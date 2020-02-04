@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include <iostream>
 #include <SDL.h>
+#include "Controller.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -24,5 +25,7 @@ private:
 	SDL_Renderer* m_renderer;
 	// bool for if game is running or not
 	bool m_isRunning;
+
+	Controller* controller;
 };
 

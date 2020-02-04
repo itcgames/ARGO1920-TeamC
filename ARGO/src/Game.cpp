@@ -24,6 +24,7 @@ Game::Game()
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 		// Game is running
 		m_isRunning = true;
+		controller = new Controller();
 	}
 	catch (std::string error)
 	{
@@ -95,6 +96,21 @@ void Game::processEvent()
 /// </summary>
 void Game::update()
 {
+	controller->update();
+	controller->getButtonState(ButtonType::A);
+	controller->getButtonState(ButtonType::B);
+	controller->getButtonState(ButtonType::X);
+	controller->getButtonState(ButtonType::Y);
+	controller->getButtonState(ButtonType::Back);
+	controller->getButtonState(ButtonType::Start);
+	controller->getButtonState(ButtonType::RightThumbStickClick);
+	controller->getButtonState(ButtonType::LeftThumbStickClick);
+	controller->getButtonState(ButtonType::DpadDown);
+	controller->getButtonState(ButtonType::DpadLeft);
+	controller->getButtonState(ButtonType::DpadRight);
+	controller->getButtonState(ButtonType::DpadUp);
+	controller->getButtonState(ButtonType::RB);
+	controller->getButtonState(ButtonType::LB);
 }
 
 /// <summary>
