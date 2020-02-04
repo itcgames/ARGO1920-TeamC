@@ -11,15 +11,36 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AiSystem.cpp" />
+    <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\HealthComponent.cpp" />
+    <ClCompile Include="src\HealthSystem.cpp" />
+    <ClCompile Include="src\InputComponent.cpp" />
+    <ClCompile Include="src\InputSystem.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\PositionComponent.cpp" />
+    <ClCompile Include="src\PositionSystem.cpp" />
+    <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Xbox360Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AiSystem.h" />
+    <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\Debug.h" />
+    <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\HealthComponent.h" />
+    <ClInclude Include="include\HealthSystem.h" />
+    <ClInclude Include="include\InputComponent.h" />
+    <ClInclude Include="include\InputSystem.h" />
+    <ClInclude Include="include\PositionComponent.h" />
+    <ClInclude Include="include\PositionSystem.h" />
+    <ClInclude Include="include\RenderSystem.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="Xbox360Controller.h" />
   </ItemGroup>

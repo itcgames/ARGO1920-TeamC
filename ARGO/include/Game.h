@@ -24,5 +24,7 @@ private:
 	SDL_Renderer* m_renderer;
 	// bool for if game is running or not
 	bool m_isRunning;
+
+	
 };
 

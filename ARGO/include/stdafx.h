@@ -9,24 +9,28 @@
 
 // add headers that you want to pre-compile here
 
-////std
+//std
 #include <random>
 #include <iostream>
 #include <vector>
-//
-////SDL
+
+//SDL
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 
-////GLM
+//GLM
 #include <vec2.hpp>
 #include <vec3.hpp>
+
+//cute_math
+#include <cute_math.h>
 
 //some external libraries
 
 
 //other
+#include "Debug.h"
 //#include "Input.h" //for keyboard input
 //#include "XBOX360CONTROLLER.h" //for controller input
 //#include "FPS.h" //for fps
