@@ -1,61 +1,70 @@
 #include "stdafx.h"
 #include "Entity.h"
+#include <iostream>
 
-Entity::Entity(int t_entityIdNum) :
-	m_id(t_entityIdNum)
+Entity::Entity()
 {
-	//m_components = new std::vector<Component*>;
-	m_components.reserve(5);
 }
+
+//Entity::Entity(int t_entityIdNum) :
+//	m_id(t_entityIdNum)
+//{
+//}
 
 Entity::~Entity()
 {
-	for (int i = 0; i < m_components.size(); i++)
-	{
-		delete m_components[i];
-	}
+	std::cout << "Destroying entity" << std::endl;
+
 	m_components.clear();
 }
 
-void Entity::addComponent(Component* c)
+void Entity::addComponent(Component* t_c)
 {
-	if (m_components.size() > 0)
-	{
-		for (int i = 0; i < m_components.size(); i++)
-		{
-			if (m_components[i]->getType() == c->getType())
-			{
-				break;
-			}
-			else if (i == m_components.size() - 1)
-			{
-				m_components.push_back(c);
-			}
-		}
-	}
-	else
-	{
-		m_components.push_back(c);
-	}
+	m_components.emplace_back(t_c);
 }
 
-void Entity::removeComponent(Component* c)
+void Entity::removeCompType(ComponentType t_type)
 {
-	for (int i = 0; i < m_components.size(); i++)
+	for (std::vector<Component*>::iterator it = m_components.begin(); it != m_components.end(); )
 	{
-		if (m_components[i] != nullptr)
+		if ((*it)->getType() == t_type)
 		{
-			if (c == m_components[i])
-			{
-				delete m_components[i];
-				m_components[i] = nullptr;
-				break;
-			}
+			delete* it;
+			it = m_components.erase(it);
+		}
+		else
+		{
+			++it;
 		}
 	}
 }
 
-std::vector<Component*> Entity::getComponents()
+Component* Entity::getComponent(ComponentType t_type)
 {
-	return m_components;
+	for (std::vector<Component*>::iterator it = m_components.begin(); it != m_components.end(); )
+	{
+		if ((*it)->getType() == t_type)
+		{
+			return *it;
+		}
+		else
+		{
+			it++;
+		}
+	}
+
+	return nullptr;
+}
+
+bool Entity::hasComponentType(ComponentType t_type) const
+{
+	for (auto& comp : m_components)
+	{
+		if (comp->getType() == t_type)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

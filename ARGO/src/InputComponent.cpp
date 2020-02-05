@@ -10,7 +10,10 @@ InputComponent::InputComponent() :
 
 InputComponent::~InputComponent()
 {
-	delete keystates;
+	if (keystates != nullptr)
+	{
+		delete keystates;
+	}
 }
 
 void InputComponent::update()

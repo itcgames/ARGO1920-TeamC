@@ -1,17 +1,17 @@
 #pragma once
-#include "PositionComponent.h"
-#include "SDL.h"
-#include "Entity.h"
 #include <iostream>
+#include "SDL.h"
 #include "Debug.h"
+#include "BaseSystem.h"
+#include "Entity.h"
+#include "TransformComponent.h"
 
-class AiSystem
+class AiSystem : public BaseSystem
 {
 public:
-	void addEntity(Entity* t_e);
-	void update();
+	~AiSystem();
+	void update(Entity& t_e);
 private:
-	std::vector<Entity*> m_entities;
-	std::vector<PositionComponent*> m_posComps;
+
 };
 

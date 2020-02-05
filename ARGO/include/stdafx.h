@@ -19,10 +19,12 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include "SDL_ttf.h"
 
 //GLM
 #include <vec2.hpp>
 #include <vec3.hpp>
+#include <gtc/random.hpp>
 
 //cute_math
 #include <cute_math.h>

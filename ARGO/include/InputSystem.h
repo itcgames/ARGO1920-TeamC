@@ -4,14 +4,14 @@
 #include "Entity.h"
 #include <iostream>
 #include "Debug.h"
+#include "BaseSystem.h"
 
-class InputSystem
+class InputSystem : public BaseSystem
 {
 public:
-	void addEntity(Entity* t_e);
-	void update();
+	~InputSystem();
+	void update(Entity& t_e);
 private:
-	std::vector<Entity*> m_entities;
-	std::vector<InputComponent*> m_inputComps;
+
 };
 

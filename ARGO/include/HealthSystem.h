@@ -1,21 +1,17 @@
 #pragma once
-#include "Entity.h"
-#include "SDL.h"
-#include "HealthComponent.h"
 #include <iostream>
+#include "SDL.h"
 #include "Debug.h"
+#include "BaseSystem.h"
+#include "Entity.h"
+#include "HealthComponent.h"
 
-class HealthSystem
+class HealthSystem : public BaseSystem
 {
 public:
-	void addEntity(Entity* t_e);
-	void update();
+	~HealthSystem();
+	void update(Entity& t_e);
 private:
-	std::vector<Entity*> m_entities;
-	std::vector<HealthComponent*> m_hpComps;
-
-	Uint32 m_timer = 0;
-	const Uint32 UPDATE_DELAY = 500;
 
 };
 

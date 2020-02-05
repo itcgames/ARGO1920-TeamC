@@ -10,7 +10,7 @@ Game::Game()
 	{
 		// Try to initalise SDL in general
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
-		
+
 		// Create SDL Window Centred in Middle Of Screen
 		m_window = SDL_CreateWindow("Final Year Project", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, NULL);
 		// Check if window was created correctly
@@ -25,6 +25,21 @@ Game::Game()
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 		// Game is running
 		m_isRunning = true;
+
+		//add components to player
+		for (auto& player : m_players)
+		{
+			player.addComponent(new HealthComponent(10, 10));
+			player.addComponent(new TransformComponent());
+			player.addComponent(new InputComponent());
+		}
+
+		m_entities.reserve(1000);
+		for (int i = 0; i < 5; i++)
+		{
+			m_entities.emplace_back();
+			m_entities.at(i).addComponent(new TransformComponent());
+		}
 	}
 	catch (std::string error)
 	{
@@ -85,6 +100,11 @@ void Game::processEvent()
 		{
 			m_isRunning = false;
 		}
+		if (SDLK_SPACE == event.key.keysym.sym)
+		{
+
+		}
+
 		break;
 	default:
 		break;
@@ -96,6 +116,44 @@ void Game::processEvent()
 /// </summary>
 void Game::update()
 {
+	for (auto& entity : m_entities)
+	{
+		if (entity.hasComponentType(ComponentType::Health))
+		{
+			m_hpSystem.update(entity);
+		}	
+		if (entity.hasComponentType(ComponentType::Input))
+		{
+			m_inputSystem.update(entity);
+		}
+		if (entity.hasComponentType(ComponentType::Ai))
+		{
+			m_aiSystem.update(entity);
+		}
+		if (entity.hasComponentType(ComponentType::Transform))
+		{
+			m_transformSystem.update(entity);
+		}
+	}
+	for (auto& player : m_players)
+	{
+		if (player.hasComponentType(ComponentType::Health))
+		{
+			m_hpSystem.update(player);
+		}
+		if (player.hasComponentType(ComponentType::Input))
+		{
+			m_inputSystem.update(player);
+		}
+		if (player.hasComponentType(ComponentType::Ai))
+		{
+			m_aiSystem.update(player);
+		}
+		if (player.hasComponentType(ComponentType::Transform))
+		{
+			m_transformSystem.update(player);
+		}
+	}
 }
 
 /// <summary>
@@ -104,7 +162,23 @@ void Game::update()
 void Game::render()
 {
 	SDL_RenderClear(m_renderer);
+
 	//Draw Here
+	for (auto& entity : m_entities)
+	{
+		if (entity.hasComponentType(ComponentType::Transform) || entity.hasComponentType(ComponentType::Visual))
+		{
+			m_renderSystem.render(m_renderer, entity);
+		}
+	}
+	for (auto& player : m_players)
+	{
+		if (player.hasComponentType(ComponentType::Transform) || player.hasComponentType(ComponentType::Visual))
+		{
+			m_renderSystem.render(m_renderer, player);
+		}
+	}
+
 	SDL_RenderPresent(m_renderer);
 }
 

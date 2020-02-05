@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AiComponent.cpp" />
     <ClCompile Include="src\AiSystem.cpp" />
     <ClCompile Include="src\BaseSystem.cpp" />
     <ClCompile Include="src\Component.cpp" />
@@ -21,8 +22,9 @@
     <ClCompile Include="src\InputComponent.cpp" />
     <ClCompile Include="src\InputSystem.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\PositionComponent.cpp" />
-    <ClCompile Include="src\PositionSystem.cpp" />
+    <ClCompile Include="src\VisualComponent.cpp" />
+    <ClCompile Include="src\TransformComponent.cpp" />
+    <ClCompile Include="src\TransformSystem.cpp" />
     <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -30,8 +32,10 @@
     <ClCompile Include="Xbox360Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AiComponent.h" />
     <ClInclude Include="include\AiSystem.h" />
     <ClInclude Include="include\BaseSystem.h" />
+    <ClInclude Include="include\CompEnums.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Debug.h" />
     <ClInclude Include="include\Entity.h" />
@@ -40,8 +44,9 @@
     <ClInclude Include="include\HealthSystem.h" />
     <ClInclude Include="include\InputComponent.h" />
     <ClInclude Include="include\InputSystem.h" />
-    <ClInclude Include="include\PositionComponent.h" />
-    <ClInclude Include="include\PositionSystem.h" />
+    <ClInclude Include="include\VisualComponent.h" />
+    <ClInclude Include="include\TransformComponent.h" />
+    <ClInclude Include="include\TransformSystem.h" />
     <ClInclude Include="include\RenderSystem.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="Xbox360Controller.h" />

@@ -1,59 +1,51 @@
 #include "stdafx.h"
 #include "AiSystem.h"
 
-void AiSystem::addEntity(Entity* t_e)
+AiSystem::~AiSystem()
 {
-	m_entities.push_back(t_e);
-
-	std::vector<Component*> comps = t_e->getComponents();
-	for (int i = 0; i < comps.size(); i++)
-	{
-		if (comps[i]->getType() == Component::ComponentType::Position)
-		{
-			m_posComps.push_back(static_cast<PositionComponent*>(comps[i]));
-		}
-	}
-	comps.clear();
+	BaseSystem::~BaseSystem();
 }
 
-void AiSystem::update()
+void AiSystem::update(Entity& t_e)
 {
-	for (int i = 0; i < m_posComps.size(); i++)
+	TransformComponent* posComp = dynamic_cast<TransformComponent*>(t_e.getComponent(ComponentType::Transform));
+	//AiComponent* aiComp = dynamic_cast<AiComponent*>(t_e.getComponent(ComponentType::Ai));
+
+	if (posComp)
 	{
-		if (m_posComps[i]->m_right)
+		if (posComp->m_movingRight)
 		{
-			m_posComps[i]->moveRight();
+			posComp->moveRight();
 		}
 		else
 		{
-			m_posComps[i]->moveLeft();
+			posComp->moveLeft();
 		}
 
-		if (m_posComps[i]->m_up)
+		if (posComp->m_movingUp)
 		{
-			m_posComps[i]->moveUp();
+			posComp->moveUp();
 		}
 		else
 		{
-			m_posComps[i]->moveDown();
+			posComp->moveDown();
 		}
 
-		if (m_posComps[i]->getPos().x >= 825)
+		if (posComp->getPos().x >= 825)
 		{
-			m_posComps[i]->m_right = false;
+			posComp->m_movingRight = false;
 		}
-		else if (m_posComps[i]->getPos().x <= -25)
+		else if (posComp->getPos().x <= -25)
 		{
-			m_posComps[i]->m_right = true;
+			posComp->m_movingRight = true;
 		}
-		if (m_posComps[i]->getPos().y >= 625)
+		if (posComp->getPos().y >= 625)
 		{
-			m_posComps[i]->m_up = true;
+			posComp->m_movingUp = true;
 		}
-		else if (m_posComps[i]->getPos().y <= -25)
+		else if (posComp->getPos().y <= -25)
 		{
-			m_posComps[i]->m_up = false;
+			posComp->m_movingUp = false;
 		}
-
 	}
 }
