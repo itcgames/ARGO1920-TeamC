@@ -13,6 +13,7 @@
 #include <random>
 #include <iostream>
 #include <vector>
+#include <memory>
 
 //SDL
 #include <SDL.h>

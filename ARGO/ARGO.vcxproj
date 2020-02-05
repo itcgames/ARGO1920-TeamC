@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AiSystem.cpp" />
+    <ClCompile Include="src\BaseSystem.cpp" />
     <ClCompile Include="src\Component.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -30,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AiSystem.h" />
+    <ClInclude Include="include\BaseSystem.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Debug.h" />
     <ClInclude Include="include\Entity.h" />
