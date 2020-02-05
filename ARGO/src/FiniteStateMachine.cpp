@@ -11,14 +11,14 @@ FiniteStateMachine::~FiniteStateMachine()
 {
 }
 
-void FiniteStateMachine::setCurrent(State* s)
+void FiniteStateMachine::setCurrent(State* t_state)
 {
-	m_current = s;
+	m_current = t_state;
 }
 
-void FiniteStateMachine::setPrevious(State* s)
+void FiniteStateMachine::setPrevious(State* t_state)
 {
-	m_current = s;
+	m_current = t_state;
 }
 
 State* FiniteStateMachine::getCurrent()

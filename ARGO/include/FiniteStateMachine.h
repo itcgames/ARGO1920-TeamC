@@ -8,8 +8,8 @@ private:
 public:
 	FiniteStateMachine();
 	~FiniteStateMachine();
-	void setCurrent(State* s);
-	void setPrevious(State* s);
+	void setCurrent(State* t_state);
+	void setPrevious(State* t_state);
 	State* getCurrent();
 	State* getPrevious();
 

@@ -10,9 +10,6 @@ class Tile // Extend Entity
 {
 public:
 	Tile(glm::vec2 t_position, float t_size, TileType t_type);
-
-
-
 //accessors
 	//Position - Chenge to position component
 	glm::vec2 getPosition() { return m_position; };
@@ -20,7 +17,7 @@ public:
 	//Type
 	TileType getType() { return m_type; };
 	void setType(TileType t_type) { m_type = t_type; };
-	//Size - change to render pomponent
+	//Size - change to render component
 	int getSize() { return m_tileSize; };
 	//Neighbours
 	std::vector<Tile*>* getNeightbours() { return &m_neighbours; };

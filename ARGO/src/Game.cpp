@@ -27,6 +27,7 @@ Game::Game() :
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 		// Game is running
 		m_isRunning = true;
+		setupLevel();
 	}
 	catch (std::string error)
 	{
@@ -36,7 +37,6 @@ Game::Game() :
 		m_isRunning = false;
 	}
 
-	setupLevel();
 }
 
 /// <summary>
