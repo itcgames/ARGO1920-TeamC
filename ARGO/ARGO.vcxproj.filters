@@ -39,14 +39,14 @@
     <ClCompile Include="src\FiniteStateMachine.cpp">
       <Filter>Source Files\AnimationFSM</Filter>
     </ClCompile>
-    <ClCompile Include="include\Moving.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Attacking.cpp">
+      <Filter>Source Files\AnimationFSM</Filter>
     </ClCompile>
-    <ClCompile Include="include\Idle.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Idle.cpp">
+      <Filter>Source Files\AnimationFSM</Filter>
     </ClCompile>
-    <ClCompile Include="include\Attacking.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Moving.cpp">
+      <Filter>Source Files\AnimationFSM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
