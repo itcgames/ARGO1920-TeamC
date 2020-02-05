@@ -1,9 +1,12 @@
 #include "Game.h"
-
 /// <summary>
 /// Constructor for the game class.
 /// </summary>
-Game::Game()
+class State;
+Game::Game() : 
+	m_tileSize (20),
+	m_levelHeight(100),
+	m_levelWidth(100)
 {
 	try
 	{
@@ -24,6 +27,7 @@ Game::Game()
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 		// Game is running
 		m_isRunning = true;
+		setupLevel();
 	}
 	catch (std::string error)
 	{
@@ -32,6 +36,7 @@ Game::Game()
 		// game doesnt run
 		m_isRunning = false;
 	}
+
 }
 
 /// <summary>
@@ -84,6 +89,18 @@ void Game::processEvent()
 		{
 			m_isRunning = false;
 		}
+		if (SDLK_UP == event.key.keysym.sym)
+		{
+			fsm.idle();
+		}
+		if (SDLK_DOWN == event.key.keysym.sym)
+		{
+			fsm.moving();
+		}
+		if (SDLK_LEFT == event.key.keysym.sym)
+		{
+			fsm.attacking();
+		}
 		break;
 	default:
 		break;
@@ -95,6 +112,7 @@ void Game::processEvent()
 /// </summary>
 void Game::update()
 {
+	fsm.update();
 }
 
 /// <summary>
@@ -115,4 +133,16 @@ void Game::cleanup()
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
 	SDL_QUIT;
+}
+
+void Game::setupLevel()
+{
+	m_levelTiles.clear();
+	for (int i = 0; i < m_levelHeight; i++)
+	{
+		for (int j = 0; j < m_levelWidth; j++)
+		{
+			m_levelTiles.push_back(Tile(glm::vec2(i, j), m_tileSize, TileType::Ground));
+		}
+	}
 }
