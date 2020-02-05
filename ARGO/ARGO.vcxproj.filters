@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\AnimationFSM">
-      <UniqueIdentifier>{66fe804f-c2a2-4fc8-ba0a-cb14157c9fe4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\AnimationFSM">
-      <UniqueIdentifier>{81ba1f45-edc4-4a14-b28a-b2f41b937a20}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -33,21 +27,6 @@
     <ClCompile Include="Xbox360Controller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FiniteStateMachine.cpp">
-      <Filter>Source Files\AnimationFSM</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Moving.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Idle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Attacking.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -58,24 +37,6 @@
     </ClInclude>
     <ClInclude Include="Xbox360Controller.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\FiniteStateMachine.h">
-      <Filter>Header Files\AnimationFSM</Filter>
-    </ClInclude>
-    <ClInclude Include="include\State.h">
-      <Filter>Header Files\AnimationFSM</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Idle.h">
-      <Filter>Header Files\AnimationFSM</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Moving.h">
-      <Filter>Header Files\AnimationFSM</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Attacking.h">
-      <Filter>Header Files\AnimationFSM</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
