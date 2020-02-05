@@ -11,7 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Command.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\InputHandler.cpp" />
+    <ClCompile Include="src\MacroCommand.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -19,7 +22,10 @@
     <ClCompile Include="src\Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Command.h" />
     <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\InputHandler.h" />
+    <ClInclude Include="include\MacroCommand.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\Controller.h" />
   </ItemGroup>

@@ -14,6 +14,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <stack>
+#include <map>
 //
 ////SDL
 #include <SDL.h>

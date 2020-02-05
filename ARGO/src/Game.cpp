@@ -11,7 +11,7 @@ Game::Game()
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
 		
 		// Create SDL Window Centred in Middle Of Screen
-		m_window = SDL_CreateWindow("Final Year Project", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, NULL);
+		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, NULL);
 		// Check if window was created correctly
 		if (!m_window) throw "Error Loading Window";
 
@@ -28,6 +28,8 @@ Game::Game()
 		{
 			controllers.push_back(new Controller());
 		}
+		std::shared_ptr<int> t = std::make_shared<int>(9);
+		t.get();
 	}
 	catch (std::string error)
 	{

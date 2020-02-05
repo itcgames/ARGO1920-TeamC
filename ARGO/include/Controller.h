@@ -45,7 +45,9 @@ enum class AxisType
 	RightThumbStick,
 	LeftThumbStick,
 	LeftTrigger,
-	RightTrigger
+	RightTrigger,
+	// used to get size of enum
+	Count
 };
 
 /// <summary>
@@ -66,7 +68,9 @@ enum class ButtonType
 	DpadRight,
 	DpadLeft,
 	Start,
-	Back
+	Back,
+	// used to get size of enum
+	Count
 };
 
 /// <summary>
