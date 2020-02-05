@@ -26,6 +26,6 @@ private:
 	// bool for if game is running or not
 	bool m_isRunning;
 
-	Controller* controller;
+	std::vector<Controller*> controllers;
 };
 

@@ -24,7 +24,10 @@ Game::Game()
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 		// Game is running
 		m_isRunning = true;
-		controller = new Controller();
+		for (int index = 0; index < SDL_NumJoysticks(); index++)
+		{
+			controllers.push_back(new Controller());
+		}
 	}
 	catch (std::string error)
 	{
@@ -96,21 +99,31 @@ void Game::processEvent()
 /// </summary>
 void Game::update()
 {
-	controller->update();
-	controller->getButtonState(ButtonType::A);
-	controller->getButtonState(ButtonType::B);
-	controller->getButtonState(ButtonType::X);
-	controller->getButtonState(ButtonType::Y);
-	controller->getButtonState(ButtonType::Back);
-	controller->getButtonState(ButtonType::Start);
-	controller->getButtonState(ButtonType::RightThumbStickClick);
-	controller->getButtonState(ButtonType::LeftThumbStickClick);
-	controller->getButtonState(ButtonType::DpadDown);
-	controller->getButtonState(ButtonType::DpadLeft);
-	controller->getButtonState(ButtonType::DpadRight);
-	controller->getButtonState(ButtonType::DpadUp);
-	controller->getButtonState(ButtonType::RB);
-	controller->getButtonState(ButtonType::LB);
+	for (int index = 0; index < SDL_NumJoysticks(); index++)
+	{
+		controllers[index]->update();
+		controllers[index]->getButtonState(ButtonType::A);
+		controllers[index]->getButtonState(ButtonType::B);
+		controllers[index]->getButtonState(ButtonType::X);
+		controllers[index]->getButtonState(ButtonType::Y);
+		controllers[index]->getButtonState(ButtonType::Back);
+		controllers[index]->getButtonState(ButtonType::Start);
+		controllers[index]->getButtonState(ButtonType::RightThumbStickClick);
+		controllers[index]->getButtonState(ButtonType::LeftThumbStickClick);
+		controllers[index]->getButtonState(ButtonType::DpadDown);
+		controllers[index]->getButtonState(ButtonType::DpadLeft);
+		controllers[index]->getButtonState(ButtonType::DpadRight);
+		controllers[index]->getButtonState(ButtonType::DpadUp);
+		controllers[index]->getButtonState(ButtonType::RB);
+		controllers[index]->getButtonState(ButtonType::LB);
+
+		controllers[index]->getAxisState(AxisType::LeftThumbStick);
+		controllers[index]->getAxisState(AxisType::RightThumbStick);
+		controllers[index]->getAxisState(AxisType::LeftTrigger);
+		controllers[index]->getAxisState(AxisType::RightTrigger);
+	}
+
+	
 }
 
 /// <summary>

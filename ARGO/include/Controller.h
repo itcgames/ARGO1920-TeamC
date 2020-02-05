@@ -16,7 +16,10 @@ struct GamePadState
 	glm::vec2 LeftThumbStick{ 0.0f, 0.0f };
 };
 
-
+/// <summary>
+/// The Different States the button can be on based on the
+/// values of current and previous gamepadstate
+/// </summary>
 enum class ButtonState
 {
 	Pressed,
@@ -25,6 +28,29 @@ enum class ButtonState
 	NotPressed
 };
 
+/// <summary>
+/// The different states the axis can be similar to the button state above
+/// </summary>
+enum class AxisState
+{
+	Moved,
+	NotMoved
+};
+
+/// <summary>
+/// The different non buttons on the controller that gets its value from SDL axis
+/// </summary>
+enum class AxisType
+{
+	RightThumbStick,
+	LeftThumbStick,
+	LeftTrigger,
+	RightTrigger
+};
+
+/// <summary>
+/// The different buttons present on the controller gotten from the SDL button value
+/// </summary>
 enum class ButtonType
 {
 	A,
@@ -43,12 +69,14 @@ enum class ButtonType
 	Back
 };
 
+/// <summary>
+/// Class for Controllers and their input
+/// </summary>
 class Controller
 {
 public:
 	Controller();
 	~Controller();
-	void init();
 	void update();
 	bool isConnected() const;
 	int getIndex() const;
@@ -56,11 +84,11 @@ public:
 	GamePadState getCurrent() const;
 	GamePadState getPrevious() const;
 
-
-	ButtonState getButtonState(ButtonType t_type);
+	ButtonState getButtonState(ButtonType t_ButtonType);
+	AxisState getAxisState(AxisType t_AxisType);
 private:
 	// dead zone for the dpad? (works like an another joystick)
-	const int DPAD_THRESHOLD = 50;
+	const int THUMB_STICK_THRESHOLD = 3200;
 	// index of getCurrent controller
 	int m_controllerIndex;
 	// static int to differentiate between several connected controllers
@@ -72,7 +100,14 @@ private:
 
 	SDL_GameController* m_controller;
 
-	std::string getButtonName(ButtonType t_type);
+	// name of controller gotten by calling SDL_GameControllerName 
+	std::string controllerName;
+
+	const std::string XBOX_CONTROLLER_NAME = "XInput Controller";
+	const std::string SWITCH_CONTROLLER_NAME = "Nintendo Switch Pro Controller";
+
+	std::string getButtonName(ButtonType t_ButtonType);
+
 };
 
 #endif // !CONTROLLER
