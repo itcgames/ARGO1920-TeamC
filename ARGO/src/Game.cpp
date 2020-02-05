@@ -102,7 +102,40 @@ void Game::processEvent()
 		}
 		if (SDLK_SPACE == event.key.keysym.sym)
 		{
-
+			if (m_entities.size() > 0)
+			{
+				m_entities.erase(m_entities.begin());
+			}
+			std::cout << m_entities.size() << std::endl;
+		}
+		if (SDLK_BACKSPACE == event.key.keysym.sym)
+		{
+			if (m_entities.size() > 0)
+			{
+				m_entities.erase(m_entities.begin(), m_entities.end());
+			}
+			std::cout << m_entities.size() << std::endl;
+		}
+		if (SDLK_RETURN == event.key.keysym.sym)
+		{
+			if (1000 - m_entities.size() > 100)
+			{
+				for (int i = 0; i < 100; i++)
+				{
+					m_entities.emplace_back();
+					m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
+				}
+			}
+			std::cout << m_entities.size() << std::endl;
+		}
+		if (SDLK_1 == event.key.keysym.sym)
+		{
+			if (m_entities.size() < 1000)
+			{
+				m_entities.emplace_back();
+				m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
+			}
+			std::cout << m_entities.size() << std::endl;
 		}
 
 		break;

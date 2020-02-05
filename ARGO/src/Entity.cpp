@@ -13,7 +13,7 @@ Entity::Entity()
 
 Entity::~Entity()
 {
-	std::cout << "Destroying entity" << std::endl;
+	//std::cout << "Destroying entity" << std::endl;
 
 	m_components.clear();
 }
