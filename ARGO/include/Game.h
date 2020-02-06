@@ -24,5 +24,12 @@ private:
 	SDL_Renderer* m_renderer;
 	// bool for if game is running or not
 	bool m_isRunning;
+
+	bool showDemoWindow = true;
+	bool showanotherWindow = true;
+	bool done = false;
+	ImVec4 clear_color = ImVec4(0, 0, 0, 0);
+	int counter = 0;
+
 };
 

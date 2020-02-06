@@ -23,6 +23,13 @@
 #include <vec2.hpp>
 #include <vec3.hpp>
 
+
+////IMGUI
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_sdl.h"
+#include "imgui/imgui_sdl.h"
+
+
 //some external libraries
 
 
