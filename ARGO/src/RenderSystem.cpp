@@ -6,24 +6,6 @@ RenderSystem::~RenderSystem()
 	BaseSystem::~BaseSystem();
 }
 
-//void RenderSystem::addEntity(Entity* t_e)
-//{
-//	m_entities.push_back(t_e);
-//
-//	{//temporay function to give random colours to objects
-//		//set fill colour
-//		Uint8 rgb[3];
-//		rgb[0] = glm::linearRand(0, 255);
-//		rgb[1] = glm::linearRand(0, 255);
-//		rgb[2] = glm::linearRand(0, 255);
-//
-//		for (int i = 0; i < 3; i++)
-//		{
-//			m_rgbVec.push_back(rgb[i]);
-//		}
-//	}
-//}
-
 void RenderSystem::update(Entity& t_e)
 {
 	//some sort of update to visual components here
@@ -41,11 +23,12 @@ void RenderSystem::render(SDL_Renderer* t_renderer, Entity& t_e)
 	}
 	else
 	{
-		renderPrimitives(t_renderer, posComp);
+		ColourComponent* colComp = dynamic_cast<ColourComponent*>(t_e.getComponent(ComponentType::Colour));
+		renderPrimitives(t_renderer, posComp, colComp);
 	}
 }
 
-void RenderSystem::renderPrimitives(SDL_Renderer* t_renderer, TransformComponent* t_posComp)
+void RenderSystem::renderPrimitives(SDL_Renderer* t_renderer, TransformComponent* t_posComp, ColourComponent* t_colComp)
 {
 	Uint8 prevRGBA[4];
 	SDL_GetRenderDrawColor(t_renderer, &prevRGBA[0], &prevRGBA[1], &prevRGBA[2], &prevRGBA[3]);
@@ -56,7 +39,17 @@ void RenderSystem::renderPrimitives(SDL_Renderer* t_renderer, TransformComponent
 	rect.w = 50;
 	rect.h = 50;
 
-	SDL_SetRenderDrawColor(t_renderer, 255, 0, 0, 255);
+	Colour colour;
+	if (t_colComp)
+	{
+		colour = t_colComp->getColour();
+	}
+	else
+	{
+		colour.red = 255;
+	}
+
+	SDL_SetRenderDrawColor(t_renderer, colour.red, colour.green, colour.blue, colour.alpha);
 	SDL_RenderFillRect(t_renderer, &rect);
 
 	//reset the renderer to previous colour

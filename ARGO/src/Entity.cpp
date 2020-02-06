@@ -4,18 +4,20 @@
 
 Entity::Entity()
 {
+	m_components.reserve(10);
 }
-
-//Entity::Entity(int t_entityIdNum) :
-//	m_id(t_entityIdNum)
-//{
-//}
 
 Entity::~Entity()
 {
 	//std::cout << "Destroying entity" << std::endl;
 
-	m_components.clear();
+	for (int i = m_components.size() - 1; i >= 0; i--)
+	{
+		delete m_components.at(i);
+		m_components.at(i) = nullptr;
+	}
+
+	m_components.erase(std::remove(m_components.begin(), m_components.end(), nullptr), m_components.end());
 }
 
 void Entity::addComponent(Component* t_c)

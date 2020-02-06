@@ -9,9 +9,11 @@ HealthSystem::~HealthSystem()
 void HealthSystem::update(Entity& t_e)
 {
 	auto hpComp = dynamic_cast<HealthComponent*>(t_e.getComponent(ComponentType::Health));
-	//if more than 0 hp
+
+	//if not nullptr
 	if (hpComp)
 	{
+		//if more than 0 hp
 		if (hpComp->getHealth() > 0)
 		{
 			//reduce hp by 1

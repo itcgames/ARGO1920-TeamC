@@ -14,6 +14,7 @@
     <ClCompile Include="src\AiComponent.cpp" />
     <ClCompile Include="src\AiSystem.cpp" />
     <ClCompile Include="src\BaseSystem.cpp" />
+    <ClCompile Include="src\ColourComponent.cpp" />
     <ClCompile Include="src\Component.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -35,6 +36,7 @@
     <ClInclude Include="include\AiComponent.h" />
     <ClInclude Include="include\AiSystem.h" />
     <ClInclude Include="include\BaseSystem.h" />
+    <ClInclude Include="include\ColourComponent.h" />
     <ClInclude Include="include\CompEnums.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Debug.h" />

@@ -5,5 +5,6 @@ enum class ComponentType
 	Transform,
 	Ai,
 	Input,
-	Visual
+	Visual,
+	Colour
 };

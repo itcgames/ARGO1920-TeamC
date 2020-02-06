@@ -32,13 +32,15 @@ Game::Game()
 			player.addComponent(new HealthComponent(10, 10));
 			player.addComponent(new TransformComponent());
 			player.addComponent(new InputComponent());
+			player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
 		}
 
-		m_entities.reserve(1000);
+		m_entities.reserve(10000);
 		for (int i = 0; i < 5; i++)
 		{
 			m_entities.emplace_back();
 			m_entities.at(i).addComponent(new TransformComponent());
+			m_entities.at(i).addComponent(new AiComponent());
 		}
 	}
 	catch (std::string error)
@@ -104,7 +106,7 @@ void Game::processEvent()
 		{
 			if (m_entities.size() > 0)
 			{
-				m_entities.erase(m_entities.begin());
+				m_entities.erase(--m_entities.end());
 			}
 			std::cout << m_entities.size() << std::endl;
 		}
@@ -124,6 +126,7 @@ void Game::processEvent()
 				{
 					m_entities.emplace_back();
 					m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
+					m_entities.at(m_entities.size() - 1).addComponent(new AiComponent());
 				}
 			}
 			std::cout << m_entities.size() << std::endl;
@@ -134,6 +137,7 @@ void Game::processEvent()
 			{
 				m_entities.emplace_back();
 				m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
+				m_entities.at(m_entities.size() - 1).addComponent(new AiComponent());
 			}
 			std::cout << m_entities.size() << std::endl;
 		}
@@ -151,41 +155,17 @@ void Game::update()
 {
 	for (auto& entity : m_entities)
 	{
-		if (entity.hasComponentType(ComponentType::Health))
-		{
-			m_hpSystem.update(entity);
-		}	
-		if (entity.hasComponentType(ComponentType::Input))
-		{
-			m_inputSystem.update(entity);
-		}
-		if (entity.hasComponentType(ComponentType::Ai))
-		{
-			m_aiSystem.update(entity);
-		}
-		if (entity.hasComponentType(ComponentType::Transform))
-		{
-			m_transformSystem.update(entity);
-		}
+		m_hpSystem.update(entity);
+		m_inputSystem.update(entity);
+		m_aiSystem.update(entity);
+		m_transformSystem.update(entity);
 	}
 	for (auto& player : m_players)
 	{
-		if (player.hasComponentType(ComponentType::Health))
-		{
-			m_hpSystem.update(player);
-		}
-		if (player.hasComponentType(ComponentType::Input))
-		{
-			m_inputSystem.update(player);
-		}
-		if (player.hasComponentType(ComponentType::Ai))
-		{
-			m_aiSystem.update(player);
-		}
-		if (player.hasComponentType(ComponentType::Transform))
-		{
-			m_transformSystem.update(player);
-		}
+		m_hpSystem.update(player);
+		m_inputSystem.update(player);
+		m_aiSystem.update(player);
+		m_transformSystem.update(player);
 	}
 }
 

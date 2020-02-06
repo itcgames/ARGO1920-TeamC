@@ -10,15 +10,11 @@ InputComponent::InputComponent() :
 
 InputComponent::~InputComponent()
 {
-	if (keystates != nullptr)
-	{
-		delete keystates;
-	}
 }
 
 void InputComponent::update()
 {
-	if (keystates[SDL_SCANCODE_UP])
+	if (m_keyStates[SDL_SCANCODE_UP])
 	{
 		m_keys.up = true;
 	}
@@ -27,7 +23,7 @@ void InputComponent::update()
 		m_keys.up = false;
 	}
 
-	if (keystates[SDL_SCANCODE_DOWN])
+	if (m_keyStates[SDL_SCANCODE_DOWN])
 	{
 		m_keys.down = true;
 	}
@@ -36,7 +32,7 @@ void InputComponent::update()
 		m_keys.down = false;
 	}
 
-	if (keystates[SDL_SCANCODE_LEFT])
+	if (m_keyStates[SDL_SCANCODE_LEFT])
 	{
 		m_keys.left = true;
 	}
@@ -45,7 +41,7 @@ void InputComponent::update()
 		m_keys.left = false;
 	}
 
-	if (keystates[SDL_SCANCODE_RIGHT])
+	if (m_keyStates[SDL_SCANCODE_RIGHT])
 	{
 		m_keys.right = true;
 	}

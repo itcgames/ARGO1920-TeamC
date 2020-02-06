@@ -19,6 +19,6 @@ public:
 	Keys m_keys;
 
 private:
-	const Uint8* keystates = SDL_GetKeyboardState(NULL);
+	const Uint8* m_keyStates = SDL_GetKeyboardState(NULL);
 };
 

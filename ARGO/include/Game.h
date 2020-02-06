@@ -1,11 +1,14 @@
 #pragma once
 #include <iostream>
 #include <SDL.h>
+#include <gtc/random.hpp>
 
 #include "Entity.h"
 #include "HealthComponent.h"
 #include "TransformComponent.h"
 #include "InputComponent.h"
+#include "ColourComponent.h"
+#include "VisualComponent.h"
 #include "HealthSystem.h"
 #include "TransformSystem.h"
 #include "InputSystem.h"
