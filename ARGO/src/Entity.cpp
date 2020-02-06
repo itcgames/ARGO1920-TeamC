@@ -4,13 +4,12 @@
 
 Entity::Entity()
 {
-	m_components.reserve(10);
+	//m_components.reserve(S_MAX_COMPS);
+	m_components.resize(S_MAX_COMPS);
 }
 
 Entity::~Entity()
 {
-	//std::cout << "Destroying entity" << std::endl;
-
 	for (int i = m_components.size() - 1; i >= 0; i--)
 	{
 		delete m_components.at(i);
@@ -22,36 +21,151 @@ Entity::~Entity()
 
 void Entity::addComponent(Component* t_c)
 {
-	m_components.emplace_back(t_c);
+	switch (t_c->getType())
+	{
+	case ComponentType::Health:
+	{
+		if (!m_components.at(COMPONENT_ID::HEALTH_ID))
+		{
+			m_components.at(COMPONENT_ID::HEALTH_ID) = t_c;
+			return;
+		}
+		break;
+	}
+	case ComponentType::Transform:
+	{
+		if (!m_components.at(COMPONENT_ID::TRANSFORM_ID))
+		{
+			m_components.at(COMPONENT_ID::TRANSFORM_ID) = t_c;
+			return;
+		}
+		break;
+	}
+	case ComponentType::Ai:
+	{
+		if (!m_components.at(COMPONENT_ID::AI_ID))
+		{
+			m_components.at(COMPONENT_ID::AI_ID) = t_c;
+			return;
+		}
+		break;
+	}
+	case ComponentType::Input:
+	{
+		if (!m_components.at(COMPONENT_ID::INPUT_ID))
+		{
+			m_components.at(COMPONENT_ID::INPUT_ID) = t_c;
+			return;
+		}
+		break;
+	}
+	case ComponentType::Visual:
+	{
+		if (!m_components.at(COMPONENT_ID::VISUAL_ID))
+		{
+			m_components.at(COMPONENT_ID::VISUAL_ID) = t_c;
+			return;
+		}
+		break;
+	}
+	case ComponentType::Colour:
+	{
+		if (!m_components.at(COMPONENT_ID::COLOUR_ID))
+		{
+			m_components.at(COMPONENT_ID::COLOUR_ID) = t_c;
+			return;
+		}
+		break;
+	}
+	default:
+
+		break;
+	}
+
+	throw std::invalid_argument("already has this component!");
 }
 
 void Entity::removeCompType(ComponentType t_type)
 {
-	for (std::vector<Component*>::iterator it = m_components.begin(); it != m_components.end(); )
+	switch (t_type)
 	{
-		if ((*it)->getType() == t_type)
+	case ComponentType::Health:
+	{
+		if (m_components.at(COMPONENT_ID::HEALTH_ID))
 		{
-			delete* it;
-			it = m_components.erase(it);
+			delete m_components.at(COMPONENT_ID::HEALTH_ID);
+			m_components.at(COMPONENT_ID::HEALTH_ID) = nullptr;
+			return;
 		}
-		else
-		{
-			++it;
-		}
+		break;
 	}
+	case ComponentType::Transform:
+	{
+		if (m_components.at(COMPONENT_ID::TRANSFORM_ID))
+		{
+			delete m_components.at(COMPONENT_ID::TRANSFORM_ID);
+			m_components.at(COMPONENT_ID::TRANSFORM_ID) = nullptr;
+			return;
+		}
+		break;
+	}
+	case ComponentType::Ai:
+	{
+		if (m_components.at(COMPONENT_ID::AI_ID))
+		{
+			delete m_components.at(COMPONENT_ID::AI_ID);
+			m_components.at(COMPONENT_ID::AI_ID) = nullptr;
+			return;
+		}
+		break;
+	}
+	case ComponentType::Input:
+	{
+		if (m_components.at(COMPONENT_ID::INPUT_ID))
+		{
+			delete m_components.at(COMPONENT_ID::INPUT_ID);
+			m_components.at(COMPONENT_ID::INPUT_ID) = nullptr;
+			return;
+		}
+		break;
+	}
+	case ComponentType::Visual:
+	{
+		if (m_components.at(COMPONENT_ID::VISUAL_ID))
+		{
+			delete m_components.at(COMPONENT_ID::VISUAL_ID);
+			m_components.at(COMPONENT_ID::VISUAL_ID) = nullptr;
+			return;
+		}
+		break;
+	}
+	case ComponentType::Colour:
+	{
+		if (m_components.at(COMPONENT_ID::COLOUR_ID))
+		{
+			delete m_components.at(COMPONENT_ID::COLOUR_ID);
+			m_components.at(COMPONENT_ID::COLOUR_ID) = nullptr;
+			return;
+		}
+		break;
+	}
+	default:
+		throw std::invalid_argument("trying to delete an unknown component!");
+		break;
+	}	
 }
 
 Component* Entity::getComponent(ComponentType t_type)
 {
 	for (std::vector<Component*>::iterator it = m_components.begin(); it != m_components.end(); )
 	{
-		if ((*it)->getType() == t_type)
+		if ((*it) && (*it)->getType() == t_type)
 		{
 			return *it;
 		}
 		else
 		{
-			it++;
+			++it;
 		}
 	}
 
@@ -67,6 +181,10 @@ bool Entity::hasComponentType(ComponentType t_type) const
 			return true;
 		}
 	}
-
 	return false;
+}
+
+std::vector<Component*>& Entity::getAllComps()
+{
+	return m_components;
 }

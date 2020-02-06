@@ -25,7 +25,7 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\VisualComponent.cpp" />
     <ClCompile Include="src\TransformComponent.cpp" />
-    <ClCompile Include="src\TransformSystem.cpp" />
+    <ClCompile Include="src\PhysicsSystem.cpp" />
     <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\Attacking.cpp" />
     <ClCompile Include="src\FiniteStateMachine.cpp" />
@@ -53,7 +53,7 @@
     <ClInclude Include="include\InputSystem.h" />
     <ClInclude Include="include\VisualComponent.h" />
     <ClInclude Include="include\TransformComponent.h" />
-    <ClInclude Include="include\TransformSystem.h" />
+    <ClInclude Include="include\PhysicsSystem.h" />
     <ClInclude Include="include\RenderSystem.h" />
     <ClInclude Include="include\Attacking.h" />
     <ClInclude Include="include\FiniteStateMachine.h" />

@@ -5,6 +5,6 @@ class BaseSystem
 {
 public:
 	virtual ~BaseSystem();
-	virtual void update(Entity& t_e) = 0;
+	virtual void update(Entity& t_entity) = 0;
 };
 

@@ -7,15 +7,15 @@ InputSystem::~InputSystem()
 	BaseSystem::~BaseSystem();
 }
 
-void InputSystem::update(Entity& t_e)
+void InputSystem::update(Entity& t_entity)
 {
 #if (INPUT_SYS_DEBUG == 1)
-	std::cout << "Updating input for entity with id: " << m_entities[i]->getId() << std::endl;
+	std::cout << "Calling InputComponent.update()" << std::endl;
 #endif
-	InputComponent* inputComp = dynamic_cast<InputComponent*>(t_e.getComponent(ComponentType::Input));
 
-	if (inputComp)
+	if (t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID))
 	{
+		InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID));
 		inputComp->update();
 	}
 }

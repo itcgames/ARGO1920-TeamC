@@ -11,7 +11,7 @@ class AiSystem : public BaseSystem
 {
 public:
 	~AiSystem();
-	void update(Entity& t_e);
+	void update(Entity& t_entity);
 private:
 	void simpleMoveAi(TransformComponent* t_posComp);
 };

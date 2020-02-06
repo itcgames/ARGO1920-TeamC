@@ -10,8 +10,6 @@ class HealthSystem : public BaseSystem
 {
 public:
 	~HealthSystem();
-	void update(Entity& t_e);
-private:
-
+	void update(Entity& t_entity);
 };
 

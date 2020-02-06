@@ -10,7 +10,7 @@
 #include "ColourComponent.h"
 #include "VisualComponent.h"
 #include "HealthSystem.h"
-#include "TransformSystem.h"
+#include "PhysicsSystem.h"
 #include "InputSystem.h"
 #include "RenderSystem.h"
 #include "AiSystem.h"
@@ -33,9 +33,11 @@ private:
 	void cleanup();
 
 	const int MAX_PLAYERS = 4;
+	const int MAX_ENTITIES = 10000;
+	const int PLAYER_MAX_HEALTH = 10;
 
 	HealthSystem m_hpSystem;
-	TransformSystem m_transformSystem;
+	PhysicsSystem m_transformSystem;
 	InputSystem m_inputSystem;
 	RenderSystem m_renderSystem;
 	AiSystem m_aiSystem;
@@ -50,8 +52,8 @@ private:
 	SDL_Window* m_window;
 	// Renderer used to render onto screen
 	SDL_Renderer* m_renderer;
-	// bool for if game is running or not
 
+	// bool for if game is running or not
 	bool m_isRunning;
 
 	//2D grid of tiles
@@ -60,5 +62,5 @@ private:
 	int m_tileSize;
 	std::vector<Tile> m_levelTiles;
 
-	FiniteStateMachine fsm;
+	FiniteStateMachine m_fsm;
 };

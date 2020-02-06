@@ -46,7 +46,7 @@ void TransformComponent::setRotation(float t_newRotation)
 /// <summary>
 /// Pass in a value to change current rotation by an amount
 /// </summary>
-/// <param name="t_changeRotation">change in rototion</param>
+/// <param name="t_changeRotation">change in rotation</param>
 void TransformComponent::rotate(float t_changeRotation)
 {
 	m_rotation += t_changeRotation;

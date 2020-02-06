@@ -6,13 +6,13 @@ HealthSystem::~HealthSystem()
 	BaseSystem::~BaseSystem();
 }
 
-void HealthSystem::update(Entity& t_e)
+void HealthSystem::update(Entity& t_entity)
 {
-	auto hpComp = dynamic_cast<HealthComponent*>(t_e.getComponent(ComponentType::Health));
-
 	//if not nullptr
-	if (hpComp)
+	if (t_entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))
 	{
+		HealthComponent* hpComp = static_cast<HealthComponent*>(t_entity.getAllComps().at(COMPONENT_ID::HEALTH_ID));
+
 		//if more than 0 hp
 		if (hpComp->getHealth() > 0)
 		{
@@ -23,9 +23,7 @@ void HealthSystem::update(Entity& t_e)
 		{
 			//mark entity as dead here?
 #if (HP_SYS_DEBUG == 1)
-			std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << std::endl;
-			std::cout << "Entity with id " << m_entities[i]->getId() << " is dead. RIP [*]" << std::endl;
-			std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << std::endl;
+			std::cout << "Entity is dead" << std::endl;
 #endif // HP_SYS_DEBUG
 		}
 	}

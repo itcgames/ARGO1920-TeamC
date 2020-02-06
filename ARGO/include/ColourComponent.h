@@ -35,8 +35,6 @@ public:
 	Uint8 getBlue();
 	Uint8 getAlpha();
 
-
-
 private:
 	Colour m_colour;
 };

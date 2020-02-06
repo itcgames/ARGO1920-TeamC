@@ -7,14 +7,13 @@
 #include <iostream>
 #include "Debug.h"
 
-class TransformSystem : public BaseSystem
+class PhysicsSystem : public BaseSystem
 {
 public:
-	~TransformSystem();
-	void update(Entity& t_e);
+	~PhysicsSystem();
+	void update(Entity& t_entity);
 
 private:
-
 	void checkBorder(TransformComponent* t_pos);
 	void updateWithInput(TransformComponent* t_pos, InputComponent* t_input);
 };

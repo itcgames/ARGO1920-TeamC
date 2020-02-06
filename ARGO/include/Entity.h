@@ -1,27 +1,26 @@
 #pragma once
-#include <algorithm>
 #include <vector>
 #include <memory>
 #include "Component.h"
 #include "CompEnums.h"
+#include <stdexcept>
 
 
 class Entity
 {
 public:
 	Entity();
-	//Entity(int t_entityIdNum);
 	~Entity();
 
-	void addComponent(Component* t_c);
+	void addComponent(Component* t_component);
 	void removeCompType(ComponentType t_type);
 
 	Component* getComponent(ComponentType t_type);
 	bool hasComponentType(ComponentType t_type) const;
-	//int getId() { return m_id; }
+	std::vector<Component*>& getAllComps();
 private:
+	//used to reserve space in the components vector 
+	//10 might be too much perhaps
+	const static int S_MAX_COMPS = 10;
 	std::vector<Component*> m_components;
-
-	//might want to have an enum for entity types
-	//int m_id;
 };

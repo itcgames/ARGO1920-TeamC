@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "Game.h"
+
 /// <summary>
 /// Constructor for the game class.
 /// </summary>
 class State;
-Game::Game() : 
-	m_tileSize (20),
+Game::Game() :
+	m_tileSize(20),
 	m_levelHeight(100),
 	m_levelWidth(100)
 {
@@ -38,7 +39,7 @@ Game::Game() :
 			player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
 		}
 
-		m_entities.reserve(10000);
+		m_entities.reserve(MAX_ENTITIES);
 		for (int i = 0; i < 5; i++)
 		{
 			m_entities.emplace_back();
@@ -118,17 +119,31 @@ void Game::processEvent()
 		}
 		if (SDLK_BACKSPACE == event.key.keysym.sym)
 		{
+			//delete all entities
 			if (m_entities.size() > 0)
 			{
 				m_entities.erase(m_entities.begin(), m_entities.end());
 			}
 			std::cout << m_entities.size() << std::endl;
 		}
+		if (SDLK_DELETE == event.key.keysym.sym)
+		{
+			//delete all entities
+			m_players[0].removeCompType(ComponentType::Input);
+		}
 		if (SDLK_RETURN == event.key.keysym.sym)
 		{
-			if (1000 - m_entities.size() > 100)
+			//check if we can add 100 entities
+			int availableSpace = MAX_ENTITIES - m_entities.size();
+			//if more than 100 available, set to 100
+			if (availableSpace > 100)
 			{
-				for (int i = 0; i < 100; i++)
+				availableSpace = 100;
+			}
+			//if at least 1 available
+			if (availableSpace > 0)
+			{
+				for (int i = 0; i < availableSpace; i++)
 				{
 					m_entities.emplace_back();
 					m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
@@ -139,8 +154,10 @@ void Game::processEvent()
 		}
 		if (SDLK_1 == event.key.keysym.sym)
 		{
-			if (m_entities.size() < 1000)
+			//if space available in the vector
+			if (m_entities.size() < MAX_ENTITIES)
 			{
+				//add one
 				m_entities.emplace_back();
 				m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
 				m_entities.at(m_entities.size() - 1).addComponent(new AiComponent());
@@ -150,15 +167,15 @@ void Game::processEvent()
 
 		if (SDLK_UP == event.key.keysym.sym)
 		{
-			fsm.idle();
+			m_fsm.idle();
 		}
 		if (SDLK_DOWN == event.key.keysym.sym)
 		{
-			fsm.moving();
+			m_fsm.moving();
 		}
 		if (SDLK_LEFT == event.key.keysym.sym)
 		{
-			fsm.attacking();
+			m_fsm.attacking();
 		}
 		break;
 	default:
@@ -186,7 +203,7 @@ void Game::update()
 		m_transformSystem.update(player);
 	}
 
-	fsm.update();
+	m_fsm.update();
 }
 
 /// <summary>
@@ -199,17 +216,11 @@ void Game::render()
 	//Draw Here
 	for (auto& entity : m_entities)
 	{
-		if (entity.hasComponentType(ComponentType::Transform) || entity.hasComponentType(ComponentType::Visual))
-		{
-			m_renderSystem.render(m_renderer, entity);
-		}
+		m_renderSystem.render(m_renderer, entity);
 	}
 	for (auto& player : m_players)
 	{
-		if (player.hasComponentType(ComponentType::Transform) || player.hasComponentType(ComponentType::Visual))
-		{
-			m_renderSystem.render(m_renderer, player);
-		}
+		m_renderSystem.render(m_renderer, player);
 	}
 
 	SDL_RenderPresent(m_renderer);

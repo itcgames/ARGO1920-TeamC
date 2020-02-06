@@ -10,8 +10,6 @@ class InputSystem : public BaseSystem
 {
 public:
 	~InputSystem();
-	void update(Entity& t_e);
-private:
-
+	void update(Entity& t_entity);
 };
 

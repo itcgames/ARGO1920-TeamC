@@ -6,20 +6,17 @@ AiSystem::~AiSystem()
 	BaseSystem::~BaseSystem();
 }
 
-void AiSystem::update(Entity& t_e)
+void AiSystem::update(Entity& t_entity)
 {
-	AiComponent* aiComp = dynamic_cast<AiComponent*>(t_e.getComponent(ComponentType::Ai));
-	TransformComponent* posComp = dynamic_cast<TransformComponent*>(t_e.getComponent(ComponentType::Transform));
 
-	//if entity has aiComp
-	if (aiComp)
+	//make sure that entity is not missing crucial components
+	if (t_entity.getAllComps().at(COMPONENT_ID::AI_ID) && t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
 	{
-		//double check it has posComp
-		if (posComp)
-		{
-			//switch statement to handle different ai types?
-			simpleMoveAi(posComp);
-		}
+		TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getAllComps().at(COMPONENT_ID::AI_ID));
+
+		//switch statement to handle different ai types?
+		simpleMoveAi(posComp);
 	}
 }
 

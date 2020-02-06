@@ -11,32 +11,32 @@ public:
 	VisualComponent();
 	~VisualComponent();
 
-	//Loads image at specified path
-	bool loadFromFile(std::string path, SDL_Renderer* gRenderer);
+	//Loads image at specified t_path
+	bool loadFromFile(std::string t_path, SDL_Renderer* t_renderer);
 
-//#ifdef _SDL_TTF_H
+#ifdef _SDL_TTF_H
 	//Creates image from font string
-	VisualComponent(std::string fontpath);
-	bool loadFromRenderedText(std::string textureText, SDL_Color textColor, SDL_Renderer* gRenderer);
-	TTF_Font* gFont;
-//#endif
+	VisualComponent(std::string t_fontPath);
+	bool loadFromRenderedText(std::string t_textureText, SDL_Color t_textColour, SDL_Renderer* t_renderer);
+	TTF_Font* m_font;
+#endif
 
 	//Deallocates texture
 	void free();
 
 	//Set color modulation
-	void setColor(Uint8 red, Uint8 green, Uint8 blue);
+	void setColor(Uint8 t_red, Uint8 t_green, Uint8 t_blue);
 
-	//Set blending
-	void setBlendMode(SDL_BlendMode blending);
+	//Set blend mode
+	void setBlendMode(SDL_BlendMode t_blending);
 
-	//Set alpha modulation
-	void setAlpha(Uint8 alpha);
-
+	//Set t_alpha modulation
+	void setAlpha(Uint8 t_alpha);
 
 	//Gets image dimensions
 	int getWidth() const;
 	int getHeight() const;
+	//get texture ptr
 	SDL_Texture* getTexture() const;
 
 private:
