@@ -31,6 +31,12 @@
     <Filter Include="Header Files\ECS\Components">
       <UniqueIdentifier>{8fa30014-0d7e-41a1-af7a-41e18bc57176}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\AnimationFSM">
+      <UniqueIdentifier>{66fe804f-c2a2-4fc8-ba0a-cb14157c9fe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AnimationFSM">
+      <UniqueIdentifier>{81ba1f45-edc4-4a14-b28a-b2f41b937a20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -86,6 +92,21 @@
     </ClCompile>
     <ClCompile Include="src\ColourComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FiniteStateMachine.cpp">
+      <Filter>Source Files\AnimationFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Attacking.cpp">
+      <Filter>Source Files\AnimationFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Idle.cpp">
+      <Filter>Source Files\AnimationFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moving.cpp">
+      <Filter>Source Files\AnimationFSM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +166,24 @@
     </ClInclude>
     <ClInclude Include="include\ColourComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FiniteStateMachine.h">
+      <Filter>Header Files\AnimationFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\State.h">
+      <Filter>Header Files\AnimationFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Idle.h">
+      <Filter>Header Files\AnimationFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Moving.h">
+      <Filter>Header Files\AnimationFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Attacking.h">
+      <Filter>Header Files\AnimationFSM</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
