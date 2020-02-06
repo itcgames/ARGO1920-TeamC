@@ -20,7 +20,7 @@ private:
 	void update();
 	void render();
 	void cleanup();
-
+	void initInputHandler();
 	// Window used for the game
 	SDL_Window* m_window;
 	// Renderer used to render onto screen

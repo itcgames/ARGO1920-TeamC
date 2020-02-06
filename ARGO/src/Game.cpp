@@ -3,12 +3,7 @@
 /// <summary>
 /// Constructor for the game class.
 /// </summary>
-Game::Game():
-	buttonPressedMap{ std::pair<ButtonType, Command*>(ButtonType::A, new APressedCommand()),
-					  std::pair<ButtonType, Command*>(ButtonType::B, new XPressedCommand()),
-					  std::pair<ButtonType, Command*>(ButtonType::X, new XPressedCommand()),
-					  std::pair<ButtonType, Command*>(ButtonType::Y, new YPressedCommand()) }
-
+Game::Game() 
 {
 	try
 	{
@@ -33,7 +28,7 @@ Game::Game():
 		{
 			controllers.push_back(new Controller());
 		} 
-		m_inputHandler.setReleasedButtonMap(buttonPressedMap);
+		initInputHandler();
 	}
 	catch (std::string error)
 	{
@@ -108,16 +103,8 @@ void Game::update()
 	for (int index = 0; index < SDL_NumJoysticks(); index++)
 	{
 		controllers[index]->update();
-		controllers[index]->getAxisState(AxisType::RightTrigger);
-		controllers[index]->getAxisState(AxisType::LeftTrigger);
-
-		controllers[index]->getAxisState(AxisType::LeftThumbStick);
-		controllers[index]->getAxisState(AxisType::RightThumbStick);
-
 	}
 	m_inputHandler.handleControllerInput(controllers[0]);
-
-	
 }
 
 /// <summary>
@@ -138,4 +125,13 @@ void Game::cleanup()
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
 	SDL_QUIT;
+}
+
+void Game::initInputHandler()
+{
+	buttonPressedMap = std::map<ButtonType, Command*>{ std::pair<ButtonType, Command*>(ButtonType::A, new APressedCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::B, new XPressedCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::X, new XPressedCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::Y, new YPressedCommand()) };
+	m_inputHandler.setPressedButtonMap(buttonPressedMap);
 }
