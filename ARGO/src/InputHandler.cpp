@@ -9,13 +9,13 @@
 /// <param name="t_buttonPressedCommands">commands for when button is pressed</param>
 /// <param name="t_buttonHeldCommands">commands for when button is held</param>
 /// <param name="t_buttonReleasedCommands">commands for when button is released</param>
-InputHandler::InputHandler(std::map<ButtonType, Command*> t_buttonPressedCommands = std::map<ButtonType, Command*>(),
-						   std::map<ButtonType, Command*> t_buttonHeldCommands = std::map<ButtonType, Command*>(),
-						   std::map<ButtonType, Command*> t_buttonReleasedCommands = std::map<ButtonType, Command*>())
-	:
+InputHandler::InputHandler(/*std::map<ButtonType, Command*> t_buttonPressedCommands,
+						   std::map<ButtonType, Command*> t_buttonHeldCommands,
+						   std::map<ButtonType, Command*> t_buttonReleasedCommands*/)
+	/*:
 	m_buttonPressedCommands{t_buttonPressedCommands},
 	m_buttonHeldCommands{t_buttonHeldCommands},
-	m_buttonReleaseCommands{t_buttonReleasedCommands}
+	m_buttonReleaseCommands{t_buttonReleasedCommands}*/
 {
 }
 
@@ -66,7 +66,7 @@ void InputHandler::handleControllerInput(Controller* t_controller)
 		ButtonState stateOfButton = t_controller->getButtonState((ButtonType)index);
 		if (ButtonState::Pressed == stateOfButton && !m_buttonPressedCommands.empty())
 		{
-			if (m_buttonPressedCommands[(ButtonType)index] != NULL)
+			if (m_buttonPressedCommands[(ButtonType)index] != nullptr)
 			{
 				// Execute Command of appropiate button when pressed
 				m_commands.addAndExecute(m_buttonPressedCommands[(ButtonType)index]);
@@ -74,7 +74,7 @@ void InputHandler::handleControllerInput(Controller* t_controller)
 		}
 		else if (ButtonState::Held == stateOfButton && !m_buttonHeldCommands.empty())
 		{
-			if (m_buttonHeldCommands[(ButtonType)index] != NULL)
+			if (m_buttonHeldCommands[(ButtonType)index] != nullptr)
 			{
 				// Execute Command of appropiate button when pressed
 				m_commands.addAndExecute(m_buttonHeldCommands[(ButtonType)index]);
@@ -82,7 +82,7 @@ void InputHandler::handleControllerInput(Controller* t_controller)
 		}
 		else if (ButtonState::Released == stateOfButton && !m_buttonReleaseCommands.empty())
 		{
-			if (m_buttonReleaseCommands[(ButtonType)index] != NULL)
+			if (m_buttonReleaseCommands[(ButtonType)index] != nullptr)
 			{
 				// Execute Command of appropiate button when pressed
 				m_commands.addAndExecute(m_buttonReleaseCommands[(ButtonType)index]);

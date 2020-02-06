@@ -19,6 +19,12 @@
     <Filter Include="Header Files\CommandPattern">
       <UniqueIdentifier>{e8afaba2-a66a-449e-8bba-f16dc9258bd1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\CommandPattern\Commands">
+      <UniqueIdentifier>{504c730e-e2f2-4101-9a28-86718c0dc132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CommandPattern\Commands">
+      <UniqueIdentifier>{c81de626-af0f-4d7f-91ed-c5af40aad6f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -42,15 +48,24 @@
     <ClCompile Include="src\MacroCommand.cpp">
       <Filter>Source Files\CommandPattern</Filter>
     </ClCompile>
+    <ClCompile Include="src\APressedCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XPressedCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\YPressedCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rumble.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Controller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Command.h">
@@ -61,6 +76,21 @@
     </ClInclude>
     <ClInclude Include="include\MacroCommand.h">
       <Filter>Header Files\CommandPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\YPressedCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\XPressedCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\APressedCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Rumble.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

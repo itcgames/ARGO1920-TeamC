@@ -2,6 +2,7 @@
 #define CONTROLLER
 
 #include <iostream>
+#include "Rumble.h"
 
 /// <summary>
 /// data to store the getCurrent state of the controller
@@ -90,6 +91,14 @@ public:
 
 	ButtonState getButtonState(ButtonType t_ButtonType);
 	AxisState getAxisState(AxisType t_AxisType);
+	SDL_GameController* getSDLController();
+
+	void activateRumble(RumbleStrength t_strength, RumbleLength t_length);
+	void setRumbleStrength(float t_newStrength);
+	void setRumbleTime(float t_time);
+	float getRumbleStrength();
+	float getRumbleTime();
+
 private:
 	// dead zone for the dpad? (works like an another joystick)
 	const int THUMB_STICK_THRESHOLD = 3200;
@@ -111,6 +120,8 @@ private:
 	const std::string SWITCH_CONTROLLER_NAME = "Nintendo Switch Pro Controller";
 
 	std::string getButtonName(ButtonType t_ButtonType);
+
+	Rumble m_rumble;
 
 };
 

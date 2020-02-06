@@ -7,7 +7,9 @@
 class InputHandler
 {
 public:
-	InputHandler(std::map<ButtonType, Command*> t_buttonPressedCommands, std::map<ButtonType, Command*> t_buttonHeldCommands, std::map<ButtonType, Command*> t_buttonReleasedCommands);
+	InputHandler(/*std::map<ButtonType, Command*> t_buttonPressedCommands = std::map<ButtonType, Command*>(),
+				 std::map<ButtonType, Command*> t_buttonHeldCommands = std::map<ButtonType, Command*>(),
+				 std::map<ButtonType, Command*> t_buttonReleasedCommands = std::map<ButtonType, Command*>()*/);
 	void setButtonMaps(std::map<ButtonType, Command*> t_buttonPressedCommands, std::map<ButtonType, Command*> t_buttonHeldCommands, std::map<ButtonType, Command*> t_buttonReleasedCommands);
 	void setPressedButtonMap(std::map<ButtonType, Command*> t_newMap);
 	void setReleasedButtonMap(std::map<ButtonType, Command*> t_newMap);
@@ -17,6 +19,9 @@ public:
 private: 
 	// maps that hold the corresponding commands based on buttontype
 	// each map is for a different state
+
+	
+
 	std::map<ButtonType, Command*> m_buttonPressedCommands;
 	std::map<ButtonType, Command*> m_buttonHeldCommands;
 	std::map<ButtonType, Command*> m_buttonReleaseCommands;

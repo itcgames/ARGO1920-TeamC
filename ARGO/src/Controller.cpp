@@ -20,6 +20,7 @@ Controller::Controller()
 			m_controllerIndex = S_CONTROLLER_COUNT;
 			std::string name((SDL_GameControllerName(m_controller)));
 			controllerName = name;
+			m_rumble.init(m_controller);
 			break;
 		}
 	}
@@ -196,6 +197,36 @@ AxisState Controller::getAxisState(AxisType t_axisType)
 #endif // _DEBUG
 
 	return currentState;
+}
+
+SDL_GameController* Controller::getSDLController()
+{
+	return m_controller;
+}
+
+void Controller::activateRumble(RumbleStrength t_strength, RumbleLength t_length)
+{
+	m_rumble.activateRumble(t_strength, t_length);
+}
+
+void Controller::setRumbleStrength(float t_newStrength)
+{
+	m_rumble.setStrength(t_newStrength);
+}
+
+void Controller::setRumbleTime(float t_time)
+{
+	m_rumble.setTime(t_time);
+}
+
+float Controller::getRumbleStrength()
+{
+	return m_rumble.getStrength();
+}
+
+float Controller::getRumbleTime()
+{
+	return m_rumble.getTime();
 }
 
 /// <summary>

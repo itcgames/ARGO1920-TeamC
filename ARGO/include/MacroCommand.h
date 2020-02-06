@@ -1,5 +1,9 @@
 #pragma once
 #include "Command.h"
+#include "APressedCommand.h"
+#include "BPressedCommand.h"
+#include "XPressedCommand.h"
+#include "YPressedCommand.h"
 class MacroCommand
 {
 public:

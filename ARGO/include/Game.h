@@ -3,6 +3,8 @@
 #include <iostream>
 #include <SDL.h>
 #include "Controller.h"
+#include "InputHandler.h"
+#include "MacroCommand.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -27,5 +29,8 @@ private:
 	bool m_isRunning;
 
 	std::vector<Controller*> controllers;
+
+	InputHandler m_inputHandler;
+	std::map<ButtonType, Command*> buttonPressedMap;
 };
 
