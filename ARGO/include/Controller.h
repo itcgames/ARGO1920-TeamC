@@ -1,5 +1,4 @@
-#ifndef CONTROLLER
-#define CONTROLLER
+#pragma once
 
 #include <iostream>
 #include "Rumble.h"
@@ -114,7 +113,7 @@ private:
 	SDL_GameController* m_controller;
 
 	// name of controller gotten by calling SDL_GameControllerName 
-	std::string controllerName;
+	std::string m_controllerName;
 
 	const std::string XBOX_CONTROLLER_NAME = "XInput Controller";
 	const std::string SWITCH_CONTROLLER_NAME = "Nintendo Switch Pro Controller";
@@ -122,7 +121,4 @@ private:
 	std::string getButtonName(ButtonType t_ButtonType);
 
 	Rumble m_rumble;
-
 };
-
-#endif // !CONTROLLER

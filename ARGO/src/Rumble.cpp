@@ -70,13 +70,13 @@ void Rumble::setTime(RumbleLength t_lengthType)
 	switch (t_lengthType)
 	{
 	case RumbleLength::Long:
-		m_time = 750;
+		m_time = LONG_TIME;
 		break;
 	case RumbleLength::Medium:
-		m_time = 500;
+		m_time = MEDIUM_TIME;
 		break;
 	case RumbleLength::Short:
-		m_time = 150;
+		m_time = SHORT_TIME;
 		break;
 	default:
 		break;
@@ -98,13 +98,13 @@ void Rumble::setStrength(RumbleStrength t_strengthType)
 	switch (t_strengthType)
 	{
 	case RumbleStrength::Strong:
-		m_strength = 1.0f;
+		m_strength = STRONG_STRENGTH;
 		break;
 	case RumbleStrength::Medium:
-		m_strength = 0.5f;
+		m_strength = MEDIUM_STRENGTH;
 		break;
 	case RumbleStrength::Weak:
-		m_strength = 0.25f;
+		m_strength = WEAK_STRENGTH;
 		break; 
 	default:
 		break;

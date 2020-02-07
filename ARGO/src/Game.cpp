@@ -210,8 +210,6 @@ void Game::update()
 		m_hpSystem.update(player);
 		m_aiSystem.update(player);
 		m_transformSystem.update(player);
-		//pause
-		//physics
 	}
 
 	m_fsm.update();

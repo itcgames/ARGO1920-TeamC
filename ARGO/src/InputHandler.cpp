@@ -47,6 +47,7 @@ std::map<ButtonType, Command*> InputHandler::getButtonMap(ButtonState t_mapType)
 	{
 		return m_buttonHeldCommands;
 	}
+	// returns empty map if anything else
 	return std::map<ButtonType, Command*>();
 }
 
