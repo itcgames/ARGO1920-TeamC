@@ -41,8 +41,10 @@ public:
 	void moveDown();
 	bool m_movingRight = true;
 	bool m_movingUp = false;
+
 private:
 	Position m_pos;
 	float m_rotation = 0.0f;
+
 };
 

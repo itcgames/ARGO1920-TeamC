@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AiComponent.h" />
+    <ClInclude Include="include\AiStates.h" />
     <ClInclude Include="include\AiSystem.h" />
     <ClInclude Include="include\BaseSystem.h" />
     <ClInclude Include="include\ColourComponent.h" />
