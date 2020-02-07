@@ -17,6 +17,7 @@
     <ClCompile Include="src\ColourComponent.cpp" />
     <ClCompile Include="src\Component.cpp" />
     <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\ForceComponent.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\HealthComponent.cpp" />
     <ClCompile Include="src\HealthSystem.cpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Debug.h" />
     <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\ForceComponent.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\HealthComponent.h" />
     <ClInclude Include="include\HealthSystem.h" />

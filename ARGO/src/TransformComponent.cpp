@@ -22,7 +22,8 @@ TransformComponent::~TransformComponent()
 {
 }
 
-TransformComponent::Position TransformComponent::getPos() const
+
+glm::vec2 TransformComponent::getPos() const
 {
 	return m_pos;
 }

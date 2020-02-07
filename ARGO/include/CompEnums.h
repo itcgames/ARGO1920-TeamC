@@ -5,8 +5,9 @@ enum class ComponentType
 	Transform = 1,
 	Ai = 2,
 	Input = 3,
-	Visual = 9,
-	Colour = 5
+	Visual = 4,
+	Colour = 5,
+	Force = 6
 };
 
 //when adding new component type, add it to enum class and then to this
