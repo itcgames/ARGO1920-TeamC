@@ -19,7 +19,7 @@ Controller::Controller()
 			Controller::S_CONTROLLER_COUNT++;
 			m_controllerIndex = S_CONTROLLER_COUNT;
 			std::string name((SDL_GameControllerName(m_controller)));
-			controllerName = name;
+			m_controllerName = name;
 			m_rumble.init(m_controller);
 			break;
 		}
@@ -70,9 +70,9 @@ void Controller::update()
 	m_current.button[(int)ButtonType::DpadLeft] = SDL_GameControllerGetButton(m_controller, SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_LEFT);
 	m_current.button[(int)ButtonType::DpadRight] = SDL_GameControllerGetButton(m_controller, SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
 
-	//Updates the values of the triggers for how much they are pressed
-	m_current.RTrigger = SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
-	m_current.LTrigger = SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+	// if triggers are greater than threshold they are moving
+	m_current.button[(int)ButtonType::RightTrigger] = (SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > THUMB_STICK_THRESHOLD);
+	m_current.button[(int)ButtonType::LeftTrigger] = (SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERLEFT) > THUMB_STICK_THRESHOLD);
 
 	// Update position values of the left and right thumb sticks - Set positions to 0 if value is under threshold
 	m_current.LeftThumbStick = glm::vec2(SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTX),
@@ -137,7 +137,7 @@ ButtonState Controller::getButtonState(ButtonType t_buttonType)
  #ifdef _DEBUG
 	if (ButtonState::NotPressed != currentState)
 	{
-		std::string debugString = "Controller " + std::to_string(m_controllerIndex) + " " + controllerName + " " + getButtonName(t_buttonType);
+		std::string debugString = "Controller " + std::to_string(m_controllerIndex) + " " + m_controllerName + " " + getButtonName(t_buttonType);
 		if (ButtonState::Pressed == currentState)  debugString += "Pressed";
 		else if (ButtonState::Held == currentState) debugString += "Held";
 		else if (ButtonState::Released == currentState) debugString += "Released";
@@ -156,7 +156,7 @@ ButtonState Controller::getButtonState(ButtonType t_buttonType)
 AxisState Controller::getAxisState(AxisType t_axisType)
 {
 #ifdef _DEBUG
-	std::string debugString = "Controller " + std::to_string(m_controllerIndex) + " " + controllerName + " \n";
+	std::string debugString = "Controller " + std::to_string(m_controllerIndex) + " " + m_controllerName + " \n";
 #endif // _DEBUG
 	AxisState currentState = AxisState::NotMoved;
 
@@ -174,21 +174,6 @@ AxisState Controller::getAxisState(AxisType t_axisType)
 #endif // _DEBUG
 		currentState = AxisState::Moved;
 	}
-	else if (AxisType::LeftTrigger == t_axisType && m_current.LTrigger != m_previous.LTrigger)
-	{
-#ifdef _DEBUG
-		debugString += "Left Trigger Moved, Value: " + std::to_string(m_current.LTrigger);
-#endif // _DEBUG
-		currentState = AxisState::Moved;
-	}
-	else if(AxisType::RightTrigger == t_axisType && m_current.RTrigger != m_previous.RTrigger)
-	{
-#ifdef _DEBUG
-		debugString += "Right Trigger Moved, Value: " + std::to_string(m_current.RTrigger);
-#endif // _DEBUG
-		currentState = AxisState::Moved;
-	}
-
 #ifdef _DEBUG
 	if (AxisState::NotMoved != currentState)
 	{

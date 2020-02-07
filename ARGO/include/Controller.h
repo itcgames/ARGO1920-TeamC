@@ -9,9 +9,7 @@
 /// </summary>
 struct GamePadState
 {
-	bool button[14]; 
-	float RTrigger{ 0 };
-	float LTrigger{ 0 };
+	bool button[16];   
 	glm::vec2 RightThumbStick{ 0.0f, 0.0f };
 	glm::vec2 LeftThumbStick{ 0.0f, 0.0f };
 };
@@ -44,8 +42,6 @@ enum class AxisType
 {
 	RightThumbStick,
 	LeftThumbStick,
-	LeftTrigger,
-	RightTrigger,
 	// used to get size of enum
 	Count
 };
@@ -69,6 +65,8 @@ enum class ButtonType
 	DpadLeft,
 	Start,
 	Back,
+	RightTrigger,
+	LeftTrigger,
 	// used to get size of enum
 	Count
 };
