@@ -57,7 +57,7 @@ Game::~Game()
 /// </summary>
 void Game::run()
 {
-	const int FPS = 60;
+	const int FPS = 30;
 	const int frameDelay = 1000 / FPS;
 	Uint32 frameStart;
 	int frameTime;
@@ -140,7 +140,24 @@ void Game::update()
 				showanotherWindow = false;
 			ImGui::End();
 		}
-		std::cout << counter << std::endl;
+		//std::cout << counter << std::endl;
+ 
+
+	//cstr = "";
+	ImGui::Begin("Hello World");
+
+	ImGuiHelper::InputText(windowTitle, "Window Title" );
+	ImGui::SameLine();
+	if (ImGui::Button("Set Title"))
+	{
+		SDL_SetWindowTitle(m_window, windowTitle.c_str());
+	}	
+	ImGui::InputInt("Counter", &counter, 1, 100);
+
+	ImGui::End();
+
+	SDL_SetRenderDrawColor(m_renderer,clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+
 	
 }
 

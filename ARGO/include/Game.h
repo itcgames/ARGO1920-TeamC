@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include <iostream>
 #include <SDL.h>
+#include "ImguiHelper.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -28,8 +29,10 @@ private:
 	bool showDemoWindow = true;
 	bool showanotherWindow = true;
 	bool done = false;
-	ImVec4 clear_color = ImVec4(0, 0, 0, 0);
+	ImVec4 clear_color = ImVec4(0, 0, 0, 255);
 	int counter = 0;
-
+	std::string windowTitle = "ROCK";
+	std::string imguiWindowTitle;
+	
 };
 

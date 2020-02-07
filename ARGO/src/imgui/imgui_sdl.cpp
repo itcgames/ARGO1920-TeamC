@@ -586,7 +586,7 @@ namespace ImGuiSDL
 				{
 					drawCommand->UserCallback(commandList, drawCommand);
 				}
-				elses
+				else
 				{
 					const bool isWrappedTexture = drawCommand->TextureId == io.Fonts->TexID;
 
