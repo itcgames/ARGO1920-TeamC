@@ -1,9 +1,13 @@
 #include "stdafx.h"
 #include "VisualComponent.h"
 
-VisualComponent::VisualComponent() : 
+VisualComponent::VisualComponent(std::string t_path, SDL_Renderer* t_renderer) :
 	Component(ComponentType::Visual)
 {
+	if (!loadFromFile(t_path, t_renderer))
+	{
+		throw std::invalid_argument("Could not load file");
+	}
 }
 
 VisualComponent::~VisualComponent()
