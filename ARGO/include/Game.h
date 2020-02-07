@@ -30,9 +30,11 @@ private:
 	bool showanotherWindow = true;
 	bool done = false;
 	ImVec4 clear_color = ImVec4(0, 0, 0, 255);
-	int counter = 0;
+	float counter = 0;
 	std::string windowTitle = "ROCK";
 	std::string imguiWindowTitle;
+	glm::vec2 vec2 = glm::vec2(0, 0);
+	glm::vec3 vec3 = glm::vec3(0, 0, 0);
 	
 };
 

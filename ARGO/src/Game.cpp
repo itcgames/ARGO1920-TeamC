@@ -152,8 +152,9 @@ void Game::update()
 	{
 		SDL_SetWindowTitle(m_window, windowTitle.c_str());
 	}	
-	ImGui::InputInt("Counter", &counter, 1, 100);
-
+	ImGui::InputFloat("Counter", &counter, 0.5f, 2.3f, ImGuiHelper::GetDecimalPercision(25).c_str());
+	ImGuiHelper::InputFloat2(vec2, "InputFloat2");
+	ImGuiHelper::InputFloat3(vec3, "inputFloat3");
 	ImGui::End();
 
 	SDL_SetRenderDrawColor(m_renderer,clear_color.x, clear_color.y, clear_color.z, clear_color.w);
