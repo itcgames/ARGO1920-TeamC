@@ -19,7 +19,7 @@ Controller::Controller()
 			Controller::S_CONTROLLER_COUNT++;
 			m_controllerIndex = S_CONTROLLER_COUNT;
 			std::string name((SDL_GameControllerName(m_controller)));
-			controllerName = name;
+			m_controllerName = name;
 			m_rumble.init(m_controller);
 			break;
 		}
@@ -137,7 +137,7 @@ ButtonState Controller::getButtonState(ButtonType t_buttonType)
  #ifdef _DEBUG
 	if (ButtonState::NotPressed != currentState)
 	{
-		std::string debugString = "Controller " + std::to_string(m_controllerIndex) + " " + controllerName + " " + getButtonName(t_buttonType);
+		std::string debugString = "Controller " + std::to_string(m_controllerIndex) + " " + m_controllerName + " " + getButtonName(t_buttonType);
 		if (ButtonState::Pressed == currentState)  debugString += "Pressed";
 		else if (ButtonState::Held == currentState) debugString += "Held";
 		else if (ButtonState::Released == currentState) debugString += "Released";
@@ -156,7 +156,7 @@ ButtonState Controller::getButtonState(ButtonType t_buttonType)
 AxisState Controller::getAxisState(AxisType t_axisType)
 {
 #ifdef _DEBUG
-	std::string debugString = "Controller " + std::to_string(m_controllerIndex) + " " + controllerName + " \n";
+	std::string debugString = "Controller " + std::to_string(m_controllerIndex) + " " + m_controllerName + " \n";
 #endif // _DEBUG
 	AxisState currentState = AxisState::NotMoved;
 
