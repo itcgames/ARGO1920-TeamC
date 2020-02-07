@@ -1,8 +1,10 @@
 #pragma once
 #include <iostream>
 #include <SDL.h>
+#include "Controller.h"
+#include "InputHandler.h"
+#include "MacroCommand.h"
 #include <gtc/random.hpp>
-
 #include "Entity.h"
 #include "HealthComponent.h"
 #include "TransformComponent.h"
@@ -54,7 +56,7 @@ private:
 
 	// bool for if game is running or not
 	bool m_isRunning;
-
+ 
 	//2D grid of tiles
 	int m_levelWidth; //TODO: Move to global space
 	int m_levelHeight; //TODO: Move to global space

@@ -4,6 +4,7 @@
 /// <summary>
 /// Constructor for the game class.
 /// </summary>
+
 class State;
 Game::Game() :
 	m_tileSize(64),
@@ -16,20 +17,20 @@ Game::Game() :
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
 
 		// Create SDL Window Centred in Middle Of Screen
-		m_window = SDL_CreateWindow("Final Year Project", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, NULL);
+		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, NULL);
+		
 		// Check if window was created correctly
 		if (!m_window) throw "Error Loading Window";
 
 		//Create the SDL Renderer 
 		m_renderer = SDL_CreateRenderer(m_window, -1, 0);
-		//Check if the renderer was created correclty
+		//Check if the renderer was created correctly
 		if (!m_renderer) throw "Error Loading Renderer";
 
 		// Sets clear colour of renderer to black and the color of any primitives
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 		// Game is running
 		m_isRunning = true;
-
 		//add components to player
 		for (auto& player : m_players)
 		{
@@ -191,8 +192,8 @@ void Game::update()
 {
 	for (auto& entity : m_entities)
 	{
-		m_hpSystem.update(entity);
 		m_inputSystem.update(entity);
+		m_hpSystem.update(entity);
 		m_aiSystem.update(entity);
 		m_transformSystem.update(entity);
 	}
@@ -205,8 +206,8 @@ void Game::update()
 	}
 	for (auto& player : m_players)
 	{
-		m_hpSystem.update(player);
 		m_inputSystem.update(player);
+		m_hpSystem.update(player);
 		m_aiSystem.update(player);
 		m_transformSystem.update(player);
 	}

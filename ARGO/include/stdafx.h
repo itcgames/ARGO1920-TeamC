@@ -13,6 +13,9 @@
 #include <random>
 #include <iostream>
 #include <vector>
+#include <string>
+#include <stack>
+#include <map>
 #include <memory>
 #include <stdexcept>
 
