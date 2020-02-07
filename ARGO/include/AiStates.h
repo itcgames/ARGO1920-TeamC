@@ -1,3 +1,3 @@
 #pragma once
-enum AIStates { eSleeping, eWander };
-enum AITypes { eMelee, eRanged };
+enum class AIStates { eSleeping, eWander };
+enum class AITypes { eMelee, eRanged };

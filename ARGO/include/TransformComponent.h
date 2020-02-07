@@ -45,6 +45,5 @@ public:
 private:
 	Position m_pos;
 	float m_rotation = 0.0f;
-
 };
 

@@ -15,15 +15,14 @@ void AiSystem::update(Entity& t_entity)
 		TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
 		AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getAllComps().at(COMPONENT_ID::AI_ID));
 
-		switch (aiComp->getType()) {
-		case eMelee:
+		switch (aiComp->getType()) 
+		{
+		case AITypes::eMelee:
 			meleeAI(posComp,aiComp);
 			break;
-		case eRanged:
+		case AITypes::eRanged:
 			rangedAI(posComp, aiComp);
 		}
-		
-		//simpleMoveAi(posComp);
 	}
 }
 
@@ -69,39 +68,48 @@ void AiSystem::simpleMoveAi(TransformComponent* t_posComp)
 void AiSystem::meleeAI(TransformComponent* t_posComp, AiComponent* t_aiComponent)
 {
 	//The Only Possible States Available to Melee Enemies. Use to limit Behaviours
-	switch (t_aiComponent->getStates()) {
-	case eSleeping:
+	switch (t_aiComponent->getStates()) 
+	{
+	case AIStates::eSleeping:
 		sleep(t_posComp, t_aiComponent);
 		break;
-	case eWander:
+	case AIStates::eWander:
 		wander(t_posComp,t_aiComponent);
+		break;
 	}
 }
 
 void AiSystem::rangedAI(TransformComponent* t_posComp, AiComponent* t_aiComponent)
 {
 	//The Only Possible States Available to Ranged Enemies. Use to limit Behaviours
-	switch (t_aiComponent->getStates()) {
-	case eSleeping:
+	switch (t_aiComponent->getStates()) 
+	{
+	case AIStates::eSleeping:
 		sleep(t_posComp, t_aiComponent);
 		break;
-	case eWander:
+	case AIStates::eWander:
 		wander(t_posComp, t_aiComponent);
+		break;
 	}
 }
 
 void AiSystem::wander(TransformComponent* t_posComp, AiComponent* t_aiComponent)
 {
-	float tempAdjuster = (((rand() % 20 + 1)));//Gives a number between 1 and 20
-	tempAdjuster -= 10; //-10 to give a range of -9 and 10,
-	tempAdjuster /= 10;  //divide by 10 to give a range of -0.9 and 1
-	t_posComp->setRotation(t_posComp->getRotation() + (t_aiComponent->getMaxRotation() * tempAdjuster)); //Randomly changes current angle by the max which is scaled by the random scalar
-	glm::vec2 tempvelocity = glm::vec2(glm::cos(t_posComp->getRotation() * M_PI / 180), sin(t_posComp->getRotation() * M_PI / 180));//Generates a unit vector in the given angle.
-	tempvelocity *= glm::length(t_aiComponent->getMaxSpeed());//Scales it by the length of the max speed.
+	//Gives a number between 1 and 20, -10 change the range to -9 and 10 then divides it by 10 to give a range of -.9 and 1.
+	float tempAdjuster = (((rand() % 20 + 1)));
+	tempAdjuster = (tempAdjuster - 10)/10;
+
+	//Randomly changes current angle by the max which is scaled by the random scalar
+	t_posComp->setRotation(t_posComp->getRotation() + (t_aiComponent->getMaxRotation() * tempAdjuster));
+	//Generates a unit vector in the given angle.
+	glm::vec2 tempVelocity = glm::vec2(glm::cos(t_posComp->getRotation() * M_PI / 180), glm::sin(t_posComp->getRotation() * M_PI / 180));
+	//Scales the Unit Vector by the length of the max speed.
+	tempVelocity *= glm::length(t_aiComponent->getMaxSpeed());
 	auto tempPosition = t_posComp->getPos();
-	tempPosition.x += tempvelocity.x;
-	tempPosition.y += tempvelocity.y;
-	t_posComp->setPos(tempPosition.x, tempPosition.y);//Updates Position
+	tempPosition.x += tempVelocity.x;
+	tempPosition.y += tempVelocity.y;
+	//Updates Position
+	t_posComp->setPos(tempPosition.x, tempPosition.y);
 }
 
 void AiSystem::sleep(TransformComponent* t_posComp, AiComponent* t_aiComponent)
