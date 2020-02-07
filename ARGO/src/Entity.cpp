@@ -77,6 +77,15 @@ void Entity::addComponent(Component* t_c)
 		}
 		break;
 	}
+	case ComponentType::Force:
+	{
+		if (!m_components.at(COMPONENT_ID::FORCE_ID))
+		{
+			m_components.at(COMPONENT_ID::FORCE_ID) = t_c;
+			return;
+		}
+		break;
+	}
 	default:
 
 		break;

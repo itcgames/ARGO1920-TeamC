@@ -4,6 +4,7 @@
 #include "SDL.h"
 #include "TransformComponent.h"
 #include "InputComponent.h"
+#include "ForceComponent.h"
 #include <iostream>
 #include "Debug.h"
 
@@ -15,5 +16,7 @@ public:
 
 private:
 	void checkBorder(TransformComponent* t_pos);
-	void updateWithInput(TransformComponent* t_pos, InputComponent* t_input);
+	void updateWithInput(ForceComponent* t_force, InputComponent* t_input);
+
+	const float FRICTION_SCALAR = 0.95f;
 };

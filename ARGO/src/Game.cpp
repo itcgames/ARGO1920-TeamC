@@ -7,9 +7,9 @@
 
 class State;
 Game::Game() :
-	m_tileSize(20),
-	m_levelHeight(100),
-	m_levelWidth(100)
+	m_tileSize(64),
+	m_levelHeight(10),
+	m_levelWidth(15)
 {
 	try
 	{
@@ -17,7 +17,8 @@ Game::Game() :
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
 
 		// Create SDL Window Centred in Middle Of Screen
-		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, NULL);
+		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, NULL);
+		
 		// Check if window was created correctly
 		if (!m_window) throw "Error Loading Window";
 
@@ -42,6 +43,7 @@ Game::Game() :
 			player.addComponent(new HealthComponent(10, 10));
 			player.addComponent(new TransformComponent());
 			player.addComponent(new InputComponent());
+			player.addComponent(new ForceComponent());
 			player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
 		}
 
@@ -203,6 +205,13 @@ void Game::update()
 
 	for (auto& entity : m_entities)
 	{
+		m_inputSystem.update(entity);
+		m_hpSystem.update(entity);
+		m_aiSystem.update(entity);
+		m_transformSystem.update(entity);
+	}
+	for (auto& entity : m_levelTiles)
+	{
 		m_hpSystem.update(entity);
 		m_inputSystem.update(entity);
 		m_aiSystem.update(entity);
@@ -210,10 +219,12 @@ void Game::update()
 	}
 	for (auto& player : m_players)
 	{
-		m_hpSystem.update(player);
 		m_inputSystem.update(player);
+		m_hpSystem.update(player);
 		m_aiSystem.update(player);
 		m_transformSystem.update(player);
+		//pause
+		//physics
 	}
 
 	m_fsm.update();
@@ -228,6 +239,10 @@ void Game::render()
 
 	//Draw Here
 	for (auto& entity : m_entities)
+	{
+		m_renderSystem.render(m_renderer, entity);
+	}
+	for (auto& entity : m_levelTiles)
 	{
 		m_renderSystem.render(m_renderer, entity);
 	}
@@ -259,12 +274,16 @@ void Game::initInputHandler()
 }
 void Game::setupLevel()
 {
-	m_levelTiles.clear();
+	int count = 0; 
+	m_levelTiles.reserve(m_levelHeight * m_levelWidth);
 	for (int i = 0; i < m_levelHeight; i++)
 	{
 		for (int j = 0; j < m_levelWidth; j++)
 		{
-			m_levelTiles.push_back(Tile(glm::vec2(i, j), m_tileSize, TileType::Ground));
+			m_levelTiles.emplace_back();
+			m_levelTiles.at(count).addComponent(new TransformComponent(j * m_tileSize, i * m_tileSize, 0));
+			m_levelTiles.at(count).addComponent(new VisualComponent("assets//images//Texture.png", m_renderer));
+			count++;
 		}
 	}
 }

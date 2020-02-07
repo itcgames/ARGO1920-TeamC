@@ -8,7 +8,7 @@
 class VisualComponent : public Component
 {
 public:
-	VisualComponent();
+	VisualComponent(std::string t_path, SDL_Renderer* t_renderer);
 	~VisualComponent();
 
 	//Loads image at specified t_path
