@@ -16,7 +16,7 @@ Game::Game() :
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
 
 		// Create SDL Window Centred in Middle Of Screen
-		m_window = SDL_CreateWindow("Final Year Project", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, NULL);
+		m_window = SDL_CreateWindow("Final Year Project", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Utilities::SCREEN_WIDTH, Utilities::SCREEN_HEIGHT, NULL);
 		// Check if window was created correctly
 		if (!m_window) throw "Error Loading Window";
 
@@ -218,8 +218,18 @@ void Game::update()
 /// </summary>
 void Game::render()
 {
-	SDL_RenderClear(m_renderer);
+	//setting the focus point for the camera.
+	glm::vec2 focusPoint = glm::vec2(0,0);
+	for (auto& player : m_players)
+	{
+		float tempx = static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().x;
+		focusPoint.x += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().x;
+		focusPoint.y += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().y;
+	}
+	m_renderSystem.setFocus(focusPoint / 4.0f);
 
+
+	SDL_RenderClear(m_renderer);
 	//Draw Here
 	for (auto& entity : m_entities)
 	{
