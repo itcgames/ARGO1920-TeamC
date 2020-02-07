@@ -22,6 +22,7 @@ void AiSystem::update(Entity& t_entity)
 			break;
 		case AITypes::eRanged:
 			rangedAI(posComp, aiComp);
+			break;
 		}
 	}
 }
