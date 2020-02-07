@@ -4,11 +4,12 @@
 /// <summary>
 /// Constructor for the game class.
 /// </summary>
+
 class State;
 Game::Game() :
 	m_tileSize(64),
-	m_levelHeight(10),
-	m_levelWidth(15),
+	m_levelHeight(20),
+	m_levelWidth(30),
 	m_fps(60),
 	m_tps(60),
 	m_lastTick(0),
@@ -22,26 +23,26 @@ Game::Game() :
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
 
 		// Create SDL Window Centred in Middle Of Screen
-		m_window = SDL_CreateWindow("Final Year Project", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Utilities::SCREEN_WIDTH, Utilities::SCREEN_HEIGHT, NULL);
+		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Utilities::SCREEN_WIDTH, Utilities::SCREEN_HEIGHT, NULL);
 		// Check if window was created correctly
 		if (!m_window) throw "Error Loading Window";
 
 		//Create the SDL Renderer 
 		m_renderer = SDL_CreateRenderer(m_window, -1, 0);
-		//Check if the renderer was created correclty
+		//Check if the renderer was created correctly
 		if (!m_renderer) throw "Error Loading Renderer";
 
 		// Sets clear colour of renderer to black and the color of any primitives
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 		// Game is running
 		m_isRunning = true;
-
 		//add components to player
 		for (auto& player : m_players)
 		{
 			player.addComponent(new HealthComponent(10, 10));
 			player.addComponent(new TransformComponent());
 			player.addComponent(new InputComponent());
+			player.addComponent(new ForceComponent());
 			player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
 		}
 
@@ -197,8 +198,8 @@ void Game::update()
 	{
 		if (canTick)
 		{
-			m_hpSystem.update(entity);
 			m_inputSystem.update(entity);
+			m_hpSystem.update(entity);
 			m_aiSystem.update(entity);
 			m_transformSystem.update(entity);
 		}
@@ -211,8 +212,8 @@ void Game::update()
 	{
 		if (canTick)
 		{
-			m_hpSystem.update(entity);
 			m_inputSystem.update(entity);
+			m_hpSystem.update(entity);
 			m_aiSystem.update(entity);
 			m_transformSystem.update(entity);
 		}
@@ -225,8 +226,8 @@ void Game::update()
 	{
 		if (canTick)
 		{
-			m_hpSystem.update(player);
 			m_inputSystem.update(player);
+			m_hpSystem.update(player);
 			m_aiSystem.update(player);
 			m_transformSystem.update(player);
 		}
