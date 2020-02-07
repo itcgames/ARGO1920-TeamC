@@ -67,11 +67,8 @@ void AiSystem::wander(TransformComponent* t_posComp, AiComponent* t_aiComponent)
 	glm::vec2 tempVelocity = glm::vec2(glm::cos(t_posComp->getRotation() * M_PI / 180), glm::sin(t_posComp->getRotation() * M_PI / 180));
 	//Scales the Unit Vector by the length of the max speed.
 	tempVelocity *= glm::length(t_aiComponent->getMaxSpeed());
-	auto tempPosition = t_posComp->getPos();
-	tempPosition.x += tempVelocity.x;
-	tempPosition.y += tempVelocity.y;
 	//Updates Position
-	t_posComp->setPos(tempPosition.x, tempPosition.y);
+	t_posComp->setPos(t_posComp->getPos() + tempVelocity);
 }
 
 void AiSystem::sleep(TransformComponent* t_posComp, AiComponent* t_aiComponent)
