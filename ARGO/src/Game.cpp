@@ -36,6 +36,7 @@ Game::Game() :
 			player.addComponent(new HealthComponent(10, 10));
 			player.addComponent(new TransformComponent());
 			player.addComponent(new InputComponent());
+			player.addComponent(new ForceComponent());
 			player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
 		}
 

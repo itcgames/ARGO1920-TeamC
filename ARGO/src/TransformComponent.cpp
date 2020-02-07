@@ -59,6 +59,22 @@ void TransformComponent::setPos(float t_x, float t_y)
 	m_pos.y = t_y;
 }
 
+void TransformComponent::setPos(glm::vec2 t_newPos)
+{
+	m_pos = t_newPos;
+}
+
+void TransformComponent::addPos(glm::vec2 t_displacement)
+{
+	m_pos += t_displacement;
+}
+
+void TransformComponent::addPos(float t_x, float t_y)
+{
+	m_pos.x += t_x;
+	m_pos.y += t_y;
+}
+
 void TransformComponent::setRotation(float t_newRotation)
 {
 	m_rotation = t_newRotation;

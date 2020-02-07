@@ -1,7 +1,4 @@
 #pragma once
-#include <random>
-#include <gtc/random.hpp>
-#include <vector>
 #include "Component.h"
 
 class TransformComponent : public Component
@@ -21,14 +18,17 @@ class TransformComponent : public Component
 	//};
 
 public:
+	TransformComponent();
 	TransformComponent(float t_x, float t_y, float t_rotation = 0.0f);
 	TransformComponent(glm::vec2 t_pos, float t_rotation = 0.0f);
-	TransformComponent();
 	~TransformComponent();
 
 	glm::vec2 getPos() const;
 	float getRotation() const;
 	void setPos(float t_x, float t_y);
+	void setPos(glm::vec2 t_newPos);
+	void addPos(glm::vec2 t_displacement);
+	void addPos(float t_x, float t_y);
 	void setRotation(float t_newRotation);
 	void rotate(float t_changeRotation);
 	void setX(float t_x);
@@ -37,8 +37,6 @@ public:
 	void moveRight();
 	void moveUp();
 	void moveDown();
-	bool m_movingRight = true;
-	bool m_movingUp = false;
 private:
 	glm::vec2 m_pos;
 	float m_rotation;
