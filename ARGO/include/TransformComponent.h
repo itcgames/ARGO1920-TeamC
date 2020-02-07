@@ -3,12 +3,6 @@
 
 class TransformComponent : public Component
 {
-	struct Position
-	{
-		float x = 0.0f;
-		float y = 0.0f;
-	};
-
 	////might be good to add this to get rotation x&y
 	//struct Orientation
 	//{
@@ -24,13 +18,17 @@ class TransformComponent : public Component
 	//};
 
 public:
-	TransformComponent(float t_x, float t_y, float t_rotation);
 	TransformComponent();
+	TransformComponent(float t_x, float t_y, float t_rotation = 0.0f);
+	TransformComponent(glm::vec2 t_pos, float t_rotation = 0.0f);
 	~TransformComponent();
 
-	Position getPos() const;
+	glm::vec2 getPos() const;
 	float getRotation() const;
 	void setPos(float t_x, float t_y);
+	void setPos(glm::vec2 t_newPos);
+	void addPos(glm::vec2 t_displacement);
+	void addPos(float t_x, float t_y);
 	void setRotation(float t_newRotation);
 	void rotate(float t_changeRotation);
 	void setX(float t_x);
@@ -39,11 +37,9 @@ public:
 	void moveRight();
 	void moveUp();
 	void moveDown();
-	bool m_movingRight = true;
-	bool m_movingUp = false;
 
 private:
-	Position m_pos;
-	float m_rotation = 0.0f;
+	glm::vec2 m_pos;
+	float m_rotation;
 };
 

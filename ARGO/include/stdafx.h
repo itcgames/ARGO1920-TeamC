@@ -23,9 +23,10 @@
 #include "SDL_ttf.h"
 
 //GLM
-#include <vec2.hpp>
-#include <vec3.hpp>
+#include <common.hpp>
+#include <gtx/common.hpp>
 #include <gtc/random.hpp>
+#include <gtx/rotate_vector.hpp>
 
 //cute_math
 #include <cute_math.h>
