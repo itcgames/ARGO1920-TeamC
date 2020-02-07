@@ -14,7 +14,6 @@
 #include "InputSystem.h"
 #include "RenderSystem.h"
 #include "AiSystem.h"
-#include "Tile.h"
 #include "FiniteStateMachine.h"
 
 /// <summary>
@@ -31,6 +30,7 @@ private:
 	void update();
 	void render();
 	void cleanup();
+	void setupLevel();
 
 	const int MAX_PLAYERS = 4;
 	const int MAX_ENTITIES = 10000;
@@ -43,10 +43,9 @@ private:
 	AiSystem m_aiSystem;
 
 	Entity m_players[4];
-
 	std::vector<Entity> m_entities;
+	std::vector<Entity> m_levelTiles;
 
-	void setupLevel();
 
 	// Window used for the game
 	SDL_Window* m_window;
@@ -60,7 +59,6 @@ private:
 	int m_levelWidth; //TODO: Move to global space
 	int m_levelHeight; //TODO: Move to global space
 	int m_tileSize;
-	std::vector<Tile> m_levelTiles;
 
 	FiniteStateMachine m_fsm;
 };

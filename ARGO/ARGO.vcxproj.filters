@@ -90,9 +90,6 @@
     <ClCompile Include="src\ColourComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\FiniteStateMachine.cpp">
       <Filter>Source Files\AnimationFSM</Filter>
     </ClCompile>
@@ -167,9 +164,6 @@
     <ClInclude Include="include\ColourComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="include\Tile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\FiniteStateMachine.h">
       <Filter>Header Files\AnimationFSM</Filter>
     </ClInclude>
@@ -189,6 +183,9 @@
       <Filter>Header Files\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="include\ForceComponent.h">
+	  <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AiStates.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>

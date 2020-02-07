@@ -37,6 +37,7 @@ public:
 	void moveRight();
 	void moveUp();
 	void moveDown();
+
 private:
 	glm::vec2 m_pos;
 	float m_rotation;
