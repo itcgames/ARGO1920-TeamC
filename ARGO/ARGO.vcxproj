@@ -34,7 +34,6 @@
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="Xbox360Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -62,7 +61,6 @@
     <ClInclude Include="include\Moving.h" />
     <ClInclude Include="include\State.h" />
     <ClInclude Include="include\stdafx.h" />
-    <ClInclude Include="include\Tile.h" />
     <ClInclude Include="Xbox360Controller.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
