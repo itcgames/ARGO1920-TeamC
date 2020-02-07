@@ -1,15 +1,21 @@
+#include "stdafx.h"
 #include "Game.h"
 
 /// <summary>
 /// Constructor for the game class.
 /// </summary>
-Game::Game() 
+
+class State;
+Game::Game() :
+	m_tileSize(20),
+	m_levelHeight(100),
+	m_levelWidth(100)
 {
 	try
 	{
 		// Try to initalise SDL in general
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
-		
+
 		// Create SDL Window Centred in Middle Of Screen
 		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, NULL);
 		// Check if window was created correctly
@@ -29,6 +35,25 @@ Game::Game()
 			controllers.push_back(new Controller());
 		} 
 		initInputHandler();
+
+		//add components to player
+		for (auto& player : m_players)
+		{
+			player.addComponent(new HealthComponent(10, 10));
+			player.addComponent(new TransformComponent());
+			player.addComponent(new InputComponent());
+			player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
+		}
+
+		m_entities.reserve(MAX_ENTITIES);
+		for (int i = 0; i < 5; i++)
+		{
+			m_entities.emplace_back();
+			m_entities.at(i).addComponent(new TransformComponent());
+			m_entities.at(i).addComponent(new AiComponent());
+		}
+
+		setupLevel();
 	}
 	catch (std::string error)
 	{
@@ -37,6 +62,7 @@ Game::Game()
 		// game doesnt run
 		m_isRunning = false;
 	}
+
 }
 
 /// <summary>
@@ -89,6 +115,74 @@ void Game::processEvent()
 		{
 			m_isRunning = false;
 		}
+		if (SDLK_SPACE == event.key.keysym.sym)
+		{
+			if (m_entities.size() > 0)
+			{
+				m_entities.erase(--m_entities.end());
+			}
+			std::cout << m_entities.size() << std::endl;
+		}
+		if (SDLK_BACKSPACE == event.key.keysym.sym)
+		{
+			//delete all entities
+			if (m_entities.size() > 0)
+			{
+				m_entities.erase(m_entities.begin(), m_entities.end());
+			}
+			std::cout << m_entities.size() << std::endl;
+		}
+		if (SDLK_DELETE == event.key.keysym.sym)
+		{
+			//delete all entities
+			m_players[0].removeCompType(ComponentType::Input);
+		}
+		if (SDLK_RETURN == event.key.keysym.sym)
+		{
+			//check if we can add 100 entities
+			int availableSpace = MAX_ENTITIES - m_entities.size();
+			//if more than 100 available, set to 100
+			if (availableSpace > 100)
+			{
+				availableSpace = 100;
+			}
+			//if at least 1 available
+			if (availableSpace > 0)
+			{
+				for (int i = 0; i < availableSpace; i++)
+				{
+					m_entities.emplace_back();
+					m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
+					m_entities.at(m_entities.size() - 1).addComponent(new AiComponent());
+				}
+			}
+			std::cout << m_entities.size() << std::endl;
+		}
+		if (SDLK_1 == event.key.keysym.sym)
+		{
+			//if space available in the vector
+			if (m_entities.size() < MAX_ENTITIES)
+			{
+				//add one
+				m_entities.emplace_back();
+				m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
+				m_entities.at(m_entities.size() - 1).addComponent(new AiComponent());
+			}
+			std::cout << m_entities.size() << std::endl;
+		}
+
+		if (SDLK_UP == event.key.keysym.sym)
+		{
+			m_fsm.idle();
+		}
+		if (SDLK_DOWN == event.key.keysym.sym)
+		{
+			m_fsm.moving();
+		}
+		if (SDLK_LEFT == event.key.keysym.sym)
+		{
+			m_fsm.attacking();
+		}
 		break;
 	default:
 		break;
@@ -103,8 +197,26 @@ void Game::update()
 	for (int index = 0; index < SDL_NumJoysticks(); index++)
 	{
 		controllers[index]->update();
+		m_inputHandler.handleControllerInput(controllers[index]);
+
 	}
-	m_inputHandler.handleControllerInput(controllers[0]);
+
+	for (auto& entity : m_entities)
+	{
+		m_hpSystem.update(entity);
+		m_inputSystem.update(entity);
+		m_aiSystem.update(entity);
+		m_transformSystem.update(entity);
+	}
+	for (auto& player : m_players)
+	{
+		m_hpSystem.update(player);
+		m_inputSystem.update(player);
+		m_aiSystem.update(player);
+		m_transformSystem.update(player);
+	}
+
+	m_fsm.update();
 }
 
 /// <summary>
@@ -113,7 +225,17 @@ void Game::update()
 void Game::render()
 {
 	SDL_RenderClear(m_renderer);
+
 	//Draw Here
+	for (auto& entity : m_entities)
+	{
+		m_renderSystem.render(m_renderer, entity);
+	}
+	for (auto& player : m_players)
+	{
+		m_renderSystem.render(m_renderer, player);
+	}
+
 	SDL_RenderPresent(m_renderer);
 }
 
@@ -134,4 +256,15 @@ void Game::initInputHandler()
 		std::pair<ButtonType, Command*>(ButtonType::X, new XPressedCommand()),
 		std::pair<ButtonType, Command*>(ButtonType::Y, new YPressedCommand()) };
 	m_inputHandler.setPressedButtonMap(buttonPressedMap);
+}
+void Game::setupLevel()
+{
+	m_levelTiles.clear();
+	for (int i = 0; i < m_levelHeight; i++)
+	{
+		for (int j = 0; j < m_levelWidth; j++)
+		{
+			m_levelTiles.push_back(Tile(glm::vec2(i, j), m_tileSize, TileType::Ground));
+		}
+	}
 }

@@ -1,21 +1,8 @@
 #include "stdafx.h"
 #include "InputHandler.h"
  
-/// <summary>
-/// Constructor for Input Handler
-/// Pass in a map that contains the controller button and corresponding command
-/// Do this for the three different controller options
-/// </summary>
-/// <param name="t_buttonPressedCommands">commands for when button is pressed</param>
-/// <param name="t_buttonHeldCommands">commands for when button is held</param>
-/// <param name="t_buttonReleasedCommands">commands for when button is released</param>
-InputHandler::InputHandler(/*std::map<ButtonType, Command*> t_buttonPressedCommands,
-						   std::map<ButtonType, Command*> t_buttonHeldCommands,
-						   std::map<ButtonType, Command*> t_buttonReleasedCommands*/)
-	/*:
-	m_buttonPressedCommands{t_buttonPressedCommands},
-	m_buttonHeldCommands{t_buttonHeldCommands},
-	m_buttonReleaseCommands{t_buttonReleasedCommands}*/
+
+InputHandler::InputHandler()
 {
 }
 
@@ -89,4 +76,28 @@ void InputHandler::handleControllerInput(Controller* t_controller)
 			}
 		}
 	}
-} 
+}
+void InputHandler::updateButtonCommand(ButtonType t_button, ButtonState t_state, Command* t_command)
+{
+	if (ButtonState::Pressed == t_state)
+	{
+		if (!m_buttonPressedCommands.empty())
+		{
+			m_buttonPressedCommands[t_button] = t_command;
+		}
+	}
+	else if (ButtonState::Held == t_state)
+	{
+		if (!m_buttonHeldCommands.empty())
+		{
+			m_buttonHeldCommands[t_button] = t_command;
+		}
+	}
+	else if (ButtonState::Released == t_state)
+	{
+		if (!m_buttonReleaseCommands.empty())
+		{
+			m_buttonReleaseCommands[t_button] = t_command;
+		}
+	}
+}
