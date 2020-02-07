@@ -31,12 +31,6 @@ Game::Game() :
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 		// Game is running
 		m_isRunning = true;
-		for (int index = 0; index < SDL_NumJoysticks(); index++)
-		{
-			controllers.push_back(new Controller());
-		} 
-		initInputHandler();
-
 		//add components to player
 		for (auto& player : m_players)
 		{
@@ -196,13 +190,6 @@ void Game::processEvent()
 /// </summary>
 void Game::update()
 {
-	for (int index = 0; index < SDL_NumJoysticks(); index++)
-	{
-		controllers[index]->update();
-		m_inputHandler.handleControllerInput(controllers[index]);
-
-	}
-
 	for (auto& entity : m_entities)
 	{
 		m_inputSystem.update(entity);
@@ -264,14 +251,6 @@ void Game::cleanup()
 	SDL_QUIT;
 }
 
-void Game::initInputHandler()
-{
-	buttonPressedMap = std::map<ButtonType, Command*>{ std::pair<ButtonType, Command*>(ButtonType::A, new APressedCommand()),
-		std::pair<ButtonType, Command*>(ButtonType::B, new XPressedCommand()),
-		std::pair<ButtonType, Command*>(ButtonType::X, new XPressedCommand()),
-		std::pair<ButtonType, Command*>(ButtonType::Y, new YPressedCommand()) };
-	m_inputHandler.setPressedButtonMap(buttonPressedMap);
-}
 void Game::setupLevel()
 {
 	int count = 0; 

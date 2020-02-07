@@ -24,9 +24,6 @@ public:
 private: 
 	// maps that hold the corresponding commands based on buttontype
 	// each map is for a different state
-
-	
-
 	std::map<ButtonType, Command*> m_buttonPressedCommands;
 	std::map<ButtonType, Command*> m_buttonHeldCommands;
 	std::map<ButtonType, Command*> m_buttonReleaseCommands;

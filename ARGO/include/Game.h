@@ -32,7 +32,6 @@ private:
 	void update();
 	void render();
 	void cleanup();
-	void initInputHandler();
 	void setupLevel();
 
 	const int MAX_PLAYERS = 4;
@@ -57,13 +56,7 @@ private:
 
 	// bool for if game is running or not
 	bool m_isRunning;
-
-	std::vector<Controller*> controllers;
-
-	InputHandler m_inputHandler;
-	std::map<ButtonType, Command*> buttonPressedMap;
-
-
+ 
 	//2D grid of tiles
 	int m_levelWidth; //TODO: Move to global space
 	int m_levelHeight; //TODO: Move to global space
