@@ -24,7 +24,7 @@ void PhysicsSystem::update(Entity& t_entity/*float t_deltaTime*/) //deltaTime wi
 			ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
 
 			posComp->addPos(forceComp->getForce());
-			forceComp->setForce(forceComp->getForce() * 0.95f);
+			forceComp->setForce(forceComp->getForce() * FRICTION_SCALAR);
 		}
 
 		checkBorder(posComp);
