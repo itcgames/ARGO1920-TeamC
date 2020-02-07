@@ -81,3 +81,5 @@ void TransformComponent::moveDown()
 {
 	m_pos.y++;
 }
+
+
