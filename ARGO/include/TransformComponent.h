@@ -1,4 +1,7 @@
 #pragma once
+#include <random>
+#include <gtc/random.hpp>
+#include <vector>
 #include "Component.h"
 
 class TransformComponent : public Component
@@ -18,7 +21,8 @@ class TransformComponent : public Component
 	//};
 
 public:
-	TransformComponent(float t_x, float t_y, float t_rotation);
+	TransformComponent(float t_x, float t_y, float t_rotation = 0.0f);
+	TransformComponent(glm::vec2 t_pos, float t_rotation = 0.0f);
 	TransformComponent();
 	~TransformComponent();
 
@@ -37,6 +41,6 @@ public:
 	bool m_movingUp = false;
 private:
 	glm::vec2 m_pos;
-	float m_rotation = 0.0f;
+	float m_rotation;
 };
 

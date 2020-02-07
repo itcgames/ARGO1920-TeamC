@@ -19,5 +19,6 @@ namespace COMPONENT_ID
 	const int INPUT_ID = static_cast<int>(ComponentType::Input);
 	const int VISUAL_ID = static_cast<int>(ComponentType::Visual);
 	const int COLOUR_ID = static_cast<int>(ComponentType::Colour);
+	const int FORCE_ID = static_cast<int>(ComponentType::Force);
 
 }
