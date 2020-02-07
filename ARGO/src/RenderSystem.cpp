@@ -43,8 +43,6 @@ void RenderSystem::renderPrimitives(SDL_Renderer* t_renderer, TransformComponent
 
 	rect.x = rect.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
 	rect.y = rect.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
-	//rect.x = rect.x - Utilities::SCREEN_WIDTH / 2 + m_focusPoint.x;
-	//rect.y = rect.y - Utilities::SCREEN_HEIGHT / 2 + m_focusPoint.y;
 
 	Colour colour;
 	//set colour from the component

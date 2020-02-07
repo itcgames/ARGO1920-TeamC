@@ -14,7 +14,6 @@
 #include "InputSystem.h"
 #include "RenderSystem.h"
 #include "AiSystem.h"
-#include "FiniteStateMachine.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -28,6 +27,8 @@ public:
 private:
 	void processEvent();
 	void update();
+	void preRender();
+	void postRender();
 	void render();
 	void cleanup();
 	void setupLevel();
@@ -60,5 +61,10 @@ private:
 	int m_levelHeight; //TODO: Move to global space
 	int m_tileSize;
 
-	FiniteStateMachine m_fsm;
+	Uint16 m_timePerFrame;
+	Uint16 m_timePerTick;
+	Uint16 m_lastTick;
+	Uint16 m_lastRender;
+	Uint16 m_fps;
+	Uint16 m_tps;
 };

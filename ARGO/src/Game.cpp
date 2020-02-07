@@ -8,7 +8,13 @@ class State;
 Game::Game() :
 	m_tileSize(64),
 	m_levelHeight(10),
-	m_levelWidth(15)
+	m_levelWidth(15),
+	m_fps(60),
+	m_tps(60),
+	m_lastTick(0),
+	m_lastRender(0),
+	m_timePerFrame(0),
+	m_timePerTick(0)
 {
 	try
 	{
@@ -72,21 +78,13 @@ Game::~Game()
 /// </summary>
 void Game::run()
 {
-	const int FPS = 60;
-	const int frameDelay = 1000 / FPS;
-	Uint32 frameStart;
-	int frameTime;
+	m_timePerFrame = 1000 / m_fps;
+	m_timePerTick = 1000 / m_tps;
+	m_lastTick = SDL_GetTicks();
+	m_lastRender = SDL_GetTicks();
 	while (m_isRunning)
 	{
-		frameStart = SDL_GetTicks();
-		frameTime = SDL_GetTicks() - frameStart;
-		processEvent();
 		update();
-		render();
-		if (frameDelay > frameTime)
-		{
-			SDL_Delay(frameDelay - frameTime);
-		}
 	}
 }
 
@@ -164,19 +162,6 @@ void Game::processEvent()
 			}
 			std::cout << m_entities.size() << std::endl;
 		}
-
-		if (SDLK_UP == event.key.keysym.sym)
-		{
-			m_fsm.idle();
-		}
-		if (SDLK_DOWN == event.key.keysym.sym)
-		{
-			m_fsm.moving();
-		}
-		if (SDLK_LEFT == event.key.keysym.sym)
-		{
-			m_fsm.attacking();
-		}
 		break;
 	default:
 		break;
@@ -188,29 +173,92 @@ void Game::processEvent()
 /// </summary>
 void Game::update()
 {
+	Uint32 currentTick = SDL_GetTicks();
+	Uint16 deltaTime = currentTick - m_lastTick;
+	Uint16 renderTime = currentTick - m_lastRender;
+
+	bool canRender = false;
+	bool canTick = false;
+
+	if (renderTime > m_timePerFrame)
+	{
+		m_lastRender += m_timePerFrame;
+		canRender = true;
+		preRender();
+	}
+	if (deltaTime > m_timePerTick)
+	{
+		m_lastTick += m_timePerTick;
+		canTick = true;
+	}
+
+	processEvent();
 	for (auto& entity : m_entities)
 	{
-		m_hpSystem.update(entity);
-		m_inputSystem.update(entity);
-		m_aiSystem.update(entity);
-		m_transformSystem.update(entity);
+		if (canTick)
+		{
+			m_hpSystem.update(entity);
+			m_inputSystem.update(entity);
+			m_aiSystem.update(entity);
+			m_transformSystem.update(entity);
+		}
+		if (canRender)
+		{
+			m_renderSystem.render(m_renderer, entity);
+		}
 	}
 	for (auto& entity : m_levelTiles)
 	{
-		m_hpSystem.update(entity);
-		m_inputSystem.update(entity);
-		m_aiSystem.update(entity);
-		m_transformSystem.update(entity);
+		if (canTick)
+		{
+			m_hpSystem.update(entity);
+			m_inputSystem.update(entity);
+			m_aiSystem.update(entity);
+			m_transformSystem.update(entity);
+		}
+		if (canRender)
+		{
+			m_renderSystem.render(m_renderer, entity);
+		}
 	}
 	for (auto& player : m_players)
 	{
-		m_hpSystem.update(player);
-		m_inputSystem.update(player);
-		m_aiSystem.update(player);
-		m_transformSystem.update(player);
+		if (canTick)
+		{
+			m_hpSystem.update(player);
+			m_inputSystem.update(player);
+			m_aiSystem.update(player);
+			m_transformSystem.update(player);
+		}
+		if (canRender)
+		{
+			m_renderSystem.render(m_renderer, player);
+		}
 	}
 
-	m_fsm.update();
+	if (canRender) postRender();
+	//render();
+}
+
+void Game::preRender()
+{
+	//setting the focus point for the camera.
+	glm::vec2 focusPoint = glm::vec2(0, 0);
+	for (auto& player : m_players)
+	{
+		float tempx = static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().x;
+		focusPoint.x += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().x;
+		focusPoint.y += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().y;
+	}
+	m_renderSystem.setFocus(focusPoint / 4.0f);
+
+
+	SDL_RenderClear(m_renderer);
+}
+
+void Game::postRender()
+{
+	SDL_RenderPresent(m_renderer);
 }
 
 /// <summary>
