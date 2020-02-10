@@ -28,6 +28,7 @@ public:
 	void run();
 private:
 	void processEvent();
+	void update(bool t_canTick, bool t_canRender, Uint16 t_dt);
 	void preRender();
 	void cleanup();
 	void setupLevel();

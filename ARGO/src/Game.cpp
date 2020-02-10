@@ -91,50 +91,8 @@ void Game::run()
 
 		bool canRender = checkCanRender(renderTime);
 		bool canTick = checkCanTick(deltaTime);
-
 		processEvent();
-		for (auto& entity : m_entities)
-		{
-			if (canTick)
-			{
-				m_inputSystem.update(entity);
-				m_hpSystem.update(entity);
-				m_aiSystem.update(entity);
-				m_transformSystem.update(entity);
-			}
-			if (canRender)
-			{
-				m_renderSystem.render(m_renderer, entity);
-			}
-		}
-		for (auto& entity : m_levelTiles)
-		{
-			if (canTick)
-			{
-				m_inputSystem.update(entity);
-				m_hpSystem.update(entity);
-				m_aiSystem.update(entity);
-				m_transformSystem.update(entity);
-			}
-			if (canRender)
-			{
-				m_renderSystem.render(m_renderer, entity);
-			}
-		}
-		for (auto& player : m_players)
-		{
-			if (canTick)
-			{
-				m_inputSystem.update(player);
-				m_hpSystem.update(player);
-				m_aiSystem.update(player);
-				m_transformSystem.update(player);
-			}
-			if (canRender)
-			{
-				m_renderSystem.render(m_renderer, player);
-			}
-		}
+		update(canRender, canTick, deltaTime);
 
 		if (canRender) SDL_RenderPresent(m_renderer);
 	}
@@ -217,6 +175,52 @@ void Game::processEvent()
 		break;
 	default:
 		break;
+	}
+}
+
+void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
+{
+	for (auto& entity : m_entities)
+	{
+		if (t_canTick)
+		{
+			m_inputSystem.update(entity);
+			m_hpSystem.update(entity);
+			m_aiSystem.update(entity);
+			m_transformSystem.update(entity);
+		}
+		if (t_canRender)
+		{
+			m_renderSystem.render(m_renderer, entity);
+		}
+	}
+	for (auto& entity : m_levelTiles)
+	{
+		if (t_canTick)
+		{
+			m_inputSystem.update(entity);
+			m_hpSystem.update(entity);
+			m_aiSystem.update(entity);
+			m_transformSystem.update(entity);
+		}
+		if (t_canRender)
+		{
+			m_renderSystem.render(m_renderer, entity);
+		}
+	}
+	for (auto& player : m_players)
+	{
+		if (t_canTick)
+		{
+			m_inputSystem.update(player);
+			m_hpSystem.update(player);
+			m_aiSystem.update(player);
+			m_transformSystem.update(player);
+		}
+		if (t_canRender)
+		{
+			m_renderSystem.render(m_renderer, player);
+		}
 	}
 }
 
