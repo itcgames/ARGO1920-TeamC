@@ -7,6 +7,7 @@
 #include "ForceComponent.h"
 #include <iostream>
 #include "Debug.h"
+#include "Utilities.h"
 
 class PhysicsSystem : public BaseSystem
 {
