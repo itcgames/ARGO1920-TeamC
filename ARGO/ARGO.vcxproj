@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\APressedCommand.cpp" />
     <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\Rumble.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\MacroCommand.cpp" />
@@ -29,6 +30,7 @@
     <ClCompile Include="src\InputComponent.cpp" />
     <ClCompile Include="src\InputSystem.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\TextComponent.cpp" />
     <ClCompile Include="src\VisualComponent.cpp" />
     <ClCompile Include="src\TransformComponent.cpp" />
     <ClCompile Include="src\PhysicsSystem.cpp" />
@@ -47,10 +49,12 @@
   <ItemGroup>
     <ClInclude Include="include\APressedCommand.h" />
     <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\ResourceManager.h" />
     <ClInclude Include="include\Rumble.h" />
     <ClInclude Include="include\InputHandler.h" />
     <ClInclude Include="include\MacroCommand.h" />
     <ClInclude Include="include\Controller.h" />
+    <ClInclude Include="include\TextComponent.h" />
     <ClInclude Include="include\XPressedCommand.h" />
     <ClInclude Include="include\YPressedCommand.h" />
   </ItemGroup>

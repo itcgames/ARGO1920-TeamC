@@ -141,6 +141,12 @@
     <ClCompile Include="src\ForceComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\ResourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -240,6 +246,12 @@
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\AiStates.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TextComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>

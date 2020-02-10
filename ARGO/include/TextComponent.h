@@ -5,14 +5,14 @@
 #include "SDL_ttf.h"
 #include <string>
 
-class VisualComponent : public Component
+class TextComponent : public Component
 {
 public:
-	VisualComponent(std::string t_path, SDL_Renderer* t_renderer);
-	~VisualComponent();
+	TextComponent(std::string t_fontPath);
+	~TextComponent();
 
-	//Loads image at specified t_path
-	bool loadFromFile(std::string t_path, SDL_Renderer* t_renderer);
+	bool loadFromRenderedText(std::string t_textureText, SDL_Color t_textColour, SDL_Renderer* t_renderer);
+	TTF_Font* m_font;
 
 	//Deallocates texture
 	void free();
@@ -29,12 +29,16 @@ public:
 	//Gets image dimensions
 	int getWidth() const;
 	int getHeight() const;
+
 	//get texture ptr
 	SDL_Texture* getTexture() const;
 
 private:
 	//The actual hardware texture
 	SDL_Texture* m_texture;
+	SDL_Surface* m_surface;
+
+	TTF_Font* m_font;
 
 	//Image dimensions
 	int m_width;
