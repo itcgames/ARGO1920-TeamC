@@ -59,8 +59,8 @@ private:
 	bool m_isRunning;
  
 	//2D grid of tiles
-	int m_levelWidth; //TODO: Move to global space
-	int m_levelHeight; //TODO: Move to global space
+	int m_levelWidth;
+	int m_levelHeight;
 	int m_tileSize;
 
 	Uint16 m_timePerFrame;
