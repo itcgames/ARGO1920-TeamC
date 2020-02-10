@@ -11,11 +11,14 @@
 #include "InputComponent.h"
 #include "ColourComponent.h"
 #include "VisualComponent.h"
+#include "ColliderAABB.h"
+#include "ColliderCircle.h"
 #include "HealthSystem.h"
 #include "PhysicsSystem.h"
 #include "InputSystem.h"
 #include "RenderSystem.h"
 #include "AiSystem.h"
+#include "CollisionSystem.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -44,6 +47,7 @@ private:
 	InputSystem m_inputSystem;
 	RenderSystem m_renderSystem;
 	AiSystem m_aiSystem;
+	CollisionSystem m_collsisionSystem;
 
 	Entity m_players[4];
 	std::vector<Entity> m_entities;

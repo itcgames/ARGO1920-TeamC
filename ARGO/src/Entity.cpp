@@ -86,6 +86,24 @@ void Entity::addComponent(Component* t_c)
 		}
 		break;
 	}
+	case ComponentType::ColliderAABB:
+	{
+		if (!m_components.at(COMPONENT_ID::COLLIDER_AABB_ID))
+		{
+			m_components.at(COMPONENT_ID::COLLIDER_AABB_ID) = t_c;
+			return;
+		}
+		break;
+	}
+	case ComponentType::ColliderCircle:
+	{
+		if (!m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID))
+		{
+			m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID) = t_c;
+			return;
+		}
+		break;
+	}
 	default:
 
 		break;
@@ -154,6 +172,36 @@ void Entity::removeCompType(ComponentType t_type)
 		{
 			delete m_components.at(COMPONENT_ID::COLOUR_ID);
 			m_components.at(COMPONENT_ID::COLOUR_ID) = nullptr;
+			return;
+		}
+		break;
+	}
+	case ComponentType::Force:
+	{
+		if (!m_components.at(COMPONENT_ID::FORCE_ID))
+		{
+			delete m_components.at(COMPONENT_ID::FORCE_ID);
+			m_components.at(COMPONENT_ID::FORCE_ID) = nullptr;
+			return;
+		}
+		break;
+	}
+	case ComponentType::ColliderAABB:
+	{
+		if (!m_components.at(COMPONENT_ID::COLLIDER_AABB_ID))
+		{
+			delete m_components.at(COMPONENT_ID::COLLIDER_AABB_ID);
+			m_components.at(COMPONENT_ID::COLLIDER_AABB_ID) = nullptr;
+			return;
+		}
+		break;
+	}
+	case ComponentType::ColliderCircle:
+	{
+		if (!m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID))
+		{
+			delete m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID);
+			m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID) = nullptr;
 			return;
 		}
 		break;
