@@ -35,21 +35,21 @@ void PhysicsSystem::checkBorder(TransformComponent* t_pos)
 {
 	//magic numbers for window size will be replaced for world size
 	//once we have a class that holds globals
-	if (t_pos->getPos().x > 825)
+	if (t_pos->getPos().x > Utilities::SCREEN_WIDTH)
 	{
-		t_pos->setX(-25);
+		t_pos->setX(Utilities::SCREEN_WIDTH);
 	}
-	else if (t_pos->getPos().x < -25)
+	else if (t_pos->getPos().x < 0)
 	{
-		t_pos->setX(825);
+		t_pos->setX(0);
 	}
-	if (t_pos->getPos().y > 625)
+	if (t_pos->getPos().y > Utilities::SCREEN_HEIGHT)
 	{
-		t_pos->setY(-25);
+		t_pos->setY(Utilities::SCREEN_HEIGHT);
 	}
-	else if (t_pos->getPos().y < -25)
+	else if (t_pos->getPos().y < 0)
 	{
-		t_pos->setY(625);
+		t_pos->setY(0);
 	}
 }
 

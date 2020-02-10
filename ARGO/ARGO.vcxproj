@@ -74,6 +74,7 @@
     <ClInclude Include="include\HealthSystem.h" />
     <ClInclude Include="include\InputComponent.h" />
     <ClInclude Include="include\InputSystem.h" />
+    <ClInclude Include="include\Utilities.h" />
     <ClInclude Include="include\VisualComponent.h" />
     <ClInclude Include="include\TransformComponent.h" />
     <ClInclude Include="include\PhysicsSystem.h" />
