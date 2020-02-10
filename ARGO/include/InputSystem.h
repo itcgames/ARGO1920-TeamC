@@ -11,5 +11,7 @@ class InputSystem : public BaseSystem
 public:
 	~InputSystem();
 	void update(Entity& t_entity);
+private:
+	void handleInputs(InputComponent* t_inputComponent);
 };
 

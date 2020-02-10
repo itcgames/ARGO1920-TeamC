@@ -31,12 +31,19 @@ Game::Game() :
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 		// Game is running
 		m_isRunning = true;
+
+		std::map<ButtonType, Command*> buttonPressMap = { 
+			std::pair<ButtonType, Command*>(ButtonType::Y, new MoveUpCommand()),
+			std::pair<ButtonType, Command*>(ButtonType::A, new MoveDownCommand()),
+			std::pair<ButtonType, Command*>(ButtonType::X, new MoveLeftCommand()),
+			std::pair<ButtonType, Command*>(ButtonType::B, new MoveRightCommand()) };
+
 		//add components to player
 		for (auto& player : m_players)
 		{
 			player.addComponent(new HealthComponent(10, 10));
 			player.addComponent(new TransformComponent());
-			player.addComponent(new InputComponent());
+			player.addComponent(new InputComponent(buttonPressMap, buttonPressMap));
 			player.addComponent(new ForceComponent());
 			player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
 		}

@@ -26,12 +26,7 @@ void InputHandler::setReleasedButtonMap(std::map<ButtonType, Command*> t_newMap)
 void InputHandler::setHeldButtonMap(std::map<ButtonType, Command*> t_newMap)
 {
 	m_buttonHeldCommands = t_newMap;
-}
-
-void InputHandler::setAxisMovedMap(std::map<AxisType, Command*> t_newMap)
-{
-	m_axisMovedCommands = t_newMap;
-}
+} 
 
 std::map<ButtonType, Command*> InputHandler::getButtonMap(ButtonState t_mapType)
 {
@@ -80,14 +75,7 @@ void InputHandler::handleControllerInput(Controller* t_controller)
 				// Execute Command of appropiate button when pressed
 				m_commands.addAndExecute(m_buttonReleaseCommands[(ButtonType)index]);
 			}
-		}
-		if (index < (int)AxisType::Count)
-		{
-			if (m_axisMovedCommands[(AxisType)index] != nullptr)
-			{
-				m_commands.addAndExecute(m_axisMovedCommands[(AxisType)index]);
-			}
-		}
+		} 
 	}
 }
 void InputHandler::updateButtonCommand(ButtonType t_button, ButtonState t_state, Command* t_command)
@@ -113,12 +101,4 @@ void InputHandler::updateButtonCommand(ButtonType t_button, ButtonState t_state,
 			m_buttonReleaseCommands[t_button] = t_command;
 		}
 	}
-}
-
-void InputHandler::updateAxisCommand(AxisType t_axis, Command* t_command)
-{
-	if (!m_axisMovedCommands.empty())
-	{
-		m_axisMovedCommands[t_axis] = t_command;
-	}
-}
+}  

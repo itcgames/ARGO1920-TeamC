@@ -20,3 +20,13 @@ void MacroCommand::executeTop()
 {
 	m_commands.top()->execute();
 }
+
+std::stack<Command*> MacroCommand::getCommands()
+{
+	return m_commands;
+}
+
+void MacroCommand::popTopCommand()
+{
+	m_commands.pop();
+}

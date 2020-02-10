@@ -55,20 +55,36 @@ void PhysicsSystem::checkBorder(TransformComponent* t_pos)
 
 void PhysicsSystem::updateWithInput(ForceComponent* t_force, InputComponent* t_input)
 {
-	if (t_input->m_keys.up)
+	std::stack<Command*> commands = t_input->getCommands();
+	while (!t_input->getCommands().empty())
 	{
-		t_force->addForceY(-1.0f);
-	}
-	if (t_input->m_keys.down)
-	{
-		t_force->addForceY(1.0f);
-	}
-	if (t_input->m_keys.left)
-	{
-		t_force->addForceX(-1.0f);
-	}
-	if (t_input->m_keys.right)
-	{
-		t_force->addForceX(1.0f);
+		//auto topCommand = t_input->getCommands().top();
+		bool popTopCommand = false;
+		//	typeid id = typeid(&topCommand);
+		if (!t_input->getCommands().empty() && typeid(*t_input->getCommands().top()) == typeid(MoveUpCommand))
+		{
+			t_force->addForceY(-1.0f);
+			t_input->popTopCommand();
+		}
+		if (!t_input->getCommands().empty() && typeid(*t_input->getCommands().top()) == typeid(MoveDownCommand))
+		{
+			t_force->addForceY(1.0f);
+			t_input->popTopCommand();
+		}
+		if (!t_input->getCommands().empty() && typeid(*t_input->getCommands().top()) == typeid(MoveLeftCommand))
+		{
+			t_force->addForceX(-1.0f);
+			t_input->popTopCommand();
+		}
+		if (!t_input->getCommands().empty() && typeid(*t_input->getCommands().top()) == typeid(MoveRightCommand))
+		{
+			t_force->addForceX(1.0f);
+			t_input->popTopCommand();
+		}
+
+		//if (popTopCommand)
+		//{
+		//	t_input->popTopCommand();
+		//}
 	}
 }

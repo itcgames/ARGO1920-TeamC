@@ -14,10 +14,10 @@ public:
 	void setPressedButtonMap(std::map<ButtonType, Command*> t_newMap);
 	void setReleasedButtonMap(std::map<ButtonType, Command*> t_newMap);
 	void setHeldButtonMap(std::map<ButtonType, Command*> t_newMap);
-	void setAxisMovedMap(std::map<AxisType, Command*> t_newMap);
+	
 	std::map<ButtonType, Command*> getButtonMap(ButtonState t_mapType);
 	void updateButtonCommand(ButtonType t_button, ButtonState t_state, Command* t_command);
-	void updateAxisCommand(AxisType t_axis, Command* t_command);
+	
 
 	void handleControllerInput(Controller* t_controller);
 
@@ -27,7 +27,7 @@ private:
 	std::map<ButtonType, Command*> m_buttonPressedCommands;
 	std::map<ButtonType, Command*> m_buttonHeldCommands;
 	std::map<ButtonType, Command*> m_buttonReleaseCommands;
-	std::map<AxisType, Command*> m_axisMovedCommands;
+	
 
 	MacroCommand m_commands;
  };

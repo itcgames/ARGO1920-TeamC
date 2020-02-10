@@ -72,15 +72,6 @@
     <ClCompile Include="src\MacroCommand.cpp">
       <Filter>Source Files\CommandPattern</Filter>
     </ClCompile>
-    <ClCompile Include="src\APressedCommand.cpp">
-      <Filter>Source Files\CommandPattern\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="src\XPressedCommand.cpp">
-      <Filter>Source Files\CommandPattern\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="src\YPressedCommand.cpp">
-      <Filter>Source Files\CommandPattern\Commands</Filter>
-    </ClCompile>
     <ClCompile Include="src\Rumble.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -141,6 +132,18 @@
     <ClCompile Include="src\ForceComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\MoveUpCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MoveDownCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MoveRightCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MoveLeftCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -157,15 +160,6 @@
     </ClInclude>
     <ClInclude Include="include\MacroCommand.h">
       <Filter>Header Files\CommandPattern</Filter>
-    </ClInclude>
-    <ClInclude Include="include\YPressedCommand.h">
-      <Filter>Header Files\CommandPattern\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="include\XPressedCommand.h">
-      <Filter>Header Files\CommandPattern\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="include\APressedCommand.h">
-      <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
     <ClInclude Include="include\Controller.h">
       <Filter>Header Files</Filter>
@@ -241,6 +235,18 @@
     </ClInclude>
     <ClInclude Include="include\AiStates.h">
       <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MoveUpCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MoveDownCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MoveRightCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MoveLeftCommand.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

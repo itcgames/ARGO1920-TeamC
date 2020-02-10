@@ -1,9 +1,10 @@
 #pragma once
 #include "Command.h"
-#include "APressedCommand.h"
-#include "BPressedCommand.h"
-#include "XPressedCommand.h"
-#include "YPressedCommand.h"
+#include "MoveDownCommand.h"
+#include "MoveUpCommand.h"
+#include "MoveLeftCommand.h"
+#include "MoveRightCommand.h"
+
 class MacroCommand
 {
 public:
@@ -11,6 +12,8 @@ public:
 	void add(Command* t_command);
 	void addAndExecute(Command* t_command);
 	void executeTop();
+	std::stack<Command*> getCommands();
+	void popTopCommand();
 private:
 	std::stack<Command*> m_commands;
 };

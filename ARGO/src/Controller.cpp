@@ -32,7 +32,7 @@ Controller::Controller()
 	else
 	{
 		// initalise buttons to false
-		for (int index = 0; index < 14; index++)
+		for (int index = 0; index < 16; index++)
 		{
 			m_current.button[index] = false;
 			m_previous.button[index] = false;
@@ -42,7 +42,7 @@ Controller::Controller()
 
 Controller::~Controller()
 {
-	SDL_GameControllerClose(m_controller);
+	//SDL_GameControllerClose(m_controller);
 } 
 
 /// <summary>
@@ -70,9 +70,9 @@ void Controller::update()
 	m_current.button[(int)ButtonType::DpadLeft] = SDL_GameControllerGetButton(m_controller, SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_LEFT);
 	m_current.button[(int)ButtonType::DpadRight] = SDL_GameControllerGetButton(m_controller, SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
 
-	// if triggers are greater than threshold they are moving
-	m_current.button[(int)ButtonType::RightTrigger] = (SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > THUMB_STICK_THRESHOLD);
-	m_current.button[(int)ButtonType::LeftTrigger] = (SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERLEFT) > THUMB_STICK_THRESHOLD);
+	// if triggers are greater than 0 they are moving
+	m_current.button[(int)ButtonType::RightTrigger] = (SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > 0);
+	m_current.button[(int)ButtonType::LeftTrigger] = (SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERLEFT) > 0);
 
 	// Update position values of the left and right thumb sticks - Set positions to 0 if value is under threshold
 	m_current.LeftThumbStick = glm::vec2(SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTX),
@@ -145,44 +145,7 @@ ButtonState Controller::getButtonState(ButtonType t_buttonType)
 	}
 #endif // !_DEBUG
 	return currentState; 
-}
-
-/// <summary>
-/// Get the current state of the corresponding item on controller that has a axis value
-/// States can be either moved or not moved
-/// </summary>
-/// <param name="t_axisType">type of the axis being checked</param>
-/// <returns>State of the axis</returns>
-AxisState Controller::getAxisState(AxisType t_axisType)
-{
-#ifdef _DEBUG
-	std::string debugString = "Controller " + std::to_string(m_controllerIndex) + " " + m_controllerName + " \n";
-#endif // _DEBUG
-	AxisState currentState = AxisState::NotMoved;
-
-	if (AxisType::LeftThumbStick == t_axisType && m_current.LeftThumbStick != m_previous.LeftThumbStick)
-	{
-#ifdef _DEBUG 
-		debugString += "Left Thumb Stick Moved, Position: X: " + std::to_string(m_current.LeftThumbStick.x) + " ,Y: " + std::to_string(m_current.LeftThumbStick.y);
-#endif // _DEBUG
-		currentState = AxisState::Moved;
-	} 
-	else if (AxisType::RightThumbStick == t_axisType && m_current.RightThumbStick != m_previous.RightThumbStick)
-	{
-#ifdef _DEBUG
-		debugString += "Right Thumb Stick Moved, Position: X: " + std::to_string(m_current.RightThumbStick.x) + " ,Y: " + std::to_string(m_current.RightThumbStick.y);
-#endif // _DEBUG
-		currentState = AxisState::Moved;
-	}
-#ifdef _DEBUG
-	if (AxisState::NotMoved != currentState)
-	{
-		std::cout << debugString << std::endl;
-	}
-#endif // _DEBUG
-
-	return currentState;
-}
+}  
 
 SDL_GameController* Controller::getSDLController()
 {
