@@ -28,12 +28,13 @@ public:
 	void run();
 private:
 	void processEvent();
-	void update();
 	void preRender();
 	void postRender();
 	void render();
 	void cleanup();
 	void setupLevel();
+	bool checkCanRender(Uint16 t_currentTick);
+	bool checkCanTick(Uint16 t_currentTick);
 
 	const int MAX_PLAYERS = 4;
 	const int MAX_ENTITIES = 10000;
@@ -67,6 +68,6 @@ private:
 	Uint16 m_timePerTick;
 	Uint16 m_lastTick;
 	Uint16 m_lastRender;
-	Uint16 m_fps;
-	Uint16 m_tps;
+	Uint16 m_framesPerSecond;
+	Uint16 m_ticksPerSecond;
 };

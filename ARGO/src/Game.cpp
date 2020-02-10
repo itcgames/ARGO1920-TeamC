@@ -10,8 +10,8 @@ Game::Game() :
 	m_tileSize(64),
 	m_levelHeight(20),
 	m_levelWidth(30),
-	m_fps(60),
-	m_tps(60),
+	m_framesPerSecond(60),
+	m_ticksPerSecond(60),
 	m_lastTick(0),
 	m_lastRender(0),
 	m_timePerFrame(0),
@@ -19,6 +19,8 @@ Game::Game() :
 {
 	try
 	{
+		m_timePerFrame = 1000 / m_framesPerSecond;
+		m_timePerTick = 1000 / m_ticksPerSecond;
 		// Try to initalise SDL in general
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
 
@@ -79,13 +81,62 @@ Game::~Game()
 /// </summary>
 void Game::run()
 {
-	m_timePerFrame = 1000 / m_fps;
-	m_timePerTick = 1000 / m_tps;
 	m_lastTick = SDL_GetTicks();
 	m_lastRender = SDL_GetTicks();
 	while (m_isRunning)
 	{
-		update();
+		Uint32 currentTick = SDL_GetTicks();
+		Uint16 deltaTime = currentTick - m_lastTick;
+		Uint16 renderTime = currentTick - m_lastRender;
+
+		bool canRender = checkCanRender(renderTime);
+		bool canTick = checkCanTick(deltaTime);
+
+		processEvent();
+		for (auto& entity : m_entities)
+		{
+			if (canTick)
+			{
+				m_inputSystem.update(entity);
+				m_hpSystem.update(entity);
+				m_aiSystem.update(entity);
+				m_transformSystem.update(entity);
+			}
+			if (canRender)
+			{
+				m_renderSystem.render(m_renderer, entity);
+			}
+		}
+		for (auto& entity : m_levelTiles)
+		{
+			if (canTick)
+			{
+				m_inputSystem.update(entity);
+				m_hpSystem.update(entity);
+				m_aiSystem.update(entity);
+				m_transformSystem.update(entity);
+			}
+			if (canRender)
+			{
+				m_renderSystem.render(m_renderer, entity);
+			}
+		}
+		for (auto& player : m_players)
+		{
+			if (canTick)
+			{
+				m_inputSystem.update(player);
+				m_hpSystem.update(player);
+				m_aiSystem.update(player);
+				m_transformSystem.update(player);
+			}
+			if (canRender)
+			{
+				m_renderSystem.render(m_renderer, player);
+			}
+		}
+
+		if (canRender) postRender();
 	}
 }
 
@@ -169,78 +220,6 @@ void Game::processEvent()
 	}
 }
 
-/// <summary>
-/// Update function
-/// </summary>
-void Game::update()
-{
-	Uint32 currentTick = SDL_GetTicks();
-	Uint16 deltaTime = currentTick - m_lastTick;
-	Uint16 renderTime = currentTick - m_lastRender;
-
-	bool canRender = false;
-	bool canTick = false;
-
-	if (renderTime > m_timePerFrame)
-	{
-		m_lastRender += m_timePerFrame;
-		canRender = true;
-		preRender();
-	}
-	if (deltaTime > m_timePerTick)
-	{
-		m_lastTick += m_timePerTick;
-		canTick = true;
-	}
-
-	processEvent();
-	for (auto& entity : m_entities)
-	{
-		if (canTick)
-		{
-			m_inputSystem.update(entity);
-			m_hpSystem.update(entity);
-			m_aiSystem.update(entity);
-			m_transformSystem.update(entity);
-		}
-		if (canRender)
-		{
-			m_renderSystem.render(m_renderer, entity);
-		}
-	}
-	for (auto& entity : m_levelTiles)
-	{
-		if (canTick)
-		{
-			m_inputSystem.update(entity);
-			m_hpSystem.update(entity);
-			m_aiSystem.update(entity);
-			m_transformSystem.update(entity);
-		}
-		if (canRender)
-		{
-			m_renderSystem.render(m_renderer, entity);
-		}
-	}
-	for (auto& player : m_players)
-	{
-		if (canTick)
-		{
-			m_inputSystem.update(player);
-			m_hpSystem.update(player);
-			m_aiSystem.update(player);
-			m_transformSystem.update(player);
-		}
-		if (canRender)
-		{
-			m_renderSystem.render(m_renderer, player);
-		}
-	}
-
-	if (canRender) postRender();
-	//render();
-}
-
 void Game::preRender()
 {
 	//setting the focus point for the camera.
@@ -320,4 +299,25 @@ void Game::setupLevel()
 			count++;
 		}
 	}
+}
+
+bool Game::checkCanRender(Uint16 t_renderTime)
+{
+	if (t_renderTime > m_timePerFrame)
+	{
+		m_lastRender += m_timePerFrame;
+		preRender();
+		return true;
+	}
+	return false;
+}
+
+bool Game::checkCanTick(Uint16 t_deltaTime)
+{
+	if (t_deltaTime > m_timePerTick)
+	{
+		m_lastTick += m_timePerTick;
+		return true;
+	}
+	return false;
 }
