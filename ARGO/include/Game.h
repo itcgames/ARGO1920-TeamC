@@ -29,8 +29,6 @@ public:
 private:
 	void processEvent();
 	void preRender();
-	void postRender();
-	void render();
 	void cleanup();
 	void setupLevel();
 	bool checkCanRender(Uint16 t_currentTick);

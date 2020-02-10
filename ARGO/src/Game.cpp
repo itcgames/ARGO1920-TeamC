@@ -136,7 +136,7 @@ void Game::run()
 			}
 		}
 
-		if (canRender) postRender();
+		if (canRender) SDL_RenderPresent(m_renderer);
 	}
 }
 
@@ -226,53 +226,12 @@ void Game::preRender()
 	glm::vec2 focusPoint = glm::vec2(0, 0);
 	for (auto& player : m_players)
 	{
-		float tempx = static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().x;
 		focusPoint.x += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().x;
 		focusPoint.y += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().y;
 	}
 	m_renderSystem.setFocus(focusPoint / 4.0f);
 
-
 	SDL_RenderClear(m_renderer);
-}
-
-void Game::postRender()
-{
-	SDL_RenderPresent(m_renderer);
-}
-
-/// <summary>
-/// Render function
-/// </summary>
-void Game::render()
-{
-	//setting the focus point for the camera.
-	glm::vec2 focusPoint = glm::vec2(0,0);
-	for (auto& player : m_players)
-	{
-		float tempx = static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().x;
-		focusPoint.x += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().x;
-		focusPoint.y += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().y;
-	}
-	m_renderSystem.setFocus(focusPoint / 4.0f);
-
-
-	SDL_RenderClear(m_renderer);
-	//Draw Here
-	for (auto& entity : m_entities)
-	{
-		m_renderSystem.render(m_renderer, entity);
-	}
-	for (auto& entity : m_levelTiles)
-	{
-		m_renderSystem.render(m_renderer, entity);
-	}
-	for (auto& player : m_players)
-	{
-		m_renderSystem.render(m_renderer, player);
-	}
-
-	SDL_RenderPresent(m_renderer);
 }
 
 /// <summary>
