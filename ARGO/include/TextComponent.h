@@ -8,7 +8,7 @@ class TextComponent : public Component
 {
 public:
 	TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, bool t_staticPos = true, std::string t_text = "Default Text");
-	TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, int t_pointSize, bool t_staticPos = true, std::string t_text = "Default Text", Uint8 t_red = 255, Uint8 t_green = 255, Uint8 t_blue = 255, Uint8 t_alpha = 255);
+	TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, int t_size, bool t_staticPos = true, std::string t_text = "Default Text", Uint8 t_red = 255, Uint8 t_green = 255, Uint8 t_blue = 255, Uint8 t_alpha = 255);
 	~TextComponent();
 
 	void init();
@@ -31,7 +31,6 @@ public:
 	int getWidth() const;
 	int getHeight() const;
 	SDL_Color getColour() const;
-	SDL_Rect getRect() const;
 	bool hasStatisPos() const;
 
 	//Get text incase its needed
@@ -51,16 +50,13 @@ private:
 	SDL_Color m_colour;
 	SDL_Renderer* m_renderer;
 
-	//Image dimensions
+	//Text dimensions
 	int m_width = 0;
 	int m_height = 0;
+	int m_pointSize;
 
 	bool m_staticPosition;
 
 	std::string m_text;
-
-	//size of the text... i think...
-	const int DEFAULT_POINT_SIZE = 24;
-	const int POINT_SIZE;
 };
 

@@ -7,35 +7,46 @@ TextComponent::TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, bool t_
 	m_font(t_font),
 	m_renderer(t_renderer),
 	m_staticPosition(t_staticPos),
-	m_text(t_text),
-	POINT_SIZE(DEFAULT_POINT_SIZE)
+	m_text(t_text)
 {
+	m_pointSize = TTF_FontHeight(m_font);
 	m_colour.r = 255;
 	m_colour.g = 255;
 	m_colour.b = 255;
 	m_colour.a = 255;
+
 	init();
 }
 
-TextComponent::TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, int t_pointSize, bool t_staticPos, std::string t_text, Uint8 t_red, Uint8 t_green, Uint8 t_blue, Uint8 t_alpha) :
+TextComponent::TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, int t_size, bool t_staticPos, std::string t_text, Uint8 t_red, Uint8 t_green, Uint8 t_blue, Uint8 t_alpha) :
 	Component(ComponentType::Text),
 	m_font(t_font),
 	m_renderer(t_renderer),
+	m_pointSize(t_size),
 	m_staticPosition(t_staticPos),
-	m_text(t_text),
-	POINT_SIZE(t_pointSize)
+	m_text(t_text)
 {
 	m_colour.r = t_red;
 	m_colour.g = t_green;
 	m_colour.b = t_blue;
 	m_colour.a = t_alpha;
+
 	init();
 }
 
 void TextComponent::init()
 {
+	if (TTF_FontHeight(m_font) != m_pointSize)
+	{
+		int currentSize = TTF_FontHeight(m_font);
+		float ratio = (float)m_pointSize / (float)currentSize;
+
+		TTF_SizeText(m_font, m_text.c_str(), &m_width, &m_height);
+		m_width *= ratio;
+		m_height *= ratio;
+	}
+
 	updateSurface();
-	getRect();
 }
 
 TextComponent::~TextComponent()
@@ -100,11 +111,6 @@ SDL_Color TextComponent::getColour() const
 	return m_colour;
 }
 
-SDL_Rect TextComponent::getRect() const
-{
-	return SDL_Rect{ 0, 0, m_width, m_height };
-}
-
 bool TextComponent::hasStatisPos() const
 {
 	return m_staticPosition;
@@ -130,5 +136,8 @@ void TextComponent::updateSurface()
 	m_surface = TTF_RenderText_Solid(m_font,
 		m_text.c_str(), m_colour);
 	m_texture = SDL_CreateTextureFromSurface(m_renderer, m_surface);
-	SDL_QueryTexture(m_texture, NULL, NULL, &m_width, &m_height);
+	if (m_height == 0 && m_width == 0)
+	{
+		SDL_QueryTexture(m_texture, NULL, NULL, &m_width, &m_height);
+	}
 }

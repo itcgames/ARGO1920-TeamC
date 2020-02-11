@@ -106,7 +106,7 @@ void Entity::addComponent(Component* t_c)
 	catch (const std::invalid_argument & e)
 	{
 		std::cerr << e.what() << std::endl;
-		throw;
+		throw e;
 	}
 }
 
@@ -204,7 +204,7 @@ void Entity::removeCompType(ComponentType t_type)
 	catch (const std::invalid_argument & e)
 	{
 		std::cerr << e.what() << std::endl;
-		throw;
+		throw e;
 	}
 }
 
@@ -215,93 +215,31 @@ Component* Entity::getComponent(ComponentType t_type)
 		switch (t_type)
 		{
 		case ComponentType::Health:
-		{
-			if (m_components.at(COMPONENT_ID::HEALTH_ID))
-			{
-				return m_components.at(COMPONENT_ID::HEALTH_ID);
-			}
-			break;
-		}
+			return m_components.at(COMPONENT_ID::HEALTH_ID);
 		case ComponentType::Transform:
-		{
-			if (m_components.at(COMPONENT_ID::TRANSFORM_ID))
-			{
-				return m_components.at(COMPONENT_ID::TRANSFORM_ID);
-			}
-			break;
-		}
+			return m_components.at(COMPONENT_ID::TRANSFORM_ID);
 		case ComponentType::Ai:
-		{
-			if (m_components.at(COMPONENT_ID::AI_ID))
-			{
-				return m_components.at(COMPONENT_ID::AI_ID);
-			}
-			break;
-		}
+			return m_components.at(COMPONENT_ID::AI_ID);
 		case ComponentType::Input:
-		{
-			if (m_components.at(COMPONENT_ID::INPUT_ID))
-			{
-				return m_components.at(COMPONENT_ID::INPUT_ID);
-			}
-			break;
-		}
+			return m_components.at(COMPONENT_ID::INPUT_ID);
 		case ComponentType::Visual:
-		{
-			if (m_components.at(COMPONENT_ID::VISUAL_ID))
-			{
-				return m_components.at(COMPONENT_ID::VISUAL_ID);
-			}
-			break;
-		}
+			return m_components.at(COMPONENT_ID::VISUAL_ID);
 		case ComponentType::Colour:
-		{
-			if (m_components.at(COMPONENT_ID::COLOUR_ID))
-			{
-				return m_components.at(COMPONENT_ID::COLOUR_ID);
-			}
-			break;
-		}
+			return m_components.at(COMPONENT_ID::COLOUR_ID);
 		case ComponentType::Force:
-		{
-			if (m_components.at(COMPONENT_ID::FORCE_ID))
-			{
-				return m_components.at(COMPONENT_ID::FORCE_ID);
-			}
-			break;
-		}
+			return m_components.at(COMPONENT_ID::FORCE_ID);
 		case ComponentType::Text:
-		{
-			if (m_components.at(COMPONENT_ID::TEXT_ID))
-			{
-				return m_components.at(COMPONENT_ID::TEXT_ID);
-			}
-			break;
-		}
+			return m_components.at(COMPONENT_ID::TEXT_ID);
 		default:
 			throw std::invalid_argument("trying to get an unknown component!");
 			break;
 		}
-		//entity is missing component of the passed in type
-		return nullptr;
 	}
 	catch (const std::invalid_argument & e)
 	{
 		std::cerr << e.what() << std::endl;
 		throw;
 	}
-}
-
-bool Entity::hasComponentType(ComponentType t_type) const
-{
-	for (auto& comp : m_components)
-	{
-		if (comp->getType() == t_type)
-		{
-			return true;
-		}
-	}
-	return false;
 }
 
 std::vector<Component*>& Entity::getAllComps()

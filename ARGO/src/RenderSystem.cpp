@@ -93,9 +93,11 @@ void RenderSystem::renderText(SDL_Renderer* t_renderer, TransformComponent* t_po
 	Uint8 prevRGBA[4];
 	SDL_GetRenderDrawColor(t_renderer, &prevRGBA[0], &prevRGBA[1], &prevRGBA[2], &prevRGBA[3]);
 
-	SDL_Rect rect = t_textComp->getRect();
+	SDL_Rect rect;
 	rect.x = t_posComp->getPos().x;
 	rect.y = t_posComp->getPos().y;
+	rect.w = t_textComp->getWidth();
+	rect.h = t_textComp->getHeight();
 
 	if (!t_textComp->hasStatisPos())
 	{

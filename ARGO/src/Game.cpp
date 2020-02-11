@@ -69,7 +69,9 @@ Game::Game() :
 		}
 
 		m_textTest1.addComponent(new TransformComponent());
-		m_textTest1.addComponent(new TextComponent(m_font, m_renderer));
+		m_textTest1.addComponent(new TextComponent(m_font, m_renderer, true, std::string("Static Text")));
+		m_textTest2.addComponent(new TransformComponent());
+		m_textTest2.addComponent(new TextComponent(m_font, m_renderer, 50, false, "Not Static Text", 123, 123, 0, 123));
 
 		setupLevel();
 	}
@@ -246,6 +248,7 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 	if (t_canRender)
 	{
 		m_renderSystem.render(m_renderer, m_textTest1);
+		m_renderSystem.render(m_renderer, m_textTest2);
 	}
 }
 
@@ -255,8 +258,16 @@ void Game::preRender()
 	glm::vec2 focusPoint = glm::vec2(0, 0);
 	for (auto& player : m_players)
 	{
-		focusPoint.x += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().x;
-		focusPoint.y += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().y;
+		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		if (transformComp)
+		{
+			focusPoint.x += transformComp->getPos().x;
+			focusPoint.y += transformComp->getPos().y;
+		}
+		else
+		{
+			throw std::invalid_argument("Player missing Transform Component!");
+		}
 	}
 	m_renderSystem.setFocus(focusPoint / 4.0f);
 
