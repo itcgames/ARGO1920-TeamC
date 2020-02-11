@@ -1,9 +1,9 @@
 #pragma once
 #include "Component.h"
-class ColliderAABB : public Component
+class ColliderAABBComponent : public Component
 {
 public:
-	ColliderAABB(glm::vec2 t_bounds);
+	ColliderAABBComponent(glm::vec2 t_bounds);
 	glm::vec2 getBounds();
 	void setBounds(glm::vec2 t_bounds);
 

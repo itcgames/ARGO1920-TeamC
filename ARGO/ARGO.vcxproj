@@ -50,8 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\APressedCommand.h" />
-    <ClInclude Include="include\ColliderAABB.h" />
-    <ClInclude Include="include\ColliderCircle.h" />
+    <ClInclude Include="include\ColliderAABBComponent.h" />
+    <ClInclude Include="include\ColliderCircleComponent.h" />
     <ClInclude Include="include\CollisionSystem.h" />
     <ClInclude Include="include\Command.h" />
     <ClInclude Include="include\QuadTree.h" />

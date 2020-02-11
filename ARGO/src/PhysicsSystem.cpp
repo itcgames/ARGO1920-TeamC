@@ -33,8 +33,6 @@ void PhysicsSystem::update(Entity& t_entity/*float t_deltaTime*/) //deltaTime wi
 
 void PhysicsSystem::checkBorder(TransformComponent* t_pos)
 {
-	//magic numbers for window size will be replaced for world size
-	//once we have a class that holds globals
 	if (t_pos->getPos().x > Utilities::LEVEL_TILE_WIDTH * Utilities::TILE_SIZE)
 	{
 		t_pos->setX(Utilities::LEVEL_TILE_WIDTH * Utilities::TILE_SIZE);

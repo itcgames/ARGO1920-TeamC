@@ -11,8 +11,8 @@
 #include "InputComponent.h"
 #include "ColourComponent.h"
 #include "VisualComponent.h"
-#include "ColliderAABB.h"
-#include "ColliderCircle.h"
+#include "ColliderAABBComponent.h"
+#include "ColliderCircleComponent.h"
 #include "HealthSystem.h"
 #include "PhysicsSystem.h"
 #include "InputSystem.h"
@@ -47,7 +47,7 @@ private:
 	InputSystem m_inputSystem;
 	RenderSystem m_renderSystem;
 	AiSystem m_aiSystem;
-	CollisionSystem m_collsisionSystem;
+	CollisionSystem m_collisionSystem;
 
 	Entity m_players[4];
 	std::vector<Entity> m_entities;

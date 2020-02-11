@@ -1,18 +1,18 @@
 #include "stdafx.h"
-#include "ColliderAABB.h"
+#include "ColliderAABBComponent.h"
 
-ColliderAABB::ColliderAABB(glm::vec2 t_bounds) :
+ColliderAABBComponent::ColliderAABBComponent(glm::vec2 t_bounds) :
 	Component(ComponentType::ColliderAABB),
 	m_bounds(t_bounds)
 {
 }
 
-glm::vec2 ColliderAABB::getBounds()
+glm::vec2 ColliderAABBComponent::getBounds()
 {
 	return m_bounds;
 }
 
-void ColliderAABB::setBounds(glm::vec2 t_bounds)
+void ColliderAABBComponent::setBounds(glm::vec2 t_bounds)
 {
 	m_bounds = t_bounds;
 }

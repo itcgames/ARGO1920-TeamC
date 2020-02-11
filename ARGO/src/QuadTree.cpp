@@ -10,8 +10,7 @@ QuadTree::QuadTree(int t_level, glm::vec2 t_position, glm::vec2 t_size):
 
 QuadTree::~QuadTree()
 {
-	m_objects.clear();
-	m_nodes.clear();
+	clear();
 }
 
 void QuadTree::clear()
@@ -61,7 +60,8 @@ void QuadTree::insert(Quad t_data)
 void QuadTree::retrieve(std::vector<Entity*>* t_vector, Quad t_data)
 {
 	int index = getIndex(t_data);
-	if (index != -1 && !m_nodes.empty()) {
+	if (index != -1 && !m_nodes.empty()) 
+	{
 		m_nodes[index].retrieve(t_vector, t_data);
 	}
 
@@ -94,20 +94,26 @@ int QuadTree::getIndex(Quad t_data)
 	bool bottomQuadrant = (t_data.position.y >= horizontalMidpoint);
 
 	// Object can completely fit within the left quadrants
-	if (t_data.position.x + t_data.size.x <= verticalMidpoint) {
-		if (topQuadrant) {
+	if (t_data.position.x + t_data.size.x <= verticalMidpoint) 
+	{
+		if (topQuadrant) 
+		{
 			index = 1;
 		}
-		else if (bottomQuadrant) {
+		else if (bottomQuadrant) 
+		{
 			index = 2;
 		}
 	}
 	// Object can completely fit within the right quadrants
-	else if (t_data.position.x >= verticalMidpoint) {
-		if (topQuadrant) {
+	else if (t_data.position.x >= verticalMidpoint) 
+	{
+		if (topQuadrant) 
+		{
 			index = 0;
 		}
-		else if (bottomQuadrant) {
+		else if (bottomQuadrant) 
+		{
 			index = 3;
 		}
 	}
@@ -117,13 +123,13 @@ int QuadTree::getIndex(Quad t_data)
 
 void QuadTree::split()
 {
-	int subWidth = (m_boundsBottomRight.x / 2);
-	int subHeight = (m_boundsBottomRight.y / 2);
+	int subdividedWidth = (m_boundsBottomRight.x / 2);
+	int subdividedHeight = (m_boundsBottomRight.y / 2);
 	int x = m_boundsTopLeft.x;
 	int y = m_boundsTopLeft.y;
 
-	m_nodes.push_back(QuadTree(m_level + 1, glm::vec2(x + subWidth, y), glm::vec2(subWidth, subHeight)));
-	m_nodes.push_back(QuadTree(m_level + 1, glm::vec2(x, y), glm::vec2(subWidth, subHeight)));
-	m_nodes.push_back(QuadTree(m_level + 1, glm::vec2(x, y + subHeight), glm::vec2(subWidth, subHeight)));
-	m_nodes.push_back(QuadTree(m_level + 1, glm::vec2(x + subWidth, y + subHeight), glm::vec2(subWidth, subHeight)));
+	m_nodes.push_back(QuadTree(m_level + 1, glm::vec2(x + subdividedWidth, y), glm::vec2(subdividedWidth, subdividedHeight)));
+	m_nodes.push_back(QuadTree(m_level + 1, glm::vec2(x, y), glm::vec2(subdividedWidth, subdividedHeight)));
+	m_nodes.push_back(QuadTree(m_level + 1, glm::vec2(x, y + subdividedHeight), glm::vec2(subdividedWidth, subdividedHeight)));
+	m_nodes.push_back(QuadTree(m_level + 1, glm::vec2(x + subdividedWidth, y + subdividedHeight), glm::vec2(subdividedWidth, subdividedHeight)));
 }

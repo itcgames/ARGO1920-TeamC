@@ -1,18 +1,18 @@
 #include "stdafx.h"
-#include "ColliderCircle.h"
+#include "ColliderCircleComponent.h"
 
-ColliderCircle::ColliderCircle(int t_radius) :
+ColliderCircleComponent::ColliderCircleComponent(int t_radius) :
 	Component(ComponentType::ColliderCircle),
 	m_radius(t_radius)
 {
 }
 
-int ColliderCircle::getRadius()
+int ColliderCircleComponent::getRadius()
 {
 	return m_radius;
 }
 
-void ColliderCircle::setRadius(int t_radius)
+void ColliderCircleComponent::setRadius(int t_radius)
 {
 	m_radius = t_radius;
 }

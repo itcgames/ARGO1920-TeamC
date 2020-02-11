@@ -1,9 +1,9 @@
 #pragma once
 #include "Component.h"
-class ColliderCircle : public Component
+class ColliderCircleComponent : public Component
 {
 public:
-	ColliderCircle(int t_radius);
+	ColliderCircleComponent(int t_radius);
 	int getRadius();
 	void setRadius(int t_radius);
 private:

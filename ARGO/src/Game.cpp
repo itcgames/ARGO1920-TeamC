@@ -42,7 +42,7 @@ Game::Game() :
 			player.addComponent(new TransformComponent());
 			player.addComponent(new InputComponent());
 			player.addComponent(new ForceComponent());
-			player.addComponent(new ColliderCircle(Utilities::PLAYER_RADIUS));
+			player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 			player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
 		}
 
@@ -51,8 +51,8 @@ Game::Game() :
 		{
 			m_entities.emplace_back();
 			m_entities.at(i).addComponent(new TransformComponent());
-			//m_entities.at(i).addComponent(new AiComponent());
-			m_entities.at(i).addComponent(new ColliderCircle(Utilities::ENEMY_RADIUS));
+			m_entities.at(i).addComponent(new AiComponent());
+			m_entities.at(i).addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
 		}
 
 		setupLevel();
@@ -155,7 +155,7 @@ void Game::processEvent()
 					m_entities.emplace_back();
 					m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
 					m_entities.at(m_entities.size() - 1).addComponent(new AiComponent());
-					m_entities.at(m_entities.size() - 1).addComponent(new ColliderCircle(Utilities::ENEMY_RADIUS));
+					m_entities.at(m_entities.size() - 1).addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
 				}
 			}
 			std::cout << m_entities.size() << std::endl;
@@ -188,7 +188,7 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 			m_hpSystem.update(entity);
 			m_aiSystem.update(entity);
 			m_transformSystem.update(entity);
-			m_collsisionSystem.update(entity);
+			m_collisionSystem.update(entity);
 		}
 		if (t_canRender)
 		{
@@ -203,7 +203,7 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 			m_hpSystem.update(entity);
 			m_aiSystem.update(entity);
 			m_transformSystem.update(entity);
-			m_collsisionSystem.update(entity);
+			m_collisionSystem.update(entity);
 		}
 		if (t_canRender)
 		{
@@ -218,14 +218,14 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 			m_hpSystem.update(player);
 			m_aiSystem.update(player);
 			m_transformSystem.update(player);
-			m_collsisionSystem.update(player);
+			m_collisionSystem.update(player);
 		}
 		if (t_canRender)
 		{
 			m_renderSystem.render(m_renderer, player);
 		}
 	}
-	if (t_canTick) m_collsisionSystem.handleCollisions();
+	if (t_canTick) m_collisionSystem.handleCollisions();
 }
 
 void Game::preRender()
@@ -263,7 +263,7 @@ void Game::setupLevel()
 			m_levelTiles.emplace_back();
 			m_levelTiles.at(count).addComponent(new TransformComponent(j * Utilities::TILE_SIZE, i * Utilities::TILE_SIZE, 0));
 			m_levelTiles.at(count).addComponent(new VisualComponent("assets//images//Texture.png", m_renderer));
-			m_levelTiles.at(count).addComponent(new ColliderAABB(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
+			m_levelTiles.at(count).addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
 			count++;
 		}
 	}
