@@ -7,9 +7,6 @@
 
 class State;
 Game::Game() :
-	m_tileSize(64),
-	m_levelHeight(20),
-	m_levelWidth(30),
 	m_framesPerSecond(60),
 	m_ticksPerSecond(60),
 	m_lastTick(0),
@@ -54,7 +51,7 @@ Game::Game() :
 		{
 			m_entities.emplace_back();
 			m_entities.at(i).addComponent(new TransformComponent());
-			m_entities.at(i).addComponent(new AiComponent());
+			//m_entities.at(i).addComponent(new AiComponent());
 			m_entities.at(i).addComponent(new ColliderCircle(Utilities::ENEMY_RADIUS));
 		}
 
@@ -258,10 +255,10 @@ void Game::cleanup()
 void Game::setupLevel()
 {
 	int count = 0; 
-	m_levelTiles.reserve(m_levelHeight * m_levelWidth);
-	for (int i = 0; i < m_levelHeight; i++)
+	m_levelTiles.reserve(Utilities::LEVEL_TILE_HEIGHT * Utilities::LEVEL_TILE_WIDTH);
+	for (int i = 0; i < Utilities::LEVEL_TILE_HEIGHT; i++)
 	{
-		for (int j = 0; j < m_levelWidth; j++)
+		for (int j = 0; j < Utilities::LEVEL_TILE_WIDTH; j++)
 		{
 			m_levelTiles.emplace_back();
 			m_levelTiles.at(count).addComponent(new TransformComponent(j * Utilities::TILE_SIZE, i * Utilities::TILE_SIZE, 0));

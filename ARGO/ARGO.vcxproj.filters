@@ -150,6 +150,9 @@
     <ClCompile Include="src\CollisionSystem.cpp">
       <Filter>Source Files\ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\QuadTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -262,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="include\CollisionSystem.h">
       <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\QuadTree.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
