@@ -262,3 +262,23 @@ void Game::setupLevel()
 		}
 	}
 }
+
+void Game::createPlayer()
+{
+}
+
+void Game::createEnemy()
+{
+}
+
+void Game::createWall()
+{
+}
+
+void Game::convertToFloor()
+{
+}
+
+void Game::convertToWall()
+{
+}

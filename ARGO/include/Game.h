@@ -31,6 +31,11 @@ private:
 	void render();
 	void cleanup();
 	void setupLevel();
+	void createPlayer();
+	void createEnemy();
+	void createWall();
+	void convertToFloor();
+	void convertToWall();
 
 	const int MAX_PLAYERS = 4;
 	const int MAX_ENTITIES = 10000;
