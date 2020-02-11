@@ -17,6 +17,7 @@
 #include "RenderSystem.h"
 #include "AiSystem.h"
 #include "FiniteStateMachine.h"
+#include "EventManager.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -37,6 +38,7 @@ private:
 	const int MAX_PLAYERS = 4;
 	const int MAX_ENTITIES = 10000;
 	const int PLAYER_MAX_HEALTH = 10;
+	EventManager m_eventManager;
 
 	HealthSystem m_hpSystem;
 	PhysicsSystem m_transformSystem;
@@ -47,7 +49,6 @@ private:
 	Entity m_players[4];
 	std::vector<Entity> m_entities;
 	std::vector<Entity> m_levelTiles;
-
 
 	// Window used for the game
 	SDL_Window* m_window;

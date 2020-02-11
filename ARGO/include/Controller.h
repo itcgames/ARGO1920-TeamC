@@ -79,7 +79,7 @@ public:
 
 private:
 	// dead zone used by thumb sticks
-	const int THUMB_STICK_THRESHOLD = 3200;
+	const int THUMB_STICK_THRESHOLD = 8000;
 	// index of getCurrent controller
 	int m_controllerIndex;
 	// static int to differentiate between several connected controllers

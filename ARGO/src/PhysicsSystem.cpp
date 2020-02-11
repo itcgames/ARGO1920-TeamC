@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "PhysicsSystem.h"
 
+PhysicsSystem::PhysicsSystem(EventManager& t_eventManager)
+{
+	t_eventManager.subscribe<PhysicsMove>(std::bind(&PhysicsSystem::updateWithInput, this, std::placeholders::_1));
+}
+
 PhysicsSystem::~PhysicsSystem()
 {
 	BaseSystem::~BaseSystem();
@@ -11,14 +16,6 @@ void PhysicsSystem::update(Entity& t_entity/*float t_deltaTime*/) //deltaTime wi
 	if (t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
 	{
 		TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
-		//check if entity has an input comp
-		if (t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID) && t_entity.getAllComps().at(COMPONENT_ID::FORCE_ID))
-		{
-			InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID));
-			ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
-			updateWithInput(forceComp, inputComp);
-		}
-
 		if (t_entity.getAllComps().at(COMPONENT_ID::FORCE_ID))
 		{
 			ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
@@ -53,38 +50,29 @@ void PhysicsSystem::checkBorder(TransformComponent* t_pos)
 	}
 }
 
-void PhysicsSystem::updateWithInput(ForceComponent* t_force, InputComponent* t_input)
+void PhysicsSystem::updateWithInput(const PhysicsMove& t_event)
 {
-	std::stack<Command*> commands = t_input->getCommands();
-	while (!t_input->getCommands().empty())
+	if (t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID))
 	{
-		//auto topCommand = t_input->getCommands().top();
-		bool popTopCommand = false;
-		//	typeid id = typeid(&topCommand);
-		if (!t_input->getCommands().empty() && typeid(*t_input->getCommands().top()) == typeid(MoveUpCommand))
+ 		ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
+		/*if (t_event.m_velocity.y == -1)
 		{
-			t_force->addForceY(-1.0f);
-			t_input->popTopCommand();
-		}
-		if (!t_input->getCommands().empty() && typeid(*t_input->getCommands().top()) == typeid(MoveDownCommand))
-		{
-			t_force->addForceY(1.0f);
-			t_input->popTopCommand();
-		}
-		if (!t_input->getCommands().empty() && typeid(*t_input->getCommands().top()) == typeid(MoveLeftCommand))
-		{
-			t_force->addForceX(-1.0f);
-			t_input->popTopCommand();
-		}
-		if (!t_input->getCommands().empty() && typeid(*t_input->getCommands().top()) == typeid(MoveRightCommand))
-		{
-			t_force->addForceX(1.0f);
-			t_input->popTopCommand();
-		}
+			forceComp->addForceY(-1.0f);
 
-		//if (popTopCommand)
-		//{
-		//	t_input->popTopCommand();
-		//}
-	}
+		}
+		else if (t_event.m_velocity.y == 1)
+		{
+			forceComp->addForceY(1.0f);
+		}
+		else if (t_event.m_velocity.x == -1)
+		{
+			forceComp->addForceX(-1.0f);
+		}
+		else if (t_event.m_velocity.x == 1)
+		{
+			forceComp->addForceX(1.0f);
+		}*/
+
+		forceComp->addForce(t_event.m_velocity / 30000.0f);
+	}  
 }

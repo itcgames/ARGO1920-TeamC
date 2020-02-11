@@ -11,7 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AnalogMoveCommand.cpp" />
     <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\Event.cpp" />
+    <ClCompile Include="src\EventManager.cpp" />
+    <ClCompile Include="src\EventMessagingComponent.cpp" />
     <ClCompile Include="src\MoveDownCommand.cpp" />
     <ClCompile Include="src\MoveLeftCommand.cpp" />
     <ClCompile Include="src\MoveRightCommand.cpp" />
@@ -46,7 +50,11 @@
     <ClCompile Include="src\Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AnalogMoveCommand.h" />
     <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\Event.h" />
+    <ClInclude Include="include\EventManager.h" />
+    <ClInclude Include="include\EventMessagingComponent.h" />
     <ClInclude Include="include\MoveDownCommand.h" />
     <ClInclude Include="include\MoveLeftCommand.h" />
     <ClInclude Include="include\MoveRightCommand.h" />

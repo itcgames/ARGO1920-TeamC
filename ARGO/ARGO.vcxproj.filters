@@ -133,15 +133,27 @@
       <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\MoveUpCommand.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
     <ClCompile Include="src\MoveDownCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MoveRightCommand.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
     <ClCompile Include="src\MoveLeftCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MoveRightCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EventMessagingComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EventManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AnalogMoveCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -236,16 +248,28 @@
     <ClInclude Include="include\AiStates.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="include\EventMessagingComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
     <ClInclude Include="include\MoveUpCommand.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
     <ClInclude Include="include\MoveDownCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\MoveRightCommand.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
     <ClInclude Include="include\MoveLeftCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MoveRightCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EventManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AnalogMoveCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

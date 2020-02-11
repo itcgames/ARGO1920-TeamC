@@ -4,6 +4,7 @@
 #include "MoveUpCommand.h"
 #include "MoveLeftCommand.h"
 #include "MoveRightCommand.h"
+#include "AnalogMoveCommand.h"
 
 class MacroCommand
 {

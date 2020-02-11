@@ -9,7 +9,9 @@ class State;
 Game::Game() :
 	m_tileSize(64),
 	m_levelHeight(10),
-	m_levelWidth(15)
+	m_levelWidth(15),
+	m_inputSystem{ m_eventManager },
+	m_transformSystem {m_eventManager}
 {
 	try
 	{
@@ -17,7 +19,7 @@ Game::Game() :
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
 
 		// Create SDL Window Centred in Middle Of Screen
-		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, NULL);
+		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, NULL);
 		
 		// Check if window was created correctly
 		if (!m_window) throw "Error Loading Window";
@@ -33,10 +35,10 @@ Game::Game() :
 		m_isRunning = true;
 
 		std::map<ButtonType, Command*> buttonPressMap = { 
-			std::pair<ButtonType, Command*>(ButtonType::Y, new MoveUpCommand()),
-			std::pair<ButtonType, Command*>(ButtonType::A, new MoveDownCommand()),
-			std::pair<ButtonType, Command*>(ButtonType::X, new MoveLeftCommand()),
-			std::pair<ButtonType, Command*>(ButtonType::B, new MoveRightCommand()) };
+			std::pair<ButtonType, Command*>(ButtonType::RightTrigger, new MoveUpCommand()),
+			std::pair<ButtonType, Command*>(ButtonType::LeftTrigger, new MoveDownCommand()),
+			std::pair<ButtonType, Command*>(ButtonType::LB, new MoveLeftCommand()),
+			std::pair<ButtonType, Command*>(ButtonType::RB, new MoveRightCommand()) };
 
 		//add components to player
 		for (auto& player : m_players)
@@ -199,7 +201,7 @@ void Game::update()
 {
 	for (auto& entity : m_entities)
 	{
-		m_inputSystem.update(entity);
+		m_inputSystem.update(entity, m_eventManager);
 		m_hpSystem.update(entity);
 		m_aiSystem.update(entity);
 		m_transformSystem.update(entity);
@@ -207,13 +209,13 @@ void Game::update()
 	for (auto& entity : m_levelTiles)
 	{
 		m_hpSystem.update(entity);
-		m_inputSystem.update(entity);
+		m_inputSystem.update(entity, m_eventManager);
 		m_aiSystem.update(entity);
 		m_transformSystem.update(entity);
 	}
 	for (auto& player : m_players)
 	{
-		m_inputSystem.update(player);
+		m_inputSystem.update(player, m_eventManager);
 		m_hpSystem.update(player);
 		m_aiSystem.update(player);
 		m_transformSystem.update(player);
@@ -266,7 +268,7 @@ void Game::setupLevel()
 		{
 			m_levelTiles.emplace_back();
 			m_levelTiles.at(count).addComponent(new TransformComponent(j * m_tileSize, i * m_tileSize, 0));
-			m_levelTiles.at(count).addComponent(new VisualComponent("assets//images//Texture.png", m_renderer));
+			m_levelTiles.at(count).addComponent(new VisualComponent("assets//images//Texture2.png", m_renderer));
 			count++;
 		}
 	}
