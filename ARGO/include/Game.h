@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_mixer.h>
 #include "Controller.h"
 #include "InputHandler.h"
 #include "MacroCommand.h"
@@ -11,6 +13,7 @@
 #include "InputComponent.h"
 #include "ColourComponent.h"
 #include "VisualComponent.h"
+#include "TextComponent.h"
 #include "HealthSystem.h"
 #include "PhysicsSystem.h"
 #include "InputSystem.h"
@@ -49,6 +52,10 @@ private:
 	std::vector<Entity> m_entities;
 	std::vector<Entity> m_levelTiles;
 
+	Entity m_textTest1;
+	Entity m_textTest2;
+
+	TTF_Font* m_font;
 
 	// Window used for the game
 	SDL_Window* m_window;

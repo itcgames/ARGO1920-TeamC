@@ -1,19 +1,41 @@
 #include "stdafx.h"
 #include "TextComponent.h"
 
-TextComponent::TextComponent(std::string t_fontPath) :
-	Component(ComponentType::Text)
-{
-	if (TTF_Init() == -1)
-	{
-		printf("TTF_Init: %s\n", TTF_GetError());
-	}
 
-	m_font = TTF_OpenFont(t_fontPath.c_str(), 24);
-	if (!m_font)
-	{
-		std::cout << "Failed to load font" << std::endl;
-	}
+TextComponent::TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, bool t_staticPos, std::string t_text) :
+	Component(ComponentType::Text),
+	m_font(t_font),
+	m_renderer(t_renderer),
+	m_staticPosition(t_staticPos),
+	m_text(t_text),
+	POINT_SIZE(DEFAULT_POINT_SIZE)
+{
+	m_colour.r = 255;
+	m_colour.g = 255;
+	m_colour.b = 255;
+	m_colour.a = 255;
+	init();
+}
+
+TextComponent::TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, int t_pointSize, bool t_staticPos, std::string t_text, Uint8 t_red, Uint8 t_green, Uint8 t_blue, Uint8 t_alpha) :
+	Component(ComponentType::Text),
+	m_font(t_font),
+	m_renderer(t_renderer),
+	m_staticPosition(t_staticPos),
+	m_text(t_text),
+	POINT_SIZE(t_pointSize)
+{
+	m_colour.r = t_red;
+	m_colour.g = t_green;
+	m_colour.b = t_blue;
+	m_colour.a = t_alpha;
+	init();
+}
+
+void TextComponent::init()
+{
+	updateSurface();
+	getRect();
 }
 
 TextComponent::~TextComponent()
@@ -21,67 +43,46 @@ TextComponent::~TextComponent()
 	free();
 }
 
-bool TextComponent::loadFromRenderedText(std::string t_textureText, SDL_Color t_textColour, SDL_Renderer* t_renderer)
-{
-	//Get rid of preexisting texture
-	free();
-
-	//Render text surface
-	SDL_Surface* textSurface = TTF_RenderText_Solid(m_font, t_textureText.c_str(), t_textColour);
-	if (textSurface != NULL)
-	{
-		//Create texture from surface pixels
-		m_texture = SDL_CreateTextureFromSurface(t_renderer, textSurface);
-		if (m_texture == NULL)
-		{
-			printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
-		}
-		else
-		{
-			//Get image dimensions
-			m_width = textSurface->w;
-			m_height = textSurface->h;
-		}
-
-		//Get rid of old surface
-		SDL_FreeSurface(textSurface);
-	}
-	else
-	{
-		printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
-	}
-
-	//Return success
-	return m_texture != NULL;
-}
-
 void TextComponent::free()
 {
-	//Free texture if it exists
+	if (m_surface != NULL)
+	{
+		SDL_FreeSurface(m_surface);
+		m_surface = NULL;
+	}
 	if (m_texture != NULL)
 	{
 		SDL_DestroyTexture(m_texture);
 		m_texture = NULL;
-		m_width = 0;
-		m_height = 0;
 	}
+	m_width = 0;
+	m_height = 0;
 }
 
 void TextComponent::setColor(Uint8 t_red, Uint8 t_green, Uint8 t_blue)
 {
-	SDL_SetTextureColorMod(m_texture, t_red, t_green, t_blue);
-}
+	m_colour.r = t_red;
+	m_colour.g = t_green;
+	m_colour.b = t_blue;
 
-void TextComponent::setBlendMode(SDL_BlendMode t_blending)
-{
-	//Set t_blending function
-	SDL_SetTextureBlendMode(m_texture, t_blending);
+	updateSurface();
 }
 
 void TextComponent::setAlpha(Uint8 t_alpha)
 {
-	//Modulate texture t_alpha
-	SDL_SetTextureAlphaMod(m_texture, t_alpha);
+	m_colour.a = t_alpha;
+	updateSurface();
+}
+
+void TextComponent::setText(std::string t_text)
+{
+	m_text = t_text;
+	updateSurface();
+}
+
+std::string TextComponent::getText() const
+{
+	return m_text;
 }
 
 int TextComponent::getWidth() const
@@ -94,7 +95,40 @@ int TextComponent::getHeight() const
 	return m_height;
 }
 
+SDL_Color TextComponent::getColour() const
+{
+	return m_colour;
+}
+
+SDL_Rect TextComponent::getRect() const
+{
+	return SDL_Rect{ 0, 0, m_width, m_height };
+}
+
+bool TextComponent::hasStatisPos() const
+{
+	return m_staticPosition;
+}
+
 SDL_Texture* TextComponent::getTexture() const
 {
 	return m_texture;
+}
+
+SDL_Surface* TextComponent::getSurface() const
+{
+	return m_surface;
+}
+
+void TextComponent::updateSurface()
+{
+	if (m_surface != NULL)
+	{
+		SDL_FreeSurface(m_surface);
+	}
+
+	m_surface = TTF_RenderText_Solid(m_font,
+		m_text.c_str(), m_colour);
+	m_texture = SDL_CreateTextureFromSurface(m_renderer, m_surface);
+	SDL_QueryTexture(m_texture, NULL, NULL, &m_width, &m_height);
 }

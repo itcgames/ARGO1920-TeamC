@@ -1,47 +1,66 @@
 #pragma once
 #include "Component.h"
 #include <SDL.h>
-#include <SDL_image.h>
 #include "SDL_ttf.h"
 #include <string>
 
 class TextComponent : public Component
 {
 public:
-	TextComponent(std::string t_fontPath);
+	TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, bool t_staticPos = true, std::string t_text = "Default Text");
+	TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, int t_pointSize, bool t_staticPos = true, std::string t_text = "Default Text", Uint8 t_red = 255, Uint8 t_green = 255, Uint8 t_blue = 255, Uint8 t_alpha = 255);
 	~TextComponent();
 
-	bool loadFromRenderedText(std::string t_textureText, SDL_Color t_textColour, SDL_Renderer* t_renderer);
-	TTF_Font* m_font;
+	void init();
 
-	//Deallocates texture
+	//Deallocates pointers
 	void free();
 
-	//Set color modulation
+	//Set color
 	void setColor(Uint8 t_red, Uint8 t_green, Uint8 t_blue);
 
-	//Set blend mode
-	void setBlendMode(SDL_BlendMode t_blending);
-
-	//Set t_alpha modulation
+	//Set alpha modulation
 	void setAlpha(Uint8 t_alpha);
+
+	//Set text
+	void setText(std::string t_text);
+
+	//set x and y pos for text
 
 	//Gets image dimensions
 	int getWidth() const;
 	int getHeight() const;
+	SDL_Color getColour() const;
+	SDL_Rect getRect() const;
+	bool hasStatisPos() const;
+
+	//Get text incase its needed
+	std::string getText() const;
 
 	//get texture ptr
 	SDL_Texture* getTexture() const;
+	SDL_Surface* getSurface() const;
 
 private:
+	void updateSurface();
+
 	//The actual hardware texture
 	SDL_Texture* m_texture;
 	SDL_Surface* m_surface;
-
 	TTF_Font* m_font;
+	SDL_Color m_colour;
+	SDL_Renderer* m_renderer;
 
 	//Image dimensions
-	int m_width;
-	int m_height;
+	int m_width = 0;
+	int m_height = 0;
+
+	bool m_staticPosition;
+
+	std::string m_text;
+
+	//size of the text... i think...
+	const int DEFAULT_POINT_SIZE = 24;
+	const int POINT_SIZE;
 };
 
