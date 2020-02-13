@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_mixer.h>
 #include "Controller.h"
 #include "MacroCommand.h"
 #include <gtc/random.hpp>
@@ -10,6 +12,7 @@
 #include "InputComponent.h"
 #include "ColourComponent.h"
 #include "VisualComponent.h"
+#include "TextComponent.h"
 #include "ColliderAABBComponent.h"
 #include "ColliderCircleComponent.h"
 #include "HealthSystem.h"
@@ -17,6 +20,7 @@
 #include "InputSystem.h"
 #include "RenderSystem.h"
 #include "AiSystem.h"
+#include "AssetManager.h"
 #include "FiniteStateMachine.h"
 #include "EventManager.h"
 #include "CollisionSystem.h"
@@ -32,6 +36,7 @@ public:
 	~Game();
 	void run();
 private:
+	void initLibraries();
 	void processEvent();
 	void update(bool t_canTick, bool t_canRender, Uint16 t_dt);
 	void preRender();
@@ -46,6 +51,8 @@ private:
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);
 	void closeWindow(const CloseWindow& t_event);
+
+	AssetManager* m_assetMgr;
 
 	const int MAX_PLAYERS = 4;
 	const int MAX_ENTITIES = 10000;
@@ -62,7 +69,14 @@ private:
 	Entity m_players[4];
 	std::vector<Entity> m_entities;
 	std::vector<Entity> m_levelTiles;
+
+	Entity m_textTest1;
+	Entity m_textTest2;
+
+	TTF_Font* m_font;
+
 	ProjectileManager m_projectileManager;
+
 	// Window used for the game
 	SDL_Window* m_window;
 	// Renderer used to render onto screen

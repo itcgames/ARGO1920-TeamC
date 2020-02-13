@@ -41,7 +41,7 @@ void PhysicsSystem::checkBorder(TransformComponent* t_pos)
 	{
 		t_pos->setX(0);
 	}
-	if (t_pos->getPos().y > Utilities::LEVEL_TILE_HEIGHT* Utilities::TILE_SIZE)
+	if (t_pos->getPos().y > Utilities::LEVEL_TILE_HEIGHT * Utilities::TILE_SIZE)
 	{
 		t_pos->setY(Utilities::LEVEL_TILE_HEIGHT * Utilities::TILE_SIZE);
 	}
@@ -55,7 +55,7 @@ void PhysicsSystem::updateWithInput(const PhysicsMove& t_event)
 {
 	if (t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID))
 	{
- 		ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
-		forceComp->addForce(t_event.m_velocity );
-	}  
+		ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
+		forceComp->addForce(t_event.m_velocity);
+	}
 }
