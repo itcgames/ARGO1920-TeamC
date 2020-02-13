@@ -3,12 +3,13 @@
 #include <SDL.h>
 #include "SDL_ttf.h"
 #include <string>
+#include "AssetManager.h"
 
 class TextComponent : public Component
 {
 public:
-	TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, bool t_staticPos = true, std::string t_text = "Default Text");
-	TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, int t_size, bool t_staticPos = true, std::string t_text = "Default Text", Uint8 t_red = 255, Uint8 t_green = 255, Uint8 t_blue = 255, Uint8 t_alpha = 255);
+	TextComponent(std::string t_fileName, SDL_Renderer* t_renderer, bool t_staticPos = true, std::string t_text = "Default Text");
+	TextComponent(std::string t_fileName, SDL_Renderer* t_renderer, int t_size, bool t_staticPos = true, std::string t_text = "Default Text", Uint8 t_red = 255, Uint8 t_green = 255, Uint8 t_blue = 255, Uint8 t_alpha = 255);
 	~TextComponent();
 
 	void init();
@@ -25,13 +26,14 @@ public:
 	//Set text
 	void setText(std::string t_text);
 
-	//set x and y pos for text
+	//set text size
+	void setSize(int t_size);
 
 	//Gets image dimensions
 	int getWidth() const;
 	int getHeight() const;
 	SDL_Color getColour() const;
-	bool hasStatisPos() const;
+	bool hasStaticPos() const;
 
 	//Get text incase its needed
 	std::string getText() const;
@@ -44,7 +46,7 @@ private:
 
 	//The actual hardware texture
 	SDL_Texture* m_texture;
-	TTF_Font* m_font;
+	std::string m_fontName;
 	SDL_Color m_colour;
 	SDL_Renderer* m_renderer;
 

@@ -1,15 +1,21 @@
 #include "stdafx.h"
 #include "TextComponent.h"
 
-
-TextComponent::TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, bool t_staticPos, std::string t_text) :
+/// <summary>
+/// Default constructor to set up a text component. Takes a fileName, renderer, whether text is static and the text string
+/// </summary>
+/// <param name="t_fileName">file name of the font</param>
+/// <param name="t_renderer">game renderer, needed to create the texture</param>
+/// <param name="t_staticPos">whether the text is attached to the world or screen</param>
+/// <param name="t_text">the text displayed</param>
+TextComponent::TextComponent(std::string t_fileName, SDL_Renderer* t_renderer, bool t_staticPos, std::string t_text) :
 	Component(ComponentType::Text),
-	m_font(t_font),
+	m_fontName(t_fileName),
 	m_renderer(t_renderer),
 	m_staticPosition(t_staticPos),
+	m_pointSize(Utilities::MEDIUM_FONT),
 	m_text(t_text)
 {
-	m_pointSize = TTF_FontHeight(m_font);
 	m_colour.r = 255;
 	m_colour.g = 255;
 	m_colour.b = 255;
@@ -18,9 +24,9 @@ TextComponent::TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, bool t_
 	init();
 }
 
-TextComponent::TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, int t_size, bool t_staticPos, std::string t_text, Uint8 t_red, Uint8 t_green, Uint8 t_blue, Uint8 t_alpha) :
+TextComponent::TextComponent(std::string t_fileName, SDL_Renderer* t_renderer, int t_size, bool t_staticPos, std::string t_text, Uint8 t_red, Uint8 t_green, Uint8 t_blue, Uint8 t_alpha) :
 	Component(ComponentType::Text),
-	m_font(t_font),
+	m_fontName(t_fileName),
 	m_renderer(t_renderer),
 	m_pointSize(t_size),
 	m_staticPosition(t_staticPos),
@@ -36,16 +42,6 @@ TextComponent::TextComponent(TTF_Font* t_font, SDL_Renderer* t_renderer, int t_s
 
 void TextComponent::init()
 {
-	if (TTF_FontHeight(m_font) != m_pointSize)
-	{
-		int currentSize = TTF_FontHeight(m_font);
-		float ratio = (float)m_pointSize / (float)currentSize;
-
-		TTF_SizeText(m_font, m_text.c_str(), &m_width, &m_height);
-		m_width *= ratio;
-		m_height *= ratio;
-	}
-
 	updateTexture();
 }
 
@@ -56,13 +52,9 @@ TextComponent::~TextComponent()
 
 void TextComponent::free()
 {
-	if (m_texture != NULL)
-	{
-		SDL_DestroyTexture(m_texture);
-		m_texture = NULL;
-	}
 	m_width = 0;
 	m_height = 0;
+	m_texture = NULL;
 }
 
 void TextComponent::setColor(Uint8 t_red, Uint8 t_green, Uint8 t_blue)
@@ -86,6 +78,12 @@ void TextComponent::setText(std::string t_text)
 	updateTexture();
 }
 
+void TextComponent::setSize(int t_size)
+{
+	m_pointSize = t_size;
+	m_texture = AssetManager::Instance()->GetText(m_text, m_fontName, m_pointSize, m_colour );
+}
+
 std::string TextComponent::getText() const
 {
 	return m_text;
@@ -106,7 +104,7 @@ SDL_Color TextComponent::getColour() const
 	return m_colour;
 }
 
-bool TextComponent::hasStatisPos() const
+bool TextComponent::hasStaticPos() const
 {
 	return m_staticPosition;
 }
@@ -118,16 +116,7 @@ SDL_Texture* TextComponent::getTexture() const
 
 void TextComponent::updateTexture()
 {
-	SDL_Surface* surface = NULL;
+	TTF_SizeText(AssetManager::Instance()->GetFont(m_fontName, m_pointSize), m_text.c_str(), &m_width, &m_height);
 
-	surface = TTF_RenderText_Solid(m_font, m_text.c_str(), m_colour);
-
-	m_texture = SDL_CreateTextureFromSurface(m_renderer, surface);
-
-	if (m_height == 0 && m_width == 0)
-	{
-		SDL_QueryTexture(m_texture, NULL, NULL, &m_width, &m_height);
-	}
-
-	SDL_FreeSurface(surface);
+	m_texture = AssetManager::Instance()->GetText(m_text, m_fontName, m_pointSize, m_colour);
 }

@@ -99,7 +99,7 @@ void RenderSystem::renderText(SDL_Renderer* t_renderer, TransformComponent* t_po
 	rect.w = t_textComp->getWidth();
 	rect.h = t_textComp->getHeight();
 
-	if (!t_textComp->hasStatisPos())
+	if (!t_textComp->hasStaticPos())
 	{
 		rect.x = rect.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
 		rect.y = rect.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;

@@ -62,17 +62,53 @@ Mix_Music* AssetManager::GetMusic(std::string t_filename)
 	return m_music[fullPath];
 }
 
-TTF_Font* AssetManager::GetFont(std::string t_filename, const int t_fontSize)
+SDL_Texture* AssetManager::GetText(std::string t_text, std::string t_filename, int t_size, SDL_Color t_colour)
+{
+	TTF_Font* font = GetFont(t_filename, t_size);
+
+	std::string key = t_text + t_filename + (char)t_size + (char)t_colour.r + (char)t_colour.g + (char)t_colour.b + (char)t_colour.a;
+
+	if (!m_text[key])
+	{
+		m_text[key] = CreateTextTexture(font, t_text, t_colour);
+	}
+	return m_text[key];
+}
+
+TTF_Font* AssetManager::GetFont(std::string t_filename, int t_fontSize)
 {
 	std::string fullPath = SDL_GetBasePath();
 	fullPath.append(Utilities::FONTS_PATH + t_filename);
+	std::string key = fullPath + (char)t_fontSize;
 
-	if (!m_fonts[fullPath])
+	if (!m_fonts[key])
 	{
-		m_fonts.at(fullPath) = loadFont(fullPath.c_str(), t_fontSize);
+		m_fonts[key] = loadFont(fullPath.c_str(), t_fontSize);
 	}
 
-	return m_fonts[fullPath];
+	return m_fonts[key];
+}
+
+SDL_Texture* AssetManager::CreateTextTexture(TTF_Font* t_font, std::string t_text, SDL_Color t_colour)
+{
+	SDL_Surface* surface = TTF_RenderText_Solid(t_font, t_text.c_str(), t_colour);
+
+	if (surface == NULL)
+	{
+		printf("Text Render Error: %s\n", TTF_GetError());
+		return NULL;
+	}
+
+	SDL_Texture* tex = SDL_CreateTextureFromSurface(&m_renderer, surface);
+
+	if (tex == NULL)
+	{
+		printf("Text Texture Creation Error: %s\n", SDL_GetError());
+		return NULL;
+	}
+	SDL_FreeSurface(surface);
+
+	return tex;
 }
 
 AssetManager::AssetManager(SDL_Renderer& t_renderer) :
@@ -112,7 +148,17 @@ AssetManager::~AssetManager()
 	}
 	m_music.clear();
 
-	//free up music
+	//free up text textures
+	for (auto& text : m_text)
+	{
+		if (text.second != NULL)
+		{
+			SDL_DestroyTexture(text.second);
+		}
+	}
+	m_text.clear();
+
+	//free up fonts
 	for (auto& font : m_fonts)
 	{
 		if (font.second != NULL)
@@ -156,7 +202,7 @@ Mix_Music* AssetManager::loadMusic(std::string t_path)
 
 	if (music == NULL)
 	{
-		printf("Failed to load music! SDL_mixer Error: %s\n", Mix_GetError());
+		printf("Failed to load music! Music: %s SDL_mixer Error: %s\n", t_path.c_str(), Mix_GetError());
 		return music;
 	}
 	return music;
@@ -170,13 +216,13 @@ Mix_Chunk* AssetManager::loadSfx(std::string t_path)
 
 	if (sfx == NULL)
 	{
-		printf("Failed to load sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		printf("Failed to load sound effect! Sound: %s SDL_mixer Error: %s\n", t_path.c_str(), Mix_GetError());
 		return sfx;
 	}
 	return sfx;
 }
 
-TTF_Font* AssetManager::loadFont(std::string t_path, const int t_fontSize)
+TTF_Font* AssetManager::loadFont(std::string t_path, int t_fontSize)
 {
 	TTF_Font* font = NULL;
 
@@ -184,7 +230,7 @@ TTF_Font* AssetManager::loadFont(std::string t_path, const int t_fontSize)
 
 	if (font == NULL)
 	{
-		printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+		printf("Failed to load font! Font: %s SDL_ttf Error: %s\n", t_path.c_str(), TTF_GetError());
 		return font;
 	}
 	return font;

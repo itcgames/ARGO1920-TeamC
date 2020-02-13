@@ -64,9 +64,9 @@ Game::Game() :
 		}
 
 		m_textTest1.addComponent(new TransformComponent());
-		m_textTest1.addComponent(new TextComponent(m_font, m_renderer, true, std::string("Static Text")));
+		m_textTest1.addComponent(new TextComponent("comic.ttf", m_renderer, true, std::string("Static Text")));
 		m_textTest2.addComponent(new TransformComponent());
-		m_textTest2.addComponent(new TextComponent(m_font, m_renderer, 50, false, "Not Static Text", 123, 123, 0, 123));
+		m_textTest2.addComponent(new TextComponent("pt-sans.ttf", m_renderer, Utilities::LARGE_FONT, false, "Not Static Text", 255, 255, 0, 123));
 
 		setupLevel();
 	}
@@ -85,16 +85,10 @@ Game::Game() :
 Game::~Game()
 {
 	m_entities.clear();
-	if (m_font != NULL)
-	{
-		TTF_CloseFont(m_font);
-		m_font = NULL;
-	}
-	IMG_Quit();
-	Mix_Quit();
-	TTF_Quit();
+
 	AssetManager::Release();
 	m_assetMgr = NULL;
+
 	cleanup();
 }
 
@@ -134,7 +128,7 @@ void Game::initLibraries()
 		printf("SDL_TTF could not initialize! SDL_TTF Error: %s\n", TTF_GetError());
 	}
 
-	if (!(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) < 0))
+	if ((IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) < 0))
 	{
 		printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
 	}
@@ -213,6 +207,18 @@ void Game::processEvent()
 				m_entities.at(m_entities.size() - 1).addComponent(new AiComponent());
 			}
 			std::cout << m_entities.size() << std::endl;
+		}
+		if (SDLK_q == event.key.keysym.sym)
+		{
+			static_cast<TextComponent*>(m_textTest2.getComponent(ComponentType::Text))->setAlpha(255);
+		}
+		if (SDLK_w == event.key.keysym.sym)
+		{
+			static_cast<TextComponent*>(m_textTest2.getComponent(ComponentType::Text))->setAlpha(123);
+		}
+		if (SDLK_e == event.key.keysym.sym)
+		{
+			static_cast<TextComponent*>(m_textTest2.getComponent(ComponentType::Text))->setAlpha(1);
 		}
 		break;
 	default:
@@ -299,6 +305,9 @@ void Game::preRender()
 /// </summary>
 void Game::cleanup()
 {
+	IMG_Quit();
+	Mix_Quit();
+	TTF_Quit();
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
 	m_renderer = NULL;
