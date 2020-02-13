@@ -39,34 +39,17 @@ Game::Game() :
 
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 
-		std::map<ButtonType, Command*> buttonPressMap = {
-			std::pair<ButtonType, Command*>(ButtonType::DpadUp, new MoveUpCommand()),
-			std::pair<ButtonType, Command*>(ButtonType::DpadDown, new MoveDownCommand()),
-			std::pair<ButtonType, Command*>(ButtonType::DpadLeft, new MoveLeftCommand()),
-			std::pair<ButtonType, Command*>(ButtonType::DpadRight, new MoveRightCommand()),
-			std::pair<ButtonType,Command*>(ButtonType::Back, new CloseWindowCommand()) };
-
 		//add components to player
 		for (auto& player : m_players)
 		{
-			player.addComponent(new HealthComponent(10, 10));
-			player.addComponent(new TransformComponent());
-			// passing two of the same object as at this moment the commands for button press is the same for button held
-			player.addComponent(new InputComponent(buttonPressMap, buttonPressMap));
-			player.addComponent(new ForceComponent());
-			player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
-			player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
+			createPlayer(player);
 		}
 
 		m_entities.reserve(MAX_ENTITIES);
 		for (int i = 0; i < 5; i++)
 		{
-			m_entities.emplace_back();
-			m_entities.at(i).addComponent(new TransformComponent());
-			m_entities.at(i).addComponent(new AiComponent());
-			m_entities.at(i).addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
+			createEnemy();
 		}
-
 		setupLevel();
 	}
 	catch (std::string error)
@@ -96,16 +79,19 @@ void Game::run()
 	m_lastRender = SDL_GetTicks();
 	while (m_isRunning)
 	{
+		processEvent();
 		Uint32 currentTick = SDL_GetTicks();
 		Uint16 deltaTime = currentTick - m_lastTick;
 		Uint16 renderTime = currentTick - m_lastRender;
 
 		bool canRender = checkCanRender(renderTime);
 		bool canTick = checkCanTick(deltaTime);
-		processEvent();
 		update(canRender, canTick, deltaTime);
 
-		if (canRender) SDL_RenderPresent(m_renderer);
+		if (canRender)
+		{
+			SDL_RenderPresent(m_renderer);
+		}
 	}
 }
 
@@ -130,11 +116,11 @@ void Game::processEvent()
 		}
 		if (SDLK_SPACE == event.key.keysym.sym)
 		{
-			if (m_entities.size() > 0)
-			{
-				m_entities.erase(--m_entities.end());
-			}
-			std::cout << m_entities.size() << std::endl;
+			createBulletEvent bulletEvent{ static_cast<TransformComponent*>(m_players[0].getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos(),
+								glm::vec2(50,0),
+								0
+			};
+			m_projectileManager.createPlayerBullet(bulletEvent);
 		}
 		if (SDLK_BACKSPACE == event.key.keysym.sym)
 		{
@@ -164,10 +150,7 @@ void Game::processEvent()
 			{
 				for (int i = 0; i < availableSpace; i++)
 				{
-					m_entities.emplace_back();
-					m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
-					m_entities.at(m_entities.size() - 1).addComponent(new AiComponent());
-					m_entities.at(m_entities.size() - 1).addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
+					createEnemy();
 				}
 			}
 			std::cout << m_entities.size() << std::endl;
@@ -192,14 +175,10 @@ void Game::processEvent()
 
 void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 {
-	for (auto& entity : m_entities)
+	for (auto& entity : m_levelTiles)
 	{
 		if (t_canTick)
 		{
-			m_inputSystem.update(entity, m_eventManager);
-			m_hpSystem.update(entity);
-			m_aiSystem.update(entity);
-			m_transformSystem.update(entity);
 			m_collisionSystem.update(entity);
 		}
 		if (t_canRender)
@@ -207,11 +186,10 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 			m_renderSystem.render(m_renderer, entity);
 		}
 	}
-	for (auto& entity : m_levelTiles)
+	for (auto& entity : m_entities)
 	{
 		if (t_canTick)
 		{
-			m_inputSystem.update(entity, m_eventManager);
 			m_hpSystem.update(entity);
 			m_aiSystem.update(entity);
 			m_transformSystem.update(entity);
@@ -228,7 +206,6 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 		{
 			m_inputSystem.update(player, m_eventManager);
 			m_hpSystem.update(player);
-			m_aiSystem.update(player);
 			m_transformSystem.update(player);
 			m_collisionSystem.update(player);
 		}
@@ -237,6 +214,16 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 			m_renderSystem.render(m_renderer, player);
 		}
 	}
+	if (t_canTick)
+	{
+		m_projectileManager.update(&m_transformSystem);
+		m_projectileManager.update(&m_collisionSystem);
+	}
+	if (t_canRender)
+	{
+		m_projectileManager.render(m_renderer, &m_renderSystem);
+	}
+
 	if (t_canTick) m_collisionSystem.handleCollisions();
 }
 
@@ -273,12 +260,56 @@ void Game::setupLevel()
 		for (int j = 0; j < Utilities::LEVEL_TILE_WIDTH; j++)
 		{
 			m_levelTiles.emplace_back();
-			m_levelTiles.at(count).addComponent(new TransformComponent(j * Utilities::TILE_SIZE, i * Utilities::TILE_SIZE, 0));
-			m_levelTiles.at(count).addComponent(new VisualComponent("assets//images//Texture.png", m_renderer));
-			m_levelTiles.at(count).addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
+
+			setToFloor(m_levelTiles.at(count), glm::vec2(j * Utilities::TILE_SIZE, i * Utilities::TILE_SIZE));
 			count++;
 		}
 	}
+}
+
+void Game::createPlayer(Entity& t_player)
+{
+	std::map<ButtonType, Command*> buttonPressMap = {
+		std::pair<ButtonType, Command*>(ButtonType::DpadUp, new MoveUpCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::DpadDown, new MoveDownCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::DpadLeft, new MoveLeftCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::DpadRight, new MoveRightCommand()),
+		std::pair<ButtonType,Command*>(ButtonType::Back, new CloseWindowCommand()) };
+
+	t_player.addComponent(new HealthComponent(10, 10));
+	t_player.addComponent(new TransformComponent());
+	// passing two of the same object as at this moment the commands for button press is the same for button held
+	t_player.addComponent(new InputComponent(buttonPressMap, buttonPressMap));
+	t_player.addComponent(new ForceComponent());
+	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
+	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
+}
+
+void Game::createEnemy()
+{
+	m_entities.emplace_back();
+	m_entities.back().addComponent(new TransformComponent());
+	m_entities.back().addComponent(new AiComponent());
+	m_entities.back().addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
+}
+
+void Game::createBullet(glm::vec2 t_position, glm::vec2 t_force)
+{
+}
+
+void Game::setToWall(Entity& t_entity, glm::vec2 t_position)
+{
+	t_entity.removeAllComponents();
+	t_entity.addComponent(new TransformComponent(t_position));
+	t_entity.addComponent(new VisualComponent("assets//images//wall_4.png", m_renderer)); //TODO: change to wall texture when assets have been recieved.
+	t_entity.addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
+}
+
+void Game::setToFloor(Entity& t_entity, glm::vec2 t_position)
+{
+	t_entity.removeAllComponents();
+	t_entity.addComponent(new TransformComponent(t_position));
+	t_entity.addComponent(new VisualComponent("assets//images//floor_1b.png", m_renderer)); //TODO: change to floor texture when assets have been recieved.
 }
 
 bool Game::checkCanRender(Uint16 t_renderTime)

@@ -20,6 +20,7 @@
 #include "FiniteStateMachine.h"
 #include "EventManager.h"
 #include "CollisionSystem.h"
+#include "ProjectileManager.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -36,6 +37,12 @@ private:
 	void preRender();
 	void cleanup();
 	void setupLevel();
+	void createPlayer(Entity& t_player);
+	void createEnemy();
+	void createBullet(glm::vec2 t_position, glm::vec2 t_force);
+	void setToWall(Entity& t_entity, glm::vec2 t_position);
+	void setToFloor(Entity& t_entity, glm::vec2 t_position);
+
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);
 	void closeWindow(const CloseWindow& t_event);
@@ -55,7 +62,7 @@ private:
 	Entity m_players[4];
 	std::vector<Entity> m_entities;
 	std::vector<Entity> m_levelTiles;
-
+	ProjectileManager m_projectileManager;
 	// Window used for the game
 	SDL_Window* m_window;
 	// Renderer used to render onto screen

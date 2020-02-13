@@ -104,6 +104,15 @@ void Entity::addComponent(Component* t_c)
 		}
 		break;
 	}
+	case ComponentType::Timer:
+	{
+		if (!m_components.at(COMPONENT_ID::TIMER_ID))
+		{
+			m_components.at(COMPONENT_ID::TIMER_ID) = t_c;
+			return;
+		}
+		break;
+	}
 	default:
 
 		break;
@@ -206,10 +215,29 @@ void Entity::removeCompType(ComponentType t_type)
 		}
 		break;
 	}
+	case ComponentType::Timer:
+	{
+		if (!m_components.at(COMPONENT_ID::TIMER_ID))
+		{
+			delete m_components.at(COMPONENT_ID::TIMER_ID);
+			m_components.at(COMPONENT_ID::TIMER_ID) = nullptr;
+			return;
+		}
+		break;
+	}
 	default:
 		throw std::invalid_argument("trying to delete an unknown component!");
 		break;
 	}	
+}
+
+void Entity::removeAllComponents()
+{
+	for (int i = 0; i < m_components.size(); i++)
+	{
+		delete m_components.at(i);
+		m_components.at(i) = nullptr;
+	}
 }
 
 Component* Entity::getComponent(ComponentType t_type)

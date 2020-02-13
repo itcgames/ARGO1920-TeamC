@@ -16,6 +16,8 @@
     <ClCompile Include="src\ColliderAABB.cpp" />
     <ClCompile Include="src\ColliderCircle.cpp" />
     <ClCompile Include="src\CollisionSystem.cpp" />
+    <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\ProjectileManager.cpp" />
     <ClCompile Include="src\QuadTree.cpp" />
     <ClCompile Include="src\Rumble.cpp" />
     <ClCompile Include="src\MacroCommand.cpp" />
@@ -32,6 +34,7 @@
     <ClCompile Include="src\InputComponent.cpp" />
     <ClCompile Include="src\InputSystem.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\TimerComponent.cpp" />
     <ClCompile Include="src\VisualComponent.cpp" />
     <ClCompile Include="src\TransformComponent.cpp" />
     <ClCompile Include="src\PhysicsSystem.cpp" />
@@ -52,6 +55,8 @@
     <ClInclude Include="include\ColliderAABBComponent.h" />
     <ClInclude Include="include\ColliderCircleComponent.h" />
     <ClInclude Include="include\CollisionSystem.h" />
+    <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\ProjectileManager.h" />
     <ClInclude Include="include\QuadTree.h" />
     <ClInclude Include="include\Rumble.h" />
     <ClInclude Include="include\MacroCommand.h" />
@@ -73,6 +78,7 @@
     <ClInclude Include="include\HealthSystem.h" />
     <ClInclude Include="include\InputComponent.h" />
     <ClInclude Include="include\InputSystem.h" />
+    <ClInclude Include="include\TimerComponent.h" />
     <ClInclude Include="include\Utilities.h" />
     <ClInclude Include="include\VisualComponent.h" />
     <ClInclude Include="include\TransformComponent.h" />

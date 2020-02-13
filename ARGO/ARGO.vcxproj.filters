@@ -81,9 +81,6 @@
     <ClCompile Include="src\InputSystem.cpp">
       <Filter>Source Files\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="src\RenderSystem.cpp">
-      <Filter>Source Files\ECS\Systems</Filter>
-    </ClCompile>
     <ClCompile Include="src\HealthComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
@@ -138,6 +135,12 @@
     <ClCompile Include="src\QuadTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProjectileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\Command.cpp">
       <Filter>Source Files\CommandPattern</Filter>
     </ClCompile>
@@ -149,6 +152,12 @@
     </ClCompile>
     <ClCompile Include="src\Event.cpp">
       <Filter>Source Files\EventMessaging</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TimerComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +254,9 @@
     <ClInclude Include="include\ColliderCircleComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="include\ProjectileManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\Command.h">
       <Filter>Header Files\CommandPattern</Filter>
     </ClInclude>
@@ -259,6 +271,12 @@
     </ClInclude>
     <ClInclude Include="include\Event.h">
       <Filter>Header Files\EventMessaging</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Command.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TimerComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
