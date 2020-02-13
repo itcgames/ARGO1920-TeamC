@@ -7,6 +7,7 @@
 
 class State;
 Game::Game() :
+	m_transformSystem{ m_eventManager },
 	m_framesPerSecond(60),
 	m_ticksPerSecond(60),
 	m_lastTick(0),
@@ -35,6 +36,9 @@ Game::Game() :
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 		// Game is running
 		m_isRunning = true;
+
+		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
+
 		//add components to player
 		for (auto& player : m_players)
 		{
@@ -46,7 +50,6 @@ Game::Game() :
 		{
 			createEnemy();
 		}
-
 		setupLevel();
 	}
 	catch (std::string error)
@@ -76,13 +79,13 @@ void Game::run()
 	m_lastRender = SDL_GetTicks();
 	while (m_isRunning)
 	{
+		processEvent();
 		Uint32 currentTick = SDL_GetTicks();
 		Uint16 deltaTime = currentTick - m_lastTick;
 		Uint16 renderTime = currentTick - m_lastRender;
 
 		bool canRender = checkCanRender(renderTime);
 		bool canTick = checkCanTick(deltaTime);
-		processEvent();
 		update(canRender, canTick, deltaTime);
 
 		if (canRender)
@@ -113,7 +116,11 @@ void Game::processEvent()
 		}
 		if (SDLK_SPACE == event.key.keysym.sym)
 		{
-
+			createBulletEvent bulletEvent{ static_cast<TransformComponent*>(m_players[0].getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos(),
+								glm::vec2(50,0),
+								0
+			};
+			m_projectileManager.createPlayerBullet(bulletEvent);
 		}
 		if (SDLK_BACKSPACE == event.key.keysym.sym)
 		{
@@ -172,10 +179,6 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 	{
 		if (t_canTick)
 		{
-			m_inputSystem.update(entity);
-			m_hpSystem.update(entity);
-			m_aiSystem.update(entity);
-			m_transformSystem.update(entity);
 			m_collisionSystem.update(entity);
 		}
 		if (t_canRender)
@@ -187,7 +190,6 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 	{
 		if (t_canTick)
 		{
-			m_inputSystem.update(entity);
 			m_hpSystem.update(entity);
 			m_aiSystem.update(entity);
 			m_transformSystem.update(entity);
@@ -202,9 +204,8 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 	{
 		if (t_canTick)
 		{
-			m_inputSystem.update(player);
+			m_inputSystem.update(player, m_eventManager);
 			m_hpSystem.update(player);
-			m_aiSystem.update(player);
 			m_transformSystem.update(player);
 			m_collisionSystem.update(player);
 		}
@@ -213,6 +214,16 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 			m_renderSystem.render(m_renderer, player);
 		}
 	}
+	if (t_canTick)
+	{
+		m_projectileManager.update(&m_transformSystem);
+		m_projectileManager.update(&m_collisionSystem);
+	}
+	if (t_canRender)
+	{
+		m_projectileManager.render(m_renderer, &m_renderSystem);
+	}
+
 	if (t_canTick) m_collisionSystem.handleCollisions();
 }
 
@@ -242,7 +253,7 @@ void Game::cleanup()
 
 void Game::setupLevel()
 {
-	int count = 0; 
+	int count = 0;
 	m_levelTiles.reserve(Utilities::LEVEL_TILE_HEIGHT * Utilities::LEVEL_TILE_WIDTH);
 	for (int i = 0; i < Utilities::LEVEL_TILE_HEIGHT; i++)
 	{
@@ -258,9 +269,17 @@ void Game::setupLevel()
 
 void Game::createPlayer(Entity& t_player)
 {
+	std::map<ButtonType, Command*> buttonPressMap = {
+		std::pair<ButtonType, Command*>(ButtonType::DpadUp, new MoveUpCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::DpadDown, new MoveDownCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::DpadLeft, new MoveLeftCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::DpadRight, new MoveRightCommand()),
+		std::pair<ButtonType,Command*>(ButtonType::Back, new CloseWindowCommand()) };
+
 	t_player.addComponent(new HealthComponent(10, 10));
 	t_player.addComponent(new TransformComponent());
-	t_player.addComponent(new InputComponent());
+	// passing two of the same object as at this moment the commands for button press is the same for button held
+	t_player.addComponent(new InputComponent(buttonPressMap, buttonPressMap));
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
@@ -312,4 +331,9 @@ bool Game::checkCanTick(Uint16 t_deltaTime)
 		return true;
 	}
 	return false;
+}
+
+void Game::closeWindow(const CloseWindow& t_event)
+{
+	m_isRunning = false;
 }

@@ -9,4 +9,5 @@ namespace Utilities
 	const int TILE_SIZE = 64;
 	const int PLAYER_RADIUS = 32;
 	const int ENEMY_RADIUS = 32;
+	const int NUMBER_OF_CONTROLLER_BUTTONS = 16;
 }

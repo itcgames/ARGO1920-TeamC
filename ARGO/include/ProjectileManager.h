@@ -1,5 +1,7 @@
 #pragma once
 #include "Entity.h"
+#include "BaseSystem.h"
+#include "RenderSystem.h"
 #include "TransformComponent.h"
 #include "ForceComponent.h"
 #include "ColliderCircleComponent.h"
@@ -23,10 +25,11 @@ class ProjectileManager
 {
 public:
 	ProjectileManager();
-private:
 	void createPlayerBullet(createBulletEvent event);
 	void createEnemyBullet(createBulletEvent event);
-
+	void update(BaseSystem* t_system);
+	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
+private:
 	static const int BULLET_POOL_SIZE = 20;
 	static const int BULLET_RADIUS = 4;
 	Bullet m_playerBullets[BULLET_POOL_SIZE];
