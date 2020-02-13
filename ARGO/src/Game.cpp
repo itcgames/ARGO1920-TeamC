@@ -113,11 +113,7 @@ void Game::processEvent()
 		}
 		if (SDLK_SPACE == event.key.keysym.sym)
 		{
-			if (m_entities.size() > 0)
-			{
-				m_entities.erase(--m_entities.end());
-			}
-			std::cout << m_entities.size() << std::endl;
+
 		}
 		if (SDLK_BACKSPACE == event.key.keysym.sym)
 		{

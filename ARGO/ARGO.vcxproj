@@ -16,6 +16,7 @@
     <ClCompile Include="src\ColliderCircle.cpp" />
     <ClCompile Include="src\CollisionSystem.cpp" />
     <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\ProjectileManager.cpp" />
     <ClCompile Include="src\QuadTree.cpp" />
     <ClCompile Include="src\Rumble.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="include\ColliderCircleComponent.h" />
     <ClInclude Include="include\CollisionSystem.h" />
     <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\ProjectileManager.h" />
     <ClInclude Include="include\QuadTree.h" />
     <ClInclude Include="include\Rumble.h" />
     <ClInclude Include="include\InputHandler.h" />

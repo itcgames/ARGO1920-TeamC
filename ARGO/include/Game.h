@@ -57,7 +57,6 @@ private:
 
 	Entity m_players[4];
 	std::vector<Entity> m_entities;
-	std::vector<Entity> m_bullets;
 	std::vector<Entity> m_levelTiles;
 
 

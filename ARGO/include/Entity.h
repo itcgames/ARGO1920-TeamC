@@ -5,7 +5,6 @@
 #include "CompEnums.h"
 #include <stdexcept>
 
-
 class Entity
 {
 public:
