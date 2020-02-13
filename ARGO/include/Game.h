@@ -3,7 +3,6 @@
 #include <SDL.h>
 #include "ImguiHelper.h"
 #include "Controller.h"
-#include "InputHandler.h"
 #include "MacroCommand.h"
 #include <gtc/random.hpp>
 #include "Entity.h"
@@ -19,6 +18,8 @@
 #include "InputSystem.h"
 #include "RenderSystem.h"
 #include "AiSystem.h"
+#include "FiniteStateMachine.h"
+#include "EventManager.h"
 #include "CollisionSystem.h"
 
 /// <summary>
@@ -38,10 +39,12 @@ private:
 	void setupLevel();
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);
+	void closeWindow(const CloseWindow& t_event);
 
 	const int MAX_PLAYERS = 4;
 	const int MAX_ENTITIES = 10000;
 	const int PLAYER_MAX_HEALTH = 10;
+	EventManager m_eventManager;
 
 	HealthSystem m_hpSystem;
 	PhysicsSystem m_transformSystem;
@@ -53,7 +56,6 @@ private:
 	Entity m_players[4];
 	std::vector<Entity> m_entities;
 	std::vector<Entity> m_levelTiles;
-
 
 	// Window used for the game
 	SDL_Window* m_window;

@@ -2,10 +2,14 @@
 #include "InputComponent.h"
 
 
-InputComponent::InputComponent() :
-	Component(ComponentType::Input)
+InputComponent::InputComponent(std::map<ButtonType, Command*> t_buttonPressMap,
+							   std::map<ButtonType, Command*> t_buttonHeldMap,
+							   std::map<ButtonType, Command*> t_buttonReleasedMap) :
+	Component(ComponentType::Input),
+	m_buttonPressedCommands{t_buttonPressMap},
+	m_buttonHeldCommands{t_buttonHeldMap},
+	m_buttonReleaseCommands{t_buttonReleasedMap}
 {
-
 }
 
 InputComponent::~InputComponent()
@@ -13,40 +17,61 @@ InputComponent::~InputComponent()
 }
 
 void InputComponent::update()
+{ 
+	m_controller.update();
+} 
+
+Controller InputComponent::getController()
 {
-	if (m_keyStates[SDL_SCANCODE_UP])
-	{
-		m_keys.up = true;
-	}
-	else
-	{
-		m_keys.up = false;
-	}
+	return m_controller;
+} 
 
-	if (m_keyStates[SDL_SCANCODE_DOWN])
-	{
-		m_keys.down = true;
-	}
-	else
-	{
-		m_keys.down = false;
-	}
+std::stack<Command*> InputComponent::getCommands()
+{
+	return m_commands.getCommands();
+}
 
-	if (m_keyStates[SDL_SCANCODE_LEFT])
-	{
-		m_keys.left = true;
-	}
-	else
-	{
-		m_keys.left = false;
-	}
+void InputComponent::addCommand(Command* t_command)
+{
+	m_commands.add(t_command);
+}
 
-	if (m_keyStates[SDL_SCANCODE_RIGHT])
+void InputComponent::popTopCommand()
+{
+	m_commands.popTopCommand();
+}
+
+std::map<ButtonType, Command*> InputComponent::getButtonMap(ButtonState t_mapType)
+{
+	if (ButtonState::Pressed == t_mapType)
 	{
-		m_keys.right = true;
+		return m_buttonPressedCommands;
 	}
-	else
+	else if (ButtonState::Held == t_mapType)
 	{
-		m_keys.right = false;
+		return m_buttonHeldCommands;
+	}
+	else if (ButtonState::Released == t_mapType)
+	{
+		return m_buttonReleaseCommands;
+	}
+	// returns empty map if anything else
+	return std::map<ButtonType, Command*>();
+}
+
+void InputComponent::setButtonMap(ButtonState t_mapType, std::map<ButtonType, Command*> t_map)
+{
+	if (ButtonState::Pressed == t_mapType)
+	{
+		m_buttonPressedCommands = t_map;
+	}
+	else if (ButtonState::Held == t_mapType)
+	{
+		m_buttonHeldCommands = t_map;
+	}
+	else if (ButtonState::Released == t_mapType)
+	{
+		m_buttonReleaseCommands = t_map;
 	}
 }
+

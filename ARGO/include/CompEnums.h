@@ -24,5 +24,4 @@ namespace COMPONENT_ID
 	const int FORCE_ID = static_cast<int>(ComponentType::Force);
 	const int COLLIDER_AABB_ID = static_cast<int>(ComponentType::ColliderAABB);
 	const int COLLIDER_CIRCLE_ID = static_cast<int>(ComponentType::ColliderCircle);
-
 }
