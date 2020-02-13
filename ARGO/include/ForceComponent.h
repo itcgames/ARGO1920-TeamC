@@ -4,7 +4,6 @@
 class ForceComponent : public Component
 {
 public:
-	ForceComponent();
 	ForceComponent(glm::vec2 t_force, bool t_hasFriction);
 	~ForceComponent();
 

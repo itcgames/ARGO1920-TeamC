@@ -26,8 +26,8 @@ class ProjectileManager
 {
 public:
 	ProjectileManager();
-	void createPlayerBullet(createBulletEvent event);
-	void createEnemyBullet(createBulletEvent event);
+	void createPlayerBullet(createBulletEvent t_event);
+	void createEnemyBullet(createBulletEvent t_event);
 	void update(BaseSystem* t_system);
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
 private:

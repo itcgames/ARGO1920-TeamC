@@ -15,7 +15,7 @@ bool TimerComponent::tick(float t_time)
 		m_currentTime -= t_time;
 		return true;
 	}
-	else return false;
+	return false;
 }
 
 void TimerComponent::setMaxTime(float t_time)
