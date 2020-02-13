@@ -23,13 +23,13 @@ Game::Game() :
 		m_timePerTick = 1000 / m_ticksPerSecond;
 		// Try to initalise SDL in general
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
-		if (TTF_Init() == -1)
-		{
-			printf("TTF_Init: %s\n", TTF_GetError());
-		}
 
 		// Create SDL Window Centred in Middle Of Screen
 		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Utilities::SCREEN_WIDTH, Utilities::SCREEN_HEIGHT, NULL);
+
+		//initilises mixer, ttf and img
+		initLibraries();
+
 		// Check if window was created correctly
 		if (!m_window) throw "Error Loading Window";
 
@@ -41,12 +41,7 @@ Game::Game() :
 		// Sets clear colour of renderer to black and the color of any primitives
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 
-		m_font = TTF_OpenFont(std::string("assets//fonts//ordinary.ttf").c_str(), 100);
-		if (!m_font)
-		{
-			std::cout << "Failed to load font" << std::endl;
-		}
-
+		m_assetMgr = AssetManager::Instance(*m_renderer);
 
 		// Game is running
 		m_isRunning = true;
@@ -95,6 +90,11 @@ Game::~Game()
 		TTF_CloseFont(m_font);
 		m_font = NULL;
 	}
+	IMG_Quit();
+	Mix_Quit();
+	TTF_Quit();
+	AssetManager::Release();
+	m_assetMgr = NULL;
 	cleanup();
 }
 
@@ -117,6 +117,26 @@ void Game::run()
 		update(canRender, canTick, deltaTime);
 
 		if (canRender) SDL_RenderPresent(m_renderer);
+	}
+}
+
+void Game::initLibraries()
+{
+	//Initialize SDL_mixer
+	if (Mix_OpenAudio(Utilities::AUDIO_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, Utilities::AUDIO_CHUNK_SIZE) < 0)
+	{
+		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+	}
+
+	//Initialize SDL_TTF
+	if (TTF_Init() < 0)
+	{
+		printf("SDL_TTF could not initialize! SDL_TTF Error: %s\n", TTF_GetError());
+	}
+
+	if (!(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) < 0))
+	{
+		printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
 	}
 }
 
@@ -281,7 +301,7 @@ void Game::cleanup()
 {
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
-	TTF_Quit();
+	m_renderer = NULL;
 	SDL_Quit();
 }
 
@@ -295,7 +315,7 @@ void Game::setupLevel()
 		{
 			m_levelTiles.emplace_back();
 			m_levelTiles.at(count).addComponent(new TransformComponent(j * m_tileSize, i * m_tileSize, 0));
-			m_levelTiles.at(count).addComponent(new VisualComponent("assets//images//Texture.png", m_renderer));
+			m_levelTiles.at(count).addComponent(new VisualComponent("Texture.png", m_renderer));
 			count++;
 		}
 	}

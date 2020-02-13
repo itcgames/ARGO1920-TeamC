@@ -4,18 +4,16 @@
 #include <SDL_image.h>
 #include "SDL_ttf.h"
 #include <string>
+#include "AssetManager.h"
 
 class VisualComponent : public Component
 {
 public:
-	VisualComponent(std::string t_path, SDL_Renderer* t_renderer);
+	VisualComponent(std::string t_filename, SDL_Renderer* t_renderer);
 	~VisualComponent();
 
 	//Loads image at specified t_path
-	bool loadFromFile(std::string t_path, SDL_Renderer* t_renderer);
-
-	//Deallocates texture
-	void free();
+	bool loadFromFile(std::string t_filename, SDL_Renderer* t_renderer);
 
 	//Set color modulation
 	void setColor(Uint8 t_red, Uint8 t_green, Uint8 t_blue);
@@ -33,7 +31,7 @@ public:
 	SDL_Texture* getTexture() const;
 
 private:
-	//The actual hardware texture
+	//Pointer to a texture loaded from AssetManager
 	SDL_Texture* m_texture;
 
 	//Image dimensions

@@ -46,7 +46,7 @@ void TextComponent::init()
 		m_height *= ratio;
 	}
 
-	updateSurface();
+	updateTexture();
 }
 
 TextComponent::~TextComponent()
@@ -56,11 +56,6 @@ TextComponent::~TextComponent()
 
 void TextComponent::free()
 {
-	if (m_surface != NULL)
-	{
-		SDL_FreeSurface(m_surface);
-		m_surface = NULL;
-	}
 	if (m_texture != NULL)
 	{
 		SDL_DestroyTexture(m_texture);
@@ -76,19 +71,19 @@ void TextComponent::setColor(Uint8 t_red, Uint8 t_green, Uint8 t_blue)
 	m_colour.g = t_green;
 	m_colour.b = t_blue;
 
-	updateSurface();
+	updateTexture();
 }
 
 void TextComponent::setAlpha(Uint8 t_alpha)
 {
 	m_colour.a = t_alpha;
-	updateSurface();
+	updateTexture();
 }
 
 void TextComponent::setText(std::string t_text)
 {
 	m_text = t_text;
-	updateSurface();
+	updateTexture();
 }
 
 std::string TextComponent::getText() const
@@ -121,23 +116,18 @@ SDL_Texture* TextComponent::getTexture() const
 	return m_texture;
 }
 
-SDL_Surface* TextComponent::getSurface() const
+void TextComponent::updateTexture()
 {
-	return m_surface;
-}
+	SDL_Surface* surface = NULL;
 
-void TextComponent::updateSurface()
-{
-	if (m_surface != NULL)
-	{
-		SDL_FreeSurface(m_surface);
-	}
+	surface = TTF_RenderText_Solid(m_font, m_text.c_str(), m_colour);
 
-	m_surface = TTF_RenderText_Solid(m_font,
-		m_text.c_str(), m_colour);
-	m_texture = SDL_CreateTextureFromSurface(m_renderer, m_surface);
+	m_texture = SDL_CreateTextureFromSurface(m_renderer, surface);
+
 	if (m_height == 0 && m_width == 0)
 	{
 		SDL_QueryTexture(m_texture, NULL, NULL, &m_width, &m_height);
 	}
+
+	SDL_FreeSurface(surface);
 }

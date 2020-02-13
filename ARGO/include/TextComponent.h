@@ -38,14 +38,12 @@ public:
 
 	//get texture ptr
 	SDL_Texture* getTexture() const;
-	SDL_Surface* getSurface() const;
 
 private:
-	void updateSurface();
+	void updateTexture();
 
 	//The actual hardware texture
 	SDL_Texture* m_texture;
-	SDL_Surface* m_surface;
 	TTF_Font* m_font;
 	SDL_Color m_colour;
 	SDL_Renderer* m_renderer;

@@ -19,6 +19,8 @@
 #include "InputSystem.h"
 #include "RenderSystem.h"
 #include "AiSystem.h"
+#include "ResourceMng.h"
+#include "AssetManager.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -30,6 +32,7 @@ public:
 	~Game();
 	void run();
 private:
+	void initLibraries();
 	void processEvent();
 	void update(bool t_canTick, bool t_canRender, Uint16 t_dt);
 	void preRender();
@@ -37,6 +40,8 @@ private:
 	void setupLevel();
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);
+
+	AssetManager* m_assetMgr;
 
 	const int MAX_PLAYERS = 4;
 	const int MAX_ENTITIES = 10000;
