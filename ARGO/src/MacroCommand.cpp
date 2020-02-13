@@ -8,6 +8,7 @@ MacroCommand::MacroCommand()
 void MacroCommand::add(Command* t_command)
 {
 	m_commands.push(t_command);
+	m_commandHistory.push(t_command);
 }
 
 void MacroCommand::addAndExecute(Command* t_command)

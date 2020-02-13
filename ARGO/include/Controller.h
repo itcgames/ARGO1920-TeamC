@@ -1,17 +1,15 @@
 #pragma once
-
 #include <iostream>
 #include "Rumble.h"
+#include "Utilities.h"
 
 /// <summary>
 /// data to store the getCurrent state of the controller
 /// This class is strictly for Xbox controllers
 /// </summary>
 struct GamePadState
-{
-	//>> Add variable for numbers of buttons once utility 
-	//>> Class is in
-	bool button[16];   
+{ 
+	bool button[Utilities::NUMBER_OF_CONTROLLER_BUTTONS];   
 	glm::vec2 RightThumbStick{ 0.0f, 0.0f };
 	glm::vec2 LeftThumbStick{ 0.0f, 0.0f };
 };
@@ -48,9 +46,7 @@ enum class ButtonType
 	Start,
 	Back,
 	RightTrigger,
-	LeftTrigger,
-	// used to get size of enum
-	Count
+	LeftTrigger 
 };
 
 /// <summary>

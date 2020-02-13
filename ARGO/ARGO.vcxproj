@@ -11,17 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AnalogMoveCommand.cpp" />
     <ClCompile Include="src\Command.cpp" />
     <ClCompile Include="src\Event.cpp" />
     <ClCompile Include="src\EventManager.cpp" />
-    <ClCompile Include="src\EventMessagingComponent.cpp" />
-    <ClCompile Include="src\MoveDownCommand.cpp" />
-    <ClCompile Include="src\MoveLeftCommand.cpp" />
-    <ClCompile Include="src\MoveRightCommand.cpp" />
-    <ClCompile Include="src\MoveUpCommand.cpp" />
+    <ClCompile Include="src\ColliderAABB.cpp" />
+    <ClCompile Include="src\ColliderCircle.cpp" />
+    <ClCompile Include="src\CollisionSystem.cpp" />
+    <ClCompile Include="src\QuadTree.cpp" />
     <ClCompile Include="src\Rumble.cpp" />
-    <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\MacroCommand.cpp" />
     <ClCompile Include="src\AiComponent.cpp" />
     <ClCompile Include="src\AiSystem.cpp" />
@@ -50,17 +47,14 @@
     <ClCompile Include="src\Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\AnalogMoveCommand.h" />
     <ClInclude Include="include\Command.h" />
     <ClInclude Include="include\Event.h" />
     <ClInclude Include="include\EventManager.h" />
-    <ClInclude Include="include\EventMessagingComponent.h" />
-    <ClInclude Include="include\MoveDownCommand.h" />
-    <ClInclude Include="include\MoveLeftCommand.h" />
-    <ClInclude Include="include\MoveRightCommand.h" />
-    <ClInclude Include="include\MoveUpCommand.h" />
+    <ClInclude Include="include\ColliderAABBComponent.h" />
+    <ClInclude Include="include\ColliderCircleComponent.h" />
+    <ClInclude Include="include\CollisionSystem.h" />
+    <ClInclude Include="include\QuadTree.h" />
     <ClInclude Include="include\Rumble.h" />
-    <ClInclude Include="include\InputHandler.h" />
     <ClInclude Include="include\MacroCommand.h" />
     <ClInclude Include="include\Controller.h" />
   </ItemGroup>
@@ -80,6 +74,7 @@
     <ClInclude Include="include\HealthSystem.h" />
     <ClInclude Include="include\InputComponent.h" />
     <ClInclude Include="include\InputSystem.h" />
+    <ClInclude Include="include\Utilities.h" />
     <ClInclude Include="include\VisualComponent.h" />
     <ClInclude Include="include\TransformComponent.h" />
     <ClInclude Include="include\PhysicsSystem.h" />

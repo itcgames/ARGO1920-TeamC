@@ -3,7 +3,7 @@
 
 PhysicsSystem::PhysicsSystem(EventManager& t_eventManager)
 {
-	t_eventManager.subscribe<PhysicsMove>(std::bind(&PhysicsSystem::updateWithInput, this, std::placeholders::_1));
+	t_eventManager.subscribeToEvent<PhysicsMove>(std::bind(&PhysicsSystem::updateWithInput, this, std::placeholders::_1));
 }
 
 PhysicsSystem::~PhysicsSystem()
@@ -30,23 +30,21 @@ void PhysicsSystem::update(Entity& t_entity/*float t_deltaTime*/) //deltaTime wi
 
 void PhysicsSystem::checkBorder(TransformComponent* t_pos)
 {
-	//magic numbers for window size will be replaced for world size
-	//once we have a class that holds globals
-	if (t_pos->getPos().x > 825)
+	if (t_pos->getPos().x > Utilities::LEVEL_TILE_WIDTH * Utilities::TILE_SIZE)
 	{
-		t_pos->setX(-25);
+		t_pos->setX(Utilities::LEVEL_TILE_WIDTH * Utilities::TILE_SIZE);
 	}
-	else if (t_pos->getPos().x < -25)
+	else if (t_pos->getPos().x < 0)
 	{
-		t_pos->setX(825);
+		t_pos->setX(0);
 	}
-	if (t_pos->getPos().y > 625)
+	if (t_pos->getPos().y > Utilities::LEVEL_TILE_HEIGHT* Utilities::TILE_SIZE)
 	{
-		t_pos->setY(-25);
+		t_pos->setY(Utilities::LEVEL_TILE_HEIGHT * Utilities::TILE_SIZE);
 	}
-	else if (t_pos->getPos().y < -25)
+	else if (t_pos->getPos().y < 0)
 	{
-		t_pos->setY(625);
+		t_pos->setY(0);
 	}
 }
 
@@ -55,24 +53,6 @@ void PhysicsSystem::updateWithInput(const PhysicsMove& t_event)
 	if (t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID))
 	{
  		ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
-		/*if (t_event.m_velocity.y == -1)
-		{
-			forceComp->addForceY(-1.0f);
-
-		}
-		else if (t_event.m_velocity.y == 1)
-		{
-			forceComp->addForceY(1.0f);
-		}
-		else if (t_event.m_velocity.x == -1)
-		{
-			forceComp->addForceX(-1.0f);
-		}
-		else if (t_event.m_velocity.x == 1)
-		{
-			forceComp->addForceX(1.0f);
-		}*/
-
-		forceComp->addForce(t_event.m_velocity / 30000.0f);
+		forceComp->addForce(t_event.m_velocity );
 	}  
 }

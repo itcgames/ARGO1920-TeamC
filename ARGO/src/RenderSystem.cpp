@@ -41,6 +41,9 @@ void RenderSystem::renderPrimitives(SDL_Renderer* t_renderer, TransformComponent
 	rect.w = 50;
 	rect.h = 50;
 
+	rect.x = rect.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
+	rect.y = rect.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
+
 	Colour colour;
 	//set colour from the component
 	if (t_colComp)
@@ -71,6 +74,13 @@ void RenderSystem::renderTextures(VisualComponent* t_visComp, int t_textureLeftP
 		renderQuad.h = t_clip->h;
 	}
 
+	renderQuad.x = renderQuad.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
+	renderQuad.y = renderQuad.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
 	//Render to screen
 	SDL_RenderCopyEx(t_renderer, t_visComp->getTexture(), t_clip, &renderQuad, t_angle, t_center, t_flip);
+}
+
+void RenderSystem::setFocus(glm::vec2 t_point)
+{
+	m_focusPoint = t_point;
 }

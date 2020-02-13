@@ -6,6 +6,10 @@ struct PhysicsMove
 	Entity& m_entity;
 };
 
+struct CloseWindow
+{
+};
+
 class BaseEvent
 {
 protected:

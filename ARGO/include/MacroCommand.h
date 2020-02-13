@@ -1,11 +1,6 @@
 #pragma once
 #include "Command.h"
-#include "MoveDownCommand.h"
-#include "MoveUpCommand.h"
-#include "MoveLeftCommand.h"
-#include "MoveRightCommand.h"
-#include "AnalogMoveCommand.h"
-
+ 
 class MacroCommand
 {
 public:
@@ -16,6 +11,11 @@ public:
 	std::stack<Command*> getCommands();
 	void popTopCommand();
 private:
+	// stack that holds list of current commands
 	std::stack<Command*> m_commands;
+	// stack to hold all executed commands, 
+	// m_commands changes constantly as commands are executed and removed
+	// m_commandHistory does not
+	std::stack<Command*> m_commandHistory;
 };
 

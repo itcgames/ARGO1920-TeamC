@@ -7,6 +7,7 @@
 #include "ForceComponent.h"
 #include <iostream>
 #include "Debug.h"
+#include "Utilities.h"
 
 class PhysicsSystem : public BaseSystem
 {
@@ -15,11 +16,9 @@ public:
 	~PhysicsSystem();
 	void update(Entity& t_entity);
 
-private:
-
+private: 
 
 	void checkBorder(TransformComponent* t_pos);
 	void updateWithInput(const PhysicsMove& t_event);
-	void updateMovement(const PhysicsMove& t_event);
-	const float FRICTION_SCALAR = 0.9f;
+ 	const float FRICTION_SCALAR = 0.9f;
 };

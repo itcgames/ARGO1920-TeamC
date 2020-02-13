@@ -3,14 +3,13 @@
 
 
 InputComponent::InputComponent(std::map<ButtonType, Command*> t_buttonPressMap,
-	std::map<ButtonType, Command*> t_buttonHeldMap,
-	std::map<ButtonType, Command*> t_buttonReleasedMap) :
+							   std::map<ButtonType, Command*> t_buttonHeldMap,
+							   std::map<ButtonType, Command*> t_buttonReleasedMap) :
 	Component(ComponentType::Input),
 	m_buttonPressedCommands{t_buttonPressMap},
 	m_buttonHeldCommands{t_buttonHeldMap},
 	m_buttonReleaseCommands{t_buttonReleasedMap}
 {
-
 }
 
 InputComponent::~InputComponent()
@@ -20,12 +19,7 @@ InputComponent::~InputComponent()
 void InputComponent::update()
 { 
 	m_controller.update();
-}
-
-void InputComponent::setController(Controller& t_controller)
-{
-	//m_controller = t_controller;
-}
+} 
 
 Controller InputComponent::getController()
 {

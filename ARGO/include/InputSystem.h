@@ -9,12 +9,12 @@
 class InputSystem : public BaseSystem
 {
 public:
-	InputSystem(EventManager & t_em);
+	InputSystem();
 	~InputSystem();
-	void update(Entity& t_entity, EventManager& t_em);
+	void update(Entity& t_entity, EventManager& t_eventManager);
 	void update(Entity& t_entity) {}
 private:
 	void handleInputs(InputComponent* t_inputComponent);
-	void handleCommands(EventManager& t_em, InputComponent* t_input, Entity& t_entity);
+	void handleCommands(EventManager& t_eventManager, InputComponent* t_input, Entity& t_entity);
  };
 
