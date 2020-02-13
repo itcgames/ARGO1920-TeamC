@@ -18,6 +18,11 @@ bool TimerComponent::tick(float t_time)
 	else return false;
 }
 
+void TimerComponent::setMaxTime(float t_time)
+{
+	m_maxTime = t_time;
+}
+
 float TimerComponent::getCurrentTime()
 {
 	return m_currentTime;

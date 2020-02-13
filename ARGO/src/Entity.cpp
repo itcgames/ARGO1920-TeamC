@@ -104,6 +104,15 @@ void Entity::addComponent(Component* t_c)
 		}
 		break;
 	}
+	case ComponentType::Timer:
+	{
+		if (!m_components.at(COMPONENT_ID::TIMER_ID))
+		{
+			m_components.at(COMPONENT_ID::TIMER_ID) = t_c;
+			return;
+		}
+		break;
+	}
 	default:
 
 		break;
@@ -202,6 +211,16 @@ void Entity::removeCompType(ComponentType t_type)
 		{
 			delete m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID);
 			m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID) = nullptr;
+			return;
+		}
+		break;
+	}
+	case ComponentType::Timer:
+	{
+		if (!m_components.at(COMPONENT_ID::TIMER_ID))
+		{
+			delete m_components.at(COMPONENT_ID::TIMER_ID);
+			m_components.at(COMPONENT_ID::TIMER_ID) = nullptr;
 			return;
 		}
 		break;

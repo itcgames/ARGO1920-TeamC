@@ -12,6 +12,7 @@ ProjectileManager::ProjectileManager() :
 		bullet.entity.addComponent(new ForceComponent(glm::vec2(0,0), false));
 		bullet.entity.addComponent(new HealthComponent(1, 0));
 		bullet.entity.addComponent(new ColliderCircleComponent(BULLET_RADIUS));
+		bullet.entity.addComponent(new TimerComponent(BULLET_LIFETIME));
 	}
 	for (auto& bullet : m_enemyBullets)
 	{
@@ -20,6 +21,7 @@ ProjectileManager::ProjectileManager() :
 		bullet.entity.addComponent(new ForceComponent(glm::vec2(0, 0), false));
 		bullet.entity.addComponent(new HealthComponent(1, 0));
 		bullet.entity.addComponent(new ColliderCircleComponent(BULLET_RADIUS));
+		bullet.entity.addComponent(new TimerComponent(BULLET_LIFETIME));
 	}
 }
 
@@ -28,6 +30,7 @@ void ProjectileManager::createPlayerBullet(createBulletEvent event)
 	static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->setPos(event.position);
 	static_cast<ForceComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::FORCE_ID))->setForce(event.force);
 	static_cast<HealthComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(1);
+	static_cast<TimerComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->reset();
 	m_playerBullets[m_nextPlayerBullet].type = event.type;
 
 	m_nextPlayerBullet++;
@@ -42,6 +45,7 @@ void ProjectileManager::createEnemyBullet(createBulletEvent event)
 	static_cast<TransformComponent*>(m_enemyBullets[m_nextEnemyBullet].entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->setPos(event.position);
 	static_cast<ForceComponent*>(m_enemyBullets[m_nextEnemyBullet].entity.getAllComps().at(COMPONENT_ID::FORCE_ID))->setForce(event.force);
 	static_cast<HealthComponent*>(m_enemyBullets[m_nextEnemyBullet].entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(1);
+	static_cast<TimerComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->reset();
 	m_enemyBullets[m_nextEnemyBullet].type = event.type;
 
 	m_nextEnemyBullet++;
@@ -57,6 +61,7 @@ void ProjectileManager::update(BaseSystem* t_system)
 	{
 		if (static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->getHealth() > 0)
 		{
+			static_cast<TimerComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(1);
 			t_system->update(bullet.entity);
 		}
 	}
@@ -64,6 +69,10 @@ void ProjectileManager::update(BaseSystem* t_system)
 	{
 		if (static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->getHealth() > 0)
 		{
+			if (!static_cast<TimerComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(1))
+			{
+				static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0);
+			}
 			t_system->update(bullet.entity);
 		}
 	}
@@ -75,6 +84,10 @@ void ProjectileManager::render(SDL_Renderer* t_renderer, RenderSystem* t_system)
 	{
 		if (static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->getHealth() > 0)
 		{
+			if (!static_cast<TimerComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(1))
+			{
+				static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0);
+			}
 			t_system->render(t_renderer, bullet.entity);
 		}
 	}

@@ -7,6 +7,7 @@
 #include "ColliderCircleComponent.h"
 #include "ColourComponent.h"
 #include "HealthComponent.h"
+#include "TimerComponent.h"
 
 struct createBulletEvent
 {
@@ -32,6 +33,7 @@ public:
 private:
 	static const int BULLET_POOL_SIZE = 20;
 	static const int BULLET_RADIUS = 4;
+	static const int BULLET_LIFETIME = 30;
 	Bullet m_playerBullets[BULLET_POOL_SIZE];
 	Bullet m_enemyBullets[BULLET_POOL_SIZE];
 	int m_nextPlayerBullet;
