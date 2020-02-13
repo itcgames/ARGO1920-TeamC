@@ -35,5 +35,4 @@ private:
 	std::map<std::string, TTF_Font*> m_fonts;
 
 	SDL_Renderer& m_renderer;
-
 };

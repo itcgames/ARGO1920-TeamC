@@ -135,15 +135,6 @@
     <ClCompile Include="src\AudioHandler.cpp">
       <Filter>Source Files\ResourceManagement</Filter>
     </ClCompile>
-    <ClCompile Include="src\Music.cpp">
-      <Filter>Source Files\ResourceManagement</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SoundEffect.cpp">
-      <Filter>Source Files\ResourceManagement</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\AssetManager.cpp">
       <Filter>Source Files\ResourceManagement</Filter>
     </ClCompile>
@@ -269,20 +260,8 @@
     <ClInclude Include="include\TextComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="include\ResourceMng.h">
-      <Filter>Header Files\ResourceManagement</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Music.h">
-      <Filter>Header Files\ResourceManagement</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SoundEffect.h">
-      <Filter>Header Files\ResourceManagement</Filter>
-    </ClInclude>
     <ClInclude Include="include\AudioHandler.h">
       <Filter>Header Files\ResourceManagement</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Graphics.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\AssetManager.h">
       <Filter>Header Files\ResourceManagement</Filter>

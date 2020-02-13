@@ -20,7 +20,6 @@
 #include "InputSystem.h"
 #include "RenderSystem.h"
 #include "AiSystem.h"
-#include "ResourceMng.h"
 #include "AssetManager.h"
 #include "FiniteStateMachine.h"
 #include "EventManager.h"

@@ -291,8 +291,7 @@ void Game::preRender()
 		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
 		if (transformComp)
 		{
-			focusPoint.x += transformComp->getPos().x;
-			focusPoint.y += transformComp->getPos().y;
+			focusPoint += transformComp->getPos();
 		}
 		else
 		{

@@ -14,8 +14,6 @@
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\AudioHandler.cpp" />
     <ClCompile Include="src\Command.cpp" />
-    <ClCompile Include="src\Graphics.cpp" />
-    <ClCompile Include="src\Music.cpp" />
     <ClCompile Include="src\Event.cpp" />
     <ClCompile Include="src\ColliderAABB.cpp" />
     <ClCompile Include="src\ColliderCircle.cpp" />
@@ -37,7 +35,6 @@
     <ClCompile Include="src\InputComponent.cpp" />
     <ClCompile Include="src\InputSystem.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\SoundEffect.cpp" />
     <ClCompile Include="src\TextComponent.cpp" />
     <ClCompile Include="src\TimerComponent.cpp" />
     <ClCompile Include="src\VisualComponent.cpp" />
@@ -57,9 +54,6 @@
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\AudioHandler.h" />
     <ClInclude Include="include\Command.h" />
-    <ClInclude Include="include\Graphics.h" />
-    <ClInclude Include="include\Music.h" />
-    <ClInclude Include="include\ResourceMng.h" />
     <ClInclude Include="include\Event.h" />
     <ClInclude Include="include\EventManager.h" />
     <ClInclude Include="include\ColliderAABBComponent.h" />
@@ -70,7 +64,6 @@
     <ClInclude Include="include\Rumble.h" />
     <ClInclude Include="include\MacroCommand.h" />
     <ClInclude Include="include\Controller.h" />
-    <ClInclude Include="include\SoundEffect.h" />
     <ClInclude Include="include\TextComponent.h" />
   </ItemGroup>
   <ItemGroup>
