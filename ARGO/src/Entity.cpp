@@ -5,7 +5,7 @@
 Entity::Entity()
 {
 	//m_components.reserve(S_MAX_COMPS);
-	m_components.resize(S_MAX_COMPS);
+	m_components.resize((int)ComponentType::Count);
 }
 
 Entity::~Entity()
@@ -97,6 +97,38 @@ void Entity::addComponent(Component* t_c)
 			}
 			break;
 		}
+		case ComponentType::ColliderAABB:
+		{
+			if (!m_components.at(COMPONENT_ID::COLLIDER_AABB_ID))
+			{
+				m_components.at(COMPONENT_ID::COLLIDER_AABB_ID) = t_c;
+
+
+				return;
+
+
+			}
+			break;
+		}
+		case ComponentType::ColliderCircle:
+		{
+			if (!m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID))
+			{
+				m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID) = t_c;
+				return;
+			}
+			break;
+		}
+		case ComponentType::Timer:
+		{
+			if (!m_components.at(COMPONENT_ID::TIMER_ID))
+			{
+				m_components.at(COMPONENT_ID::TIMER_ID) = t_c;
+				return;
+			}
+			break;
+		}
+
 		default:
 			throw std::invalid_argument("Invalid component type!");
 			break;
@@ -196,6 +228,40 @@ void Entity::removeCompType(ComponentType t_type)
 			}
 			break;
 		}
+		case ComponentType::ColliderAABB:
+		{
+			if (!m_components.at(COMPONENT_ID::COLLIDER_AABB_ID))
+			{
+				delete m_components.at(COMPONENT_ID::COLLIDER_AABB_ID);
+
+				m_components.at(COMPONENT_ID::COLLIDER_AABB_ID) = nullptr;
+
+				return;
+			}
+			break;
+		}
+		case ComponentType::ColliderCircle:
+		{
+			if (!m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID))
+			{
+				delete m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID);
+
+				m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID) = nullptr;
+
+				return;
+			}
+			break;
+		}
+		case ComponentType::Timer:
+		{
+			if (!m_components.at(COMPONENT_ID::TIMER_ID))
+			{
+				delete m_components.at(COMPONENT_ID::TIMER_ID);
+				m_components.at(COMPONENT_ID::TIMER_ID) = nullptr;
+				return;
+			}
+			break;
+		}
 		default:
 			throw std::invalid_argument("trying to delete an unknown component!");
 			break;
@@ -205,6 +271,15 @@ void Entity::removeCompType(ComponentType t_type)
 	{
 		std::cerr << e.what() << std::endl;
 		throw e;
+	}
+}
+
+void Entity::removeAllComponents()
+{
+	for (int i = 0; i < m_components.size(); i++)
+	{
+		delete m_components.at(i);
+		m_components.at(i) = nullptr;
 	}
 }
 
@@ -230,6 +305,12 @@ Component* Entity::getComponent(ComponentType t_type)
 			return m_components.at(COMPONENT_ID::FORCE_ID);
 		case ComponentType::Text:
 			return m_components.at(COMPONENT_ID::TEXT_ID);
+		case ComponentType::ColliderAABB:
+			return m_components.at(COMPONENT_ID::COLLIDER_AABB_ID);
+		case ComponentType::ColliderCircle:
+			return m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID);
+		case ComponentType::Timer:
+			return m_components.at(COMPONENT_ID::TIMER_ID);
 		default:
 			throw std::invalid_argument("trying to get an unknown component!");
 			break;

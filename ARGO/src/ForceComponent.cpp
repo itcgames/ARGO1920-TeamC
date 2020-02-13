@@ -1,16 +1,12 @@
 #include "stdafx.h"
 #include "ForceComponent.h"
 
-ForceComponent::ForceComponent() :
-	Component(ComponentType::Force)
-{
-	m_force = glm::vec2(0.0f, 0.0f);
-}
 
-ForceComponent::ForceComponent(glm::vec2 t_force) :
-	Component(ComponentType::Force)
+ForceComponent::ForceComponent(glm::vec2 t_force, bool t_hasFriction) :
+	Component(ComponentType::Force),
+	m_force(t_force),
+	m_hasFriction(t_hasFriction)
 {
-	m_force = t_force;
 }
 
 ForceComponent::~ForceComponent()
@@ -84,4 +80,14 @@ void ForceComponent::setX(float t_x)
 void ForceComponent::setY(float t_y)
 {
 	m_force.y = t_y;
+}
+
+void ForceComponent::setHasFriction(bool t_hasFriction)
+{
+	m_hasFriction = t_hasFriction;
+}
+
+bool ForceComponent::getHasFriction()
+{
+	return m_hasFriction;
 }

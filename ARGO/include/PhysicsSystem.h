@@ -12,12 +12,13 @@
 class PhysicsSystem : public BaseSystem
 {
 public:
+	PhysicsSystem(EventManager& t_eventManager);
 	~PhysicsSystem();
 	void update(Entity& t_entity);
 
-private:
-	void checkBorder(TransformComponent* t_pos);
-	void updateWithInput(ForceComponent* t_force, InputComponent* t_input);
+private: 
 
-	const float FRICTION_SCALAR = 0.95f;
+	void checkBorder(TransformComponent* t_pos);
+	void updateWithInput(const PhysicsMove& t_event);
+ 	const float FRICTION_SCALAR = 0.9f;
 };

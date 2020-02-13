@@ -5,7 +5,6 @@
 #include "CompEnums.h"
 #include <stdexcept>
 
-
 class Entity
 {
 public:
@@ -14,9 +13,9 @@ public:
 
 	void addComponent(Component* t_component);
 	void removeCompType(ComponentType t_type);
+	void removeAllComponents();
 
 	Component* getComponent(ComponentType t_type);
-	bool hasComponentType(ComponentType t_type) const;
 	std::vector<Component*>& getAllComps();
 private:
 	//used to reserve space in the components vector 

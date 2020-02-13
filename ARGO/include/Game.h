@@ -4,7 +4,6 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include "Controller.h"
-#include "InputHandler.h"
 #include "MacroCommand.h"
 #include <gtc/random.hpp>
 #include "Entity.h"
@@ -14,6 +13,8 @@
 #include "ColourComponent.h"
 #include "VisualComponent.h"
 #include "TextComponent.h"
+#include "ColliderAABBComponent.h"
+#include "ColliderCircleComponent.h"
 #include "HealthSystem.h"
 #include "PhysicsSystem.h"
 #include "InputSystem.h"
@@ -21,6 +22,10 @@
 #include "AiSystem.h"
 #include "ResourceMng.h"
 #include "AssetManager.h"
+#include "FiniteStateMachine.h"
+#include "EventManager.h"
+#include "CollisionSystem.h"
+#include "ProjectileManager.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -38,20 +43,29 @@ private:
 	void preRender();
 	void cleanup();
 	void setupLevel();
+	void createPlayer(Entity& t_player);
+	void createEnemy();
+	void createBullet(glm::vec2 t_position, glm::vec2 t_force);
+	void setToWall(Entity& t_entity, glm::vec2 t_position);
+	void setToFloor(Entity& t_entity, glm::vec2 t_position);
+
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);
+	void closeWindow(const CloseWindow& t_event);
 
 	AssetManager* m_assetMgr;
 
 	const int MAX_PLAYERS = 4;
 	const int MAX_ENTITIES = 10000;
 	const int PLAYER_MAX_HEALTH = 10;
+	EventManager m_eventManager;
 
 	HealthSystem m_hpSystem;
 	PhysicsSystem m_transformSystem;
 	InputSystem m_inputSystem;
 	RenderSystem m_renderSystem;
 	AiSystem m_aiSystem;
+	CollisionSystem m_collisionSystem;
 
 	Entity m_players[4];
 	std::vector<Entity> m_entities;
@@ -62,6 +76,8 @@ private:
 
 	TTF_Font* m_font;
 
+	ProjectileManager m_projectileManager;
+
 	// Window used for the game
 	SDL_Window* m_window;
 	// Renderer used to render onto screen
@@ -69,11 +85,6 @@ private:
 
 	// bool for if game is running or not
 	bool m_isRunning;
- 
-	//2D grid of tiles
-	int m_levelWidth;
-	int m_levelHeight;
-	int m_tileSize;
 
 	Uint16 m_timePerFrame;
 	Uint16 m_timePerTick;
