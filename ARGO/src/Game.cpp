@@ -17,7 +17,7 @@ Game::Game() :
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
 
 		// Create SDL Window Centred in Middle Of Screen
-		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, NULL);
+		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 281, NULL);
 		
 		// Check if window was created correctly
 		if (!m_window) throw "Error Loading Window";
@@ -39,6 +39,8 @@ Game::Game() :
 			player.addComponent(new InputComponent());
 			player.addComponent(new ForceComponent());
 			player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
+			player.addComponent(new PrimitiveComponent());
+			player.addComponent(new ParticleEmitterComponent());
 		}
 
 		m_entities.reserve(MAX_ENTITIES);
@@ -210,6 +212,7 @@ void Game::update()
 		m_hpSystem.update(player);
 		m_aiSystem.update(player);
 		m_transformSystem.update(player);
+		m_particleSystem.update(player);
 	}
 
 	m_fsm.update();

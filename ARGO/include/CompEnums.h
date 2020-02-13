@@ -7,7 +7,9 @@ enum class ComponentType
 	Input = 3,
 	Visual = 4,
 	Colour = 5,
-	Force = 6
+	Force = 6,
+	Primitive = 7,
+	ParticleEmitter = 8,
 };
 
 //when adding new component type, add it to enum class and then to this
@@ -20,5 +22,7 @@ namespace COMPONENT_ID
 	const int VISUAL_ID = static_cast<int>(ComponentType::Visual);
 	const int COLOUR_ID = static_cast<int>(ComponentType::Colour);
 	const int FORCE_ID = static_cast<int>(ComponentType::Force);
+	const int PRIMITIVE_ID = static_cast<int>(ComponentType::Primitive);
+	const int PARTICLE_ID = static_cast<int>(ComponentType::ParticleEmitter);
 
 }

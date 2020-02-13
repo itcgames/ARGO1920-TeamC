@@ -13,6 +13,10 @@
   <ItemGroup>
     <ClCompile Include="src\APressedCommand.cpp" />
     <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\Particle.cpp" />
+    <ClCompile Include="src\ParticleEmitterComponent.cpp" />
+    <ClCompile Include="src\ParticleSystem.cpp" />
+    <ClCompile Include="src\PrimitiveComponent.cpp" />
     <ClCompile Include="src\Rumble.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\MacroCommand.cpp" />
@@ -47,6 +51,10 @@
   <ItemGroup>
     <ClInclude Include="include\APressedCommand.h" />
     <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\Particle.h" />
+    <ClInclude Include="include\ParticleEmitterComponent.h" />
+    <ClInclude Include="include\ParticleSystem.h" />
+    <ClInclude Include="include\PrimitiveComponent.h" />
     <ClInclude Include="include\Rumble.h" />
     <ClInclude Include="include\InputHandler.h" />
     <ClInclude Include="include\MacroCommand.h" />

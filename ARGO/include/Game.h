@@ -17,6 +17,7 @@
 #include "RenderSystem.h"
 #include "AiSystem.h"
 #include "FiniteStateMachine.h"
+#include "ParticleSystem.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -43,6 +44,7 @@ private:
 	InputSystem m_inputSystem;
 	RenderSystem m_renderSystem;
 	AiSystem m_aiSystem;
+	ParticleSystem m_particleSystem;
 
 	Entity m_players[4];
 	std::vector<Entity> m_entities;

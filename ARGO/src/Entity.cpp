@@ -86,6 +86,24 @@ void Entity::addComponent(Component* t_c)
 		}
 		break;
 	}
+	case ComponentType::Primitive:
+	{
+		if (!m_components.at(COMPONENT_ID::PRIMITIVE_ID))
+		{
+			m_components.at(COMPONENT_ID::PRIMITIVE_ID) = t_c;
+			return;
+		}
+		break;
+	}
+	case ComponentType::ParticleEmitter:
+	{
+		if (!m_components.at(COMPONENT_ID::PARTICLE_ID))
+		{
+			m_components.at(COMPONENT_ID::PARTICLE_ID) = t_c;
+			return;
+		}
+		break;
+	}
 	default:
 
 		break;
@@ -154,6 +172,26 @@ void Entity::removeCompType(ComponentType t_type)
 		{
 			delete m_components.at(COMPONENT_ID::COLOUR_ID);
 			m_components.at(COMPONENT_ID::COLOUR_ID) = nullptr;
+			return;
+		}
+		break;
+	}
+	case ComponentType::Primitive:
+	{
+		if (m_components.at(COMPONENT_ID::PRIMITIVE_ID))
+		{
+			delete m_components.at(COMPONENT_ID::PRIMITIVE_ID);
+			m_components.at(COMPONENT_ID::PRIMITIVE_ID) = nullptr;
+			return;
+		}
+		break;
+	}
+	case ComponentType::ParticleEmitter:
+	{
+		if (m_components.at(COMPONENT_ID::PARTICLE_ID))
+		{
+			delete m_components.at(COMPONENT_ID::PARTICLE_ID);
+			m_components.at(COMPONENT_ID::PARTICLE_ID) = nullptr;
 			return;
 		}
 		break;
