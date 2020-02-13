@@ -13,7 +13,6 @@
   <ItemGroup>
     <ClCompile Include="src\Command.cpp" />
     <ClCompile Include="src\Event.cpp" />
-    <ClCompile Include="src\EventManager.cpp" />
     <ClCompile Include="src\ColliderAABB.cpp" />
     <ClCompile Include="src\ColliderCircle.cpp" />
     <ClCompile Include="src\CollisionSystem.cpp" />

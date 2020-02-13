@@ -19,17 +19,16 @@ public:
 	template <typename EventType>
 	void emitEvent(const EventType& t_event)
 	{
-
-			size_t id = Event<EventType>::getId();
-			if (id >= m_subscribers.size())
-			{
-				m_subscribers.resize(id + 1);
-			}
-			Event<EventType> eventWrapper(t_event);
-			for (auto& receiver : m_subscribers[id])
-			{
-				receiver(eventWrapper);
-			}
+		size_t id = Event<EventType>::getId();
+		if (id >= m_subscribers.size())
+		{
+			m_subscribers.resize(id + 1);
+		}
+		Event<EventType> eventWrapper(t_event);
+		for (auto& receiver : m_subscribers[id])
+		{
+			receiver(eventWrapper);
+		}
 	}
 
 	template <typename EventType>

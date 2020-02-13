@@ -147,9 +147,6 @@
     <ClCompile Include="src\Rumble.cpp">
       <Filter>Source Files\Controller</Filter>
     </ClCompile>
-    <ClCompile Include="src\EventManager.cpp">
-      <Filter>Source Files\EventMessaging</Filter>
-    </ClCompile>
     <ClCompile Include="src\Event.cpp">
       <Filter>Source Files\EventMessaging</Filter>
     </ClCompile>

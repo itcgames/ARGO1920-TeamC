@@ -51,6 +51,7 @@ Game::Game() :
 		{
 			player.addComponent(new HealthComponent(10, 10));
 			player.addComponent(new TransformComponent());
+			// passing two of the same object as at this moment the commands for button press is the same for button held
 			player.addComponent(new InputComponent(buttonPressMap, buttonPressMap));
 			player.addComponent(new ForceComponent());
 			player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));

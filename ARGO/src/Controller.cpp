@@ -32,7 +32,7 @@ Controller::Controller()
 	else
 	{
 		// initalise buttons to false
-		for (int index = 0; index < 16; index++)
+		for (int index = 0; index < Utilities::NUMBER_OF_CONTROLLER_BUTTONS; index++)
 		{
 			m_current.button[index] = false;
 			m_previous.button[index] = false;
@@ -42,7 +42,6 @@ Controller::Controller()
 
 Controller::~Controller()
 {
-	//SDL_GameControllerClose(m_controller);
 } 
 
 /// <summary>
