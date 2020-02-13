@@ -1,23 +1,34 @@
+#include "stdafx.h"
 #include "Game.h"
 
 /// <summary>
 /// Constructor for the game class.
 /// </summary>
-Game::Game()
+
+class State;
+Game::Game() :
+	m_framesPerSecond(60),
+	m_ticksPerSecond(60),
+	m_lastTick(0),
+	m_lastRender(0),
+	m_timePerFrame(0),
+	m_timePerTick(0)
 {
 	try
 	{
+		m_timePerFrame = 1000 / m_framesPerSecond;
+		m_timePerTick = 1000 / m_ticksPerSecond;
 		// Try to initalise SDL in general
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
-		
+
 		// Create SDL Window Centred in Middle Of Screen
-		m_window = SDL_CreateWindow("Final Year Project", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, NULL);
+		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Utilities::SCREEN_WIDTH, Utilities::SCREEN_HEIGHT, NULL);
 		// Check if window was created correctly
 		if (!m_window) throw "Error Loading Window";
 
 		//Create the SDL Renderer 
 		m_renderer = SDL_CreateRenderer(m_window, -1, 0);
-		//Check if the renderer was created correclty
+		//Check if the renderer was created correctly
 		if (!m_renderer) throw "Error Loading Renderer";
 
 		// Sets clear colour of renderer to black and the color of any primitives
@@ -34,6 +45,27 @@ Game::Game()
 		ImGui_ImplSDL2_InitForD3D(m_window);
 		ImGuiSDL::Initialize(m_renderer, 800, 600);
 
+		//add components to player
+		for (auto& player : m_players)
+		{
+			player.addComponent(new HealthComponent(10, 10));
+			player.addComponent(new TransformComponent());
+			player.addComponent(new InputComponent());
+			player.addComponent(new ForceComponent());
+			player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
+			player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
+		}
+
+		m_entities.reserve(MAX_ENTITIES);
+		for (int i = 0; i < 5; i++)
+		{
+			m_entities.emplace_back();
+			m_entities.at(i).addComponent(new TransformComponent());
+			m_entities.at(i).addComponent(new AiComponent());
+			m_entities.at(i).addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
+		}
+
+		setupLevel();
 	}
 	catch (std::string error)
 	{
@@ -42,6 +74,7 @@ Game::Game()
 		// game doesnt run
 		m_isRunning = false;
 	}
+
 }
 
 /// <summary>
@@ -57,20 +90,24 @@ Game::~Game()
 /// </summary>
 void Game::run()
 {
-	const int FPS = 30;
-	const int frameDelay = 1000 / FPS;
-	Uint32 frameStart;
-	int frameTime;
+	m_lastTick = SDL_GetTicks();
+	m_lastRender = SDL_GetTicks();
 	while (m_isRunning)
 	{
-		frameStart = SDL_GetTicks();
-		frameTime = SDL_GetTicks() - frameStart;
+		Uint32 currentTick = SDL_GetTicks();
+		Uint16 deltaTime = currentTick - m_lastTick;
+		Uint16 renderTime = currentTick - m_lastRender;
+
+		bool canRender = checkCanRender(renderTime);
+		bool canTick = checkCanTick(deltaTime);
 		processEvent();
-		update();
-		render();
-		if (frameDelay > frameTime)
-		{
-			SDL_Delay(frameDelay - frameTime);
+		update(canRender, canTick, deltaTime);
+
+		if (canRender) 
+		{//Draw Here
+			ImGui::Render();
+			ImGuiSDL::Render(ImGui::GetDrawData());
+			SDL_RenderPresent(m_renderer);
 		}
 	}
 }
@@ -94,17 +131,72 @@ void Game::processEvent()
 		{
 			m_isRunning = false;
 		}
+		if (SDLK_SPACE == event.key.keysym.sym)
+		{
+			if (m_entities.size() > 0)
+			{
+				m_entities.erase(--m_entities.end());
+			}
+			std::cout << m_entities.size() << std::endl;
+		}
+		if (SDLK_BACKSPACE == event.key.keysym.sym)
+		{
+			//delete all entities
+			if (m_entities.size() > 0)
+			{
+				m_entities.erase(m_entities.begin(), m_entities.end());
+			}
+			std::cout << m_entities.size() << std::endl;
+		}
+		if (SDLK_DELETE == event.key.keysym.sym)
+		{
+			//delete all entities
+			m_players[0].removeCompType(ComponentType::Input);
+		}
+		if (SDLK_RETURN == event.key.keysym.sym)
+		{
+			//check if we can add 100 entities
+			int availableSpace = MAX_ENTITIES - m_entities.size();
+			//if more than 100 available, set to 100
+			if (availableSpace > 100)
+			{
+				availableSpace = 100;
+			}
+			//if at least 1 available
+			if (availableSpace > 0)
+			{
+				for (int i = 0; i < availableSpace; i++)
+				{
+					m_entities.emplace_back();
+					m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
+					m_entities.at(m_entities.size() - 1).addComponent(new AiComponent());
+					m_entities.at(m_entities.size() - 1).addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
+				}
+			}
+			std::cout << m_entities.size() << std::endl;
+		}
+		if (SDLK_1 == event.key.keysym.sym)
+		{
+			//if space available in the vector
+			if (m_entities.size() < MAX_ENTITIES)
+			{
+				//add one
+				m_entities.emplace_back();
+				m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
+				m_entities.at(m_entities.size() - 1).addComponent(new AiComponent());
+			}
+			std::cout << m_entities.size() << std::endl;
+		}
 		break;
 	default:
 		break;
 	}
 }
 
-/// <summary>
-/// Update function
-/// </summary>
-void Game::update()
+void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 {
+	if (t_canRender)
+	{
 	ImGui_ImplSDL2_NewFrame(m_window);
 	ImGui::NewFrame();
 	
@@ -157,21 +249,75 @@ void Game::update()
 	ImGuiHelper::InputFloat3(vec3, "inputFloat3");
 	ImGui::End();
 
-	SDL_SetRenderDrawColor(m_renderer,clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+	//SDL_SetRenderDrawColor(m_renderer,clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+	
+		//SDL_RenderClear(m_renderer);
 
 	
+	}
+	
+	for (auto& entity : m_entities)
+	{
+		if (t_canTick)
+		{
+			m_inputSystem.update(entity);
+			m_hpSystem.update(entity);
+			m_aiSystem.update(entity);
+			m_transformSystem.update(entity);
+			m_collisionSystem.update(entity);
+		}
+		if (t_canRender)
+		{
+			m_renderSystem.render(m_renderer, entity);
+		}
+	}
+	for (auto& entity : m_levelTiles)
+	{
+		if (t_canTick)
+		{
+			m_inputSystem.update(entity);
+			m_hpSystem.update(entity);
+			m_aiSystem.update(entity);
+			m_transformSystem.update(entity);
+			m_collisionSystem.update(entity);
+		}
+		if (t_canRender)
+		{
+			m_renderSystem.render(m_renderer, entity);
+		}
+	}
+	for (auto& player : m_players)
+	{
+		if (t_canTick)
+		{
+			m_inputSystem.update(player);
+			m_hpSystem.update(player);
+			m_aiSystem.update(player);
+			m_transformSystem.update(player);
+			m_collisionSystem.update(player);
+		}
+		if (t_canRender)
+		{
+			m_renderSystem.render(m_renderer, player);
+		}
+	}
+	if (t_canTick) m_collisionSystem.handleCollisions();
 }
 
-/// <summary>
-/// Render function
-/// </summary>
-void Game::render()
+void Game::preRender()
 {
+	//setting the focus point for the camera.
+	glm::vec2 focusPoint = glm::vec2(0, 0);
+	for (auto& player : m_players)
+	{
+		focusPoint.x += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().x;
+		focusPoint.y += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().y;
+	}
+	m_renderSystem.setFocus(focusPoint / 4.0f);
+
+
 	SDL_RenderClear(m_renderer);
-	//Draw Here
-	ImGui::Render();
-	ImGuiSDL::Render(ImGui::GetDrawData());
-	SDL_RenderPresent(m_renderer);
+	
 }
 
 /// <summary>
@@ -182,4 +328,42 @@ void Game::cleanup()
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
 	SDL_QUIT;
+}
+
+void Game::setupLevel()
+{
+	int count = 0; 
+	m_levelTiles.reserve(Utilities::LEVEL_TILE_HEIGHT * Utilities::LEVEL_TILE_WIDTH);
+	for (int i = 0; i < Utilities::LEVEL_TILE_HEIGHT; i++)
+	{
+		for (int j = 0; j < Utilities::LEVEL_TILE_WIDTH; j++)
+		{
+			m_levelTiles.emplace_back();
+			m_levelTiles.at(count).addComponent(new TransformComponent(j * Utilities::TILE_SIZE, i * Utilities::TILE_SIZE, 0));
+			m_levelTiles.at(count).addComponent(new VisualComponent("assets//images//Texture.png", m_renderer));
+			m_levelTiles.at(count).addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
+			count++;
+		}
+	}
+}
+
+bool Game::checkCanRender(Uint16 t_renderTime)
+{
+	if (t_renderTime > m_timePerFrame)
+	{
+		m_lastRender += m_timePerFrame;
+		preRender();
+		return true;
+	}
+	return false;
+}
+
+bool Game::checkCanTick(Uint16 t_deltaTime)
+{
+	if (t_deltaTime > m_timePerTick)
+	{
+		m_lastTick += m_timePerTick;
+		return true;
+	}
+	return false;
 }

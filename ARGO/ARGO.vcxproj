@@ -11,6 +11,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\APressedCommand.cpp" />
+    <ClCompile Include="src\ColliderAABB.cpp" />
+    <ClCompile Include="src\ColliderCircle.cpp" />
+    <ClCompile Include="src\CollisionSystem.cpp" />
+    <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\QuadTree.cpp" />
+    <ClCompile Include="src\Rumble.cpp" />
+    <ClCompile Include="src\InputHandler.cpp" />
+    <ClCompile Include="src\MacroCommand.cpp" />
+    <ClCompile Include="src\AiComponent.cpp" />
+    <ClCompile Include="src\AiSystem.cpp" />
+    <ClCompile Include="src\BaseSystem.cpp" />
+    <ClCompile Include="src\ColourComponent.cpp" />
+    <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\ForceComponent.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\ImguiHelper.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp" />
@@ -19,13 +35,51 @@
     <ClCompile Include="src\imgui\imgui_impl_sdl.cpp" />
     <ClCompile Include="src\imgui\imgui_sdl.cpp" />
     <ClCompile Include="src\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\HealthComponent.cpp" />
+    <ClCompile Include="src\HealthSystem.cpp" />
+    <ClCompile Include="src\InputComponent.cpp" />
+    <ClCompile Include="src\InputSystem.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\VisualComponent.cpp" />
+    <ClCompile Include="src\TransformComponent.cpp" />
+    <ClCompile Include="src\PhysicsSystem.cpp" />
+    <ClCompile Include="src\RenderSystem.cpp" />
+    <ClCompile Include="src\Attacking.cpp" />
+    <ClCompile Include="src\FiniteStateMachine.cpp" />
+    <ClCompile Include="src\Idle.cpp" />
+    <ClCompile Include="src\Moving.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Xbox360Controller.cpp" />
+    <ClCompile Include="src\Controller.cpp" />
+    <ClCompile Include="src\XPressedCommand.cpp" />
+    <ClCompile Include="src\YPressedCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\APressedCommand.h" />
+    <ClInclude Include="include\ColliderAABBComponent.h" />
+    <ClInclude Include="include\ColliderCircleComponent.h" />
+    <ClInclude Include="include\CollisionSystem.h" />
+    <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\QuadTree.h" />
+    <ClInclude Include="include\Rumble.h" />
+    <ClInclude Include="include\InputHandler.h" />
+    <ClInclude Include="include\MacroCommand.h" />
+    <ClInclude Include="include\Controller.h" />
+    <ClInclude Include="include\XPressedCommand.h" />
+    <ClInclude Include="include\YPressedCommand.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\AiComponent.h" />
+    <ClInclude Include="include\AiStates.h" />
+    <ClInclude Include="include\AiSystem.h" />
+    <ClInclude Include="include\BaseSystem.h" />
+    <ClInclude Include="include\ColourComponent.h" />
+    <ClInclude Include="include\CompEnums.h" />
+    <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\Debug.h" />
+    <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\ForceComponent.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\ImguiHelper.h" />
     <ClInclude Include="include\imgui\imconfig.h" />
@@ -36,8 +90,21 @@
     <ClInclude Include="include\imgui\imstb_rectpack.h" />
     <ClInclude Include="include\imgui\imstb_textedit.h" />
     <ClInclude Include="include\imgui\imstb_truetype.h" />
+    <ClInclude Include="include\HealthComponent.h" />
+    <ClInclude Include="include\HealthSystem.h" />
+    <ClInclude Include="include\InputComponent.h" />
+    <ClInclude Include="include\InputSystem.h" />
+    <ClInclude Include="include\Utilities.h" />
+    <ClInclude Include="include\VisualComponent.h" />
+    <ClInclude Include="include\TransformComponent.h" />
+    <ClInclude Include="include\PhysicsSystem.h" />
+    <ClInclude Include="include\RenderSystem.h" />
+    <ClInclude Include="include\Attacking.h" />
+    <ClInclude Include="include\FiniteStateMachine.h" />
+    <ClInclude Include="include\Idle.h" />
+    <ClInclude Include="include\Moving.h" />
+    <ClInclude Include="include\State.h" />
     <ClInclude Include="include\stdafx.h" />
-    <ClInclude Include="Xbox360Controller.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

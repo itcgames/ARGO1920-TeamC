@@ -9,20 +9,30 @@
 
 // add headers that you want to pre-compile here
 
-////std
+//std
 #include <random>
 #include <iostream>
 #include <vector>
 #include <string>
-//
-////SDL
+#include <stack>
+#include <map>
+#include <memory>
+#include <stdexcept>
+
+//SDL
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include "SDL_ttf.h"
 
-////GLM
-#include <vec2.hpp>
-#include <vec3.hpp>
+//GLM
+#include <common.hpp>
+#include <gtx/common.hpp>
+#include <gtc/random.hpp>
+#include <gtx/rotate_vector.hpp>
+
+//cute_math
+#include <cute_math.h>
 
 
 ////IMGUI
@@ -35,6 +45,7 @@
 
 
 //other
+#include "Debug.h"
 //#include "Input.h" //for keyboard input
 //#include "XBOX360CONTROLLER.h" //for controller input
 //#include "FPS.h" //for fps

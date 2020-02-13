@@ -19,6 +19,42 @@
     <Filter Include="Header Files\imgui">
       <UniqueIdentifier>{7151f7fd-e4da-4b63-bf84-73e281ae8c5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\CommandPattern">
+      <UniqueIdentifier>{c2b49d59-4c7d-4e84-922a-0ec406064363}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CommandPattern">
+      <UniqueIdentifier>{e8afaba2-a66a-449e-8bba-f16dc9258bd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CommandPattern\Commands">
+      <UniqueIdentifier>{504c730e-e2f2-4101-9a28-86718c0dc132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CommandPattern\Commands">
+      <UniqueIdentifier>{c81de626-af0f-4d7f-91ed-c5af40aad6f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS">
+      <UniqueIdentifier>{06d03961-a7b7-44ac-a096-2710c5115490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS">
+      <UniqueIdentifier>{48dc6fc1-17b9-4755-b854-dfa78b1b479d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS\Systems">
+      <UniqueIdentifier>{af2a9f94-7fb1-45e2-bf41-387f4387bff8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS\Components">
+      <UniqueIdentifier>{9b647a62-c855-496c-94d7-4e8c5724025f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS\Systems">
+      <UniqueIdentifier>{e625491d-8ef3-4941-9cef-a8a0ce2daa5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS\Components">
+      <UniqueIdentifier>{8fa30014-0d7e-41a1-af7a-41e18bc57176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\AnimationFSM">
+      <UniqueIdentifier>{66fe804f-c2a2-4fc8-ba0a-cb14157c9fe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AnimationFSM">
+      <UniqueIdentifier>{81ba1f45-edc4-4a14-b28a-b2f41b937a20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -30,7 +66,97 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Xbox360Controller.cpp">
+    <ClCompile Include="src\Controller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Command.cpp">
+      <Filter>Source Files\CommandPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputHandler.cpp">
+      <Filter>Source Files\CommandPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MacroCommand.cpp">
+      <Filter>Source Files\CommandPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="src\APressedCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XPressedCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\YPressedCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rumble.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AiSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HealthSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HealthComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Component.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BaseSystem.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TransformComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VisualComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AiComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ColourComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FiniteStateMachine.cpp">
+      <Filter>Source Files\AnimationFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Attacking.cpp">
+      <Filter>Source Files\AnimationFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Idle.cpp">
+      <Filter>Source Files\AnimationFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moving.cpp">
+      <Filter>Source Files\AnimationFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PhysicsSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ForceComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ColliderAABB.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ColliderCircle.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CollisionSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\QuadTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\imgui\imgui_widgets.cpp">
@@ -62,7 +188,25 @@
     <ClInclude Include="include\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Xbox360Controller.h">
+    <ClInclude Include="include\Command.h">
+      <Filter>Header Files\CommandPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InputHandler.h">
+      <Filter>Header Files\CommandPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MacroCommand.h">
+      <Filter>Header Files\CommandPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\YPressedCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\XPressedCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\APressedCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Controller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\imgui\imconfig.h">
@@ -91,6 +235,93 @@
     </ClInclude>
     <ClInclude Include="include\ImguiHelper.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Rumble.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entity.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AiSystem.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HealthSystem.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InputSystem.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RenderSystem.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HealthComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InputComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Component.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BaseSystem.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TransformComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CompEnums.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VisualComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AiComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ColourComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FiniteStateMachine.h">
+      <Filter>Header Files\AnimationFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\State.h">
+      <Filter>Header Files\AnimationFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Idle.h">
+      <Filter>Header Files\AnimationFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Moving.h">
+      <Filter>Header Files\AnimationFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Attacking.h">
+      <Filter>Header Files\AnimationFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PhysicsSystem.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ForceComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AiStates.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollisionSystem.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\QuadTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ColliderAABBComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ColliderCircleComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
