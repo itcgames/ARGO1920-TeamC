@@ -3,6 +3,8 @@
 #include "ColliderAABBComponent.h"
 #include "ColliderCircleComponent.h"
 #include "TransformComponent.h"
+#include "TagComponent.h"
+#include "HealthComponent.h"
 #include "Utilities.h"
 #include "QuadTree.h"
 
@@ -16,6 +18,27 @@ public:
 private:
 	bool circleToCircleCollision(Entity* t_entityCircle1, Entity* t_entityCircle2);
 	bool circleToAABBCollision(Entity* t_entityCircle, Entity* t_entityAABB);
+
+	void handlePlayerCollision(Entity* t_player);
+	void handlePlayerBulletCollision(Entity* t_playerBullet);
+	void handleEnemyCollision(Entity* t_enemy);
+	void handleEnemyBulletCollision(Entity* t_enemyBullet);
+
+	//player collisions
+	void playerToPlayer(Entity* t_player1, Entity* t_player2);
+	void playerToEnemy(Entity* t_player, Entity* t_enemy);
+	void playerToEnemyBullet(Entity* t_player, Entity* t_enemyBullet);
+	void playerToWall(Entity* t_player, Entity* t_wall);
+
+	void playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enemy);
+	void playerBulletToWall(Entity* t_playerBullet, Entity* t_wall);
+
+	void enemyToEnemy(Entity* t_enemy1, Entity* t_enemy2);
+	void enemyToWall(Entity* t_enemy, Entity* t_wall);
+
+	void enemyBulletToWall(Entity* t_enemyBullet, Entity* t_wall);
+
+
 
 	QuadTree m_quadTree;
 	std::vector<Entity*> m_circleColliderBuffer;

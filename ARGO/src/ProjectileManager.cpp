@@ -1,10 +1,13 @@
 #include "stdafx.h"
 #include "ProjectileManager.h"
 
-ProjectileManager::ProjectileManager() :
+ProjectileManager::ProjectileManager(EventManager& t_eventManager) :
 	m_nextEnemyBullet(0),
 	m_nextPlayerBullet(0)
 {
+	t_eventManager.subscribeToEvent<createBulletEvent>(std::bind(&ProjectileManager::createPlayerBullet, this, std::placeholders::_1));
+	t_eventManager.subscribeToEvent<createBulletEvent>(std::bind(&ProjectileManager::createEnemyBullet, this, std::placeholders::_1));
+
 	for (auto& bullet : m_playerBullets)
 	{
 		bullet.entity.addComponent(new TransformComponent());
@@ -13,6 +16,7 @@ ProjectileManager::ProjectileManager() :
 		bullet.entity.addComponent(new HealthComponent(1, 0));
 		bullet.entity.addComponent(new ColliderCircleComponent(BULLET_RADIUS));
 		bullet.entity.addComponent(new TimerComponent(BULLET_LIFETIME));
+		bullet.entity.addComponent(new TagComponent(Tag::PlayerBullet));
 	}
 	for (auto& bullet : m_enemyBullets)
 	{
@@ -22,13 +26,15 @@ ProjectileManager::ProjectileManager() :
 		bullet.entity.addComponent(new HealthComponent(1, 0));
 		bullet.entity.addComponent(new ColliderCircleComponent(BULLET_RADIUS));
 		bullet.entity.addComponent(new TimerComponent(BULLET_LIFETIME));
+		bullet.entity.addComponent(new TagComponent(Tag::EnemyBullet));
 	}
 }
 
-void ProjectileManager::createPlayerBullet(createBulletEvent t_event)
+void ProjectileManager::createPlayerBullet(const createBulletEvent& t_event)
 {
-	static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->setPos(t_event.position);
-	static_cast<ForceComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::FORCE_ID))->setForce(t_event.force);
+	glm::vec2 position = static_cast<TransformComponent*>(t_event.entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos();
+	static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->setPos(position);
+	static_cast<ForceComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::FORCE_ID))->setForce(t_event.direction * t_event.forceScale);
 	static_cast<HealthComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(1);
 	static_cast<TimerComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->reset();
 	m_playerBullets[m_nextPlayerBullet].type = t_event.type;
@@ -40,10 +46,11 @@ void ProjectileManager::createPlayerBullet(createBulletEvent t_event)
 	}
 }
 
-void ProjectileManager::createEnemyBullet(createBulletEvent t_event)
+void ProjectileManager::createEnemyBullet(const createBulletEvent& t_event)
 {
-	static_cast<TransformComponent*>(m_enemyBullets[m_nextEnemyBullet].entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->setPos(t_event.position);
-	static_cast<ForceComponent*>(m_enemyBullets[m_nextEnemyBullet].entity.getAllComps().at(COMPONENT_ID::FORCE_ID))->setForce(t_event.force);
+	glm::vec2 position = static_cast<TransformComponent*>(t_event.entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos();
+	static_cast<TransformComponent*>(m_enemyBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->setPos(position);
+	static_cast<ForceComponent*>(m_enemyBullets[m_nextEnemyBullet].entity.getAllComps().at(COMPONENT_ID::FORCE_ID))->setForce(t_event.direction * t_event.forceScale);
 	static_cast<HealthComponent*>(m_enemyBullets[m_nextEnemyBullet].entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(1);
 	static_cast<TimerComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->reset();
 	m_enemyBullets[m_nextEnemyBullet].type = t_event.type;

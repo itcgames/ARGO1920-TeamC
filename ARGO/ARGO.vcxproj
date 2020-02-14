@@ -35,6 +35,7 @@
     <ClCompile Include="src\InputComponent.cpp" />
     <ClCompile Include="src\InputSystem.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\TagComponent.cpp" />
     <ClCompile Include="src\TextComponent.cpp" />
     <ClCompile Include="src\TimerComponent.cpp" />
     <ClCompile Include="src\VisualComponent.cpp" />
@@ -82,6 +83,7 @@
     <ClInclude Include="include\HealthSystem.h" />
     <ClInclude Include="include\InputComponent.h" />
     <ClInclude Include="include\InputSystem.h" />
+    <ClInclude Include="include\TagComponent.h" />
     <ClInclude Include="include\TimerComponent.h" />
     <ClInclude Include="include\Utilities.h" />
     <ClInclude Include="include\VisualComponent.h" />

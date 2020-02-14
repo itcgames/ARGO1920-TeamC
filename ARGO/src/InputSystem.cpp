@@ -78,6 +78,10 @@ void InputSystem::handleCommands(EventManager& t_eventManager, InputComponent* t
 		{
 			t_eventManager.emitEvent(CloseWindow());
 		}
+		else if (typeid(*t_input->getCommands().top()) == typeid(FireBulletCommand))
+		{
+			t_eventManager.emitEvent(createBulletEvent{ t_entity, glm::normalize(t_input->getController().getCurrent().RightThumbStick), Utilities::PROJECTILE_SPEED ,0 });
+		}
 		else continue;
 		t_input->popTopCommand();
 	}

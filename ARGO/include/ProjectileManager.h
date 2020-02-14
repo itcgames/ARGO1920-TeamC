@@ -8,13 +8,8 @@
 #include "ColourComponent.h"
 #include "HealthComponent.h"
 #include "TimerComponent.h"
-
-struct createBulletEvent
-{
-	glm::vec2 position;
-	glm::vec2 force;
-	int type;
-};
+#include "TagComponent.h"
+#include "EventManager.h"
 
 struct Bullet
 {
@@ -25,9 +20,9 @@ struct Bullet
 class ProjectileManager
 {
 public:
-	ProjectileManager();
-	void createPlayerBullet(createBulletEvent t_event);
-	void createEnemyBullet(createBulletEvent t_event);
+	ProjectileManager(EventManager& t_eventManager);
+	void createPlayerBullet(const createBulletEvent& t_event);
+	void createEnemyBullet(const createBulletEvent& t_event);
 	void update(BaseSystem* t_system);
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
 private:

@@ -8,6 +8,7 @@
 class State;
 Game::Game() :
 	m_transformSystem{ m_eventManager },
+	m_projectileManager{ m_eventManager },
 	m_framesPerSecond(60),
 	m_ticksPerSecond(60),
 	m_lastTick(0),
@@ -153,11 +154,6 @@ void Game::processEvent()
 		}
 		if (SDLK_SPACE == event.key.keysym.sym)
 		{
-			createBulletEvent bulletEvent{ static_cast<TransformComponent*>(m_players[0].getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos(),
-								glm::vec2(50,0),
-								0
-			};
-			m_projectileManager.createPlayerBullet(bulletEvent);
 		}
 		if (SDLK_BACKSPACE == event.key.keysym.sym)
 		{
@@ -340,6 +336,7 @@ void Game::createPlayer(Entity& t_player)
 		std::pair<ButtonType, Command*>(ButtonType::DpadDown, new MoveDownCommand()),
 		std::pair<ButtonType, Command*>(ButtonType::DpadLeft, new MoveLeftCommand()),
 		std::pair<ButtonType, Command*>(ButtonType::DpadRight, new MoveRightCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::RightTrigger, new FireBulletCommand()),
 		std::pair<ButtonType,Command*>(ButtonType::Back, new CloseWindowCommand()) };
 
 	t_player.addComponent(new HealthComponent(10, 10));
@@ -349,6 +346,7 @@ void Game::createPlayer(Entity& t_player)
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
+	t_player.addComponent(new TagComponent(Tag::Player));
 }
 
 void Game::createEnemy()
@@ -357,10 +355,7 @@ void Game::createEnemy()
 	m_entities.back().addComponent(new TransformComponent());
 	m_entities.back().addComponent(new AiComponent());
 	m_entities.back().addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
-}
-
-void Game::createBullet(glm::vec2 t_position, glm::vec2 t_force)
-{
+	m_entities.back().addComponent(new TagComponent(Tag::Enemy));
 }
 
 void Game::setToWall(Entity& t_entity, glm::vec2 t_position)
@@ -369,6 +364,7 @@ void Game::setToWall(Entity& t_entity, glm::vec2 t_position)
 	t_entity.addComponent(new TransformComponent(t_position));
 	t_entity.addComponent(new VisualComponent("wall_4.png", m_renderer)); //TODO: change to wall texture when assets have been recieved.
 	t_entity.addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
+	t_entity.addComponent(new TagComponent(Tag::Wall));
 }
 
 void Game::setToFloor(Entity& t_entity, glm::vec2 t_position)

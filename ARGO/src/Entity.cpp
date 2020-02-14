@@ -128,7 +128,15 @@ void Entity::addComponent(Component* t_c)
 			}
 			break;
 		}
-
+		case ComponentType::Tag:
+		{
+			if (!m_components.at(COMPONENT_ID::TAG_ID))
+			{
+				m_components.at(COMPONENT_ID::TAG_ID) = t_c;
+				return;
+			}
+			break;
+		}
 		default:
 			throw std::invalid_argument("Invalid component type!");
 			break;
@@ -262,6 +270,16 @@ void Entity::removeCompType(ComponentType t_type)
 			}
 			break;
 		}
+		case ComponentType::Tag:
+		{
+			if (!m_components.at(COMPONENT_ID::TAG_ID))
+			{
+				delete m_components.at(COMPONENT_ID::TAG_ID);
+				m_components.at(COMPONENT_ID::TAG_ID) = nullptr;
+				return;
+			}
+			break;
+		}
 		default:
 			throw std::invalid_argument("trying to delete an unknown component!");
 			break;
@@ -311,6 +329,8 @@ Component* Entity::getComponent(ComponentType t_type)
 			return m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID);
 		case ComponentType::Timer:
 			return m_components.at(COMPONENT_ID::TIMER_ID);
+		case ComponentType::Tag:
+			return m_components.at(COMPONENT_ID::TAG_ID);
 		default:
 			throw std::invalid_argument("trying to get an unknown component!");
 			break;
