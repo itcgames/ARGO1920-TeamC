@@ -10,6 +10,16 @@ ParticleEmitterComponent::ParticleEmitterComponent():
 		m_particles.push_back(x);
 	}
 }
+ParticleEmitterComponent::ParticleEmitterComponent(glm::vec2* t_position):
+	Component(ComponentType::ParticleEmitter)
+{
+	m_position = t_position;
+	for (int i = 0; i < m_maxParticles; i++)
+	{
+		Particle x;
+		m_particles.push_back(x);
+	}
+}
 
 void ParticleEmitterComponent::setParticle(glm::vec2 t_pos)
 {
@@ -19,7 +29,6 @@ void ParticleEmitterComponent::setParticle(glm::vec2 t_pos)
 		m_particles[m_placeParticle].setAlive(true);
 	}
 	m_placeParticle++;
-	std::cout << m_placeParticle;
 	if (m_placeParticle >= m_maxParticles)
 	{
 		m_placeParticle = 0;
@@ -87,7 +96,7 @@ glm::vec2 ParticleEmitterComponent::getParticleMovement(int t_index)
 	return m_particles[t_index].getMovement();
 }
 
-void ParticleEmitterComponent::setPosition(glm::vec2 t_pos)
+void ParticleEmitterComponent::setPosition(glm::vec2* t_pos)
 {
 	m_position = t_pos;
 }
@@ -112,8 +121,9 @@ bool ParticleEmitterComponent::getParticleAlive(int t_index)
 	return m_particles[t_index].getAlive();
 }
 
-glm::vec2 ParticleEmitterComponent::getEmitterPosition()
+glm::vec2* ParticleEmitterComponent::getEmitterPosition()
 {
+	;
 	return m_position;
 }
 

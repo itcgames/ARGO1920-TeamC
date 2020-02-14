@@ -1,17 +1,15 @@
 #pragma once
-
 #include <iostream>
 #include "Rumble.h"
+#include "Utilities.h"
 
 /// <summary>
 /// data to store the getCurrent state of the controller
 /// This class is strictly for Xbox controllers
 /// </summary>
 struct GamePadState
-{
-	bool button[14]; 
-	float RTrigger{ 0 };
-	float LTrigger{ 0 };
+{ 
+	bool button[Utilities::NUMBER_OF_CONTROLLER_BUTTONS];   
 	glm::vec2 RightThumbStick{ 0.0f, 0.0f };
 	glm::vec2 LeftThumbStick{ 0.0f, 0.0f };
 };
@@ -26,29 +24,7 @@ enum class ButtonState
 	Held,
 	Released,
 	NotPressed
-};
-
-/// <summary>
-/// The different states the axis can be similar to the button state above
-/// </summary>
-enum class AxisState
-{
-	Moved,
-	NotMoved
-};
-
-/// <summary>
-/// The different non buttons on the controller that gets its value from SDL axis
-/// </summary>
-enum class AxisType
-{
-	RightThumbStick,
-	LeftThumbStick,
-	LeftTrigger,
-	RightTrigger,
-	// used to get size of enum
-	Count
-};
+}; 
 
 /// <summary>
 /// The different buttons present on the controller gotten from the SDL button value
@@ -69,8 +45,8 @@ enum class ButtonType
 	DpadLeft,
 	Start,
 	Back,
-	// used to get size of enum
-	Count
+	RightTrigger,
+	LeftTrigger 
 };
 
 /// <summary>
@@ -89,7 +65,6 @@ public:
 	GamePadState getPrevious() const;
 
 	ButtonState getButtonState(ButtonType t_ButtonType);
-	AxisState getAxisState(AxisType t_AxisType);
 	SDL_GameController* getSDLController();
 
 	void activateRumble(RumbleStrength t_strength, RumbleLength t_length);
@@ -99,8 +74,8 @@ public:
 	float getRumbleTime();
 
 private:
-	// dead zone for the dpad? (works like an another joystick)
-	const int THUMB_STICK_THRESHOLD = 3200;
+	// dead zone used by thumb sticks
+	const int THUMB_STICK_THRESHOLD = 8000;
 	// index of getCurrent controller
 	int m_controllerIndex;
 	// static int to differentiate between several connected controllers

@@ -12,6 +12,7 @@
 #include "CompEnums.h"
 #include "ParticleEmitterComponent.h"
 #include "PrimitiveComponent.h"
+#include "Utilities.h"
 
 class RenderSystem : public BaseSystem
 {
@@ -22,8 +23,11 @@ public:
 
 	void renderPrimitives(SDL_Renderer* t_renderer, TransformComponent* t_posComp, ColourComponent* t_colourComp);
 	void renderParticles(SDL_Renderer* t_renderer, ParticleEmitterComponent* t_emitter, PrimitiveComponent* t_primitive, ColourComponent* t_colComp, TransformComponent* t_posComp);
-
 	//Renders texture at given point
 	void renderTextures(VisualComponent* t_visComp, int t_textureLeftPos, int t_textureTopPos, SDL_Renderer* t_renderer = NULL, SDL_Rect* t_clip = NULL, double t_angle = 0.0, SDL_Point* t_center = NULL, SDL_RendererFlip t_flip = SDL_FLIP_NONE);
+
+	void setFocus(glm::vec2 t_point);
+private:
+	glm::vec2 m_focusPoint;
 };
 

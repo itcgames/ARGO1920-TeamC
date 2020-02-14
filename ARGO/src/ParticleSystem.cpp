@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ParticleSystem.h"
+#include "ext.hpp"
 
 ParticleSystem::~ParticleSystem()
 {
@@ -7,12 +8,12 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::update(Entity& t_entity)
 {
-	if (t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID) && t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID))
+	if (t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID) && t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID) && t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
 	{
 		ParticleEmitterComponent* partComp = static_cast<ParticleEmitterComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID));
 
 		PrimitiveComponent* primtiveComp = static_cast<PrimitiveComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID));
-
+		partComp->setPosition(static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID)))
 
 		for (int i = 0; i < partComp->getMaxParticles(); i++)
 		{
@@ -23,9 +24,7 @@ void ParticleSystem::update(Entity& t_entity)
 				partComp->setParticleMovement(i, randomDirectionVectorInRange(partComp->getAngle(), partComp->getAngleOffset()));
 				if (m_placeParticleTimer > 1.0f)
 				{
-					
 					partComp->setParticle(partComp->getEmitterPosition() + glm::vec2(partComp->randomOffset(), partComp->randomOffset()));
-
 					m_placeParticleTimer = 0;
 				}
 			}

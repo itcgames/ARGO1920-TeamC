@@ -19,12 +19,6 @@
     <Filter Include="Header Files\CommandPattern">
       <UniqueIdentifier>{e8afaba2-a66a-449e-8bba-f16dc9258bd1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\CommandPattern\Commands">
-      <UniqueIdentifier>{504c730e-e2f2-4101-9a28-86718c0dc132}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\CommandPattern\Commands">
-      <UniqueIdentifier>{c81de626-af0f-4d7f-91ed-c5af40aad6f7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\ECS">
       <UniqueIdentifier>{06d03961-a7b7-44ac-a096-2710c5115490}</UniqueIdentifier>
     </Filter>
@@ -49,6 +43,18 @@
     <Filter Include="Source Files\AnimationFSM">
       <UniqueIdentifier>{81ba1f45-edc4-4a14-b28a-b2f41b937a20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Controller">
+      <UniqueIdentifier>{42578eb5-ea3f-4bed-9542-879ad1c6e93b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controller">
+      <UniqueIdentifier>{c78ef028-1411-4d55-8ab1-b58235a84496}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\EventMessaging">
+      <UniqueIdentifier>{792bb31c-6556-49d1-8690-f7753968a054}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\EventMessaging">
+      <UniqueIdentifier>{e81561f9-bc32-4ada-a2e4-ff7ccd1068fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -60,29 +66,8 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Controller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Command.cpp">
-      <Filter>Source Files\CommandPattern</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InputHandler.cpp">
-      <Filter>Source Files\CommandPattern</Filter>
-    </ClCompile>
     <ClCompile Include="src\MacroCommand.cpp">
       <Filter>Source Files\CommandPattern</Filter>
-    </ClCompile>
-    <ClCompile Include="src\APressedCommand.cpp">
-      <Filter>Source Files\CommandPattern\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="src\XPressedCommand.cpp">
-      <Filter>Source Files\CommandPattern\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="src\YPressedCommand.cpp">
-      <Filter>Source Files\CommandPattern\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rumble.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Entity.cpp">
       <Filter>Source Files\ECS</Filter>
@@ -94,9 +79,6 @@
       <Filter>Source Files\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="src\InputSystem.cpp">
-      <Filter>Source Files\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RenderSystem.cpp">
       <Filter>Source Files\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="src\HealthComponent.cpp">
@@ -152,6 +134,39 @@
     </ClCompile>
     <ClCompile Include="src\PrimitiveComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
+	</ClCompile>
+    <ClCompile Include="src\ColliderAABB.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ColliderCircle.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CollisionSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\QuadTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProjectileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Command.cpp">
+      <Filter>Source Files\CommandPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Controller.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rumble.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Event.cpp">
+      <Filter>Source Files\EventMessaging</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TimerComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -161,29 +176,8 @@
     <ClInclude Include="include\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Command.h">
-      <Filter>Header Files\CommandPattern</Filter>
-    </ClInclude>
-    <ClInclude Include="include\InputHandler.h">
-      <Filter>Header Files\CommandPattern</Filter>
-    </ClInclude>
     <ClInclude Include="include\MacroCommand.h">
       <Filter>Header Files\CommandPattern</Filter>
-    </ClInclude>
-    <ClInclude Include="include\YPressedCommand.h">
-      <Filter>Header Files\CommandPattern\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="include\XPressedCommand.h">
-      <Filter>Header Files\CommandPattern\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="include\APressedCommand.h">
-      <Filter>Header Files\CommandPattern\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Controller.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Rumble.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Entity.h">
       <Filter>Header Files\ECS</Filter>
@@ -248,6 +242,9 @@
     <ClInclude Include="include\PhysicsSystem.h">
       <Filter>Header Files\ECS\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="include\Utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\ForceComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
@@ -264,6 +261,39 @@
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\Particle.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollisionSystem.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\QuadTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ColliderAABBComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ColliderCircleComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ProjectileManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Command.h">
+      <Filter>Header Files\CommandPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Controller.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Rumble.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EventManager.h">
+      <Filter>Header Files\EventMessaging</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Event.h">
+      <Filter>Header Files\EventMessaging</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TimerComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>

@@ -7,18 +7,23 @@
 
 class State;
 Game::Game() :
-	m_tileSize(64),
-	m_levelHeight(10),
-	m_levelWidth(15)
+	m_transformSystem{ m_eventManager },
+	m_framesPerSecond(60),
+	m_ticksPerSecond(60),
+	m_lastTick(0),
+	m_lastRender(0),
+	m_timePerFrame(0),
+	m_timePerTick(0)
 {
 	try
 	{
+		m_timePerFrame = 1000 / m_framesPerSecond;
+		m_timePerTick = 1000 / m_ticksPerSecond;
 		// Try to initalise SDL in general
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
 
 		// Create SDL Window Centred in Middle Of Screen
-		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 281, NULL);
-		
+		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Utilities::SCREEN_WIDTH, Utilities::SCREEN_HEIGHT, NULL);
 		// Check if window was created correctly
 		if (!m_window) throw "Error Loading Window";
 
@@ -31,26 +36,20 @@ Game::Game() :
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 		// Game is running
 		m_isRunning = true;
+
+		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
+
 		//add components to player
 		for (auto& player : m_players)
 		{
-			player.addComponent(new HealthComponent(10, 10));
-			player.addComponent(new TransformComponent());
-			player.addComponent(new InputComponent());
-			player.addComponent(new ForceComponent());
-			player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
-			player.addComponent(new PrimitiveComponent());
-			player.addComponent(new ParticleEmitterComponent());
+			createPlayer(player);
 		}
 
 		m_entities.reserve(MAX_ENTITIES);
 		for (int i = 0; i < 5; i++)
 		{
-			m_entities.emplace_back();
-			m_entities.at(i).addComponent(new TransformComponent());
-			m_entities.at(i).addComponent(new AiComponent());
+			createEnemy();
 		}
-
 		setupLevel();
 	}
 	catch (std::string error)
@@ -76,20 +75,22 @@ Game::~Game()
 /// </summary>
 void Game::run()
 {
-	const int FPS = 60;
-	const int frameDelay = 1000 / FPS;
-	Uint32 frameStart;
-	int frameTime;
+	m_lastTick = SDL_GetTicks();
+	m_lastRender = SDL_GetTicks();
 	while (m_isRunning)
 	{
-		frameStart = SDL_GetTicks();
-		frameTime = SDL_GetTicks() - frameStart;
 		processEvent();
-		update();
-		render();
-		if (frameDelay > frameTime)
+		Uint32 currentTick = SDL_GetTicks();
+		Uint16 deltaTime = currentTick - m_lastTick;
+		Uint16 renderTime = currentTick - m_lastRender;
+
+		bool canRender = checkCanRender(renderTime);
+		bool canTick = checkCanTick(deltaTime);
+		update(canRender, canTick, deltaTime);
+
+		if (canRender)
 		{
-			SDL_Delay(frameDelay - frameTime);
+			SDL_RenderPresent(m_renderer);
 		}
 	}
 }
@@ -115,11 +116,11 @@ void Game::processEvent()
 		}
 		if (SDLK_SPACE == event.key.keysym.sym)
 		{
-			if (m_entities.size() > 0)
-			{
-				m_entities.erase(--m_entities.end());
-			}
-			std::cout << m_entities.size() << std::endl;
+			createBulletEvent bulletEvent{ static_cast<TransformComponent*>(m_players[0].getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos(),
+								glm::vec2(50,0),
+								0
+			};
+			m_projectileManager.createPlayerBullet(bulletEvent);
 		}
 		if (SDLK_BACKSPACE == event.key.keysym.sym)
 		{
@@ -149,9 +150,7 @@ void Game::processEvent()
 			{
 				for (int i = 0; i < availableSpace; i++)
 				{
-					m_entities.emplace_back();
-					m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
-					m_entities.at(m_entities.size() - 1).addComponent(new AiComponent());
+					createEnemy();
 				}
 			}
 			std::cout << m_entities.size() << std::endl;
@@ -168,78 +167,79 @@ void Game::processEvent()
 			}
 			std::cout << m_entities.size() << std::endl;
 		}
-
-		if (SDLK_UP == event.key.keysym.sym)
-		{
-			m_fsm.idle();
-		}
-		if (SDLK_DOWN == event.key.keysym.sym)
-		{
-			m_fsm.moving();
-		}
-		if (SDLK_LEFT == event.key.keysym.sym)
-		{
-			m_fsm.attacking();
-		}
 		break;
 	default:
 		break;
 	}
 }
 
-/// <summary>
-/// Update function
-/// </summary>
-void Game::update()
+void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 {
-	for (auto& entity : m_entities)
-	{
-		m_inputSystem.update(entity);
-		m_hpSystem.update(entity);
-		m_aiSystem.update(entity);
-		m_transformSystem.update(entity);
-	}
 	for (auto& entity : m_levelTiles)
 	{
-		m_hpSystem.update(entity);
-		m_inputSystem.update(entity);
-		m_aiSystem.update(entity);
-		m_transformSystem.update(entity);
+		if (t_canTick)
+		{
+			m_collisionSystem.update(entity);
+		}
+		if (t_canRender)
+		{
+			m_renderSystem.render(m_renderer, entity);
+		}
+	}
+	for (auto& entity : m_entities)
+	{
+		if (t_canTick)
+		{
+			m_hpSystem.update(entity);
+			m_aiSystem.update(entity);
+			m_transformSystem.update(entity);
+			m_collisionSystem.update(entity);
+		}
+		if (t_canRender)
+		{
+			m_renderSystem.render(m_renderer, entity);
+		}
 	}
 	for (auto& player : m_players)
 	{
-		m_inputSystem.update(player);
-		m_hpSystem.update(player);
-		m_aiSystem.update(player);
-		m_transformSystem.update(player);
-		m_particleSystem.update(player);
+		if (t_canTick)
+		{
+			m_inputSystem.update(player, m_eventManager);
+			m_hpSystem.update(player);
+			m_transformSystem.update(player);
+			m_collisionSystem.update(player);
+			m_particleSystem.update(player);
+		}
+		if (t_canRender)
+		{
+			m_renderSystem.render(m_renderer, player);
+		}
+	}
+	if (t_canTick)
+	{
+		m_projectileManager.update(&m_transformSystem);
+		m_projectileManager.update(&m_collisionSystem);
+	}
+	if (t_canRender)
+	{
+		m_projectileManager.render(m_renderer, &m_renderSystem);
 	}
 
-	m_fsm.update();
+	if (t_canTick) m_collisionSystem.handleCollisions();
 }
 
-/// <summary>
-/// Render function
-/// </summary>
-void Game::render()
+void Game::preRender()
 {
-	SDL_RenderClear(m_renderer);
-
-	//Draw Here
-	for (auto& entity : m_entities)
-	{
-		m_renderSystem.render(m_renderer, entity);
-	}
-	for (auto& entity : m_levelTiles)
-	{
-		m_renderSystem.render(m_renderer, entity);
-	}
+	//setting the focus point for the camera.
+	glm::vec2 focusPoint = glm::vec2(0, 0);
 	for (auto& player : m_players)
 	{
-		m_renderSystem.render(m_renderer, player);
+		focusPoint.x += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().x;
+		focusPoint.y += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().y;
 	}
+	m_renderSystem.setFocus(focusPoint / 4.0f);
 
-	SDL_RenderPresent(m_renderer);
+	SDL_RenderClear(m_renderer);
 }
 
 /// <summary>
@@ -254,16 +254,89 @@ void Game::cleanup()
 
 void Game::setupLevel()
 {
-	int count = 0; 
-	m_levelTiles.reserve(m_levelHeight * m_levelWidth);
-	for (int i = 0; i < m_levelHeight; i++)
+	int count = 0;
+	m_levelTiles.reserve(Utilities::LEVEL_TILE_HEIGHT * Utilities::LEVEL_TILE_WIDTH);
+	for (int i = 0; i < Utilities::LEVEL_TILE_HEIGHT; i++)
 	{
-		for (int j = 0; j < m_levelWidth; j++)
+		for (int j = 0; j < Utilities::LEVEL_TILE_WIDTH; j++)
 		{
 			m_levelTiles.emplace_back();
-			m_levelTiles.at(count).addComponent(new TransformComponent(j * m_tileSize, i * m_tileSize, 0));
-			m_levelTiles.at(count).addComponent(new VisualComponent("assets//images//Texture.png", m_renderer));
+
+			setToFloor(m_levelTiles.at(count), glm::vec2(j * Utilities::TILE_SIZE, i * Utilities::TILE_SIZE));
 			count++;
 		}
 	}
+}
+
+void Game::createPlayer(Entity& t_player)
+{
+	std::map<ButtonType, Command*> buttonPressMap = {
+		std::pair<ButtonType, Command*>(ButtonType::DpadUp, new MoveUpCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::DpadDown, new MoveDownCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::DpadLeft, new MoveLeftCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::DpadRight, new MoveRightCommand()),
+		std::pair<ButtonType,Command*>(ButtonType::Back, new CloseWindowCommand()) };
+
+	t_player.addComponent(new HealthComponent(10, 10));
+	t_player.addComponent(new TransformComponent());
+	// passing two of the same object as at this moment the commands for button press is the same for button held
+	t_player.addComponent(new InputComponent(buttonPressMap, buttonPressMap));
+	t_player.addComponent(new ForceComponent());
+	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
+	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
+	t_player.addComponent(new ParticleEmitterComponent(&static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos()));
+	t_player.addComponent(new PrimitiveComponent());
+}
+
+void Game::createEnemy()
+{
+	m_entities.emplace_back();
+	m_entities.back().addComponent(new TransformComponent());
+	m_entities.back().addComponent(new AiComponent());
+	m_entities.back().addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
+}
+
+void Game::createBullet(glm::vec2 t_position, glm::vec2 t_force)
+{
+}
+
+void Game::setToWall(Entity& t_entity, glm::vec2 t_position)
+{
+	t_entity.removeAllComponents();
+	t_entity.addComponent(new TransformComponent(t_position));
+	t_entity.addComponent(new VisualComponent("assets//images//wall_4.png", m_renderer)); //TODO: change to wall texture when assets have been recieved.
+	t_entity.addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
+}
+
+void Game::setToFloor(Entity& t_entity, glm::vec2 t_position)
+{
+	t_entity.removeAllComponents();
+	t_entity.addComponent(new TransformComponent(t_position));
+	t_entity.addComponent(new VisualComponent("assets//images//floor_1b.png", m_renderer)); //TODO: change to floor texture when assets have been recieved.
+}
+
+bool Game::checkCanRender(Uint16 t_renderTime)
+{
+	if (t_renderTime > m_timePerFrame)
+	{
+		m_lastRender += m_timePerFrame;
+		preRender();
+		return true;
+	}
+	return false;
+}
+
+bool Game::checkCanTick(Uint16 t_deltaTime)
+{
+	if (t_deltaTime > m_timePerTick)
+	{
+		m_lastTick += m_timePerTick;
+		return true;
+	}
+	return false;
+}
+
+void Game::closeWindow(const CloseWindow& t_event)
+{
+	m_isRunning = false;
 }

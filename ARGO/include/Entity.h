@@ -5,7 +5,6 @@
 #include "CompEnums.h"
 #include <stdexcept>
 
-
 class Entity
 {
 public:
@@ -14,6 +13,7 @@ public:
 
 	void addComponent(Component* t_component);
 	void removeCompType(ComponentType t_type);
+	void removeAllComponents();
 
 	Component* getComponent(ComponentType t_type);
 	bool hasComponentType(ComponentType t_type) const;
@@ -21,6 +21,6 @@ public:
 private:
 	//used to reserve space in the components vector 
 	//10 might be too much perhaps
-	const static int S_MAX_COMPS = 10;
+	const static int S_MAX_COMPS = 15;
 	std::vector<Component*> m_components;
 };
