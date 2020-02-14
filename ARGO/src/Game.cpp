@@ -40,17 +40,21 @@ Game::Game() :
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 
 		//add components to player
-		int i = 0;
+
+		
+		//int i = 0;  //Uncomment to test Particle Emmitter
 		for (auto& player : m_players)
 		{
 			createPlayer(player);
-			static_cast<ParticleEmitterComponent*>(player.getAllComps().at(COMPONENT_ID::PARTICLE_ID))->setAngle(i * 45);
-			if (i == 1 || i == 3)
-			{
-				static_cast<ParticleEmitterComponent*>(player.getAllComps().at(COMPONENT_ID::PARTICLE_ID))->setRotating(true);
-			}
-			i++;
 
+			////Uncomment to test Particle Emmitter - Start
+			//static_cast<ParticleEmitterComponent*>(player.getAllComps().at(COMPONENT_ID::PARTICLE_ID))->setAngle(i * 45);
+			//if (i == 1 || i == 3)
+			//{
+			//	static_cast<ParticleEmitterComponent*>(player.getAllComps().at(COMPONENT_ID::PARTICLE_ID))->setRotating(true);
+			//}
+			//i++;
+			////Uncomment to test Particle Emmitter - End
 		}
 
 		m_entities.reserve(MAX_ENTITIES);

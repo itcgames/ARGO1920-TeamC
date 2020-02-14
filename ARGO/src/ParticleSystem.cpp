@@ -11,29 +11,27 @@ void ParticleSystem::update(Entity& t_entity)
 	if (t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID) && t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID) && t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
 	{
 		ParticleEmitterComponent* partComp = static_cast<ParticleEmitterComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID));
-
 		PrimitiveComponent* primtiveComp = static_cast<PrimitiveComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID));
-		partComp->setPosition(static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos());
-
+		partComp->setPosition(static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos());//Sets the Emitter to the entity's tranform position. This makes it move with mobile entities.
 		for (int i = 0; i < partComp->getMaxParticles(); i++)
 		{
-
-			//Places More Particles if the Emitter is Emitting
+			//If the Emitter is emitting and the currently queded particle is not already alive
 			if (partComp->getEmitting() && !partComp->getParticleAlive(partComp->getNextParticle()))
 			{
-				
+				//And it is time to place a new particle
 				if (partComp->getPlaceParticleTimer() > 1.0f)
 				{
-					if(partComp->getRotating())
+					if (partComp->getRotating())//Changes the angle if the Emitter is rotating
 					{
 						adjustParticleAngles((partComp->getAngle() + partComp->getRotating()), partComp);
 					}
+					//Set's the particles movement, places it and decrements the placeTimer
 					partComp->setParticleMovement(partComp->getNextParticle(), randomDirectionVectorInRange(partComp->getAngle(), partComp->getAngleOffset()));
 					partComp->setParticle(partComp->getEmitterPosition() + glm::vec2(randomOffset(partComp->getOffset()), partComp->getOffset()));
 					partComp->setPlaceParticleTimer(partComp->getPlaceParticleTimer() - 1);
 				}
 			}
-
+			//If the Current particle is alive.
 			if (partComp->getParticleAlive(i))
 			{
 				//Checks to see if the Particle should be killed
@@ -41,11 +39,12 @@ void ParticleSystem::update(Entity& t_entity)
 				{
 					partComp->killParticle(i);
 				}
-				//Updates the Particles
+				//Updates all the living particles. Moving them and incrementing their timers.
 				partComp->updateParticle(i);
-	
+
 			}
 		}
+		//Increment the placeTimer. This value is set by the particlesPerSecond variable. When the place timer is more than 1 a particle is placed.
 		partComp->setPlaceParticleTimer(partComp->getPlaceParticleTimer() + partComp->getParticlesPerSecond());
 	}
 }
