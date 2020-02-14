@@ -14,6 +14,8 @@
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\AudioHandler.cpp" />
     <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\CommandComponent.cpp" />
+    <ClCompile Include="src\CommandSystem.cpp" />
     <ClCompile Include="src\Event.cpp" />
     <ClCompile Include="src\ColliderAABB.cpp" />
     <ClCompile Include="src\ColliderCircle.cpp" />
@@ -54,6 +56,8 @@
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\AudioHandler.h" />
     <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\CommandComponent.h" />
+    <ClInclude Include="include\CommandSystem.h" />
     <ClInclude Include="include\Event.h" />
     <ClInclude Include="include\EventManager.h" />
     <ClInclude Include="include\ColliderAABBComponent.h" />

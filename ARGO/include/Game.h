@@ -25,6 +25,7 @@
 #include "EventManager.h"
 #include "CollisionSystem.h"
 #include "ProjectileManager.h"
+#include "CommandSystem.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -65,6 +66,7 @@ private:
 	RenderSystem m_renderSystem;
 	AiSystem m_aiSystem;
 	CollisionSystem m_collisionSystem;
+	CommandSystem m_commandSystem;
 
 	Entity m_players[4];
 	std::vector<Entity> m_entities;

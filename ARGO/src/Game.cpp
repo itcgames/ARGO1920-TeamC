@@ -253,7 +253,8 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 	{
 		if (t_canTick)
 		{
-			m_inputSystem.update(player, m_eventManager);
+			m_inputSystem.update(player);
+			m_commandSystem.update(player, m_eventManager);
 			m_hpSystem.update(player);
 			m_transformSystem.update(player);
 			m_collisionSystem.update(player);
@@ -342,6 +343,7 @@ void Game::createPlayer(Entity& t_player)
 		std::pair<ButtonType, Command*>(ButtonType::DpadRight, new MoveRightCommand()),
 		std::pair<ButtonType,Command*>(ButtonType::Back, new CloseWindowCommand()) };
 
+	t_player.addComponent(new CommandComponent());
 	t_player.addComponent(new HealthComponent(10, 10));
 	t_player.addComponent(new TransformComponent());
 	// passing two of the same object as at this moment the commands for button press is the same for button held
