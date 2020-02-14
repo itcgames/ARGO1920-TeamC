@@ -41,6 +41,7 @@ Game::Game() :
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 
 		m_assetMgr = AssetManager::Instance(*m_renderer);
+		m_audioMgr = AudioManager::Instance();
 
 		// Game is running
 		m_isRunning = true;
@@ -82,6 +83,9 @@ Game::~Game()
 {
 	m_entities.clear();
 
+	AudioManager::Release();
+	m_audioMgr = NULL;
+
 	AssetManager::Release();
 	m_assetMgr = NULL;
 
@@ -115,12 +119,6 @@ void Game::run()
 
 void Game::initLibraries()
 {
-	//Initialize SDL_mixer
-	if (Mix_OpenAudio(Utilities::AUDIO_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, Utilities::AUDIO_CHUNK_SIZE) < 0)
-	{
-		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
-	}
-
 	//Initialize SDL_TTF
 	if (TTF_Init() < 0)
 	{
@@ -193,25 +191,24 @@ void Game::processEvent()
 			//if space available in the vector
 			if (m_entities.size() < MAX_ENTITIES)
 			{
-				//add one
-				m_entities.emplace_back();
-				m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
-				m_entities.at(m_entities.size() - 1).addComponent(new AiComponent());
+				//add one enemy
+				createEnemy();
 			}
 			std::cout << m_entities.size() << std::endl;
 		}
 		if (SDLK_q == event.key.keysym.sym)
 		{
-			static_cast<TextComponent*>(m_textTest2.getComponent(ComponentType::Text))->setAlpha(255);
+			m_audioMgr->PlaySfx("airhorn.wav");
 		}
-		if (SDLK_w == event.key.keysym.sym)
+		if (SDLK_UP == event.key.keysym.sym)
 		{
-			static_cast<TextComponent*>(m_textTest2.getComponent(ComponentType::Text))->setAlpha(123);
+			m_audioMgr->SetVolume(m_audioMgr->GetVolume() + 10);
 		}
-		if (SDLK_e == event.key.keysym.sym)
+		if (SDLK_DOWN == event.key.keysym.sym)
 		{
-			static_cast<TextComponent*>(m_textTest2.getComponent(ComponentType::Text))->setAlpha(1);
+			m_audioMgr->SetVolume(m_audioMgr->GetVolume() - 10);
 		}
+
 		break;
 	default:
 		break;

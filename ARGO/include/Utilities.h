@@ -9,7 +9,7 @@ namespace Utilities
 
 	//audio consts
 	const int AUDIO_FREQUENCY = 2 * MIX_DEFAULT_FREQUENCY;
-	const int AUDIO_CHUNK_SIZE = 2048;
+	const int AUDIO_CHUNK_SIZE = 4096;
 
 	const std::string IMAGES_PATH = "assets\\images\\";
 	const std::string SOUNDS_PATH = "assets\\sounds\\";
@@ -24,4 +24,8 @@ namespace Utilities
 	const int ENEMY_RADIUS = 32;
 	const int NUMBER_OF_CONTROLLER_BUTTONS = 16;
 	const int PROJECTILE_SPEED = 32;
+
+	const int ALL_AUDIO_CHANNELS = -1;
+	const int GET_VOLUME = -1;
+	const int AUDIO_LOOP_CONSTANT = -1;
 }
