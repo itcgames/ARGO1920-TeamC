@@ -12,7 +12,8 @@ namespace Utilities
 	const int AUDIO_CHUNK_SIZE = 4096;
 
 	const std::string IMAGES_PATH = "assets\\images\\";
-	const std::string SOUNDS_PATH = "assets\\sounds\\";
+	const std::string SFX_PATH = "assets\\sounds\\sfx\\";
+	const std::string MUSIC_PATH = "assets\\sounds\\music\\";
 	const std::string FONTS_PATH = "assets\\fonts\\";
 
 	const int SCREEN_WIDTH = 1600;

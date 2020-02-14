@@ -30,9 +30,12 @@ private:
 	AudioManager();
 	~AudioManager();
 	int calcVolume(const int& t_volume);
+	void coutVolumes();
 
-	int m_masterVolume = 50;
+	int m_masterVolume = 100;
 	int m_musicVolume = 100;
 	int m_sfxVolume = 100;
+
+	int m_inittedFlags;
 };
 

@@ -53,6 +53,9 @@ void AudioManager::SetMasterVolume(const int t_percent)
 
 	//set master volume to the percentage
 	Mix_Volume(Utilities::ALL_AUDIO_CHANNELS, m_masterVolume * MIX_MAX_VOLUME / 100.0f);
+	Mix_VolumeMusic(calcVolume(m_musicVolume));
+
+	coutVolumes();
 }
 
 int AudioManager::GetMasterVolume() const
@@ -97,6 +100,8 @@ AudioManager::AudioManager()
 	{
 		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 	}
+	m_inittedFlags = Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG);
+
 	Mix_AllocateChannels(Utilities::AUDIO_MIX_CHANNELS);
 
 	SetMasterVolume(m_masterVolume);
@@ -105,10 +110,22 @@ AudioManager::AudioManager()
 AudioManager::~AudioManager()
 {
 	m_assetMgr = NULL;
-	Mix_Quit();
+	Mix_CloseAudio();
+
+	for (int i = 0; i < m_inittedFlags; i++)
+	{
+		Mix_Quit();
+	}
 }
 
 int AudioManager::calcVolume(const int& t_volume)
 {
 	return (t_volume * (m_masterVolume * MIX_MAX_VOLUME / 100.0f)) / 100.0f;
+}
+
+void AudioManager::coutVolumes()
+{
+	std::cout << "Master volume: " << m_masterVolume << std::endl;
+	std::cout << "Music volume: " << m_musicVolume << " real volume " << calcVolume(m_musicVolume) << std::endl;
+	std::cout << "SFX volume: " << m_sfxVolume << " real volume " << calcVolume(m_sfxVolume) << std::endl;
 }

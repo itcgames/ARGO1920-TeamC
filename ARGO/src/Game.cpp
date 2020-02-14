@@ -42,6 +42,7 @@ Game::Game() :
 
 		m_assetMgr = AssetManager::Instance(*m_renderer);
 		m_audioMgr = AudioManager::Instance();
+		m_audioMgr->PlayMusic("looping\\Ove - Earth Is All We Have.ogg");
 
 		// Game is running
 		m_isRunning = true;
@@ -83,11 +84,11 @@ Game::~Game()
 {
 	m_entities.clear();
 
-	AudioManager::Release();
-	m_audioMgr = NULL;
-
 	AssetManager::Release();
 	m_assetMgr = NULL;
+
+	AudioManager::Release();
+	m_audioMgr = NULL;
 
 	cleanup();
 }
@@ -200,13 +201,32 @@ void Game::processEvent()
 		{
 			m_audioMgr->PlaySfx("airhorn.wav");
 		}
+		//master volume
 		if (SDLK_UP == event.key.keysym.sym)
 		{
-			m_audioMgr->SetSfxVolume(m_audioMgr->GetSfxVolume() + 10);
+			m_audioMgr->SetMasterVolume(m_audioMgr->GetMasterVolume() + 10);
 		}
 		if (SDLK_DOWN == event.key.keysym.sym)
 		{
+			m_audioMgr->SetMasterVolume(m_audioMgr->GetMasterVolume() - 10);
+		}
+		//sfx volume
+		if (SDLK_KP_7 == event.key.keysym.sym)
+		{
+			m_audioMgr->SetSfxVolume(m_audioMgr->GetSfxVolume() + 10);
+		}
+		if (SDLK_KP_4 == event.key.keysym.sym)
+		{
 			m_audioMgr->SetSfxVolume(m_audioMgr->GetSfxVolume() - 10);
+		}
+		//music volume
+		if (SDLK_KP_9 == event.key.keysym.sym)
+		{
+			m_audioMgr->SetMusicVolume(m_audioMgr->GetMusicVolume() + 10);
+		}
+		if (SDLK_KP_6 == event.key.keysym.sym)
+		{
+			m_audioMgr->SetMusicVolume(m_audioMgr->GetMusicVolume() - 10);
 		}
 
 		break;
@@ -303,7 +323,6 @@ void Game::preRender()
 void Game::cleanup()
 {
 	IMG_Quit();
-	Mix_Quit();
 	TTF_Quit();
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
