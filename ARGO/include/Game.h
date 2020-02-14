@@ -12,6 +12,7 @@
 #include "VisualComponent.h"
 #include "ColliderAABBComponent.h"
 #include "ColliderCircleComponent.h"
+#include "TagComponent.h"
 #include "HealthSystem.h"
 #include "PhysicsSystem.h"
 #include "InputSystem.h"
@@ -39,7 +40,6 @@ private:
 	void setupLevel();
 	void createPlayer(Entity& t_player);
 	void createEnemy();
-	void createBullet(glm::vec2 t_position, glm::vec2 t_force);
 	void setToWall(Entity& t_entity, glm::vec2 t_position);
 	void setToFloor(Entity& t_entity, glm::vec2 t_position);
 

@@ -21,6 +21,6 @@ public:
 private:
 	//used to reserve space in the components vector 
 	//10 might be too much perhaps
-	const static int S_MAX_COMPS = 10;
+	const static int S_MAX_COMPS = 20;
 	std::vector<Component*> m_components;
 };

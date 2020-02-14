@@ -10,4 +10,5 @@ namespace Utilities
 	const int PLAYER_RADIUS = 32;
 	const int ENEMY_RADIUS = 32;
 	const int NUMBER_OF_CONTROLLER_BUTTONS = 16;
+	const int PROJECTILE_SPEED = 32;
 }

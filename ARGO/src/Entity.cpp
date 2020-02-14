@@ -113,6 +113,15 @@ void Entity::addComponent(Component* t_c)
 		}
 		break;
 	}
+	case ComponentType::Tag:
+	{
+		if (!m_components.at(COMPONENT_ID::TAG_ID))
+		{
+			m_components.at(COMPONENT_ID::TAG_ID) = t_c;
+			return;
+		}
+		break;
+	}
 	default:
 
 		break;
@@ -221,6 +230,16 @@ void Entity::removeCompType(ComponentType t_type)
 		{
 			delete m_components.at(COMPONENT_ID::TIMER_ID);
 			m_components.at(COMPONENT_ID::TIMER_ID) = nullptr;
+			return;
+		}
+		break;
+	}
+	case ComponentType::Tag:
+	{
+		if (!m_components.at(COMPONENT_ID::TAG_ID))
+		{
+			delete m_components.at(COMPONENT_ID::TAG_ID);
+			m_components.at(COMPONENT_ID::TAG_ID) = nullptr;
 			return;
 		}
 		break;
