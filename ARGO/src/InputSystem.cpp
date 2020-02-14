@@ -10,23 +10,23 @@ InputSystem::~InputSystem()
 	BaseSystem::~BaseSystem();
 }
 
-void InputSystem::update(Entity& t_entity, EventManager& t_eventManager)
+void InputSystem::update(Entity& t_entity)
 {
 
 #if (INPUT_SYS_DEBUG == 1)
 	std::cout << "Calling InputComponent.update()" << std::endl;
 #endif
 
-	if (t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID))
+	if (t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID) && t_entity.getAllComps().at(COMPONENT_ID::COMMAND_ID))
 	{
 		InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID));
+		CommandComponent* commandComp = static_cast<CommandComponent*>(t_entity.getAllComps().at(COMPONENT_ID::COMMAND_ID));
 		inputComp->update();
-		handleInputs(inputComp);
-		handleCommands(t_eventManager, inputComp, t_entity);
+		handleInputs(inputComp, commandComp);
 	}
 }
 
-void InputSystem::handleInputs(InputComponent* t_inputComponent)
+void InputSystem::handleInputs(InputComponent* t_inputComponent, CommandComponent* t_commandComponent)
 {
 	Controller controller = t_inputComponent->getController();
 	for (int index = 0; index < Utilities::NUMBER_OF_CONTROLLER_BUTTONS; index++)
@@ -37,48 +37,16 @@ void InputSystem::handleInputs(InputComponent* t_inputComponent)
 		{
 			if (buttonMap[(ButtonType)index] != nullptr)
 			{
-				t_inputComponent->addCommand(buttonMap[(ButtonType)index]);
+				t_commandComponent->addCommand(buttonMap[(ButtonType)index]);
 			}
 		}
 	}
 	if (controller.getCurrent().LeftThumbStick != glm::vec2(0.0f, 0.0f))
 	{
-		t_inputComponent->addCommand(new AnalogMoveCommand());
+		t_commandComponent->addCommand(new AnalogMoveCommand());
 	}
 	if (controller.getCurrent().RightThumbStick != glm::vec2(0.0f, 0.0f))
 	{
-	}
-}
 
-void InputSystem::handleCommands(EventManager& t_eventManager, InputComponent* t_input, Entity& t_entity)
-{
-	while (!t_input->getCommands().empty())
-	{
-		if (typeid(*t_input->getCommands().top()) == typeid(MoveUpCommand))
-		{
-			t_eventManager.emitEvent(PhysicsMove{ glm::vec2(0,-1), t_entity });
-		}
-		else if (typeid(*t_input->getCommands().top()) == typeid(MoveDownCommand))
-		{
-			t_eventManager.emitEvent(PhysicsMove{ glm::vec2(0,1), t_entity });
-		}
-		else if (typeid(*t_input->getCommands().top()) == typeid(MoveLeftCommand))
-		{
-			t_eventManager.emitEvent(PhysicsMove{ glm::vec2(-1, 0), t_entity });
-		}
-		else if (typeid(*t_input->getCommands().top()) == typeid(MoveRightCommand))
-		{
-			t_eventManager.emitEvent(PhysicsMove{ glm::vec2(1, 0), t_entity });
-		}
-		else if (typeid(*t_input->getCommands().top()) == typeid(AnalogMoveCommand))
-		{
-			t_eventManager.emitEvent(PhysicsMove{ glm::normalize(t_input->getController().getCurrent().LeftThumbStick), t_entity });
-		}
-		else if (typeid(*t_input->getCommands().top()) == typeid(CloseWindowCommand))
-		{
-			t_eventManager.emitEvent(CloseWindow());
-		}
-		else continue;
-		t_input->popTopCommand();
 	}
 }

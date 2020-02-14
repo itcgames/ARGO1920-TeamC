@@ -13,7 +13,10 @@ enum class ComponentType
 	Timer = 9,
 	Primitive = 10,
 	ParticleEmitter = 11,
-
+	Tag = 12,
+	Text = 13,
+	Command = 14,
+	Count
 };
 
 //when adding new component type, add it to enum class and then to this
@@ -28,7 +31,10 @@ namespace COMPONENT_ID
 	const int FORCE_ID = static_cast<int>(ComponentType::Force);
 	const int PRIMITIVE_ID = static_cast<int>(ComponentType::Primitive);
 	const int PARTICLE_ID = static_cast<int>(ComponentType::ParticleEmitter);
+	const int TEXT_ID = static_cast<int>(ComponentType::Text);
 	const int COLLIDER_AABB_ID = static_cast<int>(ComponentType::ColliderAABB);
 	const int COLLIDER_CIRCLE_ID = static_cast<int>(ComponentType::ColliderCircle);
 	const int TIMER_ID = static_cast<int>(ComponentType::Timer);
+	const int COMMAND_ID = static_cast<int>(ComponentType::Command);
+	const int TAG_ID = static_cast<int>(ComponentType::Tag);
 }

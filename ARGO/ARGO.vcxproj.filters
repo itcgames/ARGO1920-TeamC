@@ -43,6 +43,12 @@
     <Filter Include="Source Files\AnimationFSM">
       <UniqueIdentifier>{81ba1f45-edc4-4a14-b28a-b2f41b937a20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ResourceManagement">
+      <UniqueIdentifier>{75cdffdd-e633-4bd5-b1c6-adf8ed25b50d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ResourceManagement">
+      <UniqueIdentifier>{c1434c21-e7b5-4bc5-b998-45ce59e0d8ae}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\Controller">
       <UniqueIdentifier>{42578eb5-ea3f-4bed-9542-879ad1c6e93b}</UniqueIdentifier>
     </Filter>
@@ -135,6 +141,12 @@
     <ClCompile Include="src\PrimitiveComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
 	</ClCompile>
+    <ClCompile Include="src\TextComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetManager.cpp">
+      <Filter>Source Files\ResourceManagement</Filter>
+    </ClCompile>
     <ClCompile Include="src\ColliderAABB.cpp">
       <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
@@ -166,6 +178,21 @@
       <Filter>Source Files\EventMessaging</Filter>
     </ClCompile>
     <ClCompile Include="src\TimerComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioManager.cpp">
+      <Filter>Source Files\ResourceManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommandSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommandComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TagComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
   </ItemGroup>
@@ -262,6 +289,12 @@
     </ClInclude>
     <ClInclude Include="include\Particle.h">
       <Filter>Header Files\ECS\Components</Filter>
+	  </ClInclude>
+    <ClInclude Include="include\TextComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AssetManager.h">
+      <Filter>Header Files\ResourceManagement</Filter>
     </ClInclude>
     <ClInclude Include="include\CollisionSystem.h">
       <Filter>Header Files\ECS\Systems</Filter>
@@ -294,6 +327,21 @@
       <Filter>Header Files\EventMessaging</Filter>
     </ClInclude>
     <ClInclude Include="include\TimerComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AudioManager.h">
+      <Filter>Header Files\ResourceManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CommandComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CommandSystem.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Command.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TagComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>

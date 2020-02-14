@@ -8,6 +8,7 @@
 class State;
 Game::Game() :
 	m_transformSystem{ m_eventManager },
+	m_projectileManager{ m_eventManager },
 	m_framesPerSecond(60),
 	m_ticksPerSecond(60),
 	m_lastTick(0),
@@ -24,6 +25,10 @@ Game::Game() :
 
 		// Create SDL Window Centred in Middle Of Screen
 		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Utilities::SCREEN_WIDTH, Utilities::SCREEN_HEIGHT, NULL);
+
+		//initilises mixer, ttf and img
+		initLibraries();
+
 		// Check if window was created correctly
 		if (!m_window) throw "Error Loading Window";
 
@@ -34,6 +39,10 @@ Game::Game() :
 
 		// Sets clear colour of renderer to black and the color of any primitives
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
+
+		m_assetMgr = AssetManager::Instance(*m_renderer);
+		m_audioMgr = AudioManager::Instance();
+
 		// Game is running
 		m_isRunning = true;
 
@@ -62,6 +71,12 @@ Game::Game() :
 		{
 			createEnemy();
 		}
+
+		m_textTest1.addComponent(new TransformComponent());
+		m_textTest1.addComponent(new TextComponent("comic.ttf", m_renderer, true, std::string("Static Text")));
+		m_textTest2.addComponent(new TransformComponent());
+		m_textTest2.addComponent(new TextComponent("pt-sans.ttf", m_renderer, Utilities::LARGE_FONT, false, "Not Static Text", 255, 255, 0, 123));
+
 		setupLevel();
 	}
 	catch (std::string error)
@@ -71,7 +86,6 @@ Game::Game() :
 		// game doesnt run
 		m_isRunning = false;
 	}
-
 }
 
 /// <summary>
@@ -79,6 +93,14 @@ Game::Game() :
 /// </summary>
 Game::~Game()
 {
+	m_entities.clear();
+
+	AudioManager::Release();
+	m_audioMgr = NULL;
+
+	AssetManager::Release();
+	m_assetMgr = NULL;
+
 	cleanup();
 }
 
@@ -107,6 +129,20 @@ void Game::run()
 	}
 }
 
+void Game::initLibraries()
+{
+	//Initialize SDL_TTF
+	if (TTF_Init() < 0)
+	{
+		printf("SDL_TTF could not initialize! SDL_TTF Error: %s\n", TTF_GetError());
+	}
+
+	if ((IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) < 0))
+	{
+		printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+	}
+}
+
 /// <summary>
 /// Processes any SDL event
 /// </summary>
@@ -128,11 +164,6 @@ void Game::processEvent()
 		}
 		if (SDLK_SPACE == event.key.keysym.sym)
 		{
-			createBulletEvent bulletEvent{ static_cast<TransformComponent*>(m_players[0].getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos(),
-								glm::vec2(50,0),
-								0
-			};
-			m_projectileManager.createPlayerBullet(bulletEvent);
 		}
 		if (SDLK_BACKSPACE == event.key.keysym.sym)
 		{
@@ -172,13 +203,24 @@ void Game::processEvent()
 			//if space available in the vector
 			if (m_entities.size() < MAX_ENTITIES)
 			{
-				//add one
-				m_entities.emplace_back();
-				m_entities.at(m_entities.size() - 1).addComponent(new TransformComponent());
-				m_entities.at(m_entities.size() - 1).addComponent(new AiComponent());
+				//add one enemy
+				createEnemy();
 			}
 			std::cout << m_entities.size() << std::endl;
 		}
+		if (SDLK_q == event.key.keysym.sym)
+		{
+			m_audioMgr->PlaySfx("airhorn.wav");
+		}
+		if (SDLK_UP == event.key.keysym.sym)
+		{
+			m_audioMgr->SetVolume(m_audioMgr->GetVolume() + 10);
+		}
+		if (SDLK_DOWN == event.key.keysym.sym)
+		{
+			m_audioMgr->SetVolume(m_audioMgr->GetVolume() - 10);
+		}
+
 		break;
 	default:
 		break;
@@ -216,7 +258,8 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 	{
 		if (t_canTick)
 		{
-			m_inputSystem.update(player, m_eventManager);
+			m_inputSystem.update(player);
+			m_commandSystem.update(player, m_eventManager);
 			m_hpSystem.update(player);
 			m_transformSystem.update(player);
 			m_collisionSystem.update(player);
@@ -226,6 +269,12 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 		{
 			m_renderSystem.render(m_renderer, player);
 		}
+	}
+
+	if (t_canRender)
+	{
+		m_renderSystem.render(m_renderer, m_textTest1);
+		m_renderSystem.render(m_renderer, m_textTest2);
 	}
 	if (t_canTick)
 	{
@@ -246,8 +295,15 @@ void Game::preRender()
 	glm::vec2 focusPoint = glm::vec2(0, 0);
 	for (auto& player : m_players)
 	{
-		focusPoint.x += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().x;
-		focusPoint.y += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().y;
+		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		if (transformComp)
+		{
+			focusPoint += transformComp->getPos();
+		}
+		else
+		{
+			throw std::invalid_argument("Player missing Transform Component!");
+		}
 	}
 	m_renderSystem.setFocus(focusPoint / 4.0f);
 
@@ -259,9 +315,13 @@ void Game::preRender()
 /// </summary>
 void Game::cleanup()
 {
+	IMG_Quit();
+	Mix_Quit();
+	TTF_Quit();
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
-	SDL_QUIT;
+	m_renderer = NULL;
+	SDL_Quit();
 }
 
 void Game::setupLevel()
@@ -287,8 +347,10 @@ void Game::createPlayer(Entity& t_player)
 		std::pair<ButtonType, Command*>(ButtonType::DpadDown, new MoveDownCommand()),
 		std::pair<ButtonType, Command*>(ButtonType::DpadLeft, new MoveLeftCommand()),
 		std::pair<ButtonType, Command*>(ButtonType::DpadRight, new MoveRightCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::RightTrigger, new FireBulletCommand()),
 		std::pair<ButtonType,Command*>(ButtonType::Back, new CloseWindowCommand()) };
 
+	t_player.addComponent(new CommandComponent());
 	t_player.addComponent(new HealthComponent(10, 10));
 	t_player.addComponent(new TransformComponent());
 	// passing two of the same object as at this moment the commands for button press is the same for button held
@@ -298,6 +360,7 @@ void Game::createPlayer(Entity& t_player)
 	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
 	t_player.addComponent(new ParticleEmitterComponent(static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos(),true,90,30,1,100,20));
 	t_player.addComponent(new PrimitiveComponent());
+	t_player.addComponent(new TagComponent(Tag::Player));
 }
 
 void Game::createEnemy()
@@ -306,25 +369,23 @@ void Game::createEnemy()
 	m_entities.back().addComponent(new TransformComponent());
 	m_entities.back().addComponent(new AiComponent());
 	m_entities.back().addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
-}
-
-void Game::createBullet(glm::vec2 t_position, glm::vec2 t_force)
-{
+	m_entities.back().addComponent(new TagComponent(Tag::Enemy));
 }
 
 void Game::setToWall(Entity& t_entity, glm::vec2 t_position)
 {
 	t_entity.removeAllComponents();
 	t_entity.addComponent(new TransformComponent(t_position));
-	t_entity.addComponent(new VisualComponent("assets//images//wall_4.png", m_renderer)); //TODO: change to wall texture when assets have been recieved.
+	t_entity.addComponent(new VisualComponent("wall_4.png", m_renderer)); //TODO: change to wall texture when assets have been recieved.
 	t_entity.addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
+	t_entity.addComponent(new TagComponent(Tag::Wall));
 }
 
 void Game::setToFloor(Entity& t_entity, glm::vec2 t_position)
 {
 	t_entity.removeAllComponents();
 	t_entity.addComponent(new TransformComponent(t_position));
-	t_entity.addComponent(new VisualComponent("assets//images//floor_1b.png", m_renderer)); //TODO: change to floor texture when assets have been recieved.
+	t_entity.addComponent(new VisualComponent("floor_1b.png", m_renderer)); //TODO: change to floor texture when assets have been recieved.
 }
 
 bool Game::checkCanRender(Uint16 t_renderTime)

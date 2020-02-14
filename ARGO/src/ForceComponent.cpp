@@ -2,7 +2,7 @@
 #include "ForceComponent.h"
 
 
-ForceComponent::ForceComponent(glm::vec2 t_force , bool t_hasFriction ) :
+ForceComponent::ForceComponent(glm::vec2 t_force, bool t_hasFriction) :
 	Component(ComponentType::Force),
 	m_force(t_force),
 	m_hasFriction(t_hasFriction)
