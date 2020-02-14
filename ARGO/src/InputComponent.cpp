@@ -26,21 +26,6 @@ Controller InputComponent::getController()
 	return m_controller;
 } 
 
-std::stack<Command*> InputComponent::getCommands()
-{
-	return m_commands.getCommands();
-}
-
-void InputComponent::addCommand(Command* t_command)
-{
-	m_commands.add(t_command);
-}
-
-void InputComponent::popTopCommand()
-{
-	m_commands.popTopCommand();
-}
-
 std::map<ButtonType, Command*> InputComponent::getButtonMap(ButtonState t_mapType)
 {
 	if (ButtonState::Pressed == t_mapType)

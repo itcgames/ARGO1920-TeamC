@@ -13,6 +13,7 @@ enum class ComponentType
 	Timer = 9,
 	Tag = 10,
 	Text = 11,
+	Command = 12,
 	Count
 };
 
@@ -30,5 +31,6 @@ namespace COMPONENT_ID
 	const int COLLIDER_AABB_ID = static_cast<int>(ComponentType::ColliderAABB);
 	const int COLLIDER_CIRCLE_ID = static_cast<int>(ComponentType::ColliderCircle);
 	const int TIMER_ID = static_cast<int>(ComponentType::Timer);
+	const int COMMAND_ID = static_cast<int>(ComponentType::Command);
 	const int TAG_ID = static_cast<int>(ComponentType::Tag);
 }

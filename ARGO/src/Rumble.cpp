@@ -15,8 +15,10 @@ void Rumble::init(SDL_GameController* t_controller)
 		if (!SDL_INIT_HAPTIC) SDL_INIT_HAPTIC;
 		// Open haptic for the device
 		m_haptic = SDL_HapticOpenFromJoystick(SDL_GameControllerGetJoystick(m_controller));
-		if (!m_haptic) throw "Error Opening Haptic";
-		SDL_HapticRumbleInit(m_haptic);
+		if (m_haptic != NULL)
+		{
+			SDL_HapticRumbleInit(m_haptic);
+		}
 	}
 	catch (std::string error)
 	{

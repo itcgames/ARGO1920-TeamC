@@ -102,11 +102,7 @@ void Entity::addComponent(Component* t_c)
 			if (!m_components.at(COMPONENT_ID::COLLIDER_AABB_ID))
 			{
 				m_components.at(COMPONENT_ID::COLLIDER_AABB_ID) = t_c;
-
-
 				return;
-
-
 			}
 			break;
 		}
@@ -128,6 +124,15 @@ void Entity::addComponent(Component* t_c)
 			}
 			break;
 		}
+		case ComponentType::Command:
+		{
+			if (!m_components.at(COMPONENT_ID::COMMAND_ID))
+			{
+				m_components.at(COMPONENT_ID::COMMAND_ID) = t_c;
+				return;
+			}
+			break;
+		}
 		case ComponentType::Tag:
 		{
 			if (!m_components.at(COMPONENT_ID::TAG_ID))
@@ -137,6 +142,7 @@ void Entity::addComponent(Component* t_c)
 			}
 			break;
 		}
+
 		default:
 			throw std::invalid_argument("Invalid component type!");
 			break;
@@ -270,6 +276,16 @@ void Entity::removeCompType(ComponentType t_type)
 			}
 			break;
 		}
+		case ComponentType::Command:
+		{
+			if (!m_components.at(COMPONENT_ID::COMMAND_ID))
+			{
+				delete m_components.at(COMPONENT_ID::TIMER_ID);
+				m_components.at(COMPONENT_ID::COMMAND_ID) = nullptr;
+				return;
+			}
+			break;
+		}
 		case ComponentType::Tag:
 		{
 			if (!m_components.at(COMPONENT_ID::TAG_ID))
@@ -329,6 +345,8 @@ Component* Entity::getComponent(ComponentType t_type)
 			return m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID);
 		case ComponentType::Timer:
 			return m_components.at(COMPONENT_ID::TIMER_ID);
+		case ComponentType::Command:
+			return m_components.at(COMPONENT_ID::COMMAND_ID);
 		case ComponentType::Tag:
 			return m_components.at(COMPONENT_ID::TAG_ID);
 		default:
