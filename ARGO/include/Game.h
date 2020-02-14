@@ -64,19 +64,7 @@ private:
 
 	// bool for if game is running or not
 	bool m_isRunning;
-
-	bool showDemoWindow = true;
-	bool showanotherWindow = true;
-	bool done = false;
-	ImVec4 clear_color = ImVec4(0, 0, 0, 255);
-	float counter = 0;
-	std::string windowTitle = "ROCK";
-	std::string imguiWindowTitle;
-	glm::vec2 vec2 = glm::vec2(0, 0);
-	glm::vec3 vec3 = glm::vec3(0, 0, 0);
-	
-
-
+	 
 	Uint16 m_timePerFrame;
 	Uint16 m_timePerTick;
 	Uint16 m_lastTick;

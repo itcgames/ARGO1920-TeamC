@@ -1,4 +1,8 @@
 #pragma once
+/// <summary>
+/// This is a class to help with Imgui operations
+/// This is incomplete add to it as you will
+/// </summary>
 class ImGuiHelper
 {
 public:
