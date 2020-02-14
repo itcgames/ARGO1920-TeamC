@@ -52,7 +52,7 @@ void AudioManager::SetVolume(int t_volume, int t_channel)
 
 int AudioManager::GetVolume(int t_channel) const
 {
-	return Mix_Volume(t_channel, -1);
+	return Mix_Volume(t_channel, Utilities::GET_VOLUME);
 }
 
 AudioManager::AudioManager()

@@ -24,4 +24,7 @@ namespace Utilities
 	const int ENEMY_RADIUS = 32;
 	const int NUMBER_OF_CONTROLLER_BUTTONS = 16;
 	const int PROJECTILE_SPEED = 32;
+
+	const int ALL_AUDIO_CHANNELS = -1;
+	const int GET_VOLUME = -1;
 }
