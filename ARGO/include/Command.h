@@ -56,3 +56,9 @@ public:
 	virtual void execute() { std::cout << "Close Window" << std::endl; }
 };
 
+class FireBulletCommand :
+	public Command
+{
+public:
+	virtual void execute() { std::cout << "pew pew" << std::endl; }
+};

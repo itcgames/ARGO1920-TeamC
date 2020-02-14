@@ -43,8 +43,6 @@ void InputSystem::handleInputs(InputComponent* t_inputComponent, CommandComponen
 	}
 	if (controller.getCurrent().LeftThumbStick != glm::vec2(0.0f, 0.0f))
 	{
-		std::cout << "LX: " + std::to_string(t_inputComponent->getController().getCurrent().LeftThumbStick.x) + ", LY: " + std::to_string(t_inputComponent->getController().getCurrent().LeftThumbStick.y) << std::endl;
-
 		t_commandComponent->addCommand(new AnalogMoveCommand());
 	}
 	if (controller.getCurrent().RightThumbStick != glm::vec2(0.0f, 0.0f))
