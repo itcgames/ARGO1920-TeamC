@@ -25,6 +25,10 @@ Game::Game() :
 
 		// Create SDL Window Centred in Middle Of Screen
 		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Utilities::SCREEN_WIDTH, Utilities::SCREEN_HEIGHT, NULL);
+
+		//initilises mixer, ttf and img
+		initLibraries();
+
 		// Check if window was created correctly
 		if (!m_window) throw "Error Loading Window";
 
@@ -35,6 +39,9 @@ Game::Game() :
 
 		// Sets clear colour of renderer to black and the color of any primitives
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
+
+		m_assetMgr = AssetManager::Instance(*m_renderer);
+
 		// Game is running
 		m_isRunning = true;
 
@@ -51,6 +58,12 @@ Game::Game() :
 		{
 			createEnemy();
 		}
+
+		m_textTest1.addComponent(new TransformComponent());
+		m_textTest1.addComponent(new TextComponent("comic.ttf", m_renderer, true, std::string("Static Text")));
+		m_textTest2.addComponent(new TransformComponent());
+		m_textTest2.addComponent(new TextComponent("pt-sans.ttf", m_renderer, Utilities::LARGE_FONT, false, "Not Static Text", 255, 255, 0, 123));
+
 		setupLevel();
 	}
 	catch (std::string error)
@@ -60,7 +73,6 @@ Game::Game() :
 		// game doesnt run
 		m_isRunning = false;
 	}
-
 }
 
 /// <summary>
@@ -68,6 +80,11 @@ Game::Game() :
 /// </summary>
 Game::~Game()
 {
+	m_entities.clear();
+
+	AssetManager::Release();
+	m_assetMgr = NULL;
+
 	cleanup();
 }
 
@@ -93,6 +110,26 @@ void Game::run()
 		{
 			SDL_RenderPresent(m_renderer);
 		}
+	}
+}
+
+void Game::initLibraries()
+{
+	//Initialize SDL_mixer
+	if (Mix_OpenAudio(Utilities::AUDIO_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, Utilities::AUDIO_CHUNK_SIZE) < 0)
+	{
+		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+	}
+
+	//Initialize SDL_TTF
+	if (TTF_Init() < 0)
+	{
+		printf("SDL_TTF could not initialize! SDL_TTF Error: %s\n", TTF_GetError());
+	}
+
+	if ((IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) < 0))
+	{
+		printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
 	}
 }
 
@@ -163,6 +200,18 @@ void Game::processEvent()
 			}
 			std::cout << m_entities.size() << std::endl;
 		}
+		if (SDLK_q == event.key.keysym.sym)
+		{
+			static_cast<TextComponent*>(m_textTest2.getComponent(ComponentType::Text))->setAlpha(255);
+		}
+		if (SDLK_w == event.key.keysym.sym)
+		{
+			static_cast<TextComponent*>(m_textTest2.getComponent(ComponentType::Text))->setAlpha(123);
+		}
+		if (SDLK_e == event.key.keysym.sym)
+		{
+			static_cast<TextComponent*>(m_textTest2.getComponent(ComponentType::Text))->setAlpha(1);
+		}
 		break;
 	default:
 		break;
@@ -210,6 +259,12 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 			m_renderSystem.render(m_renderer, player);
 		}
 	}
+
+	if (t_canRender)
+	{
+		m_renderSystem.render(m_renderer, m_textTest1);
+		m_renderSystem.render(m_renderer, m_textTest2);
+	}
 	if (t_canTick)
 	{
 		m_projectileManager.update(&m_transformSystem);
@@ -229,8 +284,15 @@ void Game::preRender()
 	glm::vec2 focusPoint = glm::vec2(0, 0);
 	for (auto& player : m_players)
 	{
-		focusPoint.x += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().x;
-		focusPoint.y += static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos().y;
+		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		if (transformComp)
+		{
+			focusPoint += transformComp->getPos();
+		}
+		else
+		{
+			throw std::invalid_argument("Player missing Transform Component!");
+		}
 	}
 	m_renderSystem.setFocus(focusPoint / 4.0f);
 
@@ -242,9 +304,13 @@ void Game::preRender()
 /// </summary>
 void Game::cleanup()
 {
+	IMG_Quit();
+	Mix_Quit();
+	TTF_Quit();
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
-	SDL_QUIT;
+	m_renderer = NULL;
+	SDL_Quit();
 }
 
 void Game::setupLevel()
@@ -296,7 +362,7 @@ void Game::setToWall(Entity& t_entity, glm::vec2 t_position)
 {
 	t_entity.removeAllComponents();
 	t_entity.addComponent(new TransformComponent(t_position));
-	t_entity.addComponent(new VisualComponent("assets//images//wall_4.png", m_renderer)); //TODO: change to wall texture when assets have been recieved.
+	t_entity.addComponent(new VisualComponent("wall_4.png", m_renderer)); //TODO: change to wall texture when assets have been recieved.
 	t_entity.addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
 	t_entity.addComponent(new TagComponent(Tag::Wall));
 }
@@ -305,7 +371,7 @@ void Game::setToFloor(Entity& t_entity, glm::vec2 t_position)
 {
 	t_entity.removeAllComponents();
 	t_entity.addComponent(new TransformComponent(t_position));
-	t_entity.addComponent(new VisualComponent("assets//images//floor_1b.png", m_renderer)); //TODO: change to floor texture when assets have been recieved.
+	t_entity.addComponent(new VisualComponent("floor_1b.png", m_renderer)); //TODO: change to floor texture when assets have been recieved.
 }
 
 bool Game::checkCanRender(Uint16 t_renderTime)
