@@ -25,6 +25,7 @@
 #include "EventManager.h"
 #include "CollisionSystem.h"
 #include "ProjectileManager.h"
+#include "AudioManager.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -53,6 +54,7 @@ private:
 	void closeWindow(const CloseWindow& t_event);
 
 	AssetManager* m_assetMgr;
+	AudioManager* m_audioMgr;
 
 	const int MAX_PLAYERS = 4;
 	const int MAX_ENTITIES = 10000;

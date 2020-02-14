@@ -132,9 +132,6 @@
     <ClCompile Include="src\TextComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
-    <ClCompile Include="src\AudioHandler.cpp">
-      <Filter>Source Files\ResourceManagement</Filter>
-    </ClCompile>
     <ClCompile Include="src\AssetManager.cpp">
       <Filter>Source Files\ResourceManagement</Filter>
     </ClCompile>
@@ -173,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="src\TimerComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioManager.cpp">
+      <Filter>Source Files\ResourceManagement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -260,9 +260,6 @@
     <ClInclude Include="include\TextComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="include\AudioHandler.h">
-      <Filter>Header Files\ResourceManagement</Filter>
-    </ClInclude>
     <ClInclude Include="include\AssetManager.h">
       <Filter>Header Files\ResourceManagement</Filter>
     </ClInclude>
@@ -301,6 +298,9 @@
     </ClInclude>
     <ClInclude Include="include\TimerComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AudioManager.h">
+      <Filter>Header Files\ResourceManagement</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
