@@ -329,6 +329,8 @@ Component* Entity::getComponent(ComponentType t_type)
 			return m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID);
 		case ComponentType::Timer:
 			return m_components.at(COMPONENT_ID::TIMER_ID);
+		case ComponentType::Tag:
+			return m_components.at(COMPONENT_ID::TAG_ID);
 		default:
 			throw std::invalid_argument("trying to get an unknown component!");
 			break;

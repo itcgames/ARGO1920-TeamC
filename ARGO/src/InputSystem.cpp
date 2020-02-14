@@ -80,7 +80,6 @@ void InputSystem::handleCommands(EventManager& t_eventManager, InputComponent* t
 		}
 		else if (typeid(*t_input->getCommands().top()) == typeid(FireBulletCommand))
 		{
-			std::cout << t_input->getController().getCurrent().RightThumbStick.x << "y: " << t_input->getController().getCurrent().RightThumbStick.y << std::endl;
 			t_eventManager.emitEvent(createBulletEvent{ t_entity, glm::normalize(t_input->getController().getCurrent().RightThumbStick), Utilities::PROJECTILE_SPEED ,0 });
 		}
 		else continue;

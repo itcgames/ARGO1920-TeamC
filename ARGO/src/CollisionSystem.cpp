@@ -51,8 +51,6 @@ void CollisionSystem::handleCollisions()
 		case Tag::EnemyBullet:
 			handleEnemyBulletCollision(m_circleColliderBuffer[i]);
 			break;
-		case Tag::Wall:
-			break;
 		default:
 			break;
 		}
