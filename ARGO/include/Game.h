@@ -1,33 +1,13 @@
 #pragma once
-#include <iostream>
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_mixer.h>
-#include "Controller.h"
-#include "MacroCommand.h"
-#include <gtc/random.hpp>
-#include "Entity.h"
-#include "HealthComponent.h"
-#include "TransformComponent.h"
-#include "InputComponent.h"
-#include "ColourComponent.h"
-#include "VisualComponent.h"
-#include "TextComponent.h"
-#include "ColliderAABBComponent.h"
-#include "ColliderCircleComponent.h"
-#include "TagComponent.h"
-#include "HealthSystem.h"
-#include "PhysicsSystem.h"
-#include "InputSystem.h"
-#include "RenderSystem.h"
-#include "AiSystem.h"
 #include "AssetManager.h"
-#include "FiniteStateMachine.h"
-#include "EventManager.h"
-#include "CollisionSystem.h"
-#include "ProjectileManager.h"
-#include "AudioManager.h"
-#include "CommandSystem.h"
+#include "EventManager.h"  
+#include "AudioManager.h" 
+#include "GameScreen.h"
+#include "MenuScreen.h"
+#include "CreditsScreen.h"
+#include "OptionsScreen.h"
+#include "SplashScreen.h"
+#include "LicenseScreen.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -39,47 +19,20 @@ public:
 	~Game();
 	void run();
 private:
+
 	void initLibraries();
 	void processEvent();
 	void update(bool t_canTick, bool t_canRender, Uint16 t_dt);
-	void preRender();
-	void cleanup();
-	void setupLevel();
-	void createPlayer(Entity& t_player);
-	void createEnemy();
-	void setToWall(Entity& t_entity, glm::vec2 t_position);
-	void setToFloor(Entity& t_entity, glm::vec2 t_position);
-
+ 	void cleanup(); 
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);
-	void closeWindow(const CloseWindow& t_event);
+	void closeWindow(const CloseWindow& t_event = CloseWindow());
 
 	AssetManager* m_assetMgr;
 	AudioManager* m_audioMgr;
 
-	const int MAX_PLAYERS = 4;
-	const int MAX_ENTITIES = 10000;
-	const int PLAYER_MAX_HEALTH = 10;
 	EventManager m_eventManager;
 
-	HealthSystem m_hpSystem;
-	PhysicsSystem m_transformSystem;
-	InputSystem m_inputSystem;
-	RenderSystem m_renderSystem;
-	AiSystem m_aiSystem;
-	CollisionSystem m_collisionSystem;
-	CommandSystem m_commandSystem;
-
-	Entity m_players[4];
-	std::vector<Entity> m_entities;
-	std::vector<Entity> m_levelTiles;
-
-	Entity m_textTest1;
-	Entity m_textTest2;
-
-	TTF_Font* m_font;
-
-	ProjectileManager m_projectileManager;
 
 	// Window used for the game
 	SDL_Window* m_window;
@@ -95,4 +48,17 @@ private:
 	Uint16 m_lastRender;
 	Uint16 m_framesPerSecond;
 	Uint16 m_ticksPerSecond;
+
+
+ 
+	MenuStates m_currentScreen;
+	GameScreen* m_gameScreen; 
+	MenuScreen* m_mainMenuScreen;
+	OptionsScreen* m_optionsScreen;
+	CreditsScreen* m_creditsScreen;
+	LicenseScreen* m_licenseScreen;
+	SplashScreen* m_splashScreen;
+
+	void initialiseScreens();
+
 };
