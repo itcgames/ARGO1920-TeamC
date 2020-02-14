@@ -13,22 +13,26 @@ void ParticleSystem::update(Entity& t_entity)
 		ParticleEmitterComponent* partComp = static_cast<ParticleEmitterComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID));
 
 		PrimitiveComponent* primtiveComp = static_cast<PrimitiveComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID));
-		partComp->setPosition(static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID)))
+		partComp->setPosition(static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos());
 
 		for (int i = 0; i < partComp->getMaxParticles(); i++)
 		{
 
 			//Places More Particles if the Emitter is Emitting
-			if (partComp->getEmitting() && !partComp->getParticleAlive(i))
+			if (partComp->getEmitting() && !partComp->getParticleAlive(partComp->getNextParticle()))
 			{
-				partComp->setParticleMovement(i, randomDirectionVectorInRange(partComp->getAngle(), partComp->getAngleOffset()));
-				if (m_placeParticleTimer > 1.0f)
+				
+				if (partComp->getPlaceParticleTimer() > 1.0f)
 				{
-					partComp->setParticle(partComp->getEmitterPosition() + glm::vec2(partComp->randomOffset(), partComp->randomOffset()));
-					m_placeParticleTimer = 0;
+					if(partComp->getRotating())
+					{
+						adjustParticleAngles((partComp->getAngle() + partComp->getRotating()), partComp);
+					}
+					partComp->setParticleMovement(partComp->getNextParticle(), randomDirectionVectorInRange(partComp->getAngle(), partComp->getAngleOffset()));
+					partComp->setParticle(partComp->getEmitterPosition() + glm::vec2(randomOffset(partComp->getOffset()), partComp->getOffset()));
+					partComp->setPlaceParticleTimer(partComp->getPlaceParticleTimer() - 1);
 				}
 			}
-
 
 			if (partComp->getParticleAlive(i))
 			{
@@ -39,9 +43,10 @@ void ParticleSystem::update(Entity& t_entity)
 				}
 				//Updates the Particles
 				partComp->updateParticle(i);
+	
 			}
 		}
-		m_placeParticleTimer += partComp->getParticlesPerSecond();
+		partComp->setPlaceParticleTimer(partComp->getPlaceParticleTimer() + partComp->getParticlesPerSecond());
 	}
 }
 
@@ -53,5 +58,15 @@ glm::vec2 ParticleSystem::randomDirectionVectorInRange(float t_angle, float t_an
 	int tempAngle = distr(eng);
 	return  glm::vec2(glm::cos((t_angle + tempAngle) * M_PI / 180), glm::sin((t_angle + tempAngle) * M_PI / 180));
 
+}
+
+int ParticleSystem::randomOffset(int t_offsetAmount)
+{
+	return (rand() % (t_offsetAmount * 2) + 1) - t_offsetAmount;
+}
+
+void ParticleSystem::adjustParticleAngles(float t_newAngle, ParticleEmitterComponent* t_partComp)
+{
+	t_partComp->setAngle(t_newAngle);
 }
 

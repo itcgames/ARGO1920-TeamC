@@ -40,9 +40,17 @@ Game::Game() :
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 
 		//add components to player
+		int i = 0;
 		for (auto& player : m_players)
 		{
 			createPlayer(player);
+			static_cast<ParticleEmitterComponent*>(player.getAllComps().at(COMPONENT_ID::PARTICLE_ID))->setAngle(i * 45);
+			if (i == 1 || i == 3)
+			{
+				static_cast<ParticleEmitterComponent*>(player.getAllComps().at(COMPONENT_ID::PARTICLE_ID))->setRotating(true);
+			}
+			i++;
+
 		}
 
 		m_entities.reserve(MAX_ENTITIES);
@@ -284,7 +292,7 @@ void Game::createPlayer(Entity& t_player)
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
-	t_player.addComponent(new ParticleEmitterComponent(&static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos()));
+	t_player.addComponent(new ParticleEmitterComponent(static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos(),true,90,30,1,100,20));
 	t_player.addComponent(new PrimitiveComponent());
 }
 

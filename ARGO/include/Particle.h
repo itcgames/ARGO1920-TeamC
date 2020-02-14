@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-//#include <SFML/Graphics.hpp>
 
 ///@Author Sean Abner Nash
 ///@Login C00217019
@@ -20,7 +19,7 @@ public:
 	glm::vec2 getMovement();
 private:
 
-	float m_timeOut{ 0 };
+	float m_timeOut{ 0 };//This variable tracks how long a particle has been alive for
 	bool m_alive{ false };
 	glm::vec2 m_position;
 	glm::vec2 m_movement{ 0,0 };
