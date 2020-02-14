@@ -175,10 +175,10 @@
       <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\CommandSystem.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="src\CommandComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
