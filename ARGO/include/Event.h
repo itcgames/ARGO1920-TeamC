@@ -1,5 +1,14 @@
 #pragma once
 #include "Entity.h" 
+
+struct createBulletEvent
+{
+	Entity& entity;
+	glm::vec2 direction;
+	float forceScale;
+	int type;
+};
+
 struct PhysicsMove
 {
 	glm::vec2 m_velocity;

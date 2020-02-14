@@ -15,6 +15,7 @@
 #include "TextComponent.h"
 #include "ColliderAABBComponent.h"
 #include "ColliderCircleComponent.h"
+#include "TagComponent.h"
 #include "HealthSystem.h"
 #include "PhysicsSystem.h"
 #include "InputSystem.h"
@@ -26,6 +27,7 @@
 #include "CollisionSystem.h"
 #include "ProjectileManager.h"
 #include "AudioManager.h"
+#include "CommandSystem.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -45,7 +47,6 @@ private:
 	void setupLevel();
 	void createPlayer(Entity& t_player);
 	void createEnemy();
-	void createBullet(glm::vec2 t_position, glm::vec2 t_force);
 	void setToWall(Entity& t_entity, glm::vec2 t_position);
 	void setToFloor(Entity& t_entity, glm::vec2 t_position);
 
@@ -67,6 +68,7 @@ private:
 	RenderSystem m_renderSystem;
 	AiSystem m_aiSystem;
 	CollisionSystem m_collisionSystem;
+	CommandSystem m_commandSystem;
 
 	Entity m_players[4];
 	std::vector<Entity> m_entities;

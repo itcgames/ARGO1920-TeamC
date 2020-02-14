@@ -22,6 +22,7 @@ class AnalogMoveCommand :
 {
 public:
 	virtual void execute() { std::cout << "Analog Move" << std::endl; }
+	glm::vec2 m_moveVelocity;
 };
 
 class MoveDownCommand :
@@ -55,3 +56,9 @@ public:
 	virtual void execute() { std::cout << "Close Window" << std::endl; }
 };
 
+class FireBulletCommand :
+	public Command
+{
+public:
+	virtual void execute() { std::cout << "pew pew" << std::endl; }
+};
