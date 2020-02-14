@@ -40,10 +40,47 @@ void AudioManager::ResumeMusic()
 	}
 }
 
+void AudioManager::StopMusic()
+{
+	Mix_HaltMusic();
+}
+
 void AudioManager::PlaySfx(std::string t_filename, const int t_loops, const int t_channel)
 {
 	Mix_PlayChannel(t_channel, m_assetMgr->GetSfx(t_filename), t_loops);
 	Mix_VolumeChunk(m_assetMgr->GetSfx(t_filename), calcVolume(m_sfxVolume));
+}
+
+void AudioManager::PlaySfxAtPosition(std::string t_filename, glm::vec2 t_sfxPosition, glm::vec2 t_focusPosition, const int t_loops, const int t_channel)
+{
+	Mix_PlayChannel(t_channel, m_assetMgr->GetSfx(t_filename), t_loops);
+	Mix_VolumeChunk(m_assetMgr->GetSfx(t_filename), calcVolume(m_sfxVolume));
+	
+	glm::vec2 relVec = t_sfxPosition - t_focusPosition;
+	float angle = glm::degrees(std::atan2(relVec.y, relVec.x)) + 90.0f;
+	//return (t_volume * (m_masterVolume * MIX_MAX_VOLUME / 100.0f)) / 100.0f;
+
+	float maxDistPercent = (glm::length(relVec) / Utilities::SCREEN_WIDTH);
+	maxDistPercent *= 100.0f;
+	float attuentionPercent = (255 / 100.0f);
+	int dist = maxDistPercent * attuentionPercent;
+
+	Mix_SetPosition(Mix_GroupNewer(-1), angle, dist);
+}
+
+void AudioManager::PauseSfx()
+{
+	Mix_Pause(Utilities::ALL_AUDIO_CHANNELS);
+}
+
+void AudioManager::ResumeSfx()
+{
+	Mix_Resume(Utilities::ALL_AUDIO_CHANNELS);
+}
+
+void AudioManager::StopSfx()
+{
+	Mix_HaltChannel(Utilities::ALL_AUDIO_CHANNELS);
 }
 
 void AudioManager::SetMasterVolume(const int t_percent)
@@ -55,7 +92,7 @@ void AudioManager::SetMasterVolume(const int t_percent)
 	Mix_Volume(Utilities::ALL_AUDIO_CHANNELS, m_masterVolume * MIX_MAX_VOLUME / 100.0f);
 	Mix_VolumeMusic(calcVolume(m_musicVolume));
 
-	coutVolumes();
+	//coutVolumes();
 }
 
 int AudioManager::GetMasterVolume() const

@@ -77,8 +77,6 @@ private:
 	Entity m_textTest1;
 	Entity m_textTest2;
 
-	TTF_Font* m_font;
-
 	ProjectileManager m_projectileManager;
 
 	// Window used for the game

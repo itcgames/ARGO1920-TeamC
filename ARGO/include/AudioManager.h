@@ -11,8 +11,13 @@ public:
 	void PlayMusic(std::string t_filename, const int t_loops = Utilities::AUDIO_INFINITE_LOOP);
 	void PauseMusic();
 	void ResumeMusic();
+	void StopMusic();
 
 	void PlaySfx(std::string t_filename, const int t_loops = 0, const int t_channel = Utilities::ALL_AUDIO_CHANNELS);
+	void PlaySfxAtPosition(std::string t_filename, glm::vec2 t_sfxPosition, glm::vec2 t_focusPosition, const int t_loops = 0, const int t_channel = Utilities::ALL_AUDIO_CHANNELS);
+	void PauseSfx();
+	void ResumeSfx();
+	void StopSfx();
 
 	void SetMasterVolume(const int t_percent);
 	int GetMasterVolume() const;

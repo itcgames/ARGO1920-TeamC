@@ -199,7 +199,9 @@ void Game::processEvent()
 		}
 		if (SDLK_q == event.key.keysym.sym)
 		{
-			m_audioMgr->PlaySfx("airhorn.wav");
+			glm::vec2 randomPos(glm::linearRand(0, Utilities::SCREEN_WIDTH), glm::linearRand(0, Utilities::SCREEN_HEIGHT));
+			std::cout << "Sfx pos: " << randomPos.x << ", " << randomPos.y << std::endl;
+			m_audioMgr->PlaySfxAtPosition("airhorn.wav", randomPos, m_renderSystem.getFocus());
 		}
 		//master volume
 		if (SDLK_UP == event.key.keysym.sym)
