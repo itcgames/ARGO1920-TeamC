@@ -4,12 +4,12 @@
 PhysicsSystem::PhysicsSystem(EventManager& t_eventManager)
 {
 	t_eventManager.subscribeToEvent<PhysicsMove>(std::bind(&PhysicsSystem::updateWithInput, this, std::placeholders::_1));
-}
+ }
 
 PhysicsSystem::~PhysicsSystem()
 {
 	BaseSystem::~BaseSystem();
-}
+ }
 
 void PhysicsSystem::update(Entity& t_entity/*float t_deltaTime*/) //deltaTime will be required here so it will need to be uncommented and used
 {
@@ -19,11 +19,9 @@ void PhysicsSystem::update(Entity& t_entity/*float t_deltaTime*/) //deltaTime wi
 		if (t_entity.getAllComps().at(COMPONENT_ID::FORCE_ID))
 		{
 			ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
-
-			posComp->addPos(forceComp->getForce());
+ 			posComp->addPos(forceComp->getForce());
 			forceComp->setForce(forceComp->getForce() * FRICTION_SCALAR);
 		}
-
 		checkBorder(posComp);
 	}
 }
@@ -53,6 +51,6 @@ void PhysicsSystem::updateWithInput(const PhysicsMove& t_event)
 	if (t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID))
 	{
  		ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
-		forceComp->addForce(t_event.m_velocity );
+		forceComp->addForce(t_event.m_velocity);
 	}  
 }

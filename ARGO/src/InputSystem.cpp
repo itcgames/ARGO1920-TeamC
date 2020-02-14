@@ -56,23 +56,23 @@ void InputSystem::handleCommands(EventManager& t_eventManager, InputComponent* t
 	{
 		if (typeid(*t_input->getCommands().top()) == typeid(MoveUpCommand))
 		{
-			t_eventManager.emitEvent(PhysicsMove{ glm::vec2(0,-1), t_entity });
-		}
+ 			t_eventManager.emitEvent(PhysicsMove{ glm::vec2(0,-1), t_entity });
+ 		}
 		else if (typeid(*t_input->getCommands().top()) == typeid(MoveDownCommand))
 		{
 			t_eventManager.emitEvent(PhysicsMove{ glm::vec2(0,1), t_entity });
 		}
 		else if (typeid(*t_input->getCommands().top()) == typeid(MoveLeftCommand))
 		{
-			t_eventManager.emitEvent(PhysicsMove{ glm::vec2(-1, 0), t_entity });
+			t_eventManager.emitEvent(PhysicsMove{ glm::vec2(-1  , 0), t_entity });
 		}
 		else if (typeid(*t_input->getCommands().top()) == typeid(MoveRightCommand))
 		{
-			t_eventManager.emitEvent(PhysicsMove{ glm::vec2(1, 0), t_entity });
+			t_eventManager.emitEvent(PhysicsMove{ glm::vec2(1 , 0), t_entity });
 		}
 		else if (typeid(*t_input->getCommands().top()) == typeid(AnalogMoveCommand))
 		{
-			t_eventManager.emitEvent(PhysicsMove{ glm::normalize(t_input->getController().getCurrent().LeftThumbStick), t_entity });
+			t_eventManager.emitEvent(PhysicsMove{ glm::normalize(t_input->getController().getCurrent().LeftThumbStick) , t_entity });
 		}
 		else if (typeid(*t_input->getCommands().top()) == typeid(CloseWindowCommand))
 		{

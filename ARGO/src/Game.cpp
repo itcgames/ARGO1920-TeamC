@@ -207,57 +207,59 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 {
 	if (t_canRender)
 	{
-	ImGui_ImplSDL2_NewFrame(m_window);
-	ImGui::NewFrame();
+		ImGui_ImplSDL2_NewFrame(m_window);
+		ImGui::NewFrame();
 	
-	if (showDemoWindow)
-	{
-		ImGui::ShowDemoWindow(&showDemoWindow);
-	}
+	//if (showDemoWindow)
+	//{
+	//	ImGui::ShowDemoWindow(&showDemoWindow);
+	//}
 
-		static float f = 0.0f;
-		
-		ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+	//	static float f = 0.0f;
+	//	
+	//	ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
-		ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-		ImGui::Checkbox("Demo Window", &showDemoWindow);      // Edit bools storing our window open/close state
-		ImGui::Checkbox("Another Window", &showanotherWindow);
+	//	ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+	//	ImGui::Checkbox("Demo Window", &showDemoWindow);      // Edit bools storing our window open/close state
+	//	ImGui::Checkbox("Another Window", &showanotherWindow);
 
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-		ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+	//	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+	//	ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
-		if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-			counter++;
-		ImGui::SameLine();
-		ImGui::Text("counter = %d", counter);
+	//	if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+	//		counter++;
+	//	ImGui::SameLine();
+	//	ImGui::Text("counter = %d", counter);
 
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		ImGui::End();
+	//	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	//	ImGui::End();
 
-		if (showanotherWindow)
-		{
-			ImGui::Begin("Another Window", &showanotherWindow);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-			ImGui::Text("Hello from another window!");
-			if (ImGui::Button("Close Me"))
-				showanotherWindow = false;
-			ImGui::End();
-		}
+	//	if (showanotherWindow)
+	//	{
+	//		ImGui::Begin("Another Window", &showanotherWindow);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+	//		ImGui::Text("Hello from another window!");
+	//		if (ImGui::Button("Close Me"))
+	//			showanotherWindow = false;
+	//		ImGui::End();
+	//	}
 		//std::cout << counter << std::endl;
  
 
 	//cstr = "";
-	ImGui::Begin("Hello World");
+	//ImGui::Begin("Player Speed");
 
-	ImGuiHelper::InputText(windowTitle, "Window Title" );
-	ImGui::SameLine();
-	if (ImGui::Button("Set Title"))
-	{
-		SDL_SetWindowTitle(m_window, windowTitle.c_str());
-	}	
-	ImGui::InputFloat("Counter", &counter, 0.5f, 2.3f, ImGuiHelper::GetDecimalPercision(25).c_str());
-	ImGuiHelper::InputFloat2(vec2, "InputFloat2");
-	ImGuiHelper::InputFloat3(vec3, "inputFloat3");
-	ImGui::End();
+
+
+	//ImGuiHelper::InputText(windowTitle, "Window Title" );
+	////ImGui::SameLine();
+	////if (ImGui::Button("Set Title"))
+	////{
+	////	SDL_SetWindowTitle(m_window, windowTitle.c_str());
+	////}	
+	////ImGui::InputFloat("Counter", &counter, 0.5f, 2.3f, ImGuiHelper::GetDecimalPercision(25).c_str());
+	//ImGui::InputFloat("PlayerSpeed",  &Utilities::PLAYER_SPEED, 0.5f, 10.0f, ImGuiHelper::GetDecimalPercision(5, true).c_str());
+	////ImGuiHelper::InputFloat3(vec3, "inputFloat3");
+	//ImGui::End();
 
 	//SDL_SetRenderDrawColor(m_renderer,clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 	

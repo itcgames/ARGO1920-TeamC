@@ -1,26 +1,22 @@
 #include "stdafx.h"
 #include "Rumble.h"
 
-Rumble::Rumble( ):
+Rumble::Rumble() :
 	m_strength{ 0.0f },
 	m_time{ 0.0f }
-{	
+{
 }
 
 void Rumble::init(SDL_GameController* t_controller)
 {
 	m_controller = t_controller;
-	try
+
+	if (!SDL_INIT_HAPTIC) SDL_INIT_HAPTIC;
+	// Open haptic for the device
+	m_haptic = SDL_HapticOpenFromJoystick(SDL_GameControllerGetJoystick(m_controller));
+	if (m_haptic != NULL)
 	{
-		if (!SDL_INIT_HAPTIC) SDL_INIT_HAPTIC;
-		// Open haptic for the device
-		m_haptic = SDL_HapticOpenFromJoystick(SDL_GameControllerGetJoystick(m_controller));
-		if (!m_haptic) throw "Error Opening Haptic";
 		SDL_HapticRumbleInit(m_haptic);
-	}
-	catch (std::string error)
-	{
-		std::cout << error << std::endl;
 	}
 }
 
@@ -105,7 +101,7 @@ void Rumble::setStrength(RumbleStrength t_strengthType)
 		break;
 	case RumbleStrength::Weak:
 		m_strength = WEAK_STRENGTH;
-		break; 
+		break;
 	default:
 		break;
 	}
