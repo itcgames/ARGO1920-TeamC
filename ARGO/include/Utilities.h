@@ -25,7 +25,13 @@ namespace Utilities
 	const int NUMBER_OF_CONTROLLER_BUTTONS = 16;
 	const int PROJECTILE_SPEED = 32;
 
+	//consts for audio
 	const int ALL_AUDIO_CHANNELS = -1;
 	const int GET_VOLUME = -1;
-	const int AUDIO_LOOP_CONSTANT = -1;
+	const int AUDIO_INFINITE_LOOP = -1;
+	const int AUDIO_MIX_CHANNELS = 64;
+	const int PLAYER_1_FIRE_CHANNEL = 12;
+	const int PLAYER_2_FIRE_CHANNEL = 13;
+	const int PLAYER_3_FIRE_CHANNEL = 14;
+	const int PLAYER_4_FIRE_CHANNEL = 15;
 }

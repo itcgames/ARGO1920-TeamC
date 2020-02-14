@@ -202,11 +202,11 @@ void Game::processEvent()
 		}
 		if (SDLK_UP == event.key.keysym.sym)
 		{
-			m_audioMgr->SetVolume(m_audioMgr->GetVolume() + 10);
+			m_audioMgr->SetSfxVolume(m_audioMgr->GetSfxVolume() + 10);
 		}
 		if (SDLK_DOWN == event.key.keysym.sym)
 		{
-			m_audioMgr->SetVolume(m_audioMgr->GetVolume() - 10);
+			m_audioMgr->SetSfxVolume(m_audioMgr->GetSfxVolume() - 10);
 		}
 
 		break;

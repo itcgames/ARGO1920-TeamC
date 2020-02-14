@@ -18,9 +18,10 @@ void AudioManager::Release()
 	s_instance = NULL;
 }
 
-void AudioManager::PlayMusic(std::string t_filename, int t_loops)
+void AudioManager::PlayMusic(std::string t_filename, const int t_loops)
 {
 	Mix_PlayMusic(m_assetMgr->GetMusic(t_filename), t_loops);
+	Mix_VolumeMusic(calcVolume(m_musicVolume));
 }
 
 void AudioManager::PauseMusic()
@@ -39,20 +40,52 @@ void AudioManager::ResumeMusic()
 	}
 }
 
-void AudioManager::PlaySfx(std::string t_filename, int t_loops, int t_channel)
+void AudioManager::PlaySfx(std::string t_filename, const int t_loops, const int t_channel)
 {
-	Mix_PlayChannel(t_channel, m_assetMgr->GetSfx(t_filename) , t_loops);
-	SetVolume(GetVolume(), t_channel);
+	Mix_PlayChannel(t_channel, m_assetMgr->GetSfx(t_filename), t_loops);
+	Mix_VolumeChunk(m_assetMgr->GetSfx(t_filename), calcVolume(m_sfxVolume));
 }
 
-void AudioManager::SetVolume(int t_volume, int t_channel)
+void AudioManager::SetMasterVolume(const int t_percent)
 {
-	Mix_Volume(t_channel, glm::clamp(t_volume, 0, MIX_MAX_VOLUME));
+	//clamp passed percentage between 0 and 100
+	m_masterVolume = glm::clamp(t_percent, 0, 100);
+
+	//set master volume to the percentage
+	Mix_Volume(Utilities::ALL_AUDIO_CHANNELS, m_masterVolume * MIX_MAX_VOLUME / 100.0f);
 }
 
-int AudioManager::GetVolume(int t_channel) const
+int AudioManager::GetMasterVolume() const
 {
-	return Mix_Volume(t_channel, Utilities::GET_VOLUME);
+	return m_masterVolume;
+}
+
+void AudioManager::SetMusicVolume(const const int t_percent)
+{
+	//clamp passed percentage between 0 and 100
+	m_musicVolume = glm::clamp(t_percent, 0, 100);
+
+	//divide MIX_MAX_VOLUME by 100 to get percentage
+	Mix_VolumeMusic(calcVolume(m_musicVolume));
+}
+
+int AudioManager::GetMusicVolume() const
+{
+	return m_musicVolume;
+}
+
+void AudioManager::SetSfxVolume(const int t_percent, const int t_channel)
+{
+	//clamp passed percentage between 0 and 100
+	m_sfxVolume = glm::clamp(t_percent, 0, 100);
+
+	//divide MIX_MAX_VOLUME by 100 to get percentage
+	Mix_Volume(t_channel, calcVolume(m_sfxVolume));
+}
+
+int AudioManager::GetSfxVolume() const
+{
+	return m_sfxVolume;
 }
 
 AudioManager::AudioManager()
@@ -64,10 +97,18 @@ AudioManager::AudioManager()
 	{
 		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 	}
+	Mix_AllocateChannels(Utilities::AUDIO_MIX_CHANNELS);
+
+	SetMasterVolume(m_masterVolume);
 }
 
 AudioManager::~AudioManager()
 {
 	m_assetMgr = NULL;
 	Mix_Quit();
+}
+
+int AudioManager::calcVolume(const int& t_volume)
+{
+	return (t_volume * (m_masterVolume * MIX_MAX_VOLUME / 100.0f)) / 100.0f;
 }
