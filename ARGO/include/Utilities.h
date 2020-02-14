@@ -27,4 +27,5 @@ namespace Utilities
 
 	const int ALL_AUDIO_CHANNELS = -1;
 	const int GET_VOLUME = -1;
+	const int AUDIO_LOOP_CONSTANT = -1;
 }
