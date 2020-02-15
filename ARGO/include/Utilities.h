@@ -15,8 +15,8 @@ namespace Utilities
 	const std::string SOUNDS_PATH = "assets\\sounds\\";
 	const std::string FONTS_PATH = "assets\\fonts\\";
 
-	const int SCREEN_WIDTH = 800;
-	const int SCREEN_HEIGHT = 600;
+	const int SCREEN_WIDTH = 1600;
+	const int SCREEN_HEIGHT = 800;
 	const int LEVEL_TILE_WIDTH = 30;
 	const int LEVEL_TILE_HEIGHT = 20;
 	const int TILE_SIZE = 64;
