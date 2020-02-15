@@ -8,7 +8,8 @@ InputComponent::InputComponent(std::map<ButtonType, Command*> t_buttonPressMap,
 	Component(ComponentType::Input),
 	m_buttonPressedCommands{t_buttonPressMap},
 	m_buttonHeldCommands{t_buttonHeldMap},
-	m_buttonReleaseCommands{t_buttonReleasedMap}
+	m_buttonReleaseCommands{t_buttonReleasedMap},
+	m_isActive{true}
 {
 }
 
@@ -58,5 +59,15 @@ void InputComponent::setButtonMap(ButtonState t_mapType, std::map<ButtonType, Co
 	{
 		m_buttonReleaseCommands = t_map;
 	}
+}
+
+bool InputComponent::getIsActive()
+{
+	return m_isActive;
+}
+
+void InputComponent::setIsActive(bool t_isActive)
+{
+	m_isActive = t_isActive;
 }
 

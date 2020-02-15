@@ -15,6 +15,8 @@ public:
 	Controller getController();
 	std::map<ButtonType, Command*> getButtonMap(ButtonState t_mapType);
 	void setButtonMap(ButtonState t_mapType, std::map<ButtonType, Command*> t_map);
+	bool getIsActive();
+	void setIsActive(bool t_isActive);
 private:
 	// Controller that handles input from connected controller
 	Controller m_controller;
@@ -24,5 +26,7 @@ private:
 	std::map<ButtonType, Command*> m_buttonHeldCommands;
 	// map that holds the commands for when buttons are released
 	std::map<ButtonType, Command*> m_buttonReleaseCommands;
+	// bool for if input component is active or not
+	bool m_isActive;
 };
 
