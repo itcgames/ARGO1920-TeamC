@@ -48,6 +48,7 @@ Game::Game() :
 		m_isRunning = true;
 
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
+		m_eventManager.subscribeToEvent<createBulletEvent>(std::bind(&Game::playerFireSound, this, std::placeholders::_1));
 
 		//add components to player
 		for (auto& player : m_players)
@@ -153,7 +154,7 @@ void Game::processEvent()
 		}
 		if (SDLK_SPACE == event.key.keysym.sym)
 		{
-			m_audioMgr->PlayPlayerFireSfx("launcherFire.wav", static_cast<TransformComponent*>(m_players[0].getComponent(ComponentType::Transform))->getPos(), m_renderSystem.getFocus());
+			
 		}
 		if (SDLK_BACKSPACE == event.key.keysym.sym)
 		{
@@ -390,6 +391,11 @@ void Game::setToFloor(Entity& t_entity, glm::vec2 t_position)
 	t_entity.removeAllComponents();
 	t_entity.addComponent(new TransformComponent(t_position));
 	t_entity.addComponent(new VisualComponent("floor_1b.png", m_renderer)); //TODO: change to floor texture when assets have been recieved.
+}
+
+void Game::playerFireSound(const createBulletEvent& t_event)
+{
+	m_audioMgr->PlayPlayerFireSfx("launcherFire.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_renderSystem.getFocus());
 }
 
 bool Game::checkCanRender(Uint16 t_renderTime)

@@ -39,7 +39,7 @@ void CommandSystem::update(Entity& t_entity, EventManager& t_eventManager)
 				if (t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID))
 				{
 					InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID));
- 					t_eventManager.emitEvent(PhysicsMove{ glm::normalize(inputComp->getController().getCurrent().LeftThumbStick), t_entity });
+					t_eventManager.emitEvent(PhysicsMove{ glm::normalize(inputComp->getController().getCurrent().LeftThumbStick), t_entity });
 				}
 			}
 			else if (typeid(*commandComp->getCommands().top()) == typeid(FireBulletCommand))
