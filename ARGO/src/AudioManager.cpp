@@ -23,7 +23,7 @@ void AudioManager::Release()
 /// </summary>
 /// <param name="t_filename">File name of the music file to play</param>
 /// <param name="t_loops">Amount of times to loop, loops infinitely (~65k times) if left blank</param>
-void AudioManager::PlayMusic(std::string t_filename, const int t_loops)
+void AudioManager::PlayMusic(std::string t_filename, const int t_loops) const
 {
 	//play music
 	Mix_PlayMusic(m_assetMgr->GetMusic(t_filename), t_loops);
@@ -34,7 +34,7 @@ void AudioManager::PlayMusic(std::string t_filename, const int t_loops)
 /// <summary>
 /// pauses music if currently playing
 /// </summary>
-void AudioManager::PauseMusic()
+void AudioManager::PauseMusic() const
 {
 	if (Mix_PlayingMusic() != 0)
 	{
@@ -45,7 +45,7 @@ void AudioManager::PauseMusic()
 /// <summary>
 /// resumes music if currently paused
 /// </summary>
-void AudioManager::ResumeMusic()
+void AudioManager::ResumeMusic() const
 {
 	if (Mix_PausedMusic != 0)
 	{
@@ -56,7 +56,7 @@ void AudioManager::ResumeMusic()
 /// <summary>
 /// stops music
 /// </summary>
-void AudioManager::StopMusic()
+void AudioManager::StopMusic() const
 {
 	Mix_HaltMusic();
 }
@@ -67,17 +67,27 @@ void AudioManager::StopMusic()
 /// <param name="t_filename">File name of the SFX file</param>
 /// <param name="t_loops">amount of times to loop, doesn't loop if left blank</param>
 /// <param name="t_channel">what channel to play on, plays on a first free channel when left blank</param>
-void AudioManager::PlaySfx(std::string t_filename, const int t_loops, const int t_channel)
+void AudioManager::PlaySfx(std::string t_filename, const int t_loops, const int t_channel) const
 {
 	Mix_VolumeChunk(m_assetMgr->GetSfx(t_filename), getVolFromPercentage(m_sfxVolume));
 	int channel = Mix_PlayChannel(t_channel, m_assetMgr->GetSfx(t_filename), t_loops);
 	Mix_Volume(channel, getVolFromPercentage(m_masterVolume));
 }
 
-void AudioManager::PlaySfxAtPosition(std::string t_filename, glm::vec2 t_sfxPosition, glm::vec2 t_focusPosition, const int t_loops, const int t_channel)
+/// <summary>
+/// Plays a given Sound Effect at a position, if not loaded, loads and plays
+/// </summary>
+/// <param name="t_filename">filename of SFX</param>
+/// <param name="t_sfxPosition">position at which to play</param>
+/// <param name="t_focusPosition">position of the camera</param>
+/// <param name="t_loops">how many times to play the sound, plays once be default</param>
+/// <param name="t_channel">which channel to play on, plays on first free channel by default</param>
+void AudioManager::PlaySfxAtPosition(std::string t_filename, glm::vec2 t_sfxPosition, glm::vec2 t_focusPosition, const int t_loops, const int t_channel) const
 {
+	//play the sound
 	PlaySfx(t_filename, t_loops, t_channel);
 
+	//relative position vector used to calculate the angle
 	glm::vec2 relVec = t_sfxPosition - t_focusPosition;
 	float angle = glm::degrees(std::atan2(relVec.y, relVec.x)) + 90.0f;
 
@@ -97,9 +107,13 @@ void AudioManager::PlaySfxAtPosition(std::string t_filename, glm::vec2 t_sfxPosi
 	printf("Sound produced at position: [%s, %s] at angle: %s\n", std::to_string(relVec.x).c_str(), std::to_string(relVec.y).c_str(), std::to_string(angle).c_str());
 #endif // AUDIO_SYS_DEBUG
 
+	//screen width is considered as max distance for audible sounds
+	//calculate how far the sound is in percent
 	float maxDistPercent = (glm::length(relVec) / Utilities::SCREEN_WIDTH);
 	maxDistPercent *= 100.0f;
+	//this distance has to be from 0 to 255 so we get percent of this
 	float attuentionPercent = (255 / 100.0f);
+	//and then get the actual percentage as a value between 0 and 255
 	int dist = maxDistPercent * attuentionPercent;
 
 	Mix_SetPosition(Mix_GroupNewer(-1), angle, dist);
@@ -140,25 +154,43 @@ void AudioManager::PlaySfxAtPosition(std::string t_filename, glm::vec2 t_sfxPosi
 //	Mix_FadeOutChannel(Mix_GroupNewer(Utilities::AUDIO_ALL_CHANNELS), milliSec);
 //}
 
-void AudioManager::PauseSfx()
+/// <summary>
+/// Pauses all sound effects
+/// </summary>
+void AudioManager::PauseSfx() const
 {
 	Mix_Pause(Utilities::AUDIO_ALL_CHANNELS);
 }
 
-void AudioManager::ResumeSfx()
+/// <summary>
+/// Resumes all SFX
+/// </summary>
+void AudioManager::ResumeSfx() const
 {
 	Mix_Resume(Utilities::AUDIO_ALL_CHANNELS);
 }
 
-void AudioManager::StopSfx()
+/// <summary>
+/// Stops all SFX
+/// </summary>
+void AudioManager::StopSfx() const
 {
 	Mix_HaltChannel(Utilities::AUDIO_ALL_CHANNELS);
 }
 
+/// <summary>
+/// Plays a SFX on a channel that is meant for Player fire sfx
+/// </summary>
+/// <param name="t_filename">File name of the fire sound</param>
+/// <param name="t_playerPosition">position of the player</param>
+/// <param name="t_focusPosition">position of the camera/listener</param>
+/// <param name="t_loops">how many times to play the sound</param>
 void AudioManager::PlayPlayerFireSfx(std::string t_filename, glm::vec2 t_playerPosition, glm::vec2 t_focusPosition, const int t_loops)
 {
+	//check for a free channel in the player fire group
 	int channel = Mix_GroupAvailable(Utilities::AUDIO_PLAYERS_FIRE_CHANNELS);
 
+	//if no channel free, get the oldest sound so we can replace it
 	if (channel == -1)
 	{
 		channel = Mix_GroupOldest(Utilities::AUDIO_PLAYERS_FIRE_CHANNELS);
@@ -168,9 +200,14 @@ void AudioManager::PlayPlayerFireSfx(std::string t_filename, glm::vec2 t_playerP
 	std::printf("Playing Player Fire Sound %s on channel %s\n", t_filename.c_str(), std::to_string(channel).c_str());
 #endif // AUDIO_SYS_DEBUG
 
+	//then play the sound at a position
 	PlaySfxAtPosition(t_filename, t_playerPosition, t_focusPosition, t_loops, channel);
 }
 
+/// <summary>
+/// Set Master Volume to a percentage within 0 and 100
+/// </summary>
+/// <param name="t_percent">volume percentage</param>
 void AudioManager::SetMasterVolume(const int t_percent)
 {
 	//clamp passed percentage between 0 and 100
@@ -185,11 +222,20 @@ void AudioManager::SetMasterVolume(const int t_percent)
 #endif // AUDIO_SYS_DEBUG
 }
 
+/// <summary>
+/// Returns the percentage of master volume
+/// </summary>
+/// <returns>current master volume</returns>
 int AudioManager::GetMasterVolume() const
 {
 	return m_masterVolume;
 }
 
+/// <summary>
+/// Set Music Volume to a percentage within 0 and 100, this volume is a percentage of master volume
+/// Eg. Master Volume at 50 and Music at 50 results in actual music volume of 25%
+/// </summary>
+/// <param name="t_percent">volume percentage</param>
 void AudioManager::SetMusicVolume(const const int t_percent)
 {
 	//clamp passed percentage between 0 and 100
@@ -202,11 +248,21 @@ void AudioManager::SetMusicVolume(const const int t_percent)
 #endif // AUDIO_SYS_DEBUG
 }
 
+/// <summary>
+/// Returns current Music Volume
+/// </summary>
+/// <returns>Music Volume as percentage</returns>
 int AudioManager::GetMusicVolume() const
 {
 	return m_musicVolume;
 }
 
+/// <summary>
+/// Set SFX Volume to a percentage within 0 and 100, this volume is a percentage of master volume.
+/// This updates all currently playing sounds.
+/// Eg. Master Volume at 50 and SFX at 50 results in actual sfx volume of 25%
+/// </summary>
+/// <param name="t_percent">volume percentage</param>
 void AudioManager::SetSfxVolume(const int t_percent)
 {
 	//clamp passed percentage between 0 and 100
@@ -222,6 +278,10 @@ void AudioManager::SetSfxVolume(const int t_percent)
 #endif // AUDIO_SYS_DEBUG
 }
 
+/// <summary>
+/// Returns current SFX Volume
+/// </summary>
+/// <returns>Music Volume as percentage</returns>
 int AudioManager::GetSfxVolume() const
 {
 	return m_sfxVolume;
@@ -255,19 +315,32 @@ AudioManager::~AudioManager()
 	}
 }
 
-int AudioManager::calcVolume(const int& t_volume)
+/// <summary>
+/// Calculates actual volume impacted by master volume
+/// </summary>
+/// <param name="t_volume">percentage</param>
+/// <returns>volume after applying master volume</returns>
+int AudioManager::calcVolume(const int t_volume) const
 {
 	return (t_volume * (m_masterVolume * MIX_MAX_VOLUME / 100.0f)) / 100.0f;
 }
 
-void AudioManager::coutVolumes()
+/// <summary>
+/// Couts each volume and actual volume of Music and Sfx
+/// </summary>
+void AudioManager::coutVolumes() const
 {
 	std::cout << "Master volume:\t" << m_masterVolume << std::endl;
 	std::cout << "Music volume:\t" << m_musicVolume << "\treal volume\t" << calcVolume(m_musicVolume) << std::endl;
 	std::cout << "SFX volume:\t" << m_sfxVolume << "\treal volume\t" << calcVolume(m_sfxVolume) << std::endl;
 }
 
-int AudioManager::getVolFromPercentage(const int& t_percentage)
+/// <summary>
+/// calculates percentage of the volume, used when calculating Mix_Chunk volume
+/// </summary>
+/// <param name="t_percentage">percentage of SFX volume</param>
+/// <returns>volume from percentage</returns>
+int AudioManager::getVolFromPercentage(const int t_percentage) const
 {
 	return (t_percentage * MIX_MAX_VOLUME / 100.0f);
 }
