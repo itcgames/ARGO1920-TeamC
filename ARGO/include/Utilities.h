@@ -27,12 +27,16 @@ namespace Utilities
 	const int PROJECTILE_SPEED = 32;
 
 	//consts for audio
-	const int ALL_AUDIO_CHANNELS = -1;
-	const int GET_VOLUME = -1;
+	const int AUDIO_ALL_CHANNELS = -1;
+	const int AUDIO_GET_VOLUME = -1;
 	const int AUDIO_INFINITE_LOOP = -1;
-	const int AUDIO_MIX_CHANNELS = 64;
-	const int PLAYER_1_FIRE_CHANNEL = 12;
-	const int PLAYER_2_FIRE_CHANNEL = 13;
-	const int PLAYER_3_FIRE_CHANNEL = 14;
-	const int PLAYER_4_FIRE_CHANNEL = 15;
+	const int AUDIO_MIX_CHANNELS = 128;
+
+
+	//channels per player for firing - amount TBD
+	const int AUDIO_CHANNELS_PER_PLAYER = 8;
+	const int AUDIO_PLAYERS_FIRE_CHANNELS = AUDIO_MIX_CHANNELS - AUDIO_CHANNELS_PER_PLAYER * 4;
+	//const int PLAYER_2_FIRE_CHANNEL = AUDIO_MIX_CHANNELS - AUDIO_CHANNELS_PER_PLAYER * 3;
+	//const int PLAYER_3_FIRE_CHANNEL = AUDIO_MIX_CHANNELS - AUDIO_CHANNELS_PER_PLAYER * 2;
+	//const int PLAYER_4_FIRE_CHANNEL = AUDIO_MIX_CHANNELS - AUDIO_CHANNELS_PER_PLAYER * 1;
 }

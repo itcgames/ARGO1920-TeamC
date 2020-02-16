@@ -17,12 +17,12 @@ void HealthSystem::update(Entity& t_entity)
 		if (hpComp->getHealth() > 0)
 		{
 			//reduce hp by 1
-			hpComp->reduceHealth(1);
+			//hpComp->reduceHealth(1);
 		}
 		else //otherwise entity is dead
 		{
 			//mark entity as dead here?
-#if (HP_SYS_DEBUG == 1)
+#ifdef HP_SYS_DEBUG
 			std::cout << "Entity is dead" << std::endl;
 #endif // HP_SYS_DEBUG
 		}

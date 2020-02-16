@@ -49,6 +49,11 @@ Mix_Chunk* AssetManager::GetSfx(std::string t_filename)
 	return m_sfx[fullPath];
 }
 
+std::map<std::string, Mix_Chunk*>& AssetManager::GetSfxMap()
+{
+	return m_sfx;
+}
+
 Mix_Music* AssetManager::GetMusic(std::string t_filename)
 {
 	std::string fullPath = SDL_GetBasePath();

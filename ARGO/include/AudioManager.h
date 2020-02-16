@@ -13,11 +13,18 @@ public:
 	void ResumeMusic();
 	void StopMusic();
 
-	void PlaySfx(std::string t_filename, const int t_loops = 0, const int t_channel = Utilities::ALL_AUDIO_CHANNELS);
-	void PlaySfxAtPosition(std::string t_filename, glm::vec2 t_sfxPosition, glm::vec2 t_focusPosition, const int t_loops = 0, const int t_channel = Utilities::ALL_AUDIO_CHANNELS);
+	void PlaySfx(std::string t_filename, const int t_loops = 0, const int t_channel = Utilities::AUDIO_ALL_CHANNELS);
+	void PlaySfxAtPosition(std::string t_filename, glm::vec2 t_sfxPosition, glm::vec2 t_focusPosition, const int t_loops = 0, const int t_channel = Utilities::AUDIO_ALL_CHANNELS);
+
+	//void FadeInSfx(std::string t_filename, const float t_seconds, const int t_loops = 0, const int t_channel = Utilities::AUDIO_ALL_CHANNELS);
+	//void FadeOutSfx(std::string t_filename, const float t_seconds, const int t_channel = Utilities::AUDIO_ALL_CHANNELS);
+
 	void PauseSfx();
 	void ResumeSfx();
 	void StopSfx();
+
+	void PlayPlayerFireSfx(std::string t_filename, glm::vec2 t_playerPosition, glm::vec2 t_focusPosition, const int t_loops = 0);
+
 
 	void SetMasterVolume(const int t_percent);
 	int GetMasterVolume() const;
@@ -25,7 +32,7 @@ public:
 	void SetMusicVolume(const int t_percent);
 	int GetMusicVolume() const;
 
-	void SetSfxVolume(const int t_percent, const int t_channel = Utilities::ALL_AUDIO_CHANNELS);
+	void SetSfxVolume(const int t_percent);
 	int GetSfxVolume() const;
 
 private:
@@ -36,10 +43,11 @@ private:
 	~AudioManager();
 	int calcVolume(const int& t_volume);
 	void coutVolumes();
+	int getVolFromPercentage(const int& t_percentage);
 
 	int m_masterVolume = 100;
-	int m_musicVolume = 100;
-	int m_sfxVolume = 100;
+	int m_musicVolume = 20;
+	int m_sfxVolume = 20;
 
 	int m_inittedFlags;
 };

@@ -153,6 +153,7 @@ void Game::processEvent()
 		}
 		if (SDLK_SPACE == event.key.keysym.sym)
 		{
+			m_audioMgr->PlayPlayerFireSfx("launcherFire.wav", static_cast<TransformComponent*>(m_players[0].getComponent(ComponentType::Transform))->getPos(), m_renderSystem.getFocus());
 		}
 		if (SDLK_BACKSPACE == event.key.keysym.sym)
 		{
@@ -199,9 +200,7 @@ void Game::processEvent()
 		}
 		if (SDLK_q == event.key.keysym.sym)
 		{
-			glm::vec2 randomPos(glm::linearRand(0, Utilities::SCREEN_WIDTH), glm::linearRand(0, Utilities::SCREEN_HEIGHT));
-			std::cout << "Sfx pos: " << randomPos.x << ", " << randomPos.y << std::endl;
-			m_audioMgr->PlaySfxAtPosition("airhorn.wav", randomPos, m_renderSystem.getFocus());
+			m_audioMgr->PlaySfx("airhorn.wav");
 		}
 		//master volume
 		if (SDLK_UP == event.key.keysym.sym)
@@ -230,7 +229,6 @@ void Game::processEvent()
 		{
 			m_audioMgr->SetMusicVolume(m_audioMgr->GetMusicVolume() - 10);
 		}
-
 		break;
 	default:
 		break;
