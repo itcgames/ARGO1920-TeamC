@@ -49,6 +49,7 @@ private:
 	void createEnemy();
 	void setToWall(Entity& t_entity, glm::vec2 t_position);
 	void setToFloor(Entity& t_entity, glm::vec2 t_position);
+	void playerFireSound(const createBulletEvent& t_event);
 
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);
@@ -76,8 +77,6 @@ private:
 
 	Entity m_textTest1;
 	Entity m_textTest2;
-
-	TTF_Font* m_font;
 
 	ProjectileManager m_projectileManager;
 

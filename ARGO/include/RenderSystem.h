@@ -20,6 +20,7 @@ public:
 	void update(Entity& t_entity);
 	void render(SDL_Renderer* t_renderer, Entity& t_entity);
 	void setFocus(glm::vec2 t_point);
+	glm::vec2 getFocus() const;
 
 private:
 	void renderPrimitives(SDL_Renderer* t_renderer, TransformComponent* t_posComp, ColourComponent* t_colourComp);
