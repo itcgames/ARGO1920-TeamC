@@ -41,8 +41,8 @@ private:
 	AudioManager();
 	~AudioManager();
 	int calcVolume(const int t_volume) const;
-	void coutVolumes() const;
-	int getVolFromPercentage(const int t_percentage) const;
+	void outputVolumes() const;
+	int getVolumeFromPercentage(const int t_percentage) const;
 
 	int m_masterVolume = 100;
 	int m_musicVolume = 20;

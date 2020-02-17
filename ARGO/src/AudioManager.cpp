@@ -69,9 +69,9 @@ void AudioManager::StopMusic() const
 /// <param name="t_channel">what channel to play on, plays on a first free channel when left blank</param>
 void AudioManager::PlaySfx(std::string t_filename, const int t_loops, const int t_channel) const
 {
-	Mix_VolumeChunk(m_assetMgr->GetSfx(t_filename), getVolFromPercentage(m_sfxVolume));
+	Mix_VolumeChunk(m_assetMgr->GetSfx(t_filename), getVolumeFromPercentage(m_sfxVolume));
 	int channel = Mix_PlayChannel(t_channel, m_assetMgr->GetSfx(t_filename), t_loops);
-	Mix_Volume(channel, getVolFromPercentage(m_masterVolume));
+	Mix_Volume(channel, getVolumeFromPercentage(m_masterVolume));
 }
 
 /// <summary>
@@ -218,7 +218,7 @@ void AudioManager::SetMasterVolume(const int t_percent)
 	Mix_VolumeMusic(calcVolume(m_musicVolume));
 
 #ifdef AUDIO_SYS_DEBUG
-	coutVolumes();
+	outputVolumes();
 #endif // AUDIO_SYS_DEBUG
 }
 
@@ -244,7 +244,7 @@ void AudioManager::SetMusicVolume(const const int t_percent)
 	//divide MIX_MAX_VOLUME by 100 to get percentage
 	Mix_VolumeMusic(calcVolume(m_musicVolume));
 #ifdef AUDIO_SYS_DEBUG
-	coutVolumes();
+	outputVolumes();
 #endif // AUDIO_SYS_DEBUG
 }
 
@@ -270,11 +270,11 @@ void AudioManager::SetSfxVolume(const int t_percent)
 
 	for (auto& sfx : m_assetMgr->GetSfxMap())
 	{
-		Mix_VolumeChunk(sfx.second, getVolFromPercentage(m_sfxVolume));
+		Mix_VolumeChunk(sfx.second, getVolumeFromPercentage(m_sfxVolume));
 	}
 
 #ifdef AUDIO_SYS_DEBUG
-	coutVolumes();
+	outputVolumes();
 #endif // AUDIO_SYS_DEBUG
 }
 
@@ -328,7 +328,7 @@ int AudioManager::calcVolume(const int t_volume) const
 /// <summary>
 /// Couts each volume and actual volume of Music and Sfx
 /// </summary>
-void AudioManager::coutVolumes() const
+void AudioManager::outputVolumes() const
 {
 	std::cout << "Master volume:\t" << m_masterVolume << std::endl;
 	std::cout << "Music volume:\t" << m_musicVolume << "\treal volume\t" << calcVolume(m_musicVolume) << std::endl;
@@ -340,7 +340,7 @@ void AudioManager::coutVolumes() const
 /// </summary>
 /// <param name="t_percentage">percentage of SFX volume</param>
 /// <returns>volume from percentage</returns>
-int AudioManager::getVolFromPercentage(const int t_percentage) const
+int AudioManager::getVolumeFromPercentage(const int t_percentage) const
 {
 	return (t_percentage * MIX_MAX_VOLUME / 100.0f);
 }
