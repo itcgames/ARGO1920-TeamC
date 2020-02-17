@@ -4,11 +4,7 @@
 
 bool cleanUpEnemies(const Entity& t_entity)
 {
-	if (!static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health))->isAlive())
-	{
-		return true;
-	}
-	return false;
+	return !static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health))->isAlive();
 }
 
 /// <summary>
@@ -353,7 +349,7 @@ void Game::createPlayer(Entity& t_player)
 		Utilities::PARTICLE_MAX_PARTICLES_SAMPLE, Utilities::PARTICLES_PER_SECOND_SAMPLE));
 	t_player.addComponent(new PrimitiveComponent());
 	t_player.addComponent(new TagComponent(Tag::Player));
-	t_player.addComponent(new FireRateComponent(Utilities::PLAYER_FIRE_RATE));
+	t_player.addComponent(new FireRateComponent(Utilities::PLAYER_FIRE_DELAY));
 }
 
 void Game::createEnemy()

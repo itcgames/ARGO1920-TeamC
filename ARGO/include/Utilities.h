@@ -30,7 +30,7 @@ namespace Utilities
 	const int TILE_SIZE = 64;
 
 	const int PLAYER_RADIUS = 32;
-	const int PLAYER_FIRE_RATE = 1000 / 10;
+	const int PLAYER_FIRE_DELAY = 1000 / 10;
 
 	const int ENEMY_RADIUS = 32;
 	const int ENEMY_HP = 3;

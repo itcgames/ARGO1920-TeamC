@@ -59,13 +59,13 @@ void LevelManager::setToFloor(Entity& t_entity)
 	t_entity.addComponent(new VisualComponent("floor_1b.png", m_renderer));
 }
 
-void LevelManager::createRoom(glm::vec2 startPosition, int width, int height)
+void LevelManager::createRoom(glm::vec2 t_startPosition, int t_width, int t_height)
 {
-	Entity* startTile = findAtPosition(startPosition);
-	for (int i = 0; i < width; i++)
+	Entity* startTile = findAtPosition(t_startPosition);
+	for (int i = 0; i < t_width; i++)
 	{
 		Entity* currentTile = startTile;
-		for (int j = 0; j < height; j++)
+		for (int j = 0; j < t_height; j++)
 		{
 			setToFloor(*currentTile);
 			currentTile = static_cast<TileComponent*>(currentTile->getComponent(ComponentType::Tile))->getNeighbours()->bottom;
@@ -81,7 +81,6 @@ void LevelManager::setTileNeighbours()
 		glm::vec2 position = static_cast<TransformComponent*>(tile.getComponent(ComponentType::Transform))->getPos();
 		Neighbours* neighbours = static_cast<TileComponent*>(tile.getComponent(ComponentType::Tile))->getNeighbours();
 
-		//top
 		neighbours->top = findAtPosition(position + glm::vec2(0, -Utilities::TILE_SIZE));
 		neighbours->left = findAtPosition(position + glm::vec2(-Utilities::TILE_SIZE, 0));
 		neighbours->right = findAtPosition(position + glm::vec2(Utilities::TILE_SIZE, 0));

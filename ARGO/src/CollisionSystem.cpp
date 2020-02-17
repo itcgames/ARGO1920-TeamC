@@ -287,7 +287,7 @@ void CollisionSystem::playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enem
 	if (t_enemy->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID) && circleToCircleCollision(t_playerBullet, t_enemy))
 	{
 		static_cast<HealthComponent*>(t_playerBullet->getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0); //kill the bullet
-		static_cast<HealthComponent*>(t_enemy->getAllComps().at(COMPONENT_ID::HEALTH_ID))->reduceHealth(1); //kill the bullet
+		static_cast<HealthComponent*>(t_enemy->getAllComps().at(COMPONENT_ID::HEALTH_ID))->reduceHealth(1);
 	}
 }
 
