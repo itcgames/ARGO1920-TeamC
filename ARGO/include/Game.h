@@ -29,6 +29,8 @@
 #include "ProjectileManager.h"
 #include "AudioManager.h"
 #include "CommandSystem.h"
+#include "LevelManager.h"
+#include <algorithm>
 
 /// <summary>
 /// Game class needed for the game
@@ -42,16 +44,14 @@ public:
 private:
 	void initLibraries();
 	void processEvent();
-	void update(bool t_canTick, bool t_canRender, Uint16 t_dt);
+	void update(Uint16 t_dt);
+	void render();
 	void preRender();
 	void cleanup();
-	void setupLevel();
 	void createPlayer(Entity& t_player);
 	void createEnemy();
-	void setToWall(Entity& t_entity, glm::vec2 t_position);
-	void setToFloor(Entity& t_entity, glm::vec2 t_position);
+	void removeDeadEnemies();
 	void playerFireSound(const createBulletEvent& t_event);
-
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);
 	void closeWindow(const CloseWindow& t_event);
@@ -78,12 +78,12 @@ private:
 
 	Entity m_players[4];
 	std::vector<Entity> m_entities;
-	std::vector<Entity> m_levelTiles;
 
 	Entity m_textTest1;
 	Entity m_textTest2;
 
 	ProjectileManager m_projectileManager;
+	LevelManager m_levelManager;
 
 	// Window used for the game
 	SDL_Window* m_window;

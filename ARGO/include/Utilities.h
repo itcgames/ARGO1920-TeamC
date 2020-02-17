@@ -28,9 +28,16 @@ namespace Utilities
 	const int LEVEL_TILE_WIDTH = 30;
 	const int LEVEL_TILE_HEIGHT = 20;
 	const int TILE_SIZE = 64;
+
 	const int PLAYER_RADIUS = 32;
+	const int PLAYER_FIRE_DELAY = 1000 / 10;
+
 	const int ENEMY_RADIUS = 32;
+	const int ENEMY_HP = 3;
+
 	const int NUMBER_OF_CONTROLLER_BUTTONS = 16;
+
+	//Particle
 	const int PROJECTILE_SPEED = 32;
 	const int PARTICLE_DIRECTION_ANGLE_SAMPLE = 90;
 	const int PARTICLE_OFFSET_ANGLE_SAMPLE = 30;

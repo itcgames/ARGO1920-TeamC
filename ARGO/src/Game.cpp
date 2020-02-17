@@ -1,6 +1,12 @@
 #include "stdafx.h"
 #include "Game.h"
 
+
+bool cleanUpEnemies(const Entity& t_entity)
+{
+	return !static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health))->isAlive();
+}
+
 /// <summary>
 /// Constructor for the game class.
 /// </summary>
@@ -14,7 +20,8 @@ Game::Game() :
 	m_lastTick(0),
 	m_lastRender(0),
 	m_timePerFrame(0),
-	m_timePerTick(0)
+	m_timePerTick(0),
+	m_levelManager(m_renderer)
 {
 	try
 	{
@@ -68,7 +75,12 @@ Game::Game() :
 		m_textTest2.addComponent(new TransformComponent());
 		m_textTest2.addComponent(new TextComponent("pt-sans.ttf", m_renderer, Utilities::LARGE_FONT, false, "Not Static Text", 255, 255, 0, 123));
 
-		setupLevel();
+		m_levelManager.setupLevel();
+		//magic numbers for creating a sandbox level plz ignore.
+		m_levelManager.createRoom(glm::vec2(1, 1), 12, 12);
+		m_levelManager.createRoom(glm::vec2(12, 2), 3, 2);
+		m_levelManager.createRoom(glm::vec2(12, 10), 3, 2);
+		m_levelManager.createRoom(glm::vec2(15, 1), 5, 12);
 
 		setupIgnoredEvents();
 	}
@@ -113,12 +125,8 @@ void Game::run()
 
 		bool canRender = checkCanRender(renderTime);
 		bool canTick = checkCanTick(deltaTime);
-		update(canRender, canTick, deltaTime);
-
-		if (canRender)
-		{
-			SDL_RenderPresent(m_renderer);
-		}
+		if (canTick) update(deltaTime);
+		if (canRender) render();
 	}
 }
 
@@ -240,66 +248,48 @@ void Game::processEvent()
 	}
 }
 
-void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
+void Game::update(Uint16 t_dt)
 {
-	for (auto& entity : m_levelTiles)
-	{
-		if (t_canTick)
-		{
-			m_collisionSystem.update(entity);
-		}
-		if (t_canRender)
-		{
-			m_renderSystem.render(m_renderer, entity);
-		}
-	}
+	m_levelManager.update(&m_collisionSystem);
 	for (auto& entity : m_entities)
 	{
-		if (t_canTick)
-		{
-			m_hpSystem.update(entity);
-			m_aiSystem.update(entity);
-			m_transformSystem.update(entity);
-			m_collisionSystem.update(entity);
-		}
-		if (t_canRender)
-		{
-			m_renderSystem.render(m_renderer, entity);
-		}
+		m_hpSystem.update(entity);
+		m_aiSystem.update(entity);
+		m_transformSystem.update(entity);
+		m_collisionSystem.update(entity);
 	}
 	for (auto& player : m_players)
 	{
-		if (t_canTick)
-		{
-			m_inputSystem.update(player);
-			m_commandSystem.update(player, m_eventManager);
-			m_hpSystem.update(player);
-			m_transformSystem.update(player);
-			m_collisionSystem.update(player);
-			m_particleSystem.update(player);
-		}
-		if (t_canRender)
-		{
-			m_renderSystem.render(m_renderer, player);
-		}
+		m_hpSystem.update(player);
+		m_inputSystem.update(player);
+		m_commandSystem.update(player, m_eventManager);
+		m_transformSystem.update(player);
+		m_collisionSystem.update(player);
+		m_particleSystem.update(player);
 	}
+	m_projectileManager.update(&m_transformSystem);
+	m_projectileManager.update(&m_collisionSystem);
+	m_collisionSystem.handleCollisions();
 
-	if (t_canRender)
-	{
-		m_renderSystem.render(m_renderer, m_textTest1);
-		m_renderSystem.render(m_renderer, m_textTest2);
-	}
-	if (t_canTick)
-	{
-		m_projectileManager.update(&m_transformSystem);
-		m_projectileManager.update(&m_collisionSystem);
-	}
-	if (t_canRender)
-	{
-		m_projectileManager.render(m_renderer, &m_renderSystem);
-	}
+	removeDeadEnemies();
+}
 
-	if (t_canTick) m_collisionSystem.handleCollisions();
+void Game::render()
+{
+	preRender();
+	m_levelManager.render(m_renderer, &m_renderSystem);
+	for (auto& entity : m_entities)
+	{
+		m_renderSystem.render(m_renderer, entity);
+	}
+	for (auto& player : m_players)
+	{
+		m_renderSystem.render(m_renderer, player);
+	}
+	m_projectileManager.render(m_renderer, &m_renderSystem);
+	m_renderSystem.render(m_renderer, m_textTest1);
+	m_renderSystem.render(m_renderer, m_textTest2);
+	SDL_RenderPresent(m_renderer);
 }
 
 void Game::preRender()
@@ -336,22 +326,6 @@ void Game::cleanup()
 	SDL_Quit();
 }
 
-void Game::setupLevel()
-{
-	int count = 0;
-	m_levelTiles.reserve(Utilities::LEVEL_TILE_HEIGHT * Utilities::LEVEL_TILE_WIDTH);
-	for (int i = 0; i < Utilities::LEVEL_TILE_HEIGHT; i++)
-	{
-		for (int j = 0; j < Utilities::LEVEL_TILE_WIDTH; j++)
-		{
-			m_levelTiles.emplace_back();
-
-			setToFloor(m_levelTiles.at(count), glm::vec2(j * Utilities::TILE_SIZE, i * Utilities::TILE_SIZE));
-			count++;
-		}
-	}
-}
-
 void Game::createPlayer(Entity& t_player)
 {
 	std::map<ButtonType, Command*> buttonPressMap = {
@@ -375,6 +349,7 @@ void Game::createPlayer(Entity& t_player)
 		Utilities::PARTICLE_MAX_PARTICLES_SAMPLE, Utilities::PARTICLES_PER_SECOND_SAMPLE));
 	t_player.addComponent(new PrimitiveComponent());
 	t_player.addComponent(new TagComponent(Tag::Player));
+	t_player.addComponent(new FireRateComponent(Utilities::PLAYER_FIRE_DELAY));
 }
 
 void Game::createEnemy()
@@ -384,22 +359,17 @@ void Game::createEnemy()
 	m_entities.back().addComponent(new AiComponent());
 	m_entities.back().addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
 	m_entities.back().addComponent(new TagComponent(Tag::Enemy));
+	m_entities.back().addComponent(new HealthComponent(Utilities::ENEMY_HP, Utilities::ENEMY_HP));
 }
 
-void Game::setToWall(Entity& t_entity, glm::vec2 t_position)
+void Game::removeDeadEnemies()
 {
-	t_entity.removeAllComponents();
-	t_entity.addComponent(new TransformComponent(t_position));
-	t_entity.addComponent(new VisualComponent("wall_4.png", m_renderer)); //TODO: change to wall texture when assets have been recieved.
-	t_entity.addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
-	t_entity.addComponent(new TagComponent(Tag::Wall));
-}
-
-void Game::setToFloor(Entity& t_entity, glm::vec2 t_position)
-{
-	t_entity.removeAllComponents();
-	t_entity.addComponent(new TransformComponent(t_position));
-	t_entity.addComponent(new VisualComponent("floor_1b.png", m_renderer)); //TODO: change to floor texture when assets have been recieved.
+	std::vector<Entity>::iterator iter = std::remove_if(m_entities.begin(), m_entities.end(), cleanUpEnemies);
+	while (iter != m_entities.end())
+	{
+		iter->nullAllComponents();
+		iter = m_entities.erase(iter);
+	}
 }
 
 void Game::playerFireSound(const createBulletEvent& t_event)
@@ -412,7 +382,6 @@ bool Game::checkCanRender(Uint16 t_renderTime)
 	if (t_renderTime > m_timePerFrame)
 	{
 		m_lastRender += m_timePerFrame;
-		preRender();
 		return true;
 	}
 	return false;

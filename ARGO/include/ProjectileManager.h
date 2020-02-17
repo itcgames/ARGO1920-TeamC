@@ -9,6 +9,7 @@
 #include "HealthComponent.h"
 #include "TimerComponent.h"
 #include "TagComponent.h"
+#include "FireRateComponent.h"
 #include "EventManager.h"
 
 struct Bullet
@@ -24,9 +25,10 @@ public:
 	void createPlayerBullet(const createBulletEvent& t_event);
 	void createEnemyBullet(const createBulletEvent& t_event);
 	void update(BaseSystem* t_system);
+	void tick();
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
 private:
-	static const int BULLET_POOL_SIZE = 20;
+	static const int BULLET_POOL_SIZE = 160;
 	static const int BULLET_RADIUS = 4;
 	static const int BULLET_LIFETIME = 30;
 	Bullet m_playerBullets[BULLET_POOL_SIZE];
