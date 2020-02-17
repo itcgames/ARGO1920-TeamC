@@ -37,7 +37,9 @@ float Particle::getTimer()
 {
 	return m_timeOut;
 }
-
+///<summary>
+///Sets the position of the Emitter. The point from which the particles emerge from
+///</summary>
 void Particle::setPosition(glm::vec2 t_pos)
 {
 	m_position = t_pos;

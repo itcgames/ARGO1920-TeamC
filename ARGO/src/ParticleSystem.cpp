@@ -48,7 +48,9 @@ void ParticleSystem::update(Entity& t_entity)
 		particleComp->setPlaceParticleTimer(particleComp->getPlaceParticleTimer() + particleComp->getParticlesPerSecond());
 	}
 }
-
+///<summary>
+///Generates a random unit vector within the range of angles. t_angle - t_angleoffset to  t_angle + t_angleoffset
+///</summary>
 glm::vec2 ParticleSystem::randomDirectionVectorInRange(float t_angle, float t_angleOffset)
 {
 	std::random_device randomSeed; // obtain a random number from hardware
@@ -58,12 +60,16 @@ glm::vec2 ParticleSystem::randomDirectionVectorInRange(float t_angle, float t_an
 	return  glm::vec2(glm::cos((t_angle + tempAngle) * M_PI / 180), glm::sin((t_angle + tempAngle) * M_PI / 180));
 
 }
-
+///<summary>
+///Returns a random value set by the offsetAmount Value 
+///</summary>
 int ParticleSystem::randomOffset(int t_offsetAmount)
 {
 	return (rand() % (t_offsetAmount * 2) + 1) - t_offsetAmount;
 }
-
+///<summary>
+///Pass in an angle and a reference to a Particle Component to change the angle to the given angle. 
+///</summary>
 void ParticleSystem::adjustParticleAngles(float t_newAngle, ParticleEmitterComponent* t_partComp)
 {
 	t_partComp->setAngle(t_newAngle);

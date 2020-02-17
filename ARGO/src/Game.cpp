@@ -49,21 +49,9 @@ Game::Game() :
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 
 		//add components to player
-
-		
-		//int i = 0;  //Uncomment to test Particle Emmitter
 		for (auto& player : m_players)
 		{
 			createPlayer(player);
-
-			////Uncomment to test Particle Emmitter - Start
-			//static_cast<ParticleEmitterComponent*>(player.getAllComps().at(COMPONENT_ID::PARTICLE_ID))->setAngle(i * 45);
-			//if (i == 1 || i == 3)
-			//{
-			//	static_cast<ParticleEmitterComponent*>(player.getAllComps().at(COMPONENT_ID::PARTICLE_ID))->setRotating(true);
-			//}
-			//i++;
-			////Uncomment to test Particle Emmitter - End
 		}
 
 		m_entities.reserve(MAX_ENTITIES);
@@ -358,7 +346,9 @@ void Game::createPlayer(Entity& t_player)
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
-	t_player.addComponent(new ParticleEmitterComponent(static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos(),true,90,30,1,100,20));
+	t_player.addComponent(new ParticleEmitterComponent(static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos(),true,
+		Utilities::PARTICLE_DIRECTION_ANGLE_SAMPLE, Utilities::PARTICLE_OFFSET_ANGLE_SAMPLE, Utilities::PARTICLE_SPEED_SAMPLE,
+		Utilities::PARTICLE_MAX_PARTICLES_SAMPLE, Utilities::PARTICLES_PER_SECOND_SAMPLE));
 	t_player.addComponent(new PrimitiveComponent());
 	t_player.addComponent(new TagComponent(Tag::Player));
 }
