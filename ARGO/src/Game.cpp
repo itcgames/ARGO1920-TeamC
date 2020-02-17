@@ -33,7 +33,8 @@ Game::Game() :
 		if (!m_window) throw "Error Loading Window";
 
 		//Create the SDL Renderer 
-		m_renderer = SDL_CreateRenderer(m_window, -1, 0);
+		createRenderer();
+
 		//Check if the renderer was created correctly
 		if (!m_renderer) throw "Error Loading Renderer";
 
@@ -68,6 +69,8 @@ Game::Game() :
 		m_textTest2.addComponent(new TextComponent("pt-sans.ttf", m_renderer, Utilities::LARGE_FONT, false, "Not Static Text", 255, 255, 0, 123));
 
 		setupLevel();
+
+		setupIgnoredEvents();
 	}
 	catch (std::string error)
 	{
@@ -139,100 +142,101 @@ void Game::initLibraries()
 void Game::processEvent()
 {
 	SDL_Event event;
-	SDL_PollEvent(&event);
-
-	switch (event.type)
+	while (SDL_PollEvent(&event))
 	{
-	case SDL_QUIT:
-		m_isRunning = false;
-		break;
-	case SDL_KEYDOWN:
-		// Press Escape to close screen
-		if (SDLK_ESCAPE == event.key.keysym.sym)
+		switch (event.type)
 		{
+		case SDL_QUIT:
 			m_isRunning = false;
-		}
-		if (SDLK_SPACE == event.key.keysym.sym)
-		{
+			break;
+		case SDL_KEYDOWN:
+			// Press Escape to close screen
+			if (SDLK_ESCAPE == event.key.keysym.sym)
+			{
+				m_isRunning = false;
+			}
+			if (SDLK_SPACE == event.key.keysym.sym)
+			{
 
-		}
-		if (SDLK_BACKSPACE == event.key.keysym.sym)
-		{
-			//delete all entities
-			if (m_entities.size() > 0)
-			{
-				m_entities.erase(m_entities.begin(), m_entities.end());
 			}
-			std::cout << m_entities.size() << std::endl;
-		}
-		if (SDLK_DELETE == event.key.keysym.sym)
-		{
-			//delete all entities
-			m_players[0].removeCompType(ComponentType::Input);
-		}
-		if (SDLK_RETURN == event.key.keysym.sym)
-		{
-			//check if we can add 100 entities
-			int availableSpace = MAX_ENTITIES - m_entities.size();
-			//if more than 100 available, set to 100
-			if (availableSpace > 100)
+			if (SDLK_BACKSPACE == event.key.keysym.sym)
 			{
-				availableSpace = 100;
-			}
-			//if at least 1 available
-			if (availableSpace > 0)
-			{
-				for (int i = 0; i < availableSpace; i++)
+				//delete all entities
+				if (m_entities.size() > 0)
 				{
+					m_entities.erase(m_entities.begin(), m_entities.end());
+				}
+				std::cout << m_entities.size() << std::endl;
+			}
+			if (SDLK_DELETE == event.key.keysym.sym)
+			{
+				//delete all entities
+				m_players[0].removeCompType(ComponentType::Input);
+			}
+			if (SDLK_RETURN == event.key.keysym.sym)
+			{
+				//check if we can add 100 entities
+				int availableSpace = MAX_ENTITIES - m_entities.size();
+				//if more than 100 available, set to 100
+				if (availableSpace > 100)
+				{
+					availableSpace = 100;
+				}
+				//if at least 1 available
+				if (availableSpace > 0)
+				{
+					for (int i = 0; i < availableSpace; i++)
+					{
+						createEnemy();
+					}
+				}
+				std::cout << m_entities.size() << std::endl;
+			}
+			if (SDLK_1 == event.key.keysym.sym)
+			{
+				//if space available in the vector
+				if (m_entities.size() < MAX_ENTITIES)
+				{
+					//add one enemy
 					createEnemy();
 				}
+				std::cout << m_entities.size() << std::endl;
 			}
-			std::cout << m_entities.size() << std::endl;
-		}
-		if (SDLK_1 == event.key.keysym.sym)
-		{
-			//if space available in the vector
-			if (m_entities.size() < MAX_ENTITIES)
+			if (SDLK_q == event.key.keysym.sym)
 			{
-				//add one enemy
-				createEnemy();
+				m_audioMgr->PlaySfx("airhorn.wav");
 			}
-			std::cout << m_entities.size() << std::endl;
+			//master volume
+			if (SDLK_UP == event.key.keysym.sym)
+			{
+				m_audioMgr->SetMasterVolume(m_audioMgr->GetMasterVolume() + Utilities::AUDIO_VOLUME_STEP);
+			}
+			if (SDLK_DOWN == event.key.keysym.sym)
+			{
+				m_audioMgr->SetMasterVolume(m_audioMgr->GetMasterVolume() - Utilities::AUDIO_VOLUME_STEP);
+			}
+			//sfx volume
+			if (SDLK_KP_7 == event.key.keysym.sym)
+			{
+				m_audioMgr->SetSfxVolume(m_audioMgr->GetSfxVolume() + Utilities::AUDIO_VOLUME_STEP);
+			}
+			if (SDLK_KP_4 == event.key.keysym.sym)
+			{
+				m_audioMgr->SetSfxVolume(m_audioMgr->GetSfxVolume() - Utilities::AUDIO_VOLUME_STEP);
+			}
+			//music volume
+			if (SDLK_KP_9 == event.key.keysym.sym)
+			{
+				m_audioMgr->SetMusicVolume(m_audioMgr->GetMusicVolume() + Utilities::AUDIO_VOLUME_STEP);
+			}
+			if (SDLK_KP_6 == event.key.keysym.sym)
+			{
+				m_audioMgr->SetMusicVolume(m_audioMgr->GetMusicVolume() - Utilities::AUDIO_VOLUME_STEP);
+			}
+			break;
+		default:
+			break;
 		}
-		if (SDLK_q == event.key.keysym.sym)
-		{
-			m_audioMgr->PlaySfx("airhorn.wav");
-		}
-		//master volume
-		if (SDLK_UP == event.key.keysym.sym)
-		{
-			m_audioMgr->SetMasterVolume(m_audioMgr->GetMasterVolume() + Utilities::AUDIO_VOLUME_STEP);
-		}
-		if (SDLK_DOWN == event.key.keysym.sym)
-		{
-			m_audioMgr->SetMasterVolume(m_audioMgr->GetMasterVolume() - Utilities::AUDIO_VOLUME_STEP);
-		}
-		//sfx volume
-		if (SDLK_KP_7 == event.key.keysym.sym)
-		{
-			m_audioMgr->SetSfxVolume(m_audioMgr->GetSfxVolume() + Utilities::AUDIO_VOLUME_STEP);
-		}
-		if (SDLK_KP_4 == event.key.keysym.sym)
-		{
-			m_audioMgr->SetSfxVolume(m_audioMgr->GetSfxVolume() - Utilities::AUDIO_VOLUME_STEP);
-		}
-		//music volume
-		if (SDLK_KP_9 == event.key.keysym.sym)
-		{
-			m_audioMgr->SetMusicVolume(m_audioMgr->GetMusicVolume() + Utilities::AUDIO_VOLUME_STEP);
-		}
-		if (SDLK_KP_6 == event.key.keysym.sym)
-		{
-			m_audioMgr->SetMusicVolume(m_audioMgr->GetMusicVolume() - Utilities::AUDIO_VOLUME_STEP);
-		}
-		break;
-	default:
-		break;
 	}
 }
 
@@ -366,7 +370,7 @@ void Game::createPlayer(Entity& t_player)
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
-	t_player.addComponent(new ParticleEmitterComponent(static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos(),true,
+	t_player.addComponent(new ParticleEmitterComponent(static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos(), true,
 		Utilities::PARTICLE_DIRECTION_ANGLE_SAMPLE, Utilities::PARTICLE_OFFSET_ANGLE_SAMPLE, Utilities::PARTICLE_SPEED_SAMPLE,
 		Utilities::PARTICLE_MAX_PARTICLES_SAMPLE, Utilities::PARTICLES_PER_SECOND_SAMPLE));
 	t_player.addComponent(new PrimitiveComponent());
@@ -427,4 +431,29 @@ bool Game::checkCanTick(Uint16 t_deltaTime)
 void Game::closeWindow(const CloseWindow& t_event)
 {
 	m_isRunning = false;
+}
+
+void Game::setupIgnoredEvents()
+{
+	SDL_EventState(SDL_CONTROLLERAXISMOTION, SDL_IGNORE);
+	SDL_EventState(SDL_CONTROLLERBUTTONDOWN, SDL_IGNORE);
+	SDL_EventState(SDL_CONTROLLERBUTTONUP, SDL_IGNORE);
+	SDL_EventState(SDL_CONTROLLERDEVICEADDED, SDL_IGNORE);
+	SDL_EventState(SDL_CONTROLLERDEVICEREMOVED, SDL_IGNORE);
+	SDL_EventState(SDL_CONTROLLERDEVICEREMAPPED, SDL_IGNORE);
+}
+
+void Game::createRenderer()
+{
+	//create renderer with vsync and hardware rendering in DEBUG mode
+#ifdef _DEBUG
+	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+#else
+	//when in release, make window fullscreen
+	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
+	bool IsFullscreen = SDL_GetWindowFlags(m_window) & FullscreenFlag;
+	SDL_SetWindowFullscreen(m_window, IsFullscreen ? 0 : FullscreenFlag);
+	SDL_ShowCursor(IsFullscreen);
+#endif // DEBUG
 }
