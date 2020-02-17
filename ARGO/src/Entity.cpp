@@ -419,9 +419,9 @@ Component* Entity::getComponent(ComponentType t_type)
 		case ComponentType::Tile:
 			return m_components.at(COMPONENT_ID::TILE_ID);
 		case ComponentType::Primitive:
-			return m_components.at(COMPONENT_ID::TAG_ID);
+			return m_components.at(COMPONENT_ID::PRIMITIVE_ID);
 		case ComponentType::ParticleEmitter:
-			return m_components.at(COMPONENT_ID::TAG_ID);
+			return m_components.at(COMPONENT_ID::PARTICLE_ID);
 		default:
 			throw std::invalid_argument("trying to get an unknown component!");
 			break;
