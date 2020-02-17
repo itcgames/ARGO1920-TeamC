@@ -42,11 +42,13 @@ Game::Game() :
 
 		m_assetMgr = AssetManager::Instance(*m_renderer);
 		m_audioMgr = AudioManager::Instance();
+		m_audioMgr->PlayMusic("looping\\Ove - Earth Is All We Have.ogg");
 
 		// Game is running
 		m_isRunning = true;
 
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
+		m_eventManager.subscribeToEvent<createBulletEvent>(std::bind(&Game::playerFireSound, this, std::placeholders::_1));
 
 		//add components to player
 		for (auto& player : m_players)
@@ -83,11 +85,11 @@ Game::~Game()
 {
 	m_entities.clear();
 
-	AudioManager::Release();
-	m_audioMgr = NULL;
-
 	AssetManager::Release();
 	m_assetMgr = NULL;
+
+	AudioManager::Release();
+	m_audioMgr = NULL;
 
 	cleanup();
 }
@@ -152,6 +154,7 @@ void Game::processEvent()
 		}
 		if (SDLK_SPACE == event.key.keysym.sym)
 		{
+
 		}
 		if (SDLK_BACKSPACE == event.key.keysym.sym)
 		{
@@ -200,15 +203,33 @@ void Game::processEvent()
 		{
 			m_audioMgr->PlaySfx("airhorn.wav");
 		}
+		//master volume
 		if (SDLK_UP == event.key.keysym.sym)
 		{
-			m_audioMgr->SetVolume(m_audioMgr->GetVolume() + 10);
+			m_audioMgr->SetMasterVolume(m_audioMgr->GetMasterVolume() + Utilities::AUDIO_VOLUME_STEP);
 		}
 		if (SDLK_DOWN == event.key.keysym.sym)
 		{
-			m_audioMgr->SetVolume(m_audioMgr->GetVolume() - 10);
+			m_audioMgr->SetMasterVolume(m_audioMgr->GetMasterVolume() - Utilities::AUDIO_VOLUME_STEP);
 		}
-
+		//sfx volume
+		if (SDLK_KP_7 == event.key.keysym.sym)
+		{
+			m_audioMgr->SetSfxVolume(m_audioMgr->GetSfxVolume() + Utilities::AUDIO_VOLUME_STEP);
+		}
+		if (SDLK_KP_4 == event.key.keysym.sym)
+		{
+			m_audioMgr->SetSfxVolume(m_audioMgr->GetSfxVolume() - Utilities::AUDIO_VOLUME_STEP);
+		}
+		//music volume
+		if (SDLK_KP_9 == event.key.keysym.sym)
+		{
+			m_audioMgr->SetMusicVolume(m_audioMgr->GetMusicVolume() + Utilities::AUDIO_VOLUME_STEP);
+		}
+		if (SDLK_KP_6 == event.key.keysym.sym)
+		{
+			m_audioMgr->SetMusicVolume(m_audioMgr->GetMusicVolume() - Utilities::AUDIO_VOLUME_STEP);
+		}
 		break;
 	default:
 		break;
@@ -304,7 +325,6 @@ void Game::preRender()
 void Game::cleanup()
 {
 	IMG_Quit();
-	Mix_Quit();
 	TTF_Quit();
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
@@ -376,6 +396,11 @@ void Game::setToFloor(Entity& t_entity, glm::vec2 t_position)
 	t_entity.removeAllComponents();
 	t_entity.addComponent(new TransformComponent(t_position));
 	t_entity.addComponent(new VisualComponent("floor_1b.png", m_renderer)); //TODO: change to floor texture when assets have been recieved.
+}
+
+void Game::playerFireSound(const createBulletEvent& t_event)
+{
+	m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "launcher.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_renderSystem.getFocus());
 }
 
 bool Game::checkCanRender(Uint16 t_renderTime)
