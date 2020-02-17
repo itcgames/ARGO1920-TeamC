@@ -9,14 +9,6 @@ struct createBulletEvent
 	int type;
 };
 
-struct createAltBulletEvent
-{
-	Entity& entity;
-	glm::vec2 direction;
-	float forceScale;
-	int type;
-};
-
 struct PhysicsMove
 {
 	glm::vec2 m_velocity;

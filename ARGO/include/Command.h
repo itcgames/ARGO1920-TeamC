@@ -62,10 +62,3 @@ class FireBulletCommand :
 public:
 	virtual void execute() { std::cout << "pew pew" << std::endl; }
 };
-
-class FireAltBulletCommand :
-	public Command
-{
-public:
-	virtual void execute() { std::cout << "alt pew pew" << std::endl; }
-};

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CommandComponent.h"
-#include "..\include\CommandComponent.h"
 
 CommandComponent::CommandComponent() :
 	Component(ComponentType::Command)
