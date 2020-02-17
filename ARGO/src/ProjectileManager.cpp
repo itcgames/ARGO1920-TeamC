@@ -31,18 +31,25 @@ ProjectileManager::ProjectileManager(EventManager& t_eventManager) :
 
 void ProjectileManager::createPlayerBullet(const createBulletEvent& t_event)
 {
-	glm::vec2 position = static_cast<TransformComponent*>(t_event.entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos();
-	static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->setPos(position);
-	static_cast<ForceComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::FORCE_ID))->setForce(t_event.direction * t_event.forceScale);
-	static_cast<HealthComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(1);
-	static_cast<TimerComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->reset();
-	m_playerBullets[m_nextPlayerBullet].type = t_event.type;
-
-	m_nextPlayerBullet++;
-	if (m_nextPlayerBullet >= BULLET_POOL_SIZE)
+	FireRateComponent* fireRateComp = static_cast<FireRateComponent*>(t_event.entity.getComponent(ComponentType::FireRate));
+	Uint16 currentTick = SDL_GetTicks();
+	if (fireRateComp && fireRateComp->getNextFire() < currentTick)
 	{
-		m_nextPlayerBullet = 0;
+		fireRateComp->setLastFire(currentTick);
+		glm::vec2 position = static_cast<TransformComponent*>(t_event.entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos();
+		static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->setPos(position);
+		static_cast<ForceComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::FORCE_ID))->setForce(t_event.direction * t_event.forceScale);
+		static_cast<HealthComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(1);
+		static_cast<TimerComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->reset();
+		m_playerBullets[m_nextPlayerBullet].type = t_event.type;
+
+		m_nextPlayerBullet++;
+		if (m_nextPlayerBullet >= BULLET_POOL_SIZE)
+		{
+			m_nextPlayerBullet = 0;
+		}
 	}
+
 }
 
 void ProjectileManager::createEnemyBullet(const createBulletEvent& t_event)

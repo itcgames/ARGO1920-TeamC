@@ -30,6 +30,7 @@
 #include "AudioManager.h"
 #include "CommandSystem.h"
 #include "LevelManager.h"
+#include <algorithm>
 
 /// <summary>
 /// Game class needed for the game
@@ -49,6 +50,7 @@ private:
 	void cleanup();
 	void createPlayer(Entity& t_player);
 	void createEnemy();
+	void removeDeadEnemies();
 	void playerFireSound(const createBulletEvent& t_event);
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);

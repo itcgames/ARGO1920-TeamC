@@ -14,6 +14,7 @@
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\FireRateComponent.cpp" />
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\ParticleEmitterComponent.cpp" />
     <ClCompile Include="src\ParticleSystem.cpp" />
@@ -64,6 +65,7 @@
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\AudioManager.h" />
     <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\FireRateComponent.h" />
     <ClInclude Include="include\Particle.h" />
     <ClInclude Include="include\ParticleEmitterComponent.h" />
     <ClInclude Include="include\ParticleSystem.h" />

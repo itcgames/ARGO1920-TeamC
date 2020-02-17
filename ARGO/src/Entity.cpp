@@ -12,6 +12,10 @@ Entity::~Entity()
 {
 	for (int i = m_components.size() - 1; i >= 0; i--)
 	{
+		if (m_components.at(i) == NULL)
+		{
+			continue;
+		}
 		delete m_components.at(i);
 		m_components.at(i) = nullptr;
 	}
@@ -167,6 +171,15 @@ void Entity::addComponent(Component* t_c)
 			if (!m_components.at(COMPONENT_ID::TILE_ID))
 			{
 				m_components.at(COMPONENT_ID::TILE_ID) = t_c;
+				return;
+			}
+			break;
+		}
+		case ComponentType::FireRate:
+		{
+			if (!m_components.at(COMPONENT_ID::FIRE_RATE_ID))
+			{
+				m_components.at(COMPONENT_ID::FIRE_RATE_ID) = t_c;
 				return;
 			}
 			break;
@@ -363,6 +376,16 @@ void Entity::removeCompType(ComponentType t_type)
 			}
 			break;
 		}
+		case ComponentType::FireRate:
+		{
+			if (m_components.at(COMPONENT_ID::FIRE_RATE_ID))
+			{
+				delete m_components.at(COMPONENT_ID::FIRE_RATE_ID);
+				m_components.at(COMPONENT_ID::FIRE_RATE_ID) = nullptr;
+				return;
+			}
+			break;
+		}
 		default:
 			throw std::invalid_argument("trying to delete an unknown component!");
 			break;
@@ -384,7 +407,15 @@ void Entity::removeAllComponents()
 	}
 }
 
-Component* Entity::getComponent(ComponentType t_type)
+void Entity::nullAllComponents()
+{
+	for (int i = 0; i < m_components.size(); i++)
+	{
+		m_components.at(i) = nullptr;
+	}
+}
+
+Component* Entity::getComponent(ComponentType t_type) const
 {
 	try
 	{
@@ -422,6 +453,8 @@ Component* Entity::getComponent(ComponentType t_type)
 			return m_components.at(COMPONENT_ID::PRIMITIVE_ID);
 		case ComponentType::ParticleEmitter:
 			return m_components.at(COMPONENT_ID::PARTICLE_ID);
+		case ComponentType::FireRate:
+			return m_components.at(COMPONENT_ID::FIRE_RATE_ID);
 		default:
 			throw std::invalid_argument("trying to get an unknown component!");
 			break;

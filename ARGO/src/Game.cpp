@@ -1,6 +1,16 @@
 #include "stdafx.h"
 #include "Game.h"
 
+
+bool cleanUpEnemies(const Entity& t_entity)
+{
+	if (!static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health))->isAlive())
+	{
+		return true;
+	}
+	return false;
+}
+
 /// <summary>
 /// Constructor for the game class.
 /// </summary>
@@ -250,9 +260,9 @@ void Game::update(Uint16 t_dt)
 	}
 	for (auto& player : m_players)
 	{
+		m_hpSystem.update(player);
 		m_inputSystem.update(player);
 		m_commandSystem.update(player, m_eventManager);
-		m_hpSystem.update(player);
 		m_transformSystem.update(player);
 		m_collisionSystem.update(player);
 		m_particleSystem.update(player);
@@ -260,6 +270,8 @@ void Game::update(Uint16 t_dt)
 	m_projectileManager.update(&m_transformSystem);
 	m_projectileManager.update(&m_collisionSystem);
 	m_collisionSystem.handleCollisions();
+
+	removeDeadEnemies();
 }
 
 void Game::render()
@@ -337,6 +349,7 @@ void Game::createPlayer(Entity& t_player)
 		Utilities::PARTICLE_MAX_PARTICLES_SAMPLE, Utilities::PARTICLES_PER_SECOND_SAMPLE));
 	t_player.addComponent(new PrimitiveComponent());
 	t_player.addComponent(new TagComponent(Tag::Player));
+	t_player.addComponent(new FireRateComponent(Utilities::PLAYER_FIRE_RATE));
 }
 
 void Game::createEnemy()
@@ -346,6 +359,17 @@ void Game::createEnemy()
 	m_entities.back().addComponent(new AiComponent());
 	m_entities.back().addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
 	m_entities.back().addComponent(new TagComponent(Tag::Enemy));
+	m_entities.back().addComponent(new HealthComponent(Utilities::ENEMY_HP, Utilities::ENEMY_HP));
+}
+
+void Game::removeDeadEnemies()
+{
+	std::vector<Entity>::iterator iter = std::remove_if(m_entities.begin(), m_entities.end(), cleanUpEnemies);
+	while (iter != m_entities.end())
+	{
+		iter->nullAllComponents();
+		iter = m_entities.erase(iter);
+	}
 }
 
 void Game::playerFireSound(const createBulletEvent& t_event)

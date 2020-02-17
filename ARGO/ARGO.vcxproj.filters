@@ -140,7 +140,7 @@
     </ClCompile>
     <ClCompile Include="src\PrimitiveComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="src\TextComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
@@ -200,6 +200,9 @@
     </ClCompile>
     <ClCompile Include="src\TileComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FireRateComponent.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -295,7 +298,7 @@
     </ClInclude>
     <ClInclude Include="include\Particle.h">
       <Filter>Header Files\ECS\Components</Filter>
-	  </ClInclude>
+    </ClInclude>
     <ClInclude Include="include\TextComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
@@ -355,6 +358,9 @@
     </ClInclude>
     <ClInclude Include="include\TileComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FireRateComponent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
