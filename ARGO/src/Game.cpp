@@ -49,6 +49,7 @@ Game::Game() :
 
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 		m_eventManager.subscribeToEvent<createBulletEvent>(std::bind(&Game::playerFireSound, this, std::placeholders::_1));
+		m_eventManager.subscribeToEvent<createAltBulletEvent>(std::bind(&Game::playerAltFireSound, this, std::placeholders::_1));
 
 		//add components to player
 		for (auto& player : m_players)
@@ -355,6 +356,7 @@ void Game::createPlayer(Entity& t_player)
 		std::pair<ButtonType, Command*>(ButtonType::DpadLeft, new MoveLeftCommand()),
 		std::pair<ButtonType, Command*>(ButtonType::DpadRight, new MoveRightCommand()),
 		std::pair<ButtonType, Command*>(ButtonType::RightTrigger, new FireBulletCommand()),
+		std::pair<ButtonType, Command*>(ButtonType::LeftTrigger, new FireAltBulletCommand()),
 		std::pair<ButtonType,Command*>(ButtonType::Back, new CloseWindowCommand()) };
 
 	t_player.addComponent(new CommandComponent());
@@ -395,7 +397,12 @@ void Game::setToFloor(Entity& t_entity, glm::vec2 t_position)
 
 void Game::playerFireSound(const createBulletEvent& t_event)
 {
-	m_audioMgr->PlayPlayerFireSfx("launcherFire.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_renderSystem.getFocus());
+	m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "launcher.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_renderSystem.getFocus());
+}
+
+void Game::playerAltFireSound(const createAltBulletEvent& t_event)
+{
+	m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "ak.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_renderSystem.getFocus());
 }
 
 bool Game::checkCanRender(Uint16 t_renderTime)

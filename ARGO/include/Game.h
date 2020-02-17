@@ -50,6 +50,7 @@ private:
 	void setToWall(Entity& t_entity, glm::vec2 t_position);
 	void setToFloor(Entity& t_entity, glm::vec2 t_position);
 	void playerFireSound(const createBulletEvent& t_event);
+	void playerAltFireSound(const createAltBulletEvent& t_event);
 
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);
