@@ -55,6 +55,8 @@ private:
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);
 	void closeWindow(const CloseWindow& t_event);
+	void setupIgnoredEvents();
+	void createRenderer();
 
 	AssetManager* m_assetMgr;
 	AudioManager* m_audioMgr;
