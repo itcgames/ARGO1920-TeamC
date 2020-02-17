@@ -77,10 +77,10 @@ Game::Game() :
 
 		m_levelManager.setupLevel();
 		//magic numbers for creating a sandbox level plz ignore.
-		m_levelManager.createRoom(glm::vec2(64, 64), 12, 12);
-		m_levelManager.createRoom(glm::vec2(64 * 12, 64 * 2), 3, 2);
-		m_levelManager.createRoom(glm::vec2(64 * 12, 64 * 10), 3, 2);
-		m_levelManager.createRoom(glm::vec2(64 * 15, 64), 5, 12);
+		m_levelManager.createRoom(glm::vec2(1, 1), 12, 12);
+		m_levelManager.createRoom(glm::vec2(12, 2), 3, 2);
+		m_levelManager.createRoom(glm::vec2(12, 10), 3, 2);
+		m_levelManager.createRoom(glm::vec2(15, 1), 5, 12);
 
 		setupIgnoredEvents();
 	}

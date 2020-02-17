@@ -61,7 +61,7 @@ void LevelManager::setToFloor(Entity& t_entity)
 
 void LevelManager::createRoom(glm::vec2 t_startPosition, int t_width, int t_height)
 {
-	Entity* startTile = findAtPosition(t_startPosition);
+	Entity* startTile = findAtPosition(t_startPosition * (float)Utilities::TILE_SIZE);
 	for (int i = 0; i < t_width; i++)
 	{
 		Entity* currentTile = startTile;
