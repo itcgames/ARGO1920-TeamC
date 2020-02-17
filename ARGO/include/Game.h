@@ -28,6 +28,7 @@
 #include "ProjectileManager.h"
 #include "AudioManager.h"
 #include "CommandSystem.h"
+#include "LevelManager.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -44,11 +45,8 @@ private:
 	void update(bool t_canTick, bool t_canRender, Uint16 t_dt);
 	void preRender();
 	void cleanup();
-	void setupLevel();
 	void createPlayer(Entity& t_player);
 	void createEnemy();
-	void setToWall(Entity& t_entity, glm::vec2 t_position);
-	void setToFloor(Entity& t_entity, glm::vec2 t_position);
 
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);
@@ -72,7 +70,6 @@ private:
 
 	Entity m_players[4];
 	std::vector<Entity> m_entities;
-	std::vector<Entity> m_levelTiles;
 
 	Entity m_textTest1;
 	Entity m_textTest2;
@@ -80,6 +77,7 @@ private:
 	TTF_Font* m_font;
 
 	ProjectileManager m_projectileManager;
+	LevelManager m_levelManager;
 
 	// Window used for the game
 	SDL_Window* m_window;

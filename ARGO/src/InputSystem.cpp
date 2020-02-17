@@ -47,6 +47,5 @@ void InputSystem::handleInputs(InputComponent* t_inputComponent, CommandComponen
 	}
 	if (controller.getCurrent().RightThumbStick != glm::vec2(0.0f, 0.0f))
 	{
-
 	}
 }

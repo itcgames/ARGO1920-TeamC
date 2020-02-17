@@ -14,6 +14,7 @@ enum class ComponentType
 	Tag = 10,
 	Text = 11,
 	Command = 12,
+	Tile = 13,
 	Count
 };
 
@@ -33,4 +34,5 @@ namespace COMPONENT_ID
 	const int TIMER_ID = static_cast<int>(ComponentType::Timer);
 	const int COMMAND_ID = static_cast<int>(ComponentType::Command);
 	const int TAG_ID = static_cast<int>(ComponentType::Tag);
+	const int TILE_ID = static_cast<int>(ComponentType::Tile);
 }

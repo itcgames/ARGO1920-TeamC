@@ -14,7 +14,8 @@ Game::Game() :
 	m_lastTick(0),
 	m_lastRender(0),
 	m_timePerFrame(0),
-	m_timePerTick(0)
+	m_timePerTick(0),
+	m_levelManager(m_renderer)
 {
 	try
 	{
@@ -65,7 +66,10 @@ Game::Game() :
 		m_textTest2.addComponent(new TransformComponent());
 		m_textTest2.addComponent(new TextComponent("pt-sans.ttf", m_renderer, Utilities::LARGE_FONT, false, "Not Static Text", 255, 255, 0, 123));
 
-		setupLevel();
+		m_levelManager.setupLevel();
+		//magic numbers for creating a sandbox level plz ignore.
+		m_levelManager.createRoom(glm::vec2(64, 64), 12, 12);
+		m_levelManager.createRoom(glm::vec2(64 * 12, 64 * 2), 3, 1);
 	}
 	catch (std::string error)
 	{
@@ -217,17 +221,9 @@ void Game::processEvent()
 
 void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 {
-	for (auto& entity : m_levelTiles)
-	{
-		if (t_canTick)
-		{
-			m_collisionSystem.update(entity);
-		}
-		if (t_canRender)
-		{
-			m_renderSystem.render(m_renderer, entity);
-		}
-	}
+	//levelManager update+render;
+	if (t_canTick) m_levelManager.update(&m_collisionSystem);
+	if (t_canRender) m_levelManager.render(m_renderer, &m_renderSystem);
 	for (auto& entity : m_entities)
 	{
 		if (t_canTick)
@@ -258,11 +254,6 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 		}
 	}
 
-	if (t_canRender)
-	{
-		m_renderSystem.render(m_renderer, m_textTest1);
-		m_renderSystem.render(m_renderer, m_textTest2);
-	}
 	if (t_canTick)
 	{
 		m_projectileManager.update(&m_transformSystem);
@@ -271,6 +262,8 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 	if (t_canRender)
 	{
 		m_projectileManager.render(m_renderer, &m_renderSystem);
+		m_renderSystem.render(m_renderer, m_textTest1);
+		m_renderSystem.render(m_renderer, m_textTest2);
 	}
 
 	if (t_canTick) m_collisionSystem.handleCollisions();
@@ -311,22 +304,6 @@ void Game::cleanup()
 	SDL_Quit();
 }
 
-void Game::setupLevel()
-{
-	int count = 0;
-	m_levelTiles.reserve(Utilities::LEVEL_TILE_HEIGHT * Utilities::LEVEL_TILE_WIDTH);
-	for (int i = 0; i < Utilities::LEVEL_TILE_HEIGHT; i++)
-	{
-		for (int j = 0; j < Utilities::LEVEL_TILE_WIDTH; j++)
-		{
-			m_levelTiles.emplace_back();
-
-			setToFloor(m_levelTiles.at(count), glm::vec2(j * Utilities::TILE_SIZE, i * Utilities::TILE_SIZE));
-			count++;
-		}
-	}
-}
-
 void Game::createPlayer(Entity& t_player)
 {
 	std::map<ButtonType, Command*> buttonPressMap = {
@@ -355,22 +332,6 @@ void Game::createEnemy()
 	m_entities.back().addComponent(new AiComponent());
 	m_entities.back().addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
 	m_entities.back().addComponent(new TagComponent(Tag::Enemy));
-}
-
-void Game::setToWall(Entity& t_entity, glm::vec2 t_position)
-{
-	t_entity.removeAllComponents();
-	t_entity.addComponent(new TransformComponent(t_position));
-	t_entity.addComponent(new VisualComponent("wall_4.png", m_renderer)); //TODO: change to wall texture when assets have been recieved.
-	t_entity.addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
-	t_entity.addComponent(new TagComponent(Tag::Wall));
-}
-
-void Game::setToFloor(Entity& t_entity, glm::vec2 t_position)
-{
-	t_entity.removeAllComponents();
-	t_entity.addComponent(new TransformComponent(t_position));
-	t_entity.addComponent(new VisualComponent("floor_1b.png", m_renderer)); //TODO: change to floor texture when assets have been recieved.
 }
 
 bool Game::checkCanRender(Uint16 t_renderTime)

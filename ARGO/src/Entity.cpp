@@ -142,7 +142,15 @@ void Entity::addComponent(Component* t_c)
 			}
 			break;
 		}
-
+		case ComponentType::Tile:
+		{
+			if (!m_components.at(COMPONENT_ID::TILE_ID))
+			{
+				m_components.at(COMPONENT_ID::TILE_ID) = t_c;
+				return;
+			}
+			break;
+		}
 		default:
 			throw std::invalid_argument("Invalid component type!");
 			break;
@@ -244,7 +252,7 @@ void Entity::removeCompType(ComponentType t_type)
 		}
 		case ComponentType::ColliderAABB:
 		{
-			if (!m_components.at(COMPONENT_ID::COLLIDER_AABB_ID))
+			if (m_components.at(COMPONENT_ID::COLLIDER_AABB_ID))
 			{
 				delete m_components.at(COMPONENT_ID::COLLIDER_AABB_ID);
 
@@ -256,7 +264,7 @@ void Entity::removeCompType(ComponentType t_type)
 		}
 		case ComponentType::ColliderCircle:
 		{
-			if (!m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID))
+			if (m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID))
 			{
 				delete m_components.at(COMPONENT_ID::COLLIDER_CIRCLE_ID);
 
@@ -268,7 +276,7 @@ void Entity::removeCompType(ComponentType t_type)
 		}
 		case ComponentType::Timer:
 		{
-			if (!m_components.at(COMPONENT_ID::TIMER_ID))
+			if (m_components.at(COMPONENT_ID::TIMER_ID))
 			{
 				delete m_components.at(COMPONENT_ID::TIMER_ID);
 				m_components.at(COMPONENT_ID::TIMER_ID) = nullptr;
@@ -278,7 +286,7 @@ void Entity::removeCompType(ComponentType t_type)
 		}
 		case ComponentType::Command:
 		{
-			if (!m_components.at(COMPONENT_ID::COMMAND_ID))
+			if (m_components.at(COMPONENT_ID::COMMAND_ID))
 			{
 				delete m_components.at(COMPONENT_ID::TIMER_ID);
 				m_components.at(COMPONENT_ID::COMMAND_ID) = nullptr;
@@ -288,10 +296,20 @@ void Entity::removeCompType(ComponentType t_type)
 		}
 		case ComponentType::Tag:
 		{
-			if (!m_components.at(COMPONENT_ID::TAG_ID))
+			if (m_components.at(COMPONENT_ID::TAG_ID))
 			{
 				delete m_components.at(COMPONENT_ID::TAG_ID);
 				m_components.at(COMPONENT_ID::TAG_ID) = nullptr;
+				return;
+			}
+			break;
+		}
+		case ComponentType::Tile:
+		{
+			if (m_components.at(COMPONENT_ID::TILE_ID))
+			{
+				delete m_components.at(COMPONENT_ID::TILE_ID);
+				m_components.at(COMPONENT_ID::TILE_ID) = nullptr;
 				return;
 			}
 			break;
@@ -349,6 +367,8 @@ Component* Entity::getComponent(ComponentType t_type)
 			return m_components.at(COMPONENT_ID::COMMAND_ID);
 		case ComponentType::Tag:
 			return m_components.at(COMPONENT_ID::TAG_ID);
+		case ComponentType::Tile:
+			return m_components.at(COMPONENT_ID::TILE_ID);
 		default:
 			throw std::invalid_argument("trying to get an unknown component!");
 			break;

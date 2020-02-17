@@ -112,7 +112,7 @@ void CollisionSystem::handlePlayerCollision(Entity* t_player)
 		case Tag::EnemyBullet:
 			playerToEnemyBullet(t_player, other);
 			break;
-		case Tag::Wall:
+		case Tag::Tile:
 			playerToWall(t_player, other);
 			break;
 		default:
@@ -140,7 +140,7 @@ void CollisionSystem::handlePlayerBulletCollision(Entity* t_playerBullet)
 		case Tag::Enemy:
 			playerBulletToEnemy(t_playerBullet, other);
 			break;
-		case Tag::Wall:
+		case Tag::Tile:
 			playerBulletToWall(t_playerBullet, other);
 			break;
 		default:
@@ -173,7 +173,7 @@ void CollisionSystem::handleEnemyCollision(Entity* t_enemy)
 			}
 		}
 			break;
-		case Tag::Wall:
+		case Tag::Tile:
 			enemyToWall(t_enemy, other);
 			break;
 		default:
@@ -249,7 +249,26 @@ void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 {
 	if (t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID) && circleToAABBCollision(t_player, t_wall))
 	{
-		//handle aabb to circle collisisons here
+		int playerRadius = static_cast<ColliderCircleComponent*>(t_player->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
+		TransformComponent* playerPosition = static_cast<TransformComponent*>(t_player->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+
+		int wallWidth = static_cast<ColliderAABBComponent*>(t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID))->getBounds().x;
+		TransformComponent* wallPosition = static_cast<TransformComponent*>(t_wall->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+
+		glm::vec2 distanceBetween = playerPosition->getPos() - wallPosition->getPos();
+		float length = sqrt(distanceBetween.x * distanceBetween.x + distanceBetween.y * distanceBetween.y);
+		float seperation = 1 - length / (playerRadius + wallWidth);
+		if (length != 0)
+		{
+			distanceBetween /= length;
+			distanceBetween = distanceBetween * seperation * m_seperationScaler;
+		}
+		else
+		{
+			distanceBetween = glm::vec2(m_seperationScaler, m_seperationScaler);
+		}
+		playerPosition->addPos(distanceBetween);
+		//wallPosition->addPos(-distanceBetween);
 	}
 }
 
@@ -257,6 +276,7 @@ void CollisionSystem::playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enem
 {
 	if (t_enemy->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID) && circleToCircleCollision(t_playerBullet, t_enemy))
 	{
+		std::cout << "hit enemy" << std::endl;
 		static_cast<HealthComponent*>(t_playerBullet->getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0); //kill the bullet
 	}
 }
@@ -265,6 +285,7 @@ void CollisionSystem::playerBulletToWall(Entity* t_playerBullet, Entity* t_wall)
 {
 	if (t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID) && circleToAABBCollision(t_playerBullet, t_wall))
 	{
+		std::cout << "hit wall" << std::endl;
 		static_cast<HealthComponent*>(t_playerBullet->getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0); //kill the bullet
 	}
 }

@@ -60,9 +60,16 @@ void QuadTree::insert(Quad t_data)
 void QuadTree::retrieve(std::vector<Entity*>* t_vector, Quad t_data)
 {
 	int index = getIndex(t_data);
-	if (index != -1 && !m_nodes.empty()) 
+	if (!m_nodes.empty())
 	{
-		m_nodes[index].retrieve(t_vector, t_data);
+		if (index != -1)
+		{
+			m_nodes[index].retrieve(t_vector, t_data);
+		}
+		else
+		{
+
+		}
 	}
 
 	for (auto& object : m_objects)
