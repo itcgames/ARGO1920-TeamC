@@ -296,7 +296,7 @@ AudioManager::AudioManager()
 	{
 		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 	}
-	m_inittedFlags = Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG);
+	m_initialisedFlags = Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG);
 
 	Mix_AllocateChannels(Utilities::AUDIO_MIX_CHANNELS);
 	Mix_GroupChannels(Utilities::AUDIO_PLAYERS_FIRE_CHANNELS, Utilities::AUDIO_MIX_CHANNELS - 1, Utilities::AUDIO_PLAYERS_FIRE_CHANNELS);
@@ -309,7 +309,7 @@ AudioManager::~AudioManager()
 	m_assetMgr = NULL;
 	Mix_CloseAudio();
 
-	for (int i = 0; i < m_inittedFlags; i++)
+	for (int i = 0; i < m_initialisedFlags; i++)
 	{
 		Mix_Quit();
 	}

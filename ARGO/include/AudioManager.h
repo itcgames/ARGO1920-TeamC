@@ -48,6 +48,6 @@ private:
 	int m_musicVolume = 20;
 	int m_sfxVolume = 20;
 
-	int m_inittedFlags;
+	int m_initialisedFlags;
 };
 
