@@ -6,8 +6,8 @@ ParticleEmitterComponent::ParticleEmitterComponent() :
 {
 	for (int i = 0; i < m_maxParticles; i++)
 	{
-		Particle particleX;
-		m_particles.push_back(particleX);
+		Particle particula;
+		m_particles.push_back(particula);
 	}
 }
 /// <summary>
@@ -28,8 +28,8 @@ ParticleEmitterComponent::ParticleEmitterComponent(glm::vec2 t_position, bool t_
 {
 	for (int i = 0; i < m_maxParticles; i++)
 	{
-		Particle particleX;
-		m_particles.push_back(particleX);
+		Particle particula;
+		m_particles.push_back(particula);
 	}
 }
 /// <summary>
