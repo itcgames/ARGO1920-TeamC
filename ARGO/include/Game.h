@@ -23,6 +23,7 @@
 #include "AiSystem.h"
 #include "AssetManager.h"
 #include "FiniteStateMachine.h"
+#include "ParticleSystem.h"
 #include "EventManager.h"
 #include "CollisionSystem.h"
 #include "ProjectileManager.h"
@@ -48,7 +49,7 @@ private:
 	void cleanup();
 	void createPlayer(Entity& t_player);
 	void createEnemy();
-
+	void playerFireSound(const createBulletEvent& t_event);
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);
 	void closeWindow(const CloseWindow& t_event);
@@ -66,16 +67,16 @@ private:
 	InputSystem m_inputSystem;
 	RenderSystem m_renderSystem;
 	AiSystem m_aiSystem;
+	ParticleSystem m_particleSystem;
 	CollisionSystem m_collisionSystem;
 	CommandSystem m_commandSystem;
+
 
 	Entity m_players[4];
 	std::vector<Entity> m_entities;
 
 	Entity m_textTest1;
 	Entity m_textTest2;
-
-	TTF_Font* m_font;
 
 	ProjectileManager m_projectileManager;
 	LevelManager m_levelManager;

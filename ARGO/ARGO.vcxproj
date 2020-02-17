@@ -14,6 +14,10 @@
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\Particle.cpp" />
+    <ClCompile Include="src\ParticleEmitterComponent.cpp" />
+    <ClCompile Include="src\ParticleSystem.cpp" />
+    <ClCompile Include="src\PrimitiveComponent.cpp" />
     <ClCompile Include="src\CommandComponent.cpp" />
     <ClCompile Include="src\CommandSystem.cpp" />
     <ClCompile Include="src\Event.cpp" />
@@ -60,6 +64,10 @@
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\AudioManager.h" />
     <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\Particle.h" />
+    <ClInclude Include="include\ParticleEmitterComponent.h" />
+    <ClInclude Include="include\ParticleSystem.h" />
+    <ClInclude Include="include\PrimitiveComponent.h" />
     <ClInclude Include="include\CommandComponent.h" />
     <ClInclude Include="include\CommandSystem.h" />
     <ClInclude Include="include\Event.h" />

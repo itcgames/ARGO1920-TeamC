@@ -88,6 +88,26 @@ void Entity::addComponent(Component* t_c)
 			}
 			break;
 		}
+
+		case ComponentType::Primitive:
+		{
+			if (!m_components.at(COMPONENT_ID::PRIMITIVE_ID))
+			{
+				m_components.at(COMPONENT_ID::PRIMITIVE_ID) = t_c;
+				return;
+			}
+			break;
+		}
+
+		case ComponentType::ParticleEmitter:
+		{
+			if (!m_components.at(COMPONENT_ID::PARTICLE_ID))
+			{
+				m_components.at(COMPONENT_ID::PARTICLE_ID) = t_c;
+				return;
+			}
+			break;
+		}
 		case ComponentType::Text:
 		{
 			if (!m_components.at(COMPONENT_ID::TEXT_ID))
@@ -164,6 +184,8 @@ void Entity::addComponent(Component* t_c)
 	}
 }
 
+
+
 void Entity::removeCompType(ComponentType t_type)
 {
 	try
@@ -230,16 +252,43 @@ void Entity::removeCompType(ComponentType t_type)
 			}
 			break;
 		}
+
+
+		case ComponentType::Primitive:
+		{
+			if (m_components.at(COMPONENT_ID::PRIMITIVE_ID))
+			{
+				delete m_components.at(COMPONENT_ID::PRIMITIVE_ID);
+				m_components.at(COMPONENT_ID::PRIMITIVE_ID) = nullptr;
+				return;
+			}
+			break;
+		}
+
 		case ComponentType::Force:
 		{
 			if (m_components.at(COMPONENT_ID::FORCE_ID))
 			{
 				delete m_components.at(COMPONENT_ID::FORCE_ID);
 				m_components.at(COMPONENT_ID::FORCE_ID) = nullptr;
+
 				return;
 			}
 			break;
 		}
+
+		case ComponentType::ParticleEmitter:
+		{
+			if (m_components.at(COMPONENT_ID::PARTICLE_ID))
+			{
+				delete m_components.at(COMPONENT_ID::PARTICLE_ID);
+				m_components.at(COMPONENT_ID::PARTICLE_ID) = nullptr;
+				return;
+			}
+			break;
+		}
+
+
 		case ComponentType::Text:
 		{
 			if (m_components.at(COMPONENT_ID::TEXT_ID))
@@ -369,6 +418,10 @@ Component* Entity::getComponent(ComponentType t_type)
 			return m_components.at(COMPONENT_ID::TAG_ID);
 		case ComponentType::Tile:
 			return m_components.at(COMPONENT_ID::TILE_ID);
+		case ComponentType::Primitive:
+			return m_components.at(COMPONENT_ID::TAG_ID);
+		case ComponentType::ParticleEmitter:
+			return m_components.at(COMPONENT_ID::TAG_ID);
 		default:
 			throw std::invalid_argument("trying to get an unknown component!");
 			break;

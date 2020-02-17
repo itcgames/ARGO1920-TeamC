@@ -39,7 +39,7 @@ SDL_Texture* AssetManager::GetTexture(std::string t_filename)
 Mix_Chunk* AssetManager::GetSfx(std::string t_filename)
 {
 	std::string fullPath = SDL_GetBasePath();
-	fullPath.append(Utilities::SOUNDS_PATH + t_filename);
+	fullPath.append(Utilities::SFX_PATH + t_filename);
 
 	if (!m_sfx[fullPath])
 	{
@@ -49,10 +49,15 @@ Mix_Chunk* AssetManager::GetSfx(std::string t_filename)
 	return m_sfx[fullPath];
 }
 
+std::map<std::string, Mix_Chunk*>& AssetManager::GetSfxMap()
+{
+	return m_sfx;
+}
+
 Mix_Music* AssetManager::GetMusic(std::string t_filename)
 {
 	std::string fullPath = SDL_GetBasePath();
-	fullPath.append(Utilities::SOUNDS_PATH + t_filename);
+	fullPath.append(Utilities::MUSIC_PATH + t_filename);
 
 	if (!m_music[fullPath])
 	{
@@ -202,7 +207,7 @@ Mix_Music* AssetManager::loadMusic(std::string t_path)
 
 	if (music == NULL)
 	{
-		printf("Failed to load music! Music: %s SDL_mixer Error: %s\n", t_path.c_str(), Mix_GetError());
+		printf("Failed to load music! SDL_mixer Error: %s\n", Mix_GetError());
 		return music;
 	}
 	return music;

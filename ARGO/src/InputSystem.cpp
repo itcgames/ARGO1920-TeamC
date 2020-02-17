@@ -13,8 +13,8 @@ InputSystem::~InputSystem()
 void InputSystem::update(Entity& t_entity)
 {
 
-#if (INPUT_SYS_DEBUG == 1)
-	std::cout << "Calling InputComponent.update()" << std::endl;
+#ifdef INPUT_SYS_DEBUG
+	//std::cout << "Calling InputComponent.update()" << std::endl;
 #endif
 
 	if (t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID) && t_entity.getAllComps().at(COMPONENT_ID::COMMAND_ID))

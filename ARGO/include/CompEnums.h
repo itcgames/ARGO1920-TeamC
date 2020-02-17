@@ -11,10 +11,12 @@ enum class ComponentType
 	ColliderAABB = 7,
 	ColliderCircle = 8,
 	Timer = 9,
-	Tag = 10,
-	Text = 11,
-	Command = 12,
-	Tile = 13,
+	Primitive = 10,
+	ParticleEmitter = 11,
+	Tag = 12,
+	Text = 13,
+	Command = 14,
+	Tile = 15,
 	Count
 };
 
@@ -28,6 +30,8 @@ namespace COMPONENT_ID
 	const int VISUAL_ID = static_cast<int>(ComponentType::Visual);
 	const int COLOUR_ID = static_cast<int>(ComponentType::Colour);
 	const int FORCE_ID = static_cast<int>(ComponentType::Force);
+	const int PRIMITIVE_ID = static_cast<int>(ComponentType::Primitive);
+	const int PARTICLE_ID = static_cast<int>(ComponentType::ParticleEmitter);
 	const int TEXT_ID = static_cast<int>(ComponentType::Text);
 	const int COLLIDER_AABB_ID = static_cast<int>(ComponentType::ColliderAABB);
 	const int COLLIDER_CIRCLE_ID = static_cast<int>(ComponentType::ColliderCircle);
