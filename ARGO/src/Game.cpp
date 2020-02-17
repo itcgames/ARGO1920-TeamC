@@ -272,6 +272,7 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 			m_hpSystem.update(player);
 			m_transformSystem.update(player);
 			m_collisionSystem.update(player);
+			m_particleSystem.update(player);
 		}
 		if (t_canRender)
 		{
@@ -365,6 +366,10 @@ void Game::createPlayer(Entity& t_player)
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
+	t_player.addComponent(new ParticleEmitterComponent(static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos(),true,
+		Utilities::PARTICLE_DIRECTION_ANGLE_SAMPLE, Utilities::PARTICLE_OFFSET_ANGLE_SAMPLE, Utilities::PARTICLE_SPEED_SAMPLE,
+		Utilities::PARTICLE_MAX_PARTICLES_SAMPLE, Utilities::PARTICLES_PER_SECOND_SAMPLE));
+	t_player.addComponent(new PrimitiveComponent());
 	t_player.addComponent(new TagComponent(Tag::Player));
 }
 

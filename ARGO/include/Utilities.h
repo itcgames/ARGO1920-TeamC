@@ -26,6 +26,11 @@ namespace Utilities
 	const int ENEMY_RADIUS = 32;
 	const int NUMBER_OF_CONTROLLER_BUTTONS = 16;
 	const int PROJECTILE_SPEED = 32;
+	const int PARTICLE_DIRECTION_ANGLE_SAMPLE = 90;
+	const int PARTICLE_OFFSET_ANGLE_SAMPLE = 30;
+	const int PARTICLE_SPEED_SAMPLE = 1;
+	const int PARTICLE_MAX_PARTICLES_SAMPLE = 100;
+	const int PARTICLES_PER_SECOND_SAMPLE = 20;
 
 	//consts for audio
 	const int AUDIO_ALL_CHANNELS = -1;

@@ -23,6 +23,7 @@
 #include "AiSystem.h"
 #include "AssetManager.h"
 #include "FiniteStateMachine.h"
+#include "ParticleSystem.h"
 #include "EventManager.h"
 #include "CollisionSystem.h"
 #include "ProjectileManager.h"
@@ -68,8 +69,10 @@ private:
 	InputSystem m_inputSystem;
 	RenderSystem m_renderSystem;
 	AiSystem m_aiSystem;
+	ParticleSystem m_particleSystem;
 	CollisionSystem m_collisionSystem;
 	CommandSystem m_commandSystem;
+
 
 	Entity m_players[4];
 	std::vector<Entity> m_entities;
