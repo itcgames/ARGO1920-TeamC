@@ -68,7 +68,13 @@ void QuadTree::retrieve(std::vector<Entity*>* t_vector, Quad t_data)
 		}
 		else
 		{
-
+			for (auto& node : m_nodes)
+			{
+				if (node.intersects(t_data))
+				{
+					node.retrieve(t_vector, t_data);
+				}
+			}
 		}
 	}
 
@@ -126,6 +132,13 @@ int QuadTree::getIndex(Quad t_data)
 	}
 
 	return index;
+}
+
+bool QuadTree::intersects(Quad t_data)
+{
+	if (m_boundsTopLeft.x > t_data.size.x + t_data.position.x || m_boundsBottomRight.x + m_boundsTopLeft.x < t_data.position.x) return false;
+	if (m_boundsTopLeft.y > t_data.size.y + t_data.position.y || m_boundsBottomRight.y + m_boundsTopLeft.y < t_data.position.y) return false;
+	return true;
 }
 
 void QuadTree::split()
