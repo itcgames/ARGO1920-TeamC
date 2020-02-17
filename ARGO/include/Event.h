@@ -11,8 +11,21 @@ struct createBulletEvent
 
 struct PhysicsMove
 {
-	glm::vec2 m_velocity;
-	Entity& m_entity;
+	glm::vec2 velocity;
+	Entity& entity;
+};
+
+struct MenuMoveButtonsUpDown
+{
+	Entity& entity;
+	// bool for if its moving down or up
+	bool isMoveDown;
+};
+
+struct MenuSelectButton
+{
+	Entity& entity;
+
 };
 
 struct CloseWindow

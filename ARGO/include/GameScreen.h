@@ -14,17 +14,16 @@ class GameScreen
 {
 public:
 
-	GameScreen(SDL_Renderer* t_renderer, MenuStates* t_currentScreen, EventManager& t_eventManager);
+	GameScreen(SDL_Renderer* t_renderer, MenuStates* t_currentScreen, EventManager& t_eventManager, Controller t_controller[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]);
 	~GameScreen();
 
 	void update(bool t_canTick, bool t_canRender, Uint16 t_deltaTime);
 	void processEvents(SDL_Event* t_event);
 private:
 
-	void createPlayer(Entity& t_player);
+	void createPlayer(Entity& t_player, int t_index);
 	void createEnemy();
-	void createButtonMaps();
-	void setUpLevel();
+ 	void setUpLevel();
 	void setToFloor(Entity& t_entity, glm::vec2 t_position);
 	void setToWall(Entity& t_entity, glm::vec2 t_position);
 
@@ -38,10 +37,10 @@ private:
 	MenuStates* m_currentScreen;
 	EventManager& m_eventManager;
 
-	static const int MAX_PLAYERS = 4;
-	static const int MAX_ENTITIES = 10000;
+ 	static const int MAX_ENTITIES = 10000;
 
-	Entity m_players[MAX_PLAYERS];
+	Controller m_controllers[Utilities::NUMBER_OF_PLAYERS];
+	Entity m_players[Utilities::NUMBER_OF_PLAYERS];
 	std::vector<Entity> m_entities;
 	std::vector<Entity> m_levelTiles;
 
@@ -56,9 +55,7 @@ private:
 
 	ProjectileManager m_projectileManager;
 
-	// Button Maps
-	std::map<ButtonType, Command*> m_buttonPressMap;
-	std::map<ButtonType, Command*> m_buttonHeldMap;
-	std::map<ButtonType, Command*> m_buttonReleasedMap;
+
+	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]; 
 };
 

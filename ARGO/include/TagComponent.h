@@ -7,7 +7,8 @@ enum class Tag
 	Enemy,
 	PlayerBullet,
 	EnemyBullet,
-	Wall
+	Wall,
+	MenuButton
 };
 
 class TagComponent : public Component

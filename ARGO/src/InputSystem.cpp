@@ -32,8 +32,8 @@ void InputSystem::handleInputs(InputComponent* t_inputComponent, CommandComponen
 	for (int index = 0; index < Utilities::NUMBER_OF_CONTROLLER_BUTTONS; index++)
 	{
 		ButtonState stateOfButton = controller.getButtonState((ButtonType)index);
-		std::map<ButtonType, Command*> buttonMap = t_inputComponent->getButtonMap(stateOfButton);
-		if (buttonMap != std::map<ButtonType, Command*>())
+		ButtonCommandMap buttonMap = t_inputComponent->getButtonMap(stateOfButton);
+		if (buttonMap != ButtonCommandMap())
 		{
 			if (buttonMap[(ButtonType)index] != nullptr)
 			{

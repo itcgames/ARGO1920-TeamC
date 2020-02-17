@@ -2,20 +2,23 @@
 #include "GameScreen.h"
 #include "..\include\GameScreen.h"
 
-GameScreen::GameScreen(SDL_Renderer* t_renderer, MenuStates* t_currentScreen, EventManager& t_eventManager) :
+GameScreen::GameScreen(SDL_Renderer* t_renderer, MenuStates* t_currentScreen, EventManager& t_eventManager, Controller t_controllers[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]) :
 	m_renderer{ t_renderer },
 	m_currentScreen{ t_currentScreen },
 	m_eventManager{ t_eventManager },
 	m_transformSystem{ m_eventManager },
-	m_projectileManager{ m_eventManager }
+	m_projectileManager{ m_eventManager },
+	m_controllers{ *t_controllers },
+	m_controllerButtonMaps{**t_controllerButtonMaps}
 {
-	createButtonMaps();
+ 	int playerCount = 0;
 	for (Entity& player : m_players)
 	{
-		createPlayer(player);
+		createPlayer(player, playerCount);
+		playerCount++;
 	}
 	m_entities.reserve(MAX_ENTITIES);
- 	for (int index = 0; index < 5; index++)
+	for (int index = 0; index < 5; index++)
 	{
 		createEnemy();
 	}
@@ -61,7 +64,7 @@ void GameScreen::processEvents(SDL_Event* t_event)
 			break;
 		}
 		case SDLK_RETURN:
-		{ 
+		{
 			//check if we can add 100 entities, if more than 100, set to 100, if less than 0 set to 0
 			int availableSpace = glm::clamp(int(MAX_ENTITIES - m_entities.size()), 0, 100);
 			for (int index = 0; index < availableSpace; index++)
@@ -79,7 +82,7 @@ void GameScreen::processEvents(SDL_Event* t_event)
 				createEnemy();
 			}
 			break;
-		} 
+		}
 		default:
 			break;
 		}
@@ -88,30 +91,16 @@ void GameScreen::processEvents(SDL_Event* t_event)
 	default:
 		break;
 	}
-}
+} 
 
-void GameScreen::createButtonMaps()
-{
-	using ButtonCommandPair = std::pair<ButtonType, Command*>;
-	m_buttonPressMap =
-	{
-		ButtonCommandPair(ButtonType::DpadUp, new MoveUpCommand()),
-		ButtonCommandPair(ButtonType::DpadDown, new MoveDownCommand()),
-		ButtonCommandPair(ButtonType::DpadLeft, new MoveLeftCommand()),
-		ButtonCommandPair(ButtonType::DpadRight, new MoveRightCommand()),
-		ButtonCommandPair(ButtonType::Back, new CloseWindowCommand())
-	};
-	// Set Held To Same as Pressed Commands For Time Being
-	m_buttonHeldMap = m_buttonPressMap;
-	// Set Release Commands to nothing
-	m_buttonReleasedMap = std::map<ButtonType, Command*>();
-}
-
-void GameScreen::createPlayer(Entity& t_player)
+void GameScreen::createPlayer(Entity& t_player, int t_index)
 {
 	t_player.addComponent(new HealthComponent(10, 10));
 	t_player.addComponent(new TransformComponent());
-	t_player.addComponent(new InputComponent(m_buttonPressMap, m_buttonHeldMap, m_buttonReleasedMap));
+	t_player.addComponent(new InputComponent(m_controllers[t_index], 
+											 m_controllerButtonMaps[(int)ButtonState::Pressed][t_index],
+											 m_controllerButtonMaps[(int)ButtonState::Held][t_index],
+											 m_controllerButtonMaps[(int)ButtonState::Released][t_index]));
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
@@ -122,7 +111,7 @@ void GameScreen::createPlayer(Entity& t_player)
 
 void GameScreen::createEnemy()
 {
-	m_entities.emplace_back(); 
+	m_entities.emplace_back();
 	m_entities.back().addComponent(new TransformComponent());
 	m_entities.back().addComponent(new AiComponent());
 	m_entities.back().addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));

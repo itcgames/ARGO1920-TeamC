@@ -46,7 +46,15 @@ enum class ButtonType
 	Start,
 	Back,
 	RightTrigger,
-	LeftTrigger 
+	LeftTrigger,
+	LeftThumbStickUp,
+	LeftThumbStickDown,
+	LeftThumbStickLeft,
+	LeftThumbStickRight,
+	RightThumbStickUp,
+	RightThumbStickDown,
+	RightThumbStickLeft,
+	RightThumbStickRight
 };
 
 /// <summary>

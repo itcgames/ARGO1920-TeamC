@@ -62,3 +62,24 @@ class FireBulletCommand :
 public:
 	virtual void execute() { std::cout << "pew pew" << std::endl; }
 };
+
+class MenuMoveUpCommand :
+	public Command
+{
+public:
+	virtual void execute() { std::cout << "Move Up Menu" << std::endl; }
+};
+
+class MenuMoveDownCommand :
+	public Command
+{
+public:
+	virtual void execute() { std::cout << "Move Down Menu" << std::endl; }
+};
+
+class MenuSelectButtonCommand :
+	public Command
+{
+public:
+	virtual void execute() { std::cout << "Button Pressed" << std::endl; }
+};

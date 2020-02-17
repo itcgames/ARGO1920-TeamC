@@ -53,9 +53,9 @@ void PhysicsSystem::checkBorder(TransformComponent* t_pos)
 
 void PhysicsSystem::updateWithInput(const PhysicsMove& t_event)
 {
-	if (t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID))
+	if (t_event.entity.getAllComps().at(COMPONENT_ID::FORCE_ID))
 	{
-		ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
-		forceComp->addForce(t_event.m_velocity);
+		ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
+		forceComp->addForce(t_event.velocity);
 	}
 }

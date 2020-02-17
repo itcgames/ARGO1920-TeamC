@@ -15,7 +15,7 @@ Game::Game() :
 	m_timePerTick(0)
 {
 	try
-	{ 
+	{
 		// Try to initalise SDL in general
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
 
@@ -44,13 +44,13 @@ Game::Game() :
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 		m_timePerFrame = 1000 / m_framesPerSecond;
 		m_timePerTick = 1000 / m_ticksPerSecond;
-		
+
 
 		/*m_textTest1.addComponent(new TransformComponent());
 		m_textTest1.addComponent(new TextComponent("comic.ttf", m_renderer, true, std::string("Static Text")));
 		m_textTest2.addComponent(new TransformComponent());
-		m_textTest2.addComponent(new TextComponent("pt-sans.ttf", m_renderer, Utilities::LARGE_FONT, false, "Not Static Text", 255, 255, 0, 123));*/	 
-	
+		m_textTest2.addComponent(new TextComponent("pt-sans.ttf", m_renderer, Utilities::LARGE_FONT, false, "Not Static Text", 255, 255, 0, 123));*/
+
 
 		// Game is running
 		m_isRunning = true;
@@ -153,7 +153,7 @@ void Game::processEvent()
 			break;
 		}
 		break;
-	} 
+	}
 	default:
 		break;
 	}
@@ -195,7 +195,7 @@ void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
 		m_renderSystem.render(m_renderer, m_textTest2);
 	}*/
 }
- 
+
 
 /// <summary>
 /// Cleans up after running by deleting stuff
@@ -213,7 +213,7 @@ void Game::cleanup()
 	SDL_DestroyRenderer(m_renderer);
 	m_renderer = NULL;
 	SDL_Quit();
-}  
+}
 
 bool Game::checkCanRender(Uint16 t_renderTime)
 {
@@ -241,13 +241,35 @@ void Game::closeWindow(const CloseWindow& t_event)
 	m_isRunning = false;
 }
 
+void Game::createButtonMaps()
+{
+	using ButtonCommandPair = std::pair<ButtonType, Command*>;
+	for (int index = 0; index < Utilities::NUMBER_OF_PLAYERS; index++)
+	{
+		m_controllerButtonMaps[(int)ButtonState::Pressed][index] =
+		{
+			ButtonCommandPair(ButtonType::DpadUp, new MoveUpCommand()),
+			ButtonCommandPair(ButtonType::DpadDown, new MoveDownCommand()),
+			ButtonCommandPair(ButtonType::DpadLeft, new MoveLeftCommand()),
+			ButtonCommandPair(ButtonType::DpadRight, new MoveRightCommand()),
+			ButtonCommandPair(ButtonType::Back, new CloseWindowCommand()),
+			ButtonCommandPair(ButtonType::RightTrigger, new FireBulletCommand())
+		};
+		// Set Held To Same as Pressed Commands For Time Being
+		m_controllerButtonMaps[(int)ButtonState::Held][index] = m_controllerButtonMaps[(int)ButtonState::Pressed][index];
+		// Set Release Commands to nothing
+		m_controllerButtonMaps[(int)ButtonState::Released][index] = ButtonCommandMap();
+	}
+}
+
 void Game::initialiseScreens()
 {
-	m_gameScreen = new GameScreen(m_renderer, &m_currentScreen, m_eventManager);
+	//std::vector<Controller&> controllers(std::begin(m_controllers), std::end(m_controllers));
+	/*m_gameScreen = new GameScreen(m_renderer, &m_currentScreen, m_eventManager, controllers);
 	m_optionsScreen = new OptionsScreen(&m_currentScreen);
 	m_creditsScreen = new CreditsScreen(&m_currentScreen);
 	m_licenseScreen = new LicenseScreen(&m_currentScreen);
 	m_splashScreen = new SplashScreen(&m_currentScreen);
-	m_mainMenuScreen = new MenuScreen(&m_currentScreen);
-	m_currentScreen = MenuStates::Game;
+	m_mainMenuScreen = new MenuScreen(m_renderer, &m_currentScreen, m_eventManager, controllers);
+	m_currentScreen = MenuStates::Game;*/
 }

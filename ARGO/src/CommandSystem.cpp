@@ -46,6 +46,18 @@ void CommandSystem::update(Entity& t_entity, EventManager& t_eventManager)
 			{
 				t_eventManager.emitEvent(CloseWindow());
 			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(MenuMoveUpCommand))
+			{
+				t_eventManager.emitEvent(MenuMoveButtonsUpDown{ t_entity, false });
+			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(MenuMoveDownCommand))
+			{
+				t_eventManager.emitEvent(MenuMoveButtonsUpDown{ t_entity, true });
+			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(MenuSelectButtonCommand))
+			{
+				t_eventManager.emitEvent(MenuSelectButton{ t_entity });
+			}
 			else continue;
 			commandComp->popTopCommand();
 		}

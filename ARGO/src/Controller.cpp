@@ -80,6 +80,14 @@ void Controller::update()
 	{
 		m_current.LeftThumbStick = glm::vec2(0.0f, 0.0f);
 	}
+	else
+	{
+		
+	}
+
+	glm::vec2 normaliseLeftStick = glm::nor
+	if(glm::normalize(m_current.LeftThumbStick).x > 0)
+
 
 	m_current.RightThumbStick = glm::vec2(SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_RIGHTX),
 										  SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_RIGHTY)); 

@@ -1,5 +1,6 @@
 #pragma once
 
+
 namespace Utilities
 {
 	//font consts
@@ -22,8 +23,10 @@ namespace Utilities
 	const int TILE_SIZE = 64;
 	const int PLAYER_RADIUS = 32;
 	const int ENEMY_RADIUS = 32;
-	const int NUMBER_OF_CONTROLLER_BUTTONS = 16;
+	const int NUMBER_OF_CONTROLLER_BUTTONS = 24;
 	const int PROJECTILE_SPEED = 32;
+	const int NUMBER_OF_PLAYERS = 4;
+	const int NUMBER_OF_CONTROLLER_MAPS = 3;
 
 	const int ALL_AUDIO_CHANNELS = -1;
 	const int GET_VOLUME = -1;
@@ -37,5 +40,6 @@ enum class MenuStates
 	Credits,
 	Options,
 	License,
-	Splash
+	Splash,
+	Achievements
 };

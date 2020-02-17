@@ -27,6 +27,9 @@ private:
 	bool checkCanRender(Uint16 t_currentTick);
 	bool checkCanTick(Uint16 t_currentTick);
 	void closeWindow(const CloseWindow& t_event = CloseWindow());
+	void createButtonMaps();
+
+
 
 	AssetManager* m_assetMgr;
 	AudioManager* m_audioMgr;
@@ -60,5 +63,15 @@ private:
 	SplashScreen* m_splashScreen;
 
 	void initialiseScreens();
+
+
+
+	
+	Controller m_controllers[Utilities::NUMBER_OF_PLAYERS];
+
+
+
+	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS];
+ 
 
 };
