@@ -42,7 +42,8 @@ public:
 private:
 	void initLibraries();
 	void processEvent();
-	void update(bool t_canTick, bool t_canRender, Uint16 t_dt);
+	void update(Uint16 t_dt);
+	void render();
 	void preRender();
 	void cleanup();
 	void createPlayer(Entity& t_player);

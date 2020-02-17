@@ -69,7 +69,9 @@ Game::Game() :
 		m_levelManager.setupLevel();
 		//magic numbers for creating a sandbox level plz ignore.
 		m_levelManager.createRoom(glm::vec2(64, 64), 12, 12);
-		m_levelManager.createRoom(glm::vec2(64 * 12, 64 * 2), 3, 1);
+		m_levelManager.createRoom(glm::vec2(64 * 12, 64 * 2), 3, 2);
+		m_levelManager.createRoom(glm::vec2(64 * 12, 64 * 10), 3, 2);
+		m_levelManager.createRoom(glm::vec2(64 * 15, 64), 5, 12);
 	}
 	catch (std::string error)
 	{
@@ -112,12 +114,8 @@ void Game::run()
 
 		bool canRender = checkCanRender(renderTime);
 		bool canTick = checkCanTick(deltaTime);
-		update(canRender, canTick, deltaTime);
-
-		if (canRender)
-		{
-			SDL_RenderPresent(m_renderer);
-		}
+		if (canTick) update(deltaTime);
+		if (canRender) render();
 	}
 }
 
@@ -219,54 +217,45 @@ void Game::processEvent()
 	}
 }
 
-void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
+void Game::update(Uint16 t_dt)
 {
-	//levelManager update+render;
-	if (t_canTick) m_levelManager.update(&m_collisionSystem);
-	if (t_canRender) m_levelManager.render(m_renderer, &m_renderSystem);
+	m_levelManager.update(&m_collisionSystem);
 	for (auto& entity : m_entities)
 	{
-		if (t_canTick)
-		{
-			m_hpSystem.update(entity);
-			m_aiSystem.update(entity);
-			m_transformSystem.update(entity);
-			m_collisionSystem.update(entity);
-		}
-		if (t_canRender)
-		{
-			m_renderSystem.render(m_renderer, entity);
-		}
+		m_hpSystem.update(entity);
+		m_aiSystem.update(entity);
+		m_transformSystem.update(entity);
+		m_collisionSystem.update(entity);
 	}
 	for (auto& player : m_players)
 	{
-		if (t_canTick)
-		{
-			m_inputSystem.update(player);
-			m_commandSystem.update(player, m_eventManager);
-			m_hpSystem.update(player);
-			m_transformSystem.update(player);
-			m_collisionSystem.update(player);
-		}
-		if (t_canRender)
-		{
-			m_renderSystem.render(m_renderer, player);
-		}
+		m_inputSystem.update(player);
+		m_commandSystem.update(player, m_eventManager);
+		m_hpSystem.update(player);
+		m_transformSystem.update(player);
+		m_collisionSystem.update(player);
 	}
+	m_projectileManager.update(&m_transformSystem);
+	m_projectileManager.update(&m_collisionSystem);
+	m_collisionSystem.handleCollisions();
+}
 
-	if (t_canTick)
+void Game::render()
+{
+	preRender();
+	m_levelManager.render(m_renderer, &m_renderSystem);
+	for (auto& entity : m_entities)
 	{
-		m_projectileManager.update(&m_transformSystem);
-		m_projectileManager.update(&m_collisionSystem);
+		m_renderSystem.render(m_renderer, entity);
 	}
-	if (t_canRender)
+	for (auto& player : m_players)
 	{
-		m_projectileManager.render(m_renderer, &m_renderSystem);
-		m_renderSystem.render(m_renderer, m_textTest1);
-		m_renderSystem.render(m_renderer, m_textTest2);
+		m_renderSystem.render(m_renderer, player);
 	}
-
-	if (t_canTick) m_collisionSystem.handleCollisions();
+	m_projectileManager.render(m_renderer, &m_renderSystem);
+	m_renderSystem.render(m_renderer, m_textTest1);
+	m_renderSystem.render(m_renderer, m_textTest2);
+	SDL_RenderPresent(m_renderer);
 }
 
 void Game::preRender()
@@ -339,7 +328,6 @@ bool Game::checkCanRender(Uint16 t_renderTime)
 	if (t_renderTime > m_timePerFrame)
 	{
 		m_lastRender += m_timePerFrame;
-		preRender();
 		return true;
 	}
 	return false;
