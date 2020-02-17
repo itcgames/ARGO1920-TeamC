@@ -25,7 +25,7 @@ public:
 	glm::vec2 getParticleMovement(int t_index);
 	void setPosition(glm::vec2 t_pos);//Sets the position of the Emitter. The point from which the particles emerge from
 	glm::vec2 getEmitterPosition();
-	bool isParticleDead(int t_index);//Compares the m_timeToKillParticle and the particle at the given index's timer. Returns true if the Particle should be killed, false if not.
+	bool checkParticlePastKillTime(int t_index);//Compares the m_timeToKillParticle and the particle at the given index's timer. Returns true if the Particle should be killed, false if not.
 	void updateParticle(int t_index);//Moves the Particle position using its speed. Increments it's timer.
 	bool getParticleAlive(int t_index);//Returns the m_alive bool of the particle at the given index.
 	void setParticlesPerSecond(float t_particlesPerSecond);//Pass in the number of particles per second desired to be released from the emitter.

@@ -259,7 +259,7 @@ void Entity::removeCompType(ComponentType t_type)
 
 		case ComponentType::Force:
 		{
-			if (!m_components.at(COMPONENT_ID::FORCE_ID))
+			if (m_components.at(COMPONENT_ID::FORCE_ID))
 			{
 				delete m_components.at(COMPONENT_ID::FORCE_ID);
 				m_components.at(COMPONENT_ID::FORCE_ID) = nullptr;
@@ -397,6 +397,10 @@ Component* Entity::getComponent(ComponentType t_type)
 		case ComponentType::Command:
 			return m_components.at(COMPONENT_ID::COMMAND_ID);
 		case ComponentType::Tag:
+			return m_components.at(COMPONENT_ID::TAG_ID);
+		case ComponentType::Primitive:
+			return m_components.at(COMPONENT_ID::TAG_ID);
+		case ComponentType::ParticleEmitter:
 			return m_components.at(COMPONENT_ID::TAG_ID);
 		default:
 			throw std::invalid_argument("trying to get an unknown component!");

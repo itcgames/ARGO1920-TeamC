@@ -110,13 +110,9 @@ void ParticleEmitterComponent::setPosition(glm::vec2 t_pos)
 	m_position = t_pos;
 }
 
-bool ParticleEmitterComponent::isParticleDead(int t_index)
+bool ParticleEmitterComponent::checkParticlePastKillTime(int t_index)
 {
-	if (m_particles[t_index].getTimer() > m_timeToKillParticle)
-	{
-		return true;
-	}
-	return false;
+	return m_particles[t_index].getTimer() > m_timeToKillParticle;
 }
 
 void ParticleEmitterComponent::updateParticle(int t_index)
