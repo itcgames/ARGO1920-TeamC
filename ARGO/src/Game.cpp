@@ -15,18 +15,10 @@ class State;
 Game::Game() :
 	m_transformSystem{ m_eventManager },
 	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
-	m_framesPerSecond(60),
-	m_ticksPerSecond(60),
-	m_lastTick(0),
-	m_lastRender(0),
-	m_timePerFrame(0),
-	m_timePerTick(0),
 	m_levelManager(m_renderer)
 {
 	try
 	{
-		m_timePerFrame = 1000 / m_framesPerSecond;
-		m_timePerTick = 1000 / m_ticksPerSecond;
 		// Try to initalise SDL in general
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
 
@@ -105,29 +97,6 @@ Game::~Game()
 	cleanup();
 }
 
-//this is the old update loop that is being kept until we have clarification from Phil.
-//void Game::run()
-//{
-//	m_lastTick = SDL_GetTicks();
-//	m_lastRender = SDL_GetTicks();
-//	while (m_isRunning)
-//	{
-//		processEvent();
-//		Uint32 currentTick = SDL_GetTicks();
-//		Uint16 deltaTime = currentTick - m_lastTick;
-//		Uint16 renderTime = currentTick - m_lastRender;
-//
-//		bool canRender = checkCanRender(renderTime);
-//		bool canTick = checkCanTick(deltaTime);
-//		while (deltaTime > m_timePerTick)
-//		{
-//			if (canTick) update(deltaTime);
-//		}
-//
-//		if (canRender) render();
-//	}
-//}
-
 /// <summary>
 /// function for the main game loop
 /// </summary>
@@ -149,12 +118,10 @@ void Game::run()
 			{
 				processEvent();
 				update((float)timeSinceLastTick / (float)timePerFrame);
-				std::cout << (float)timeSinceLastTick / (float)timePerFrame << std::endl;
 				lastTick = currentTick;
 			}
 		}
 		nextFrame = SDL_GetTicks() + timePerFrame;
-		std::cout << "hit" << std::endl;
 		render();
 	}
 }
@@ -404,26 +371,6 @@ void Game::removeDeadEnemies()
 void Game::playerFireSound(const createBulletEvent& t_event)
 {
 	//m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "launcher.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_renderSystem.getFocus());
-}
-
-bool Game::checkCanRender(Uint16 t_renderTime)
-{
-	if (t_renderTime > m_timePerFrame)
-	{
-		m_lastRender += m_timePerFrame;
-		return true;
-	}
-	return false;
-}
-
-bool Game::checkCanTick(Uint16 t_deltaTime)
-{
-	if (t_deltaTime > m_timePerTick)
-	{
-		m_lastTick += m_timePerTick;
-		return true;
-	}
-	return false;
 }
 
 void Game::closeWindow(const CloseWindow& t_event)

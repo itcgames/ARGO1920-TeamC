@@ -104,7 +104,7 @@ void AudioManager::PlaySfxAtPosition(std::string t_filename, glm::vec2 t_sfxPosi
 	}
 
 #ifdef AUDIO_SYS_DEBUG
-	//printf("Sound produced at position: [%s, %s] at angle: %s\n", std::to_string(relVec.x).c_str(), std::to_string(relVec.y).c_str(), std::to_string(angle).c_str());
+	printf("Sound produced at position: [%s, %s] at angle: %s\n", std::to_string(relVec.x).c_str(), std::to_string(relVec.y).c_str(), std::to_string(angle).c_str());
 #endif // AUDIO_SYS_DEBUG
 
 	//screen width is considered as max distance for audible sounds

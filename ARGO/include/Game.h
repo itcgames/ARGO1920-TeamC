@@ -52,8 +52,6 @@ private:
 	void createEnemy();
 	void removeDeadEnemies();
 	void playerFireSound(const createBulletEvent& t_event);
-	bool checkCanRender(Uint16 t_currentTick);
-	bool checkCanTick(Uint16 t_currentTick);
 	void closeWindow(const CloseWindow& t_event);
 	void setupIgnoredEvents();
 	void createRenderer();
@@ -89,11 +87,4 @@ private:
 
 	// bool for if game is running or not
 	bool m_isRunning;
-
-	Uint16 m_timePerFrame;
-	Uint16 m_timePerTick;
-	Uint16 m_lastTick;
-	Uint16 m_lastRender;
-	Uint16 m_framesPerSecond;
-	Uint16 m_ticksPerSecond;
 };
