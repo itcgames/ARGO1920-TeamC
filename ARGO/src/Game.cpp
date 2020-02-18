@@ -14,7 +14,7 @@ bool cleanUpEnemies(const Entity& t_entity)
 class State;
 Game::Game() :
 	m_transformSystem{ m_eventManager },
-	m_projectileManager{ m_eventManager, m_renderSystem.getFocus() },
+	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
 	m_framesPerSecond(60),
 	m_ticksPerSecond(60),
 	m_lastTick(0),
@@ -70,11 +70,6 @@ Game::Game() :
 			createEnemy();
 		}
 
-		m_textTest1.addComponent(new TransformComponent());
-		m_textTest1.addComponent(new TextComponent("comic.ttf", m_renderer, true, std::string("Static Text")));
-		m_textTest2.addComponent(new TransformComponent());
-		m_textTest2.addComponent(new TextComponent("pt-sans.ttf", m_renderer, Utilities::LARGE_FONT, false, "Not Static Text", 255, 255, 0, 123));
-
 		m_levelManager.setupLevel();
 		//magic numbers for creating a sandbox level plz ignore.
 		m_levelManager.createRoom(glm::vec2(1, 1), 12, 12);
@@ -110,24 +105,57 @@ Game::~Game()
 	cleanup();
 }
 
+//this is the old update loop that is being kept until we have clarification from Phil.
+//void Game::run()
+//{
+//	m_lastTick = SDL_GetTicks();
+//	m_lastRender = SDL_GetTicks();
+//	while (m_isRunning)
+//	{
+//		processEvent();
+//		Uint32 currentTick = SDL_GetTicks();
+//		Uint16 deltaTime = currentTick - m_lastTick;
+//		Uint16 renderTime = currentTick - m_lastRender;
+//
+//		bool canRender = checkCanRender(renderTime);
+//		bool canTick = checkCanTick(deltaTime);
+//		while (deltaTime > m_timePerTick)
+//		{
+//			if (canTick) update(deltaTime);
+//		}
+//
+//		if (canRender) render();
+//	}
+//}
+
 /// <summary>
 /// function for the main game loop
 /// </summary>
 void Game::run()
 {
-	m_lastTick = SDL_GetTicks();
-	m_lastRender = SDL_GetTicks();
+	Uint32 timePerFrame = 1000 / 60;
+	Uint32 lastTick = SDL_GetTicks();
+	Uint32 nextFrame = SDL_GetTicks() + timePerFrame;
+	Uint32 currentTick = 0; 
+	Uint32 timeSinceLastTick = 0;
 	while (m_isRunning)
 	{
-		processEvent();
-		Uint32 currentTick = SDL_GetTicks();
-		Uint16 deltaTime = currentTick - m_lastTick;
-		Uint16 renderTime = currentTick - m_lastRender;
-
-		bool canRender = checkCanRender(renderTime);
-		bool canTick = checkCanTick(deltaTime);
-		if (canTick) update(deltaTime);
-		if (canRender) render();
+		processEvent(); 
+		while (SDL_GetTicks() < nextFrame)
+		{
+			currentTick = SDL_GetTicks();
+			timeSinceLastTick = currentTick - lastTick;
+			if (timeSinceLastTick > 0)
+			{
+				processEvent();
+				update((float)timeSinceLastTick / (float)timePerFrame);
+				std::cout << (float)timeSinceLastTick / (float)timePerFrame << std::endl;
+				lastTick = currentTick;
+			}
+		}
+		nextFrame = SDL_GetTicks() + timePerFrame;
+		std::cout << "hit" << std::endl;
+		render();
 	}
 }
 
@@ -249,7 +277,7 @@ void Game::processEvent()
 	}
 }
 
-void Game::update(Uint16 t_dt)
+void Game::update(float t_dt)
 {
 	m_levelManager.checkWallDamage();
 	m_levelManager.update(&m_collisionSystem);
@@ -257,7 +285,7 @@ void Game::update(Uint16 t_dt)
 	{
 		m_hpSystem.update(entity);
 		m_aiSystem.update(entity);
-		m_transformSystem.update(entity);
+		m_transformSystem.update(entity, t_dt);
 		m_collisionSystem.update(entity);
 	}
 	for (auto& player : m_players)
@@ -265,13 +293,12 @@ void Game::update(Uint16 t_dt)
 		m_hpSystem.update(player);
 		m_inputSystem.update(player);
 		m_commandSystem.update(player, m_eventManager);
-		m_transformSystem.update(player);
+		m_transformSystem.update(player, t_dt);
 		m_collisionSystem.update(player);
-		m_particleSystem.update(player);
+		m_particleSystem.update(player, t_dt);
 	}
 	m_projectileManager.tick();
-	m_projectileManager.update(&m_transformSystem);
-	m_projectileManager.update(&m_collisionSystem);
+	m_projectileManager.update(t_dt);
 	m_collisionSystem.handleCollisions();
 
 	removeDeadEnemies();
@@ -290,8 +317,6 @@ void Game::render()
 		m_renderSystem.render(m_renderer, player);
 	}
 	m_projectileManager.render(m_renderer, &m_renderSystem);
-	m_renderSystem.render(m_renderer, m_textTest1);
-	m_renderSystem.render(m_renderer, m_textTest2);
 	SDL_RenderPresent(m_renderer);
 }
 
@@ -359,7 +384,8 @@ void Game::createEnemy()
 {
 	m_entities.emplace_back();
 	m_entities.back().addComponent(new TransformComponent());
-	m_entities.back().addComponent(new AiComponent());
+	m_entities.back().addComponent(new ForceComponent());
+	m_entities.back().addComponent(new AiComponent(AITypes::eMelee, AIStates::eWander, 15.0f, 1.0f));
 	m_entities.back().addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
 	m_entities.back().addComponent(new TagComponent(Tag::Enemy));
 	m_entities.back().addComponent(new HealthComponent(Utilities::ENEMY_HP, Utilities::ENEMY_HP));

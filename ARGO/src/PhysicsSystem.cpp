@@ -11,7 +11,7 @@ PhysicsSystem::~PhysicsSystem()
 	BaseSystem::~BaseSystem();
 }
 
-void PhysicsSystem::update(Entity& t_entity/*float t_deltaTime*/) //deltaTime will be required here so it will need to be uncommented and used
+void PhysicsSystem::update(Entity& t_entity, float t_dt) //deltaTime will be required here so it will need to be uncommented and used
 {
 	if (t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
 	{
@@ -20,7 +20,7 @@ void PhysicsSystem::update(Entity& t_entity/*float t_deltaTime*/) //deltaTime wi
 		{
 			ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
 
-			posComp->addPos(forceComp->getForce());
+			posComp->addPos(forceComp->getForce() * t_dt);
 			if (forceComp->getHasFriction())
 			{
 				forceComp->setForce(forceComp->getForce() * FRICTION_SCALAR);
@@ -28,6 +28,10 @@ void PhysicsSystem::update(Entity& t_entity/*float t_deltaTime*/) //deltaTime wi
 		}
 
 	}
+}
+
+void PhysicsSystem::update(Entity& t_entity)
+{
 }
 
 void PhysicsSystem::updateWithInput(const PhysicsMove& t_event)

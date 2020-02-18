@@ -113,7 +113,7 @@ bool CollisionSystem::edgeOfTheWorldCircle(Entity& t_entity)
 			position->setPos(Utilities::TILE_SIZE * Utilities::LEVEL_TILE_WIDTH - radius, position->getPos().y);
 		}
 	}
-	else if (position->getPos().y - radius < 0)
+	if (position->getPos().y - radius < 0)
 	{
 		Tag tag = static_cast<TagComponent*>(t_entity.getComponent(ComponentType::Tag))->getTag();
 		if (tag == Tag::EnemyBullet || tag == Tag::PlayerBullet)

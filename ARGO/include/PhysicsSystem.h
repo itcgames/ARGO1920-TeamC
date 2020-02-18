@@ -14,6 +14,7 @@ class PhysicsSystem : public BaseSystem
 public:
 	PhysicsSystem(EventManager& t_eventManager);
 	~PhysicsSystem();
+	void update(Entity& t_entity, float t_dt);
 	void update(Entity& t_entity);
 
 private: 

@@ -44,7 +44,7 @@ public:
 private:
 	void initLibraries();
 	void processEvent();
-	void update(Uint16 t_dt);
+	void update(float t_dt);
 	void render();
 	void preRender();
 	void cleanup();
@@ -78,9 +78,6 @@ private:
 
 	Entity m_players[4];
 	std::vector<Entity> m_entities;
-
-	Entity m_textTest1;
-	Entity m_textTest2;
 
 	ProjectileManager m_projectileManager;
 	LevelManager m_levelManager;

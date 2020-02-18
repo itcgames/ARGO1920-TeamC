@@ -1,10 +1,12 @@
 #include "stdafx.h"
 #include "ProjectileManager.h"
 
-ProjectileManager::ProjectileManager(EventManager& t_eventManager, glm::vec2& t_focusPoint) :
+ProjectileManager::ProjectileManager(EventManager& t_eventManager, glm::vec2& t_focusPoint, PhysicsSystem& t_physicsSystem, CollisionSystem& t_collisionSystem) :
 	m_nextEnemyBullet(0),
 	m_nextPlayerBullet(0),
-	m_focusPoint(t_focusPoint)
+	m_focusPoint(t_focusPoint),
+	m_physicsSystem(t_physicsSystem),
+	m_collisionSystem(t_collisionSystem)
 {
 	t_eventManager.subscribeToEvent<createBulletEvent>(std::bind(&ProjectileManager::createPlayerBullet, this, std::placeholders::_1));
 
@@ -76,20 +78,36 @@ void ProjectileManager::createEnemyBullet(const createBulletEvent& t_event)
 	}
 }
 
-void ProjectileManager::update(BaseSystem* t_system)
+void ProjectileManager::update(float t_dt)
 {
 	for (auto& bullet : m_playerBullets)
 	{
 		if (static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->getHealth() > 0)
 		{
-			t_system->update(bullet.entity);
+			if (!static_cast<TimerComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(t_dt))
+			{
+				static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0);
+			}
+			else
+			{
+				m_physicsSystem.update(bullet.entity, t_dt);
+				m_collisionSystem.update(bullet.entity);
+			}
 		}
 	}
 	for (auto& bullet : m_enemyBullets)
 	{
 		if (static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->getHealth() > 0)
 		{
-			t_system->update(bullet.entity);
+			if (!static_cast<TimerComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(t_dt))
+			{
+				static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0);
+			}
+			else
+			{
+				m_physicsSystem.update(bullet.entity, t_dt);
+				m_collisionSystem.update(bullet.entity);
+			}
 		}
 	}
 }
@@ -98,10 +116,6 @@ void ProjectileManager::tick()
 {
 	for (auto& bullet : m_playerBullets)
 	{
-		if (!static_cast<TimerComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(1))
-		{
-			static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0);
-		}
 	}
 	for (auto& bullet : m_enemyBullets)
 	{
