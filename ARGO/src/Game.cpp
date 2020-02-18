@@ -36,12 +36,20 @@ Game::Game() :
 		// Sets clear colour of renderer to black and the color of any primitives
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 
+		for (int index = 0; index < Utilities::NUMBER_OF_PLAYERS; index++)
+		{
+			m_controllers[index].initialiseController();
+		}
+
+
 		m_assetMgr = AssetManager::Instance(*m_renderer);
 		m_audioMgr = AudioManager::Instance();
 		initialiseScreens();
 
 
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
+		m_eventManager.subscribeToEvent<ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
+
 		m_timePerFrame = 1000 / m_framesPerSecond;
 		m_timePerTick = 1000 / m_ticksPerSecond;
 
@@ -262,14 +270,45 @@ void Game::createButtonMaps()
 	}
 }
 
-void Game::initialiseScreens()
+void Game::changeScreen(const ChangeScreen& t_event)
 {
-	//std::vector<Controller&> controllers(std::begin(m_controllers), std::end(m_controllers));
-	/*m_gameScreen = new GameScreen(m_renderer, &m_currentScreen, m_eventManager, controllers);
+	if (m_gameScreen)
+	{
+		delete(m_gameScreen);
+	}
+	createButtonMaps();
+	m_currentScreen = t_event.newScreen;
+	switch (m_currentScreen)
+	{
+	case MenuStates::Game:
+		m_gameScreen = new GameScreen(m_renderer, &m_currentScreen, m_eventManager, m_controllers, m_controllerButtonMaps);
+		break;
+	case MenuStates::MainMenu:
+		m_mainMenuScreen->reset();
+		break;
+	case MenuStates::Credits:
+		break;
+	case MenuStates::Options:
+		break;
+	case MenuStates::License:
+		break;
+	case MenuStates::Splash:
+		break;
+	case MenuStates::Achievements:
+		break;
+	default:
+		break;
+	}
+}
+
+void Game::initialiseScreens()                                                                                                                                                                                 
+{
+	createButtonMaps();
+	m_gameScreen = new GameScreen(m_renderer, &m_currentScreen, m_eventManager, m_controllers, m_controllerButtonMaps);
 	m_optionsScreen = new OptionsScreen(&m_currentScreen);
 	m_creditsScreen = new CreditsScreen(&m_currentScreen);
 	m_licenseScreen = new LicenseScreen(&m_currentScreen);
 	m_splashScreen = new SplashScreen(&m_currentScreen);
-	m_mainMenuScreen = new MenuScreen(m_renderer, &m_currentScreen, m_eventManager, controllers);
-	m_currentScreen = MenuStates::Game;*/
+	m_mainMenuScreen = new MenuScreen(m_renderer, m_currentScreen, m_eventManager, m_controllers[0]);
+	m_currentScreen = MenuStates::MainMenu;
 }

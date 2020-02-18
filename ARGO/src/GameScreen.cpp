@@ -47,6 +47,11 @@ void GameScreen::processEvents(SDL_Event* t_event)
 	{
 		switch (t_event->key.keysym.sym)
 		{
+		case SDLK_HOME:
+		{
+			m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ *m_currentScreen, MenuStates::MainMenu });
+			break;
+		}
 		case SDLK_BACKSPACE:
 		{
 			//delete all entities

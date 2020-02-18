@@ -10,7 +10,7 @@ InputComponent::InputComponent(Controller& t_controller,
 	m_controller{t_controller},
 	m_buttonPressedCommands{t_buttonPressMap},
 	m_buttonHeldCommands{t_buttonHeldMap},
-	m_buttonReleaseCommands{t_buttonReleasedMap},
+	m_buttonReleaseCommands{t_buttonReleasedMap}
 {
 }
 

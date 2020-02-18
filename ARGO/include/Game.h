@@ -28,7 +28,7 @@ private:
 	bool checkCanTick(Uint16 t_currentTick);
 	void closeWindow(const CloseWindow& t_event = CloseWindow());
 	void createButtonMaps();
-
+	void changeScreen(const ChangeScreen& t_event);
 
 
 	AssetManager* m_assetMgr;

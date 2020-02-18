@@ -368,5 +368,8 @@
     <ClInclude Include="include\CreditsScreen.h">
       <Filter>Header Files\Screens</Filter>
     </ClInclude>
+    <ClInclude Include="ControllerButtonMaps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

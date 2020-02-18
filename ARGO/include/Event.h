@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h" 
+#include "Utilities.h"
 
 struct createBulletEvent
 {
@@ -30,6 +31,12 @@ struct MenuSelectButton
 
 struct CloseWindow
 {
+};
+
+struct ChangeScreen
+{
+	MenuStates currentScreen;
+	MenuStates newScreen;
 };
 
 class BaseEvent

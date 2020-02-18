@@ -61,6 +61,7 @@
     <ClCompile Include="src\Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ControllerButtonMaps.h" />
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\AudioManager.h" />
     <ClInclude Include="include\Command.h" />

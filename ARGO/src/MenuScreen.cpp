@@ -2,41 +2,36 @@
 #include "MenuScreen.h"
 #include "..\include\MenuScreen.h"
 
-MenuScreen::MenuScreen(SDL_Renderer* t_renderer, MenuStates& t_currentScreen, EventManager& t_eventManager, Controller t_controllers[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]) :
+MenuScreen::MenuScreen(SDL_Renderer* t_renderer, MenuStates& t_currentScreen, EventManager& t_eventManager, Controller& t_controller) :
 	m_renderer{ t_renderer },
 	m_currentScreen{ t_currentScreen },
 	m_eventManager{ t_eventManager },
-	m_controllers{ *t_controllers },
-	m_controllerButtonMaps{ **t_controllerButtonMaps }
+	m_controller{ t_controller },
+	BUTTON_DEFAULT_COLOUR{ 199,163,10 },
+	BUTTON_HIGHLIGHTED_COLOUR{ 255,255,240 },
+	m_currentButton{ MenuButtonType::Play }
 {
-	// create buttons
+	setControllerButtonMaps();
 
-	m_menuButtons[static_cast<int>(MenuButtonType::Play)].addComponent(new VisualComponent("play_button_temp.png", m_renderer));
-	m_menuButtons[static_cast<int>(MenuButtonType::Options)].addComponent(new VisualComponent("options_button_temp.png", m_renderer));
-	m_menuButtons[static_cast<int>(MenuButtonType::Credits)].addComponent(new VisualComponent("credits_button_temp.png", m_renderer));
-	m_menuButtons[static_cast<int>(MenuButtonType::Quit)].addComponent(new VisualComponent("quit_button_temp.png", m_renderer));
-	m_menuButtons[static_cast<int>(MenuButtonType::Achievements)].addComponent(new VisualComponent("achv_button_temp.png", m_renderer));
+	m_background.addComponent(new VisualComponent("Menu_Background.png", m_renderer));
+	m_background.addComponent(new TransformComponent(0, 0));
 
-	float middleOfScreenWidth = Utilities::SCREEN_WIDTH / 2.0f;
-	float heightDistBetweenButtons = Utilities::SCREEN_HEIGHT / 6.0f;
+	m_menuButtons[static_cast<int>(MenuButtonType::Play)].addComponent(new VisualComponent("Play_Button.png", m_renderer));
+	m_menuButtons[static_cast<int>(MenuButtonType::Options)].addComponent(new VisualComponent("Options_Button.png", m_renderer));
+	m_menuButtons[static_cast<int>(MenuButtonType::Credits)].addComponent(new VisualComponent("Credits_Button.png", m_renderer));
+	m_menuButtons[static_cast<int>(MenuButtonType::Quit)].addComponent(new VisualComponent("Quit_Button.png", m_renderer));
+	m_menuButtons[static_cast<int>(MenuButtonType::Achievements)].addComponent(new VisualComponent("Achievements_Button.png", m_renderer));
 	for (int index = 0; index < NUMBER_OF_MENU_BUTTONS; index++)
 	{
-		m_menuButtons[index].addComponent(new CommandComponent());
-		m_menuButtons[index].addComponent(new TransformComponent(glm::vec2(middleOfScreenWidth, (index + 1) * heightDistBetweenButtons)));
-		m_menuButtons[index].addComponent(new InputComponent(m_controllers[index],
-			m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][index],
-			m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][index],
-			m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][index]));
-		m_menuButtons[index].addComponent(new TagComponent(Tag::MenuButton));
+		createMenuButton(m_menuButtons[index], glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, (Utilities::SCREEN_HEIGHT / (NUMBER_OF_MENU_BUTTONS + 1)) * (index + 1)));
 	}
 
-
+	VisualComponent* visualComp = static_cast<VisualComponent*>(m_menuButtons[static_cast<int>(m_currentButton)].getComponent(ComponentType::Visual));
+	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f + visualComp->getWidth() / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f + visualComp->getHeight() / 2.0f));
+	visualComp->setColor(BUTTON_HIGHLIGHTED_COLOUR.x, BUTTON_HIGHLIGHTED_COLOUR.y, BUTTON_HIGHLIGHTED_COLOUR.z);
 
 	m_eventManager.subscribeToEvent<MenuMoveButtonsUpDown>(std::bind(&MenuScreen::changeCurrentSelectedButton, this, std::placeholders::_1));
-	m_eventManager.subscribeToEvent<MenuSelectButton>(std::bind(&MenuScreen::currentButtonPressed, this, std::placeholders::_1));
-
-
-
+	m_eventManager.subscribeToEvent<MenuSelectButton>(std::bind(&MenuScreen::buttonPressed, this, std::placeholders::_1));
 }
 
 MenuScreen::~MenuScreen()
@@ -45,55 +40,99 @@ MenuScreen::~MenuScreen()
 
 void MenuScreen::update(bool t_canTick, bool t_canRender, Uint16 t_deltaTime)
 {
-
-	//update buttons
+	if (t_canRender)
+	{
+		m_renderSystem.render(m_renderer, m_background);
+	}
 	for (Entity& menuButton : m_menuButtons)
 	{
 		if (t_canTick)
 		{
 			m_inputSystem.update(menuButton);
-			m_commandSystem.update(menuButton);
+			m_commandSystem.update(menuButton, m_eventManager);
 		}
 		if (t_canRender)
 		{
 			m_renderSystem.render(m_renderer, menuButton);
 		}
 	}
+}
 
+void MenuScreen::reset()
+{
+	m_currentButton = MenuButtonType::Play;
+	for (Entity& menuButton : m_menuButtons)
+	{
+		updateButtonColour(menuButton, BUTTON_DEFAULT_COLOUR);
+	}
+	VisualComponent* visualComp = static_cast<VisualComponent*>(m_menuButtons[static_cast<int>(m_currentButton)].getComponent(ComponentType::Visual));
+	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f + visualComp->getWidth() / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f + visualComp->getHeight() / 2.0f));
+	visualComp->setColor(BUTTON_HIGHLIGHTED_COLOUR.x, BUTTON_HIGHLIGHTED_COLOUR.y, BUTTON_HIGHLIGHTED_COLOUR.z);
+}
 
+void MenuScreen::setControllerButtonMaps()
+{
+	using ButtonCommandPair = std::pair<ButtonType, Command*>;
+	m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)] =
+	{ 
+		ButtonCommandPair(ButtonType::DpadUp, new MenuMoveUpCommand()),
+		ButtonCommandPair(ButtonType::DpadDown, new MenuMoveDownCommand()),
+		ButtonCommandPair(ButtonType::A, new MenuSelectButtonCommand())
+	};
+	m_controllerButtonMaps[static_cast<int>(ButtonState::Held)] = ButtonCommandMap();
+	m_controllerButtonMaps[static_cast<int>(ButtonState::Released)] = ButtonCommandMap();
+}
 
-
+void MenuScreen::createMenuButton(Entity& t_menuButton, glm::vec2 t_position)
+{
+	updateButtonColour(t_menuButton, BUTTON_DEFAULT_COLOUR);
+	t_menuButton.addComponent(new TransformComponent(t_position));
+	t_menuButton.addComponent(new InputComponent(m_controller,
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)],
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)],
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)]));
+	t_menuButton.addComponent(new CommandComponent());
 }
 
 void MenuScreen::changeCurrentSelectedButton(const MenuMoveButtonsUpDown& t_event)
 {
 	int currentButtonIndex = static_cast<int>(m_currentButton);
+	updateButtonColour(m_menuButtons[currentButtonIndex], BUTTON_DEFAULT_COLOUR);
 	currentButtonIndex = t_event.isMoveDown ? currentButtonIndex + 1 : currentButtonIndex - 1;
 	currentButtonIndex = glm::clamp(currentButtonIndex, 0, (NUMBER_OF_MENU_BUTTONS - 1));
+	updateButtonColour(m_menuButtons[currentButtonIndex], BUTTON_HIGHLIGHTED_COLOUR);
 	m_currentButton = static_cast<MenuButtonType>(currentButtonIndex);
 }
 
-void MenuScreen::currentButtonPressed(const MenuSelectButton& t_event)
+void MenuScreen::buttonPressed(const MenuSelectButton& t_event)
 {
+	MenuStates newScreen = MenuStates::MainMenu;
 	switch (m_currentButton)
 	{
 	case MenuButtonType::Play:
-		m_currentScreen = MenuStates::Game;
+		newScreen = MenuStates::Game;
 		break;
 	case MenuButtonType::Options:
-		m_currentScreen = MenuStates::Options;
+		newScreen = MenuStates::Options;
 		break;
 	case MenuButtonType::Credits:
-		m_currentScreen = MenuStates::Credits;
+		newScreen = MenuStates::Credits;
 		break;
 	case MenuButtonType::Achievements:
-		m_currentScreen = MenuStates::Achievements;
+		newScreen = MenuStates::Achievements;
 		break;
 	case MenuButtonType::Quit:
-		SDL_QUIT;
+		m_eventManager.emitEvent(CloseWindow());
 		break;
 	default:
 		break;
 	}
+	m_eventManager.emitEvent(ChangeScreen{ m_currentScreen, newScreen });
+}
+
+void MenuScreen::updateButtonColour(Entity& t_menuButton, glm::vec3 t_colour)
+{
+	VisualComponent* visualComp = static_cast<VisualComponent*>(t_menuButton.getComponent(ComponentType::Visual));
+	visualComp->setColor(t_colour.x, t_colour.y, t_colour.z);
 }
 
