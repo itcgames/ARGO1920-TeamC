@@ -39,7 +39,7 @@ void ProjectileManager::init()
 void ProjectileManager::createPlayerBullet(const createBulletEvent& t_event)
 {
 	FireRateComponent* fireRateComp = static_cast<FireRateComponent*>(t_event.entity.getComponent(ComponentType::FireRate));
-	Uint16 currentTick = SDL_GetTicks();
+	Uint32 currentTick = SDL_GetTicks();
 	if (fireRateComp && fireRateComp->getNextFire() < currentTick)
 	{
 		fireRateComp->setLastFire(currentTick);	
