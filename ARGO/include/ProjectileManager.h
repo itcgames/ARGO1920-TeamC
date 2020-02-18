@@ -11,6 +11,7 @@
 #include "TagComponent.h"
 #include "FireRateComponent.h"
 #include "EventManager.h"
+#include <AudioManager.h>
 
 struct Bullet
 {
@@ -21,7 +22,8 @@ struct Bullet
 class ProjectileManager
 {
 public:
-	ProjectileManager(EventManager& t_eventManager);
+	ProjectileManager(EventManager& t_eventManager, glm::vec2& t_focusPoint);
+	void init();
 	void createPlayerBullet(const createBulletEvent& t_event);
 	void createEnemyBullet(const createBulletEvent& t_event);
 	void update(BaseSystem* t_system);
@@ -35,5 +37,8 @@ private:
 	Bullet m_enemyBullets[BULLET_POOL_SIZE];
 	int m_nextPlayerBullet;
 	int m_nextEnemyBullet;
+	AudioManager* m_audioMgr;
+	glm::vec2& m_focusPoint;
+
 };
 

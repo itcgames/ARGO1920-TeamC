@@ -28,12 +28,13 @@ namespace Utilities
 	const int LEVEL_TILE_WIDTH = 30;
 	const int LEVEL_TILE_HEIGHT = 20;
 	const int TILE_SIZE = 64;
+	const int WALL_HEALTH = 5;
 
 	const int PLAYER_RADIUS = 32;
 	const int PLAYER_FIRE_DELAY = 1000 / 10;
 
 	const int ENEMY_RADIUS = 32;
-	const int ENEMY_HP = 3;
+	const int ENEMY_HP = 2;
 
 	const int NUMBER_OF_CONTROLLER_BUTTONS = 16;
 

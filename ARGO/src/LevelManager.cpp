@@ -20,6 +20,7 @@ void LevelManager::setupLevel()
 			m_levelTiles.back().addComponent(new VisualComponent("wall_4.png", m_renderer));
 			m_levelTiles.back().addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
 			m_levelTiles.back().addComponent(new TileComponent());
+			m_levelTiles.back().addComponent(new HealthComponent(Utilities::WALL_HEALTH, Utilities::WALL_HEALTH));
 		}
 	}
 	setTileNeighbours();
@@ -30,6 +31,17 @@ void LevelManager::update(BaseSystem* t_system)
 	for (auto& entity : m_levelTiles)
 	{
 		t_system->update(entity);
+	}
+}
+
+void LevelManager::checkWallDamage()
+{
+	for (auto& entity : m_levelTiles)
+	{
+		if (entity.getComponent(ComponentType::ColliderAABB) && static_cast<HealthComponent*>(entity.getComponent(ComponentType::Health))->getHealth() <= 0)
+		{
+			setToFloor(entity);
+		}
 	}
 }
 
@@ -48,7 +60,7 @@ void LevelManager::setToWall(Entity& t_entity)
 
 	t_entity.addComponent(new VisualComponent("wall_4.png", m_renderer));
 	t_entity.addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
-	m_levelTiles.back().addComponent(new TagComponent(Tag::Tile));
+	static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health))->setHealth(Utilities::WALL_HEALTH);
 }
 
 void LevelManager::setToFloor(Entity& t_entity)

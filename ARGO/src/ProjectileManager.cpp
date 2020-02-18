@@ -1,11 +1,13 @@
 #include "stdafx.h"
 #include "ProjectileManager.h"
 
-ProjectileManager::ProjectileManager(EventManager& t_eventManager) :
+ProjectileManager::ProjectileManager(EventManager& t_eventManager, glm::vec2& t_focusPoint) :
 	m_nextEnemyBullet(0),
-	m_nextPlayerBullet(0)
+	m_nextPlayerBullet(0),
+	m_focusPoint(t_focusPoint)
 {
 	t_eventManager.subscribeToEvent<createBulletEvent>(std::bind(&ProjectileManager::createPlayerBullet, this, std::placeholders::_1));
+
 
 	for (auto& bullet : m_playerBullets)
 	{
@@ -29,13 +31,19 @@ ProjectileManager::ProjectileManager(EventManager& t_eventManager) :
 	}
 }
 
+void ProjectileManager::init()
+{
+	m_audioMgr = AudioManager::Instance();
+}
+
 void ProjectileManager::createPlayerBullet(const createBulletEvent& t_event)
 {
 	FireRateComponent* fireRateComp = static_cast<FireRateComponent*>(t_event.entity.getComponent(ComponentType::FireRate));
 	Uint16 currentTick = SDL_GetTicks();
 	if (fireRateComp && fireRateComp->getNextFire() < currentTick)
 	{
-		fireRateComp->setLastFire(currentTick);
+		fireRateComp->setLastFire(currentTick);	
+		m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "ak.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_focusPoint);
 		glm::vec2 position = static_cast<TransformComponent*>(t_event.entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos();
 		static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->setPos(position);
 		static_cast<ForceComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getAllComps().at(COMPONENT_ID::FORCE_ID))->setForce(t_event.direction * t_event.forceScale);

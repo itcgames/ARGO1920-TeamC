@@ -14,7 +14,7 @@ bool cleanUpEnemies(const Entity& t_entity)
 class State;
 Game::Game() :
 	m_transformSystem{ m_eventManager },
-	m_projectileManager{ m_eventManager },
+	m_projectileManager{ m_eventManager, m_renderSystem.getFocus() },
 	m_framesPerSecond(60),
 	m_ticksPerSecond(60),
 	m_lastTick(0),
@@ -91,6 +91,7 @@ Game::Game() :
 		// game doesnt run
 		m_isRunning = false;
 	}
+	m_projectileManager.init();
 }
 
 /// <summary>
@@ -250,6 +251,7 @@ void Game::processEvent()
 
 void Game::update(Uint16 t_dt)
 {
+	m_levelManager.checkWallDamage();
 	m_levelManager.update(&m_collisionSystem);
 	for (auto& entity : m_entities)
 	{
@@ -267,6 +269,7 @@ void Game::update(Uint16 t_dt)
 		m_collisionSystem.update(player);
 		m_particleSystem.update(player);
 	}
+	m_projectileManager.tick();
 	m_projectileManager.update(&m_transformSystem);
 	m_projectileManager.update(&m_collisionSystem);
 	m_collisionSystem.handleCollisions();
@@ -374,7 +377,7 @@ void Game::removeDeadEnemies()
 
 void Game::playerFireSound(const createBulletEvent& t_event)
 {
-	m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "launcher.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_renderSystem.getFocus());
+	//m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "launcher.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_renderSystem.getFocus());
 }
 
 bool Game::checkCanRender(Uint16 t_renderTime)

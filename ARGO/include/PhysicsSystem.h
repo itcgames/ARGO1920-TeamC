@@ -18,7 +18,6 @@ public:
 
 private: 
 
-	void checkBorder(TransformComponent* t_pos);
 	void updateWithInput(const PhysicsMove& t_event);
  	const float FRICTION_SCALAR = 0.9f;
 };

@@ -18,6 +18,7 @@ public:
 private:
 	bool circleToCircleCollision(Entity* t_entityCircle1, Entity* t_entityCircle2);
 	bool circleToAABBCollision(Entity* t_entityCircle, Entity* t_entityAABB);
+	bool edgeOfTheWorldCircle(Entity& t_entity);
 
 	void handlePlayerCollision(Entity* t_player);
 	void handlePlayerBulletCollision(Entity* t_playerBullet);
