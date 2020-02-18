@@ -4,6 +4,12 @@
 
 class AudioManager
 {
+private:
+	int m_masterVolume = 100;
+	int m_musicVolume = 20;
+	int m_sfxVolume = 20;
+	int m_initialisedFlags;
+
 public:
 	static AudioManager* Instance();
 	static void Release();
@@ -43,11 +49,5 @@ private:
 	int calcVolume(const int t_volume) const;
 	void outputVolumes() const;
 	int getVolumeFromPercentage(const int t_percentage) const;
-
-	int m_masterVolume = 100;
-	int m_musicVolume = 20;
-	int m_sfxVolume = 20;
-
-	int m_initialisedFlags;
 };
 

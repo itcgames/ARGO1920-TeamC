@@ -18,30 +18,34 @@ void RenderSystem::render(SDL_Renderer* t_renderer, Entity& t_entity)
 
 	if (posComp != nullptr)
 	{
-		VisualComponent* visComp = static_cast<VisualComponent*>(t_entity.getComponent(ComponentType::Visual));
-		TextComponent* textComp = static_cast<TextComponent*>(t_entity.getComponent(ComponentType::Text));
-		if (visComp != nullptr)
+		if (glm::distance2(posComp->getPos(), m_focusPoint) < (Utilities::SCREEN_HEIGHT * Utilities::SCREEN_HEIGHT) / 2)
 		{
-			renderTexture(visComp, posComp->getPos().x, posComp->getPos().y, t_renderer);
-		}
-		if (textComp != nullptr)
-		{
-			renderText(t_renderer, posComp, textComp);
-		}
-		else if (!textComp && !visComp)
-		{
-			ColourComponent* colComp = static_cast<ColourComponent*>(t_entity.getComponent(ComponentType::Colour));
-			renderPrimitives(t_renderer, posComp, colComp);
+			VisualComponent* visComp = static_cast<VisualComponent*>(t_entity.getComponent(ComponentType::Visual));
+			TextComponent* textComp = static_cast<TextComponent*>(t_entity.getComponent(ComponentType::Text));
+			if (visComp != nullptr)
+			{
+				renderTexture(visComp, posComp->getPos().x, posComp->getPos().y, t_renderer);
+			}
+			if (textComp != nullptr)
+			{
+				renderText(t_renderer, posComp, textComp);
+			}
+			else if (!textComp && !visComp)
+			{
+				ColourComponent* colComp = static_cast<ColourComponent*>(t_entity.getComponent(ComponentType::Colour));
+				renderPrimitives(t_renderer, posComp, colComp);
+			}
+
+			if (t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID) && t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID))
+			{
+				ParticleEmitterComponent* emitComp = static_cast<ParticleEmitterComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID));
+				PrimitiveComponent* primComp = static_cast<PrimitiveComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID));
+				ColourComponent* colComp = dynamic_cast<ColourComponent*>(t_entity.getComponent(ComponentType::Colour));
+				renderParticles(t_renderer, emitComp, primComp, colComp, posComp);
+			}
 		}
 	}
 
-	if (t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID) && t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID))
-	{
-		ParticleEmitterComponent* emitComp = static_cast<ParticleEmitterComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID));
-		PrimitiveComponent* primComp = static_cast<PrimitiveComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID));
-		ColourComponent* colComp = dynamic_cast<ColourComponent*>(t_entity.getComponent(ComponentType::Colour));
-		renderParticles(t_renderer, emitComp, primComp, colComp, posComp);
-	}
 }
 
 void RenderSystem::renderPrimitives(SDL_Renderer* t_renderer, TransformComponent* t_posComp, ColourComponent* t_colComp)
@@ -104,10 +108,10 @@ void RenderSystem::renderParticles(SDL_Renderer* t_renderer, ParticleEmitterComp
 	SDL_SetRenderDrawColor(t_renderer, colour.red, colour.green, colour.blue, colour.alpha);
 	for (int i = 0; i < t_emitter->getMaxParticles(); i++)
 	{
-		
+
 		if (t_emitter->getParticleAlive(i))
 		{
-			rect.x = t_emitter->getParticlePosition(i).x;	
+			rect.x = t_emitter->getParticlePosition(i).x;
 			rect.y = t_emitter->getParticlePosition(i).y;
 			rect.x = rect.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
 			rect.y = rect.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
