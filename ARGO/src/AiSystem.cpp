@@ -24,6 +24,9 @@ void AiSystem::update(Entity& t_entity)
 		case AITypes::eRanged:
 			rangedAI(posComp, aiComp, forceComp);
 			break;
+		case AITypes::ePlayerBot:
+			rangedAI(posComp, aiComp, forceComp);
+			break;
 		}
 	}
 }
@@ -54,6 +57,33 @@ void AiSystem::rangedAI(TransformComponent* t_posComp, AiComponent* t_aiComponen
 		wander(t_posComp, t_aiComponent, t_forceComponent);
 		break;
 	}
+}
+
+void AiSystem::playerAI(Entity& t_entity)
+{
+	//get a decision on movement
+
+	//get a decision on shooting
+}
+
+void AiSystem::playerMovementDecision(Entity& t_entity)
+{
+	//check for closest humie player. (Need to hold reference to all non ai players) otherwise the first ai in the list of ai players is set as the leader.
+	//set goal to leader/closest player
+	
+	//get ammo weight is dependent on the amount of ammo the ai has and how close it is to an ammo pack
+	//hold position weight is dependent on the amount of enemies close to the player.
+	//retreat wieght is based on the distance to the closest enemy
+	//if not leader:
+	//	move toward goal weight is dependant in  on how far away the goal is
+	//if leader: move toward goal is a fixed value 
+
+	//create a path towards the the largest weight.
+}
+
+void AiSystem::playerShootingDecision(Entity& t_entity)
+{
+	//if enemy in range (pew pew)
 }
 
 void AiSystem::wander(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent)

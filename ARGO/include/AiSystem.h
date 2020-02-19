@@ -8,6 +8,7 @@
 #include "TransformComponent.h"
 #include "ForceComponent.h"
 #include "AiStates.h"
+#include "Utilities.h"
 
 class AiSystem : public BaseSystem
 {
@@ -20,5 +21,11 @@ private:
 	void rangedAI(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent);
 	void wander(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent);
 	void sleep(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent);
+
+	void playerAI(Entity& t_entity);
+	void playerMovementDecision(Entity& t_entity);
+	void playerShootingDecision(Entity& t_entity);
+
+	//Entity (&m_players)[Utilities::]
 };
 
