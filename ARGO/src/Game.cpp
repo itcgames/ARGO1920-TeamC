@@ -48,7 +48,6 @@ Game::Game() :
 		m_isRunning = true;
 
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
-		m_eventManager.subscribeToEvent<createBulletEvent>(std::bind(&Game::playerFireSound, this, std::placeholders::_1));
 
 		//add components to player
 		for (auto& player : m_players)
@@ -366,11 +365,6 @@ void Game::removeDeadEnemies()
 		iter->nullAllComponents();
 		iter = m_entities.erase(iter);
 	}
-}
-
-void Game::playerFireSound(const createBulletEvent& t_event)
-{
-	//m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "launcher.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_renderSystem.getFocus());
 }
 
 void Game::closeWindow(const CloseWindow& t_event)
