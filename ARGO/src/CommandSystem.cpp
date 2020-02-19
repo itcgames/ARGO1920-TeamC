@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CommandSystem.h"
-#include "..\include\CommandSystem.h"
 
 CommandSystem::CommandSystem()
 {
@@ -41,6 +40,16 @@ void CommandSystem::update(Entity& t_entity, EventManager& t_eventManager)
 				if (inputComp)
 				{
  					t_eventManager.emitEvent(PhysicsMove{ glm::normalize(inputComp->getController().getCurrent().LeftThumbStick), t_entity });
+				}
+			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(FireBulletCommand))
+			{
+				if (inputComp)
+				{
+					if (inputComp->getController().getCurrent().RightThumbStick != glm::vec2(0,0))
+					{
+						t_eventManager.emitEvent(CreateBulletEvent{ t_entity, glm::normalize(inputComp->getController().getCurrent().RightThumbStick), 32, 0 });
+					}
 				}
 			}
 			else if (typeid(*commandComp->getCommands().top()) == typeid(CloseWindowCommand))

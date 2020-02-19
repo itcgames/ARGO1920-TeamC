@@ -112,7 +112,7 @@ void CollisionSystem::handlePlayerCollision(Entity* t_player)
 		case Tag::EnemyBullet:
 			playerToEnemyBullet(t_player, other);
 			break;
-		case Tag::Wall:
+		case Tag::Tile:
 			playerToWall(t_player, other);
 			break;
 		default:
@@ -140,7 +140,7 @@ void CollisionSystem::handlePlayerBulletCollision(Entity* t_playerBullet)
 		case Tag::Enemy:
 			playerBulletToEnemy(t_playerBullet, other);
 			break;
-		case Tag::Wall:
+		case Tag::Tile:
 			playerBulletToWall(t_playerBullet, other);
 			break;
 		default:
@@ -173,7 +173,7 @@ void CollisionSystem::handleEnemyCollision(Entity* t_enemy)
 			}
 		}
 			break;
-		case Tag::Wall:
+		case Tag::Tile:
 			enemyToWall(t_enemy, other);
 			break;
 		default:
@@ -249,7 +249,36 @@ void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 {
 	if (t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID) && circleToAABBCollision(t_player, t_wall))
 	{
-		//handle aabb to circle collisisons here
+		int playerRadius = static_cast<ColliderCircleComponent*>(t_player->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
+		TransformComponent* playerPosition = static_cast<TransformComponent*>(t_player->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+
+		int wallWidth = static_cast<ColliderAABBComponent*>(t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID))->getBounds().x;
+		TransformComponent* wallPosition = static_cast<TransformComponent*>(t_wall->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+
+		glm::vec2 distanceBetween = playerPosition->getPos() - glm::vec2(playerRadius, playerRadius) - wallPosition->getPos();
+		
+		if (distanceBetween.x < playerRadius * 2 + wallWidth && (std::abs(distanceBetween.x) > std::abs(distanceBetween.y)))
+		{
+			if (distanceBetween.x < 0)
+			{
+				playerPosition->setPos(-(playerRadius) + wallPosition->getPos().x, playerPosition->getPos().y);
+			}
+			else
+			{
+				playerPosition->setPos((playerRadius + wallWidth) + wallPosition->getPos().x, playerPosition->getPos().y);
+			}
+		}
+		if (distanceBetween.y < playerRadius * 2 + wallWidth && (std::abs(distanceBetween.x) < std::abs(distanceBetween.y)))
+		{
+			if (distanceBetween.y < 0)
+			{
+				playerPosition->setPos(playerPosition->getPos().x, -(playerRadius)+wallPosition->getPos().y);
+			}
+			else
+			{
+				playerPosition->setPos(playerPosition->getPos().x, (playerRadius + wallWidth) + wallPosition->getPos().y);
+			}
+		}
 	}
 }
 
@@ -258,6 +287,7 @@ void CollisionSystem::playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enem
 	if (t_enemy->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID) && circleToCircleCollision(t_playerBullet, t_enemy))
 	{
 		static_cast<HealthComponent*>(t_playerBullet->getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0); //kill the bullet
+		static_cast<HealthComponent*>(t_enemy->getAllComps().at(COMPONENT_ID::HEALTH_ID))->reduceHealth(1);
 	}
 }
 
@@ -300,7 +330,39 @@ void CollisionSystem::enemyToWall(Entity* t_enemy, Entity* t_wall)
 {
 	if (t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID) && circleToAABBCollision(t_enemy, t_wall))
 	{
-		//handle aabb to circle collisisons here
+		if (t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID) && circleToAABBCollision(t_enemy, t_wall))
+		{
+			int playerRadius = static_cast<ColliderCircleComponent*>(t_enemy->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
+			TransformComponent* playerPosition = static_cast<TransformComponent*>(t_enemy->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+
+			int wallWidth = static_cast<ColliderAABBComponent*>(t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID))->getBounds().x;
+			TransformComponent* wallPosition = static_cast<TransformComponent*>(t_wall->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+
+			glm::vec2 distanceBetween = playerPosition->getPos() - glm::vec2(playerRadius, playerRadius) - wallPosition->getPos();
+
+			if (distanceBetween.x < playerRadius * 2 + wallWidth && (std::abs(distanceBetween.x) > std::abs(distanceBetween.y)))
+			{
+				if (distanceBetween.x < 0)
+				{
+					playerPosition->setPos(-(playerRadius)+wallPosition->getPos().x, playerPosition->getPos().y);
+				}
+				else
+				{
+					playerPosition->setPos((playerRadius + wallWidth) + wallPosition->getPos().x, playerPosition->getPos().y);
+				}
+			}
+			if (distanceBetween.y < playerRadius * 2 + wallWidth && (std::abs(distanceBetween.x) < std::abs(distanceBetween.y)))
+			{
+				if (distanceBetween.y < 0)
+				{
+					playerPosition->setPos(playerPosition->getPos().x, -(playerRadius)+wallPosition->getPos().y);
+				}
+				else
+				{
+					playerPosition->setPos(playerPosition->getPos().x, (playerRadius + wallWidth) + wallPosition->getPos().y);
+				}
+			}
+		}
 	}
 }
 

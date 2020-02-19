@@ -1,12 +1,18 @@
 #pragma once
-#include "Utilities.h"
+#include "EventManager.h"
+#include "Controller.h"
+
 class CreditsScreen
 {
 public:
-	CreditsScreen(MenuStates* t_currentScreen);
+	CreditsScreen(EventManager& t_eventManager, Controller& t_controller, SDL_Renderer* t_renderer);
 	~CreditsScreen();
-	void update(bool t_canTick, bool t_canRender, Uint16 t_deltaTime);
+
+	void update(Uint16 t_deltaTime);
+	void render(SDL_Renderer* t_renderer);
+	void reset();
 private:
-	MenuStates* m_currentScreen;
+	EventManager& m_eventManager;
+	Controller& m_controller;
 };
 

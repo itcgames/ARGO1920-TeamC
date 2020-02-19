@@ -142,6 +142,11 @@ void Controller::update()
 			m_current.button[static_cast<int>(ButtonType::RightThumbStickDown)] = true;
 		}
 	}
+
+	if (m_current.button[static_cast<int>(ButtonType::DpadDown)])
+	{
+		printf("pressing down\n");
+	}
 }
 
 /// <summary>
@@ -189,7 +194,7 @@ ButtonState Controller::getButtonState(ButtonType t_buttonType)
 	else if (currentPressed && !previousPressed) currentState = ButtonState::Pressed;
  	else if (!currentPressed && previousPressed) currentState = ButtonState::Released;
 
- #ifdef _CONTROLLER_DEBUG
+#ifdef _CONTROLLER_DEBUG
 	if (ButtonState::NotPressed != currentState)
 	{
 		std::string debugString = "Controller " + std::to_string(m_controllerIndex) + " " + m_controllerName + " " + getButtonName(t_buttonType);

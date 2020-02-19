@@ -2,16 +2,21 @@
 #include "GameScreen.h"
 #include "..\include\GameScreen.h"
 
-GameScreen::GameScreen(SDL_Renderer* t_renderer, MenuStates* t_currentScreen, EventManager& t_eventManager, Controller t_controllers[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]) :
-	m_renderer{ t_renderer },
-	m_currentScreen{ t_currentScreen },
+
+bool cleanUpEnemies(const Entity& t_entity)
+{
+	return !static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health))->isAlive();
+}
+
+GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]) :
 	m_eventManager{ t_eventManager },
 	m_transformSystem{ m_eventManager },
 	m_projectileManager{ m_eventManager },
-	m_controllers{ *t_controllers }
- {
+	m_controllers{ *t_controllers },
+	m_levelManager{ t_renderer }
+{
 	setControllerButtonMap(t_controllerButtonMaps);
- 	int playerCount = 0;
+	int playerCount = 0;
 	for (Entity& player : m_players)
 	{
 		createPlayer(player, playerCount);
@@ -27,16 +32,18 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, MenuStates* t_currentScreen, Ev
 
 GameScreen::~GameScreen()
 {
+	m_entities.clear();
 }
 
-void GameScreen::update(bool t_canTick, bool t_canRender, Uint16 t_deltaTime)
+void GameScreen::update(Uint16 t_deltaTime)
 {
+	m_levelManager.update(&m_collisionSystem);
 	preRender();
-	updateLevelTiles(t_canTick, t_canRender);
-	updateEntities(t_canTick, t_canRender);
-	updatePlayers(t_canTick, t_canRender);
-	updateProjectiles(t_canTick, t_canRender);
-	if (t_canTick) m_collisionSystem.handleCollisions();
+	updateEntities();
+	updatePlayers();
+	updateProjectiles();
+	m_collisionSystem.handleCollisions();
+	removeDeadEnemies();
 }
 
 void GameScreen::processEvents(SDL_Event* t_event)
@@ -49,7 +56,7 @@ void GameScreen::processEvents(SDL_Event* t_event)
 		{
 		case SDLK_HOME:
 		{
-			m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ *m_currentScreen, MenuStates::MainMenu });
+			m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::MainMenu });
 			break;
 		}
 		case SDLK_BACKSPACE:
@@ -86,6 +93,7 @@ void GameScreen::processEvents(SDL_Event* t_event)
 			{
 				createEnemy();
 			}
+			std::cout << m_entities.size() << std::endl;
 			break;
 		}
 		default:
@@ -96,23 +104,45 @@ void GameScreen::processEvents(SDL_Event* t_event)
 	default:
 		break;
 	}
-} 
+}
+
+
+void GameScreen::render(SDL_Renderer* t_renderer)
+{
+	m_levelManager.render(t_renderer, &m_renderSystem);
+	for (Entity& entity : m_entities)
+	{
+		m_renderSystem.render(t_renderer, entity);
+	}
+	for (Entity& player : m_players)
+	{
+		m_renderSystem.render(t_renderer, player);
+	}
+	m_projectileManager.render(t_renderer, &m_renderSystem);
+}
+
 
 void GameScreen::createPlayer(Entity& t_player, int t_index)
 {
 	t_player.addComponent(new HealthComponent(10, 10));
 	t_player.addComponent(new TransformComponent());
-	t_player.addComponent(new InputComponent(m_controllers[t_index], 
-											 m_controllerButtonMaps[(int)ButtonState::Pressed][t_index],
-											 m_controllerButtonMaps[(int)ButtonState::Held][t_index],
-											 m_controllerButtonMaps[(int)ButtonState::Released][t_index]));
+	t_player.addComponent(new InputComponent(m_controllers[t_index],
+		m_controllerButtonMaps[(int)ButtonState::Pressed][t_index],
+		m_controllerButtonMaps[(int)ButtonState::Held][t_index],
+		m_controllerButtonMaps[(int)ButtonState::Released][t_index]));
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
 	t_player.addComponent(new CommandComponent());
 	t_player.addComponent(new TagComponent(Tag::Player));
-}
+	t_player.addComponent(new ParticleEmitterComponent(static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos(), true,
+		Utilities::PARTICLE_DIRECTION_ANGLE_SAMPLE, Utilities::PARTICLE_OFFSET_ANGLE_SAMPLE, Utilities::PARTICLE_SPEED_SAMPLE,
+		Utilities::PARTICLE_MAX_PARTICLES_SAMPLE, Utilities::PARTICLES_PER_SECOND_SAMPLE));
+	t_player.addComponent(new PrimitiveComponent());
+	t_player.addComponent(new FireRateComponent(Utilities::PLAYER_FIRE_DELAY));
 
+
+}
 
 void GameScreen::createEnemy()
 {
@@ -121,86 +151,49 @@ void GameScreen::createEnemy()
 	m_entities.back().addComponent(new AiComponent());
 	m_entities.back().addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
 	m_entities.back().addComponent(new TagComponent(Tag::Enemy));
+	m_entities.back().addComponent(new ForceComponent());
+	m_entities.back().addComponent(new HealthComponent(Utilities::ENEMY_HP, Utilities::ENEMY_HP));
 }
 
 void GameScreen::setUpLevel()
 {
-	int count = 0;
-	m_levelTiles.reserve(Utilities::LEVEL_TILE_HEIGHT * Utilities::LEVEL_TILE_WIDTH);
-	for (int i = 0; i < Utilities::LEVEL_TILE_HEIGHT; i++)
-	{
-		for (int j = 0; j < Utilities::LEVEL_TILE_WIDTH; j++)
-		{
-			m_levelTiles.emplace_back();
-			setToFloor(m_levelTiles.at(count), glm::vec2(j * Utilities::TILE_SIZE, i * Utilities::TILE_SIZE));
-			count++;
-		}
-	}
+	m_levelManager.setupLevel();
+	//magic numbers for creating a sandbox level plz ignore.
+	m_levelManager.createRoom(glm::vec2(1, 1), 12, 12);
+	m_levelManager.createRoom(glm::vec2(12, 2), 3, 2);
+	m_levelManager.createRoom(glm::vec2(12, 10), 3, 2);
+	m_levelManager.createRoom(glm::vec2(15, 1), 5, 12);
 }
+ 
 
-void GameScreen::updatePlayers(bool t_canTick, bool t_canRender)
+void GameScreen::updatePlayers()
 {
 	for (Entity& player : m_players)
 	{
-		if (t_canTick)
-		{
-			m_inputSystem.update(player);
-			m_commandSystem.update(player, m_eventManager);
-			m_healthSystem.update(player);
-			m_transformSystem.update(player);
-			m_collisionSystem.update(player);
-		}
-		if (t_canRender)
-		{
-			m_renderSystem.render(m_renderer, player);
-		}
+		m_inputSystem.update(player);
+		m_commandSystem.update(player, m_eventManager);
+		m_healthSystem.update(player);
+		m_transformSystem.update(player);
+		m_collisionSystem.update(player);
+		m_particleSystem.update(player);
 	}
 }
 
-void GameScreen::updateEntities(bool t_canTick, bool t_canRender)
+void GameScreen::updateEntities()
 {
 	for (Entity& entity : m_entities)
 	{
-		if (t_canTick)
-		{
-			m_healthSystem.update(entity);
-			m_aiSystem.update(entity);
-			m_transformSystem.update(entity);
-			m_collisionSystem.update(entity);
-		}
-		if (t_canRender)
-		{
-			m_renderSystem.render(m_renderer, entity);
-		}
+		m_healthSystem.update(entity);
+		m_aiSystem.update(entity);
+		m_transformSystem.update(entity);
+		m_collisionSystem.update(entity);
 	}
-}
+} 
 
-void GameScreen::updateLevelTiles(bool t_canTick, bool t_canRender)
+void GameScreen::updateProjectiles()
 {
-	for (Entity& tileEntity : m_levelTiles)
-	{
-		if (t_canTick)
-		{
-			m_collisionSystem.update(tileEntity);
-		}
-		if (t_canRender)
-		{
-			m_renderSystem.render(m_renderer, tileEntity);
-		}
-	}
-}
-
-void GameScreen::updateProjectiles(bool t_canTick, bool t_canRender)
-{
-	if (t_canTick)
-	{
-		m_projectileManager.update(&m_transformSystem);
-		m_projectileManager.update(&m_collisionSystem);
-	}
-	if (t_canRender)
-	{
-		m_projectileManager.render(m_renderer, &m_renderSystem);
-	}
+	m_projectileManager.update(&m_transformSystem);
+	m_projectileManager.update(&m_collisionSystem);
 }
 
 void GameScreen::setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS])
@@ -231,19 +224,13 @@ void GameScreen::preRender()
 	}
 	m_renderSystem.setFocus(focusPoint / 4.0f);
 }
-
-void GameScreen::setToFloor(Entity& t_entity, glm::vec2 t_position)
+ 
+void GameScreen::removeDeadEnemies()
 {
-	t_entity.removeAllComponents();
-	t_entity.addComponent(new TransformComponent(t_position));
-	t_entity.addComponent(new VisualComponent("floor_1b.png", m_renderer)); //TODO: change to floor texture when assets have been recieved.
-}
-
-void GameScreen::setToWall(Entity& t_entity, glm::vec2 t_position)
-{
-	t_entity.removeAllComponents();
-	t_entity.addComponent(new TransformComponent(t_position));
-	t_entity.addComponent(new VisualComponent("wall_4.png", m_renderer)); //TODO: change to wall texture when assets have been recieved.
-	t_entity.addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
-	t_entity.addComponent(new TagComponent(Tag::Wall));
+	std::vector<Entity>::iterator iter = std::remove_if(m_entities.begin(), m_entities.end(), cleanUpEnemies);
+	while (iter != m_entities.end())
+	{
+		iter->nullAllComponents();
+		iter = m_entities.erase(iter);
+	}
 }

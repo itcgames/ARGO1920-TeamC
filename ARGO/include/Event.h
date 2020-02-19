@@ -2,7 +2,7 @@
 #include "Entity.h" 
 #include "Utilities.h"
 
-struct createBulletEvent
+struct CreateBulletEvent
 {
 	Entity& entity;
 	glm::vec2 direction;
@@ -35,7 +35,6 @@ struct CloseWindow
 
 struct ChangeScreen
 {
-	MenuStates currentScreen;
 	MenuStates newScreen;
 };
 

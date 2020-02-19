@@ -60,7 +60,7 @@ class FireBulletCommand :
 	public Command
 {
 public:
-	virtual void execute() { std::cout << "pew pew" << std::endl; }
+	virtual void execute() { std::cout << "Fire Bullet" << std::endl; }
 };
 
 class MenuMoveUpCommand :
@@ -83,3 +83,4 @@ class MenuSelectButtonCommand :
 public:
 	virtual void execute() { std::cout << "Button Pressed" << std::endl; }
 };
+

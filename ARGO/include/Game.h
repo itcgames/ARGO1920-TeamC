@@ -1,5 +1,4 @@
 #pragma once
-#include "AssetManager.h"
 #include "EventManager.h"  
 #include "AudioManager.h" 
 #include "GameScreen.h"
@@ -8,6 +7,8 @@
 #include "OptionsScreen.h"
 #include "SplashScreen.h"
 #include "LicenseScreen.h"
+#include "AchievementScreen.h"
+#include "Event.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -22,19 +23,31 @@ private:
 
 	void initLibraries();
 	void processEvent();
-	void update(bool t_canTick, bool t_canRender, Uint16 t_dt);
+	void update(Uint16 t_dt);
  	void cleanup(); 
-	bool checkCanRender(Uint16 t_currentTick);
-	bool checkCanTick(Uint16 t_currentTick);
-	void closeWindow(const CloseWindow& t_event = CloseWindow());
+	void initialiseScreens();
+
 	void createButtonMaps();
+
+	void setupIgnoredEvents();
+	void createRenderer();
+	void render();
+
+	void closeWindow(const CloseWindow& t_event = CloseWindow());
 	void changeScreen(const ChangeScreen& t_event);
 
+//////////////////////////////
+
+
+	
+	
 
 	AssetManager* m_assetMgr;
 	AudioManager* m_audioMgr;
 
 	EventManager m_eventManager;
+
+
 
 
 	// Window used for the game
@@ -61,8 +74,9 @@ private:
 	CreditsScreen* m_creditsScreen;
 	LicenseScreen* m_licenseScreen;
 	SplashScreen* m_splashScreen;
+	AchievementScreen* m_achievementsScreen;
 
-	void initialiseScreens();
+
 
 
 

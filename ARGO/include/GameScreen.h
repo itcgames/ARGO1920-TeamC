@@ -9,33 +9,39 @@
 #include "CollisionSystem.h"
 #include "CommandSystem.h"
 #include "ProjectileManager.h"
+#include "ParticleSystem.h"
+#include "LevelManager.h"
 
 class GameScreen
 {
 public:
 
-	GameScreen(SDL_Renderer* t_renderer, MenuStates* t_currentScreen, EventManager& t_eventManager, Controller t_controller[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]);
+	GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controller[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]);
 	~GameScreen();
 
-	void update(bool t_canTick, bool t_canRender, Uint16 t_deltaTime);
+	void update(Uint16 t_deltaTime);
 	void processEvents(SDL_Event* t_event);
+	void render(SDL_Renderer* t_renderer);
 private:
 
 	void createPlayer(Entity& t_player, int t_index);
 	void createEnemy();
  	void setUpLevel();
-	void setToFloor(Entity& t_entity, glm::vec2 t_position);
-	void setToWall(Entity& t_entity, glm::vec2 t_position);
 
 	void preRender();
-	void updatePlayers(bool t_canTick, bool t_canRender);
-	void updateEntities(bool t_canTick, bool t_canRender);
-	void updateLevelTiles(bool t_canTick, bool t_canRender);
-	void updateProjectiles(bool t_canTick, bool t_canRender);
+	void updatePlayers();
+	void updateEntities();
+	void updateProjectiles();
 	void setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]);
 
-	SDL_Renderer* m_renderer;
-	MenuStates* m_currentScreen;
+
+
+
+	void removeDeadEnemies();
+
+
+
+
 	EventManager& m_eventManager;
 
  	static const int MAX_ENTITIES = 10000;
@@ -53,8 +59,11 @@ private:
 	AiSystem m_aiSystem;
 	CollisionSystem m_collisionSystem;
 	CommandSystem m_commandSystem;
+	ParticleSystem m_particleSystem;
+
 
 	ProjectileManager m_projectileManager;
+	LevelManager m_levelManager;
 
 
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]; 

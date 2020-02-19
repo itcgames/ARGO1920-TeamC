@@ -22,10 +22,11 @@ class MenuScreen
 {
 public:
 
-	MenuScreen(SDL_Renderer* t_renderer, MenuStates& t_currentScreen, EventManager& t_eventManager, Controller& t_controller);
+	MenuScreen(EventManager& t_eventManager, Controller& t_controller, SDL_Renderer* t_renderer);
 	~MenuScreen();
-	void update(bool t_canTick, bool t_canRender, Uint16 t_deltaTime);
+	void update(Uint16 t_deltaTime);
 	void reset();
+	void render(SDL_Renderer* t_renderer);
 private:
  
 	void setControllerButtonMaps();
@@ -46,8 +47,6 @@ private:
 
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS];
 
-	MenuStates& m_currentScreen;
-	SDL_Renderer* m_renderer;
 	EventManager& m_eventManager;
 	InputSystem m_inputSystem;
 	CommandSystem m_commandSystem;
