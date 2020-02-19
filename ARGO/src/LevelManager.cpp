@@ -30,7 +30,10 @@ void LevelManager::update(BaseSystem* t_system)
 {
 	for (auto& entity : m_levelTiles)
 	{
-		t_system->update(entity);
+		if (entity.getComponent(ComponentType::ColliderAABB))
+		{
+			t_system->update(entity);
+		}
 	}
 }
 

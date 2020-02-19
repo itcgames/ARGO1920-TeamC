@@ -82,32 +82,26 @@ void ProjectileManager::update(float t_dt)
 {
 	for (auto& bullet : m_playerBullets)
 	{
-		if (static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->getHealth() > 0)
-		{
-			if (!static_cast<TimerComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(t_dt))
-			{
-				static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0);
-			}
-			else
-			{
-				m_physicsSystem.update(bullet.entity, t_dt);
-				m_collisionSystem.update(bullet.entity);
-			}
-		}
+		updateBullet(bullet, t_dt);
 	}
 	for (auto& bullet : m_enemyBullets)
 	{
-		if (static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->getHealth() > 0)
+		updateBullet(bullet, t_dt);
+	}
+}
+
+void ProjectileManager::updateBullet(Bullet& t_bullet, float t_dt)
+{
+	if (static_cast<HealthComponent*>(t_bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->getHealth() > 0)
+	{
+		if (!static_cast<TimerComponent*>(t_bullet.entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(t_dt))
 		{
-			if (!static_cast<TimerComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(t_dt))
-			{
-				static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0);
-			}
-			else
-			{
-				m_physicsSystem.update(bullet.entity, t_dt);
-				m_collisionSystem.update(bullet.entity);
-			}
+			static_cast<HealthComponent*>(t_bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0);
+		}
+		else
+		{
+			m_physicsSystem.update(t_bullet.entity, t_dt);
+			m_collisionSystem.update(t_bullet.entity);
 		}
 	}
 }

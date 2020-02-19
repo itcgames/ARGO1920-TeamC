@@ -11,7 +11,7 @@ PhysicsSystem::~PhysicsSystem()
 	BaseSystem::~BaseSystem();
 }
 
-void PhysicsSystem::update(Entity& t_entity, float t_dt) //deltaTime will be required here so it will need to be uncommented and used
+void PhysicsSystem::update(Entity& t_entity, float t_dt)
 {
 	if (t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
 	{
