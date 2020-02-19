@@ -8,54 +8,57 @@ AiSystem::~AiSystem()
 
 void AiSystem::update(Entity& t_entity)
 {
+	TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
+	AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getComponent(ComponentType::Ai));
 
 	//make sure that entity is not missing crucial components
-	if (t_entity.getAllComps().at(COMPONENT_ID::AI_ID) && t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
+	if (posComp && aiComp)
 	{
-		TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
-		AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getAllComps().at(COMPONENT_ID::AI_ID));
+		TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
+		AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getComponent(ComponentType::Ai));
+		ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
 
 		switch (aiComp->getType())
 		{
 		case AITypes::eMelee:
-			meleeAI(posComp, aiComp);
+			meleeAI(posComp, aiComp, forceComp);
 			break;
 		case AITypes::eRanged:
-			rangedAI(posComp, aiComp);
+			rangedAI(posComp, aiComp, forceComp);
 			break;
 		}
 	}
 }
 
-void AiSystem::meleeAI(TransformComponent* t_posComp, AiComponent* t_aiComponent)
+void AiSystem::meleeAI(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent)
 {
 	//The Only Possible States Available to Melee Enemies. Use to limit Behaviours
 	switch (t_aiComponent->getStates())
 	{
 	case AIStates::eSleeping:
-		sleep(t_posComp, t_aiComponent);
+		sleep(t_posComp, t_aiComponent, t_forceComponent);
 		break;
 	case AIStates::eWander:
-		wander(t_posComp, t_aiComponent);
+		wander(t_posComp, t_aiComponent, t_forceComponent);
 		break;
 	}
 }
 
-void AiSystem::rangedAI(TransformComponent* t_posComp, AiComponent* t_aiComponent)
+void AiSystem::rangedAI(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent)
 {
 	//The Only Possible States Available to Ranged Enemies. Use to limit Behaviours
 	switch (t_aiComponent->getStates())
 	{
 	case AIStates::eSleeping:
-		sleep(t_posComp, t_aiComponent);
+		sleep(t_posComp, t_aiComponent, t_forceComponent);
 		break;
 	case AIStates::eWander:
-		wander(t_posComp, t_aiComponent);
+		wander(t_posComp, t_aiComponent, t_forceComponent);
 		break;
 	}
 }
 
-void AiSystem::wander(TransformComponent* t_posComp, AiComponent* t_aiComponent)
+void AiSystem::wander(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent)
 {
 	//Gives a number between 1 and 20, -10 change the range to -9 and 10 then divides it by 10 to give a range of -.9 and 1.
 	float tempAdjuster = (((rand() % 20 + 1)));
@@ -68,10 +71,11 @@ void AiSystem::wander(TransformComponent* t_posComp, AiComponent* t_aiComponent)
 	//Scales the Unit Vector by the length of the max speed.
 	tempVelocity *= glm::length(t_aiComponent->getMaxSpeed());
 	//Updates Position
-	t_posComp->setPos(t_posComp->getPos() + tempVelocity);
+	t_forceComponent->addForce(tempVelocity);
+	//t_posComp->setPos(t_posComp->getPos() + tempVelocity);
 }
 
-void AiSystem::sleep(TransformComponent* t_posComp, AiComponent* t_aiComponent)
+void AiSystem::sleep(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent)
 {
 	//Nothing will add code to awake unit if a target (i.e player) comes within range once discussions are had.
 }

@@ -6,13 +6,15 @@ ParticleSystem::~ParticleSystem()
 {
 }
 
-void ParticleSystem::update(Entity& t_entity)
+void ParticleSystem::update(Entity& t_entity, float t_dt)
 {
-	if (t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID) && t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID) && t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
+	ParticleEmitterComponent* particleComp = static_cast<ParticleEmitterComponent*>(t_entity.getComponent(ComponentType::ParticleEmitter));
+	PrimitiveComponent* primtiveComp = static_cast<PrimitiveComponent*>(t_entity.getComponent(ComponentType::Primitive));
+	TransformComponent* transComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
+
+	if (particleComp && primtiveComp && transComp)
 	{
-		ParticleEmitterComponent* particleComp = static_cast<ParticleEmitterComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID));
-		PrimitiveComponent* primtiveComp = static_cast<PrimitiveComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID));
-		particleComp->setPosition(static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos());//Sets the Emitter to the entity's tranform position. This makes it move with mobile entities.
+		particleComp->setPosition(transComp->getPos());//Sets the Emitter to the entity's tranform position. This makes it move with mobile entities.
 		for (int i = 0; i < particleComp->getMaxParticles(); i++)
 		{
 			//If the Emitter is emitting and the currently queded particle is not already alive
@@ -26,7 +28,8 @@ void ParticleSystem::update(Entity& t_entity)
 						adjustParticleAngles((particleComp->getAngle() + particleComp->getRotating()), particleComp);
 					}
 					//Set's the particles movement, places it and decrements the placeTimer
-					particleComp->setParticleMovement(particleComp->getNextParticle(), randomDirectionVectorInRange(particleComp->getAngle(), particleComp->getAngleOffset()));
+					particleComp->setParticleMovement(particleComp->getNextParticle(), randomDirectionVectorInRange(particleComp->getAngle(), particleComp->getAngleOffset()) * t_dt);
+
 					particleComp->setParticle(particleComp->getEmitterPosition() + glm::vec2(randomOffset(particleComp->getOffset()), particleComp->getOffset()));
 					particleComp->setPlaceParticleTimer(particleComp->getPlaceParticleTimer() - 1);
 				}
@@ -47,6 +50,9 @@ void ParticleSystem::update(Entity& t_entity)
 		//Increment the placeTimer. This value is set by the particlesPerSecond variable. When the place timer is more than 1 a particle is placed.
 		particleComp->setPlaceParticleTimer(particleComp->getPlaceParticleTimer() + particleComp->getParticlesPerSecond());
 	}
+}
+void ParticleSystem::update(Entity& t_entity)
+{
 }
 ///<summary>
 ///Generates a random unit vector within the range of angles. t_angle - t_angleoffset to  t_angle + t_angleoffset

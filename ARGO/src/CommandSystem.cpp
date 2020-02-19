@@ -12,11 +12,11 @@ CommandSystem::~CommandSystem()
 
 void CommandSystem::update(Entity& t_entity, EventManager& t_eventManager)
 {
-	CommandComponent* commandComp = static_cast<CommandComponent*>(t_entity.getAllComps().at(COMPONENT_ID::COMMAND_ID));
+	CommandComponent* commandComp = static_cast<CommandComponent*>(t_entity.getComponent(ComponentType::Command));
 
 	if (commandComp)
 	{
-		InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID));
+		InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getComponent(ComponentType::Input));
 		while (!commandComp->getCommands().empty())
 		{
 			if (typeid(*commandComp->getCommands().top()) == typeid(MoveUpCommand))
@@ -39,7 +39,7 @@ void CommandSystem::update(Entity& t_entity, EventManager& t_eventManager)
 			{
 				if (inputComp)
 				{
- 					t_eventManager.emitEvent(PhysicsMove{ glm::normalize(inputComp->getController().getCurrent().LeftThumbStick), t_entity });
+					t_eventManager.emitEvent(PhysicsMove{ glm::normalize(inputComp->getController().getCurrent().LeftThumbStick), t_entity });
 				}
 			}
 			else if (typeid(*commandComp->getCommands().top()) == typeid(FireBulletCommand))

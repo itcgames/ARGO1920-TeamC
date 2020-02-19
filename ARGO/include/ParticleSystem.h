@@ -17,6 +17,7 @@ class ParticleSystem :
 {
 public:
 	~ParticleSystem();
+	void update(Entity& t_entity, float t_dt);
 	void update(Entity& t_entity);
 	glm::vec2 randomDirectionVectorInRange(float t_angle, float t_angleOffset);
 	int randomOffset(int t_offsetAmount);

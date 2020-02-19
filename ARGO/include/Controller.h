@@ -107,6 +107,7 @@ private:
 	const std::string SWITCH_CONTROLLER_NAME = "Nintendo Switch Pro Controller";
 
 	std::string getButtonName(ButtonType t_ButtonType);
+	int count = 0;
 
 	Rumble m_rumble;
 };

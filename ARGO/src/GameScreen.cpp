@@ -10,7 +10,7 @@ bool cleanUpEnemies(const Entity& t_entity)
 GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]) :
 	m_eventManager{ t_eventManager },
 	m_transformSystem{ m_eventManager },
-	m_projectileManager{ m_eventManager },
+	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
 	m_controllers{ *t_controllers },
 	m_levelManager{ t_renderer }
 {
@@ -27,6 +27,7 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 		createEnemy();
 	}
 	setUpLevel();
+	m_projectileManager.init();
 }
 
 GameScreen::~GameScreen()
@@ -34,13 +35,13 @@ GameScreen::~GameScreen()
 	m_entities.clear();
 }
 
-void GameScreen::update(Uint16 t_deltaTime)
+void GameScreen::update(float t_deltaTime)
 {
-	m_levelManager.update(&m_collisionSystem);
 	preRender();
-	updateEntities();
-	updatePlayers();
-	updateProjectiles();
+	updateLevelManager();
+	updateEntities(t_deltaTime);
+	updatePlayers(t_deltaTime);
+	updateProjectiles(t_deltaTime);
 	m_collisionSystem.handleCollisions();
 	removeDeadEnemies();
 }
@@ -147,7 +148,7 @@ void GameScreen::createEnemy()
 {
 	m_entities.emplace_back();
 	m_entities.back().addComponent(new TransformComponent());
-	m_entities.back().addComponent(new AiComponent());
+	m_entities.back().addComponent(new AiComponent(AITypes::eMelee, AIStates::eWander, 15.0f, 1.0f));
 	m_entities.back().addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
 	m_entities.back().addComponent(new TagComponent(Tag::Enemy));
 	m_entities.back().addComponent(new ForceComponent());
@@ -165,34 +166,39 @@ void GameScreen::setUpLevel()
 }
  
 
-void GameScreen::updatePlayers()
+void GameScreen::updatePlayers(float t_deltaTime)
 {
 	for (Entity& player : m_players)
 	{
 		m_inputSystem.update(player);
 		m_commandSystem.update(player, m_eventManager);
 		m_healthSystem.update(player);
-		m_transformSystem.update(player);
+		m_transformSystem.update(player, t_deltaTime);
 		m_collisionSystem.update(player);
-		m_particleSystem.update(player);
+		m_particleSystem.update(player, t_deltaTime);
 	}
 }
 
-void GameScreen::updateEntities()
+void GameScreen::updateEntities(float t_deltaTime)
 {
 	for (Entity& entity : m_entities)
 	{
 		m_healthSystem.update(entity);
 		m_aiSystem.update(entity);
-		m_transformSystem.update(entity);
+		m_transformSystem.update(entity, t_deltaTime);
 		m_collisionSystem.update(entity);
 	}
 } 
 
-void GameScreen::updateProjectiles()
+void GameScreen::updateProjectiles(float t_deltaTime)
 {
-	m_projectileManager.update(&m_transformSystem);
-	m_projectileManager.update(&m_collisionSystem);
+	m_projectileManager.update(t_deltaTime);
+}
+
+void GameScreen::updateLevelManager()
+{
+	m_levelManager.checkWallDamage();
+	m_levelManager.update(&m_collisionSystem);
 }
 
 void GameScreen::setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS])
@@ -221,7 +227,7 @@ void GameScreen::preRender()
 			throw std::invalid_argument("Player Missing Transform Component!");
 		}
 	}
-	m_renderSystem.setFocus(focusPoint / 4.0f);
+	m_renderSystem.setFocus(focusPoint / (float)Utilities::S_MAX_PLAYERS);
 }
  
 void GameScreen::removeDeadEnemies()

@@ -4,6 +4,7 @@
 #include "TagComponent.h"
 #include "ColliderAABBComponent.h"
 #include "TileComponent.h"
+#include "HealthComponent.h"
 #include "BaseSystem.h"
 #include "RenderSystem.h"
 
@@ -13,6 +14,7 @@ public:
 	LevelManager(SDL_Renderer* t_renderer);
 	void setupLevel();
 	void update(BaseSystem* t_system);
+	void checkWallDamage();
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
 	void setToWall(Entity& t_entity);
 	void setToFloor(Entity& t_entity);

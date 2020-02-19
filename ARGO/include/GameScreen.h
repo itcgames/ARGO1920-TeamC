@@ -19,7 +19,7 @@ public:
 	GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controller[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]);
 	~GameScreen();
 
-	void update(Uint16 t_deltaTime);
+	void update(float t_deltaTime);
 	void processEvents(SDL_Event* t_event);
 	void render(SDL_Renderer* t_renderer);
 private:
@@ -29,9 +29,10 @@ private:
  	void setUpLevel();
 
 	void preRender();
-	void updatePlayers();
-	void updateEntities();
-	void updateProjectiles();
+	void updatePlayers(float t_deltaTime);
+	void updateEntities(float t_deltaTime);
+	void updateProjectiles(float t_deltaTime);
+	void updateLevelManager();
 	void setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]);
 
 

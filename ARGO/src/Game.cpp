@@ -105,7 +105,6 @@ void Game::run()
 		nextFrame = SDL_GetTicks() + timePerFrame;
 		render();
 	}
-
 }
 
 void Game::initLibraries()
@@ -197,7 +196,7 @@ void Game::processEvent()
 	}
 }
 
-void Game::update(Uint16 t_dt)
+void Game::update(float t_dt)
 {
 	switch (m_currentScreen)
 	{
@@ -259,7 +258,6 @@ void Game::render()
 	SDL_RenderPresent(m_renderer);
 }
 
-
 /// <summary>
 /// Cleans up after running by deleting stuff
 /// </summary>
@@ -284,7 +282,6 @@ void Game::closeWindow(const CloseWindow& t_event)
 
 void Game::createButtonMaps()
 {
-
 	using ButtonCommandPair = std::pair<ButtonType, Command*>;
 	for (int index = 0; index < Utilities::NUMBER_OF_PLAYERS; index++)
 	{
