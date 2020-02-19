@@ -8,12 +8,12 @@ AiSystem::~AiSystem()
 
 void AiSystem::update(Entity& t_entity)
 {
+	TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
+	AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getComponent(ComponentType::Ai));
 
 	//make sure that entity is not missing crucial components
-	if (t_entity.getAllComps().at(COMPONENT_ID::AI_ID) && t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
+	if (posComp && aiComp)
 	{
-		TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
-		AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getAllComps().at(COMPONENT_ID::AI_ID));
 
 		switch (aiComp->getType())
 		{

@@ -298,7 +298,7 @@ void Game::preRender()
 	glm::vec2 focusPoint = glm::vec2(0, 0);
 	for (auto& player : m_players)
 	{
-		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getComponent(ComponentType::Transform));
 		if (transformComp)
 		{
 			focusPoint += transformComp->getPos();
@@ -308,7 +308,7 @@ void Game::preRender()
 			throw std::invalid_argument("Player missing Transform Component!");
 		}
 	}
-	m_renderSystem.setFocus(focusPoint / 4.0f);
+	m_renderSystem.setFocus(focusPoint / (float)Utilities::S_MAX_PLAYERS);
 
 	SDL_RenderClear(m_renderer);
 }

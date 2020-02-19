@@ -8,11 +8,13 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::update(Entity& t_entity)
 {
-	if (t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID) && t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID) && t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
+	ParticleEmitterComponent* particleComp = static_cast<ParticleEmitterComponent*>(t_entity.getComponent(ComponentType::ParticleEmitter));
+	PrimitiveComponent* primtiveComp = static_cast<PrimitiveComponent*>(t_entity.getComponent(ComponentType::Primitive));
+	TransformComponent* transComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
+
+	if (particleComp && primtiveComp && transComp)
 	{
-		ParticleEmitterComponent* particleComp = static_cast<ParticleEmitterComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PARTICLE_ID));
-		PrimitiveComponent* primtiveComp = static_cast<PrimitiveComponent*>(t_entity.getAllComps().at(COMPONENT_ID::PRIMITIVE_ID));
-		particleComp->setPosition(static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos());//Sets the Emitter to the entity's tranform position. This makes it move with mobile entities.
+		particleComp->setPosition(transComp->getPos());//Sets the Emitter to the entity's tranform position. This makes it move with mobile entities.
 		for (int i = 0; i < particleComp->getMaxParticles(); i++)
 		{
 			//If the Emitter is emitting and the currently queded particle is not already alive

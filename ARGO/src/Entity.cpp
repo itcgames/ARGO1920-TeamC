@@ -4,8 +4,7 @@
 
 Entity::Entity()
 {
-	//m_components.reserve(S_MAX_COMPS);
-	m_components.resize((int)ComponentType::Count);
+	m_components.resize(static_cast<int>(ComponentType::Count));
 }
 
 Entity::~Entity()
@@ -197,8 +196,6 @@ void Entity::addComponent(Component* t_c)
 	}
 }
 
-
-
 void Entity::removeCompType(ComponentType t_type)
 {
 	try
@@ -265,8 +262,6 @@ void Entity::removeCompType(ComponentType t_type)
 			}
 			break;
 		}
-
-
 		case ComponentType::Primitive:
 		{
 			if (m_components.at(COMPONENT_ID::PRIMITIVE_ID))
@@ -277,7 +272,6 @@ void Entity::removeCompType(ComponentType t_type)
 			}
 			break;
 		}
-
 		case ComponentType::Force:
 		{
 			if (m_components.at(COMPONENT_ID::FORCE_ID))
@@ -289,7 +283,6 @@ void Entity::removeCompType(ComponentType t_type)
 			}
 			break;
 		}
-
 		case ComponentType::ParticleEmitter:
 		{
 			if (m_components.at(COMPONENT_ID::PARTICLE_ID))
@@ -300,8 +293,6 @@ void Entity::removeCompType(ComponentType t_type)
 			}
 			break;
 		}
-
-
 		case ComponentType::Text:
 		{
 			if (m_components.at(COMPONENT_ID::TEXT_ID))

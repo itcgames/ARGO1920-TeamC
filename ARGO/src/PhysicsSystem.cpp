@@ -13,13 +13,12 @@ PhysicsSystem::~PhysicsSystem()
 
 void PhysicsSystem::update(Entity& t_entity/*float t_deltaTime*/) //deltaTime will be required here so it will need to be uncommented and used
 {
-	if (t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
+	TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
+	if (posComp)
 	{
-		TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
-		if (t_entity.getAllComps().at(COMPONENT_ID::FORCE_ID))
+		ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
+		if (forceComp)
 		{
-			ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
-
 			posComp->addPos(forceComp->getForce());
 			if (forceComp->getHasFriction())
 			{
@@ -33,7 +32,7 @@ void PhysicsSystem::update(Entity& t_entity/*float t_deltaTime*/) //deltaTime wi
 
 void PhysicsSystem::checkBorder(TransformComponent* t_pos)
 {
-	if (t_pos->getPos().x > Utilities::LEVEL_TILE_WIDTH * Utilities::TILE_SIZE)
+	if (t_pos->getPos().x > Utilities::LEVEL_TILE_WIDTH* Utilities::TILE_SIZE)
 	{
 		t_pos->setX(Utilities::LEVEL_TILE_WIDTH * Utilities::TILE_SIZE);
 	}
@@ -41,7 +40,7 @@ void PhysicsSystem::checkBorder(TransformComponent* t_pos)
 	{
 		t_pos->setX(0);
 	}
-	if (t_pos->getPos().y > Utilities::LEVEL_TILE_HEIGHT * Utilities::TILE_SIZE)
+	if (t_pos->getPos().y > Utilities::LEVEL_TILE_HEIGHT* Utilities::TILE_SIZE)
 	{
 		t_pos->setY(Utilities::LEVEL_TILE_HEIGHT * Utilities::TILE_SIZE);
 	}
@@ -53,9 +52,9 @@ void PhysicsSystem::checkBorder(TransformComponent* t_pos)
 
 void PhysicsSystem::updateWithInput(const PhysicsMove& t_event)
 {
-	if (t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID))
+	ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.m_entity.getComponent(ComponentType::Force));
+	if (forceComp)
 	{
-		ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
 		forceComp->addForce(t_event.m_velocity);
 	}
 }

@@ -61,7 +61,6 @@ private:
 	AssetManager* m_assetMgr;
 	AudioManager* m_audioMgr;
 
-	const int MAX_PLAYERS = 4;
 	const int MAX_ENTITIES = 10000;
 	const int PLAYER_MAX_HEALTH = 10;
 	EventManager m_eventManager;
@@ -76,7 +75,7 @@ private:
 	CommandSystem m_commandSystem;
 
 
-	Entity m_players[4];
+	Entity m_players[Utilities::S_MAX_PLAYERS];
 	std::vector<Entity> m_entities;
 
 	Entity m_textTest1;

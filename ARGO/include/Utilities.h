@@ -2,6 +2,7 @@
 
 namespace Utilities
 {
+	const static int S_MAX_PLAYERS = 4;
 	//font consts
 	const int SMALL_FONT = 24;
 	const int MEDIUM_FONT = 48;

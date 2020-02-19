@@ -11,23 +11,28 @@ CollisionSystem::CollisionSystem() :
 void CollisionSystem::update(Entity& t_entity)
 {
 	//if not nullptr
-	if (t_entity.getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID) &&
-		t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
+	TransformComponent* transComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
+	ColliderAABBComponent* aabbComp = static_cast<ColliderAABBComponent*>(t_entity.getComponent(ComponentType::ColliderAABB));
+	ColliderCircleComponent* circleComp = static_cast<ColliderCircleComponent*>(t_entity.getComponent(ComponentType::ColliderCircle));
+
+	if (transComp)
 	{
-		glm::vec2 rectPosition = static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos();
-		glm::vec2 bounds = static_cast<ColliderAABBComponent*>(t_entity.getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID))->getBounds();
-		Quad quad{ &t_entity, rectPosition, bounds };
-		m_quadTree.insert(quad);
-	}
-	else if (t_entity.getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID) &&
-		t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
-	{
-		m_circleColliderBuffer.push_back(&t_entity);
-		glm::vec2 rectPosition = static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos();
-		int radius = static_cast<ColliderCircleComponent*>(t_entity.getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
-		glm::vec2 bounds{ radius, radius };
-		Quad quad{ &t_entity, rectPosition - bounds, bounds * 2.0f };
-		m_quadTree.insert(quad);
+		if (aabbComp)
+		{
+			glm::vec2 rectPosition = transComp->getPos();
+			glm::vec2 bounds = aabbComp->getBounds();
+			Quad quad{ &t_entity, rectPosition, bounds };
+			m_quadTree.insert(quad);
+		}
+		else if (circleComp)
+		{
+			m_circleColliderBuffer.push_back(&t_entity);
+			glm::vec2 rectPosition = transComp->getPos();
+			int radius = circleComp->getRadius();
+			glm::vec2 bounds{ radius, radius };
+			Quad quad{ &t_entity, rectPosition - bounds, bounds * 2.0f };
+			m_quadTree.insert(quad);
+		}
 	}
 }
 
@@ -35,7 +40,7 @@ void CollisionSystem::handleCollisions()
 {
 	for (int i = 0; i < m_circleColliderBuffer.size(); i++)
 	{
-		TagComponent* tag = static_cast<TagComponent*>(m_circleColliderBuffer[i]->getAllComps().at(COMPONENT_ID::TAG_ID));
+		TagComponent* tag = static_cast<TagComponent*>(m_circleColliderBuffer[i]->getComponent(ComponentType::Tag));
 
 		switch (tag->getTag())
 		{
@@ -61,10 +66,10 @@ void CollisionSystem::handleCollisions()
 
 bool CollisionSystem::circleToCircleCollision(Entity* t_entityCircle1, Entity* t_entityCircle2)
 {
-	glm::vec2 position1 = static_cast<TransformComponent*>(t_entityCircle1->getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos();
-	int radius1 = static_cast<ColliderCircleComponent*>(t_entityCircle1->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
-	glm::vec2 position2 = static_cast<TransformComponent*>(t_entityCircle2->getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos();
-	int radius2 = static_cast<ColliderCircleComponent*>(t_entityCircle2->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
+	glm::vec2 position1 = static_cast<TransformComponent*>(t_entityCircle1->getComponent(ComponentType::Transform))->getPos();
+	int radius1 = static_cast<ColliderCircleComponent*>(t_entityCircle1->getComponent(ComponentType::ColliderCircle))->getRadius();
+	glm::vec2 position2 = static_cast<TransformComponent*>(t_entityCircle2->getComponent(ComponentType::Transform))->getPos();
+	int radius2 = static_cast<ColliderCircleComponent*>(t_entityCircle2->getComponent(ComponentType::ColliderCircle))->getRadius();
 
 	glm::vec2 distanceBetween = position1 - position2;
 	return sqrt(distanceBetween.x * distanceBetween.x + distanceBetween.y * distanceBetween.y) < radius1 + radius2;
@@ -72,10 +77,10 @@ bool CollisionSystem::circleToCircleCollision(Entity* t_entityCircle1, Entity* t
 
 bool CollisionSystem::circleToAABBCollision(Entity* t_entityCircle, Entity* t_entityAABB)
 {
-	glm::vec2 circlePosition = static_cast<TransformComponent*>(t_entityCircle->getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos();
-	int radius = static_cast<ColliderCircleComponent*>(t_entityCircle->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
-	glm::vec2 rectPosition = static_cast<TransformComponent*>(t_entityAABB->getAllComps().at(COMPONENT_ID::TRANSFORM_ID))->getPos();
-	glm::vec2 bounds = static_cast<ColliderAABBComponent*>(t_entityAABB->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID))->getBounds();
+	glm::vec2 circlePosition = static_cast<TransformComponent*>(t_entityCircle->getComponent(ComponentType::Transform))->getPos();
+	int radius = static_cast<ColliderCircleComponent*>(t_entityCircle->getComponent(ComponentType::ColliderCircle))->getRadius();
+	glm::vec2 rectPosition = static_cast<TransformComponent*>(t_entityAABB->getComponent(ComponentType::Transform))->getPos();
+	glm::vec2 bounds = static_cast<ColliderAABBComponent*>(t_entityAABB->getComponent(ComponentType::ColliderAABB))->getBounds();
 
 	int deltaX = circlePosition.x - std::max(rectPosition.x, std::min(circlePosition.x, rectPosition.x + bounds.x));
 	int deltaY = circlePosition.y - std::max(rectPosition.y, std::min(circlePosition.y, rectPosition.y + bounds.y));
@@ -84,8 +89,8 @@ bool CollisionSystem::circleToAABBCollision(Entity* t_entityCircle, Entity* t_en
 
 void CollisionSystem::handlePlayerCollision(Entity* t_player)
 {
-	TransformComponent* rectPosition = static_cast<TransformComponent*>(t_player->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
-	int radius = static_cast<ColliderCircleComponent*>(t_player->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
+	TransformComponent* rectPosition = static_cast<TransformComponent*>(t_player->getComponent(ComponentType::Transform));
+	int radius = static_cast<ColliderCircleComponent*>(t_player->getComponent(ComponentType::ColliderCircle))->getRadius();
 	glm::vec2 bounds{ radius, radius };
 	Quad quad{ NULL, rectPosition->getPos() - bounds, bounds * 2.0f };
 
@@ -94,7 +99,7 @@ void CollisionSystem::handlePlayerCollision(Entity* t_player)
 
 	for (auto& other : entities)
 	{
-		TagComponent* tag = static_cast<TagComponent*>(other->getAllComps().at(COMPONENT_ID::TAG_ID));
+		TagComponent* tag = static_cast<TagComponent*>(other->getComponent(ComponentType::Tag));
 
 		switch (tag->getTag())
 		{
@@ -123,8 +128,8 @@ void CollisionSystem::handlePlayerCollision(Entity* t_player)
 
 void CollisionSystem::handlePlayerBulletCollision(Entity* t_playerBullet)
 {
-	TransformComponent* rectPosition = static_cast<TransformComponent*>(t_playerBullet->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
-	int radius = static_cast<ColliderCircleComponent*>(t_playerBullet->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
+	TransformComponent* rectPosition = static_cast<TransformComponent*>(t_playerBullet->getComponent(ComponentType::Transform));
+	int radius = static_cast<ColliderCircleComponent*>(t_playerBullet->getComponent(ComponentType::ColliderCircle))->getRadius();
 	glm::vec2 bounds{ radius, radius };
 	Quad quad{ NULL, rectPosition->getPos() - bounds, bounds * 2.0f };
 
@@ -133,7 +138,7 @@ void CollisionSystem::handlePlayerBulletCollision(Entity* t_playerBullet)
 
 	for (auto& other : entities)
 	{
-		TagComponent* tag = static_cast<TagComponent*>(other->getAllComps().at(COMPONENT_ID::TAG_ID));
+		TagComponent* tag = static_cast<TagComponent*>(other->getComponent(ComponentType::Tag));
 
 		switch (tag->getTag())
 		{
@@ -151,8 +156,8 @@ void CollisionSystem::handlePlayerBulletCollision(Entity* t_playerBullet)
 
 void CollisionSystem::handleEnemyCollision(Entity* t_enemy)
 {
-	TransformComponent* rectPosition = static_cast<TransformComponent*>(t_enemy->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
-	int radius = static_cast<ColliderCircleComponent*>(t_enemy->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
+	TransformComponent* rectPosition = static_cast<TransformComponent*>(t_enemy->getComponent(ComponentType::Transform));
+	int radius = static_cast<ColliderCircleComponent*>(t_enemy->getComponent(ComponentType::ColliderCircle))->getRadius();
 	glm::vec2 bounds{ radius, radius };
 	Quad quad{ NULL, rectPosition->getPos() - bounds, bounds * 2.0f };
 
@@ -161,7 +166,7 @@ void CollisionSystem::handleEnemyCollision(Entity* t_enemy)
 
 	for (auto& other : entities)
 	{
-		TagComponent* tag = static_cast<TagComponent*>(other->getAllComps().at(COMPONENT_ID::TAG_ID));
+		TagComponent* tag = static_cast<TagComponent*>(other->getComponent(ComponentType::Tag));
 
 		switch (tag->getTag())
 		{
@@ -188,13 +193,13 @@ void CollisionSystem::handleEnemyBulletCollision(Entity* t_enemyBullet)
 
 void CollisionSystem::playerToPlayer(Entity* t_player1, Entity* t_player2)
 {
-	if (t_player2->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID) && circleToCircleCollision(t_player1, t_player2))
+	if (t_player2->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_player1, t_player2))
 	{
-		int player1Radius = static_cast<ColliderCircleComponent*>(t_player1->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
-		TransformComponent* player1Position = static_cast<TransformComponent*>(t_player1->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		int player1Radius = static_cast<ColliderCircleComponent*>(t_player1->getComponent(ComponentType::ColliderCircle))->getRadius();
+		TransformComponent* player1Position = static_cast<TransformComponent*>(t_player1->getComponent(ComponentType::Transform));
 
-		int player2Radius = static_cast<ColliderCircleComponent*>(t_player2->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
-		TransformComponent* player2Position = static_cast<TransformComponent*>(t_player2->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		int player2Radius = static_cast<ColliderCircleComponent*>(t_player2->getComponent(ComponentType::ColliderCircle))->getRadius();
+		TransformComponent* player2Position = static_cast<TransformComponent*>(t_player2->getComponent(ComponentType::Transform));
 
 		glm::vec2 distanceBetween = player1Position->getPos() - player2Position->getPos();
 		float length = sqrt(distanceBetween.x * distanceBetween.x + distanceBetween.y * distanceBetween.y);
@@ -215,13 +220,13 @@ void CollisionSystem::playerToPlayer(Entity* t_player1, Entity* t_player2)
 
 void CollisionSystem::playerToEnemy(Entity* t_player, Entity* t_enemy)
 {
-	if (t_enemy->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID) && circleToCircleCollision(t_player, t_enemy))
+	if (t_enemy->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_player, t_enemy))
 	{
-		int player1Radius = static_cast<ColliderCircleComponent*>(t_player->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
-		TransformComponent* player1Position = static_cast<TransformComponent*>(t_player->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		int player1Radius = static_cast<ColliderCircleComponent*>(t_player->getComponent(ComponentType::ColliderCircle))->getRadius();
+		TransformComponent* player1Position = static_cast<TransformComponent*>(t_player->getComponent(ComponentType::Transform));
 
-		int player2Radius = static_cast<ColliderCircleComponent*>(t_enemy->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
-		TransformComponent* player2Position = static_cast<TransformComponent*>(t_enemy->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		int player2Radius = static_cast<ColliderCircleComponent*>(t_enemy->getComponent(ComponentType::ColliderCircle))->getRadius();
+		TransformComponent* player2Position = static_cast<TransformComponent*>(t_enemy->getComponent(ComponentType::Transform));
 
 		glm::vec2 distanceBetween = player1Position->getPos() - player2Position->getPos();
 		float length = sqrt(distanceBetween.x * distanceBetween.x + distanceBetween.y * distanceBetween.y);
@@ -247,13 +252,13 @@ void CollisionSystem::playerToEnemyBullet(Entity* t_player, Entity* t_enemyBulle
 
 void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 {
-	if (t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID) && circleToAABBCollision(t_player, t_wall))
+	if (t_wall->getComponent(ComponentType::ColliderAABB) && circleToAABBCollision(t_player, t_wall))
 	{
-		int playerRadius = static_cast<ColliderCircleComponent*>(t_player->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
-		TransformComponent* playerPosition = static_cast<TransformComponent*>(t_player->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		int playerRadius = static_cast<ColliderCircleComponent*>(t_player->getComponent(ComponentType::ColliderCircle))->getRadius();
+		TransformComponent* playerPosition = static_cast<TransformComponent*>(t_player->getComponent(ComponentType::Transform));
 
-		int wallWidth = static_cast<ColliderAABBComponent*>(t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID))->getBounds().x;
-		TransformComponent* wallPosition = static_cast<TransformComponent*>(t_wall->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		int wallWidth = static_cast<ColliderAABBComponent*>(t_wall->getComponent(ComponentType::ColliderAABB))->getBounds().x;
+		TransformComponent* wallPosition = static_cast<TransformComponent*>(t_wall->getComponent(ComponentType::Transform));
 
 		glm::vec2 distanceBetween = playerPosition->getPos() - glm::vec2(playerRadius, playerRadius) - wallPosition->getPos();
 		
@@ -284,30 +289,30 @@ void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 
 void CollisionSystem::playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enemy)
 {
-	if (t_enemy->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID) && circleToCircleCollision(t_playerBullet, t_enemy))
+	if (t_enemy->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_playerBullet, t_enemy))
 	{
-		static_cast<HealthComponent*>(t_playerBullet->getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0); //kill the bullet
-		static_cast<HealthComponent*>(t_enemy->getAllComps().at(COMPONENT_ID::HEALTH_ID))->reduceHealth(1);
+		static_cast<HealthComponent*>(t_playerBullet->getComponent(ComponentType::Health))->setHealth(0); //kill the bullet
+		static_cast<HealthComponent*>(t_enemy->getComponent(ComponentType::Health))->reduceHealth(1);
 	}
 }
 
 void CollisionSystem::playerBulletToWall(Entity* t_playerBullet, Entity* t_wall)
 {
-	if (t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID) && circleToAABBCollision(t_playerBullet, t_wall))
+	if (t_wall->getComponent(ComponentType::ColliderAABB) && circleToAABBCollision(t_playerBullet, t_wall))
 	{
-		static_cast<HealthComponent*>(t_playerBullet->getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0); //kill the bullet
+		static_cast<HealthComponent*>(t_playerBullet->getComponent(ComponentType::Health))->setHealth(0); //kill the bullet
 	}
 }
 
 void CollisionSystem::enemyToEnemy(Entity* t_enemy1, Entity* t_enemy2)
 {
-	if (t_enemy2->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID) && circleToCircleCollision(t_enemy1, t_enemy2))
+	if (t_enemy2->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_enemy1, t_enemy2))
 	{
-		int enemy1Radius = static_cast<ColliderCircleComponent*>(t_enemy1->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
-		TransformComponent* enemy1Position = static_cast<TransformComponent*>(t_enemy1->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		int enemy1Radius = static_cast<ColliderCircleComponent*>(t_enemy1->getComponent(ComponentType::ColliderCircle))->getRadius();
+		TransformComponent* enemy1Position = static_cast<TransformComponent*>(t_enemy1->getComponent(ComponentType::Transform));
 
-		int player2Radius = static_cast<ColliderCircleComponent*>(t_enemy2->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
-		TransformComponent* enemy2Position = static_cast<TransformComponent*>(t_enemy2->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		int player2Radius = static_cast<ColliderCircleComponent*>(t_enemy2->getComponent(ComponentType::ColliderCircle))->getRadius();
+		TransformComponent* enemy2Position = static_cast<TransformComponent*>(t_enemy2->getComponent(ComponentType::Transform));
 
 		glm::vec2 distanceBetween = enemy1Position->getPos() - enemy2Position->getPos();
 		float length = sqrt(distanceBetween.x * distanceBetween.x + distanceBetween.y * distanceBetween.y);
@@ -328,15 +333,15 @@ void CollisionSystem::enemyToEnemy(Entity* t_enemy1, Entity* t_enemy2)
 
 void CollisionSystem::enemyToWall(Entity* t_enemy, Entity* t_wall)
 {
-	if (t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID) && circleToAABBCollision(t_enemy, t_wall))
+	if (t_wall->getComponent(ComponentType::ColliderAABB) && circleToAABBCollision(t_enemy, t_wall))
 	{
-		if (t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID) && circleToAABBCollision(t_enemy, t_wall))
+		if (t_wall->getComponent(ComponentType::ColliderAABB) && circleToAABBCollision(t_enemy, t_wall))
 		{
-			int playerRadius = static_cast<ColliderCircleComponent*>(t_enemy->getAllComps().at(COMPONENT_ID::COLLIDER_CIRCLE_ID))->getRadius();
-			TransformComponent* playerPosition = static_cast<TransformComponent*>(t_enemy->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+			int playerRadius = static_cast<ColliderCircleComponent*>(t_enemy->getComponent(ComponentType::ColliderCircle))->getRadius();
+			TransformComponent* playerPosition = static_cast<TransformComponent*>(t_enemy->getComponent(ComponentType::Transform));
 
-			int wallWidth = static_cast<ColliderAABBComponent*>(t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID))->getBounds().x;
-			TransformComponent* wallPosition = static_cast<TransformComponent*>(t_wall->getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+			int wallWidth = static_cast<ColliderAABBComponent*>(t_wall->getComponent(ComponentType::ColliderAABB))->getBounds().x;
+			TransformComponent* wallPosition = static_cast<TransformComponent*>(t_wall->getComponent(ComponentType::Transform));
 
 			glm::vec2 distanceBetween = playerPosition->getPos() - glm::vec2(playerRadius, playerRadius) - wallPosition->getPos();
 
@@ -368,8 +373,8 @@ void CollisionSystem::enemyToWall(Entity* t_enemy, Entity* t_wall)
 
 void CollisionSystem::enemyBulletToWall(Entity* t_enemyBullet, Entity* t_wall)
 {
-	if (t_wall->getAllComps().at(COMPONENT_ID::COLLIDER_AABB_ID) && circleToAABBCollision(t_enemyBullet, t_wall))
+	if (t_wall->getComponent(ComponentType::ColliderAABB) && circleToAABBCollision(t_enemyBullet, t_wall))
 	{
-		static_cast<HealthComponent*>(t_enemyBullet->getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0); //kill the bullet
+		static_cast<HealthComponent*>(t_enemyBullet->getComponent(ComponentType::Health))->setHealth(0); //kill the bullet
 	}
 }
