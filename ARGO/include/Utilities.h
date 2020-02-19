@@ -42,4 +42,4 @@ enum class MenuStates
 	License,
 	Splash,
 	Achievements
-};
+}; 

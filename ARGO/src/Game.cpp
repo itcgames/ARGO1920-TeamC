@@ -251,9 +251,11 @@ void Game::closeWindow(const CloseWindow& t_event)
 
 void Game::createButtonMaps()
 {
+	
 	using ButtonCommandPair = std::pair<ButtonType, Command*>;
 	for (int index = 0; index < Utilities::NUMBER_OF_PLAYERS; index++)
 	{
+		m_controllerButtonMaps[(int)ButtonState::Pressed][index].clear();
 		m_controllerButtonMaps[(int)ButtonState::Pressed][index] =
 		{
 			ButtonCommandPair(ButtonType::DpadUp, new MoveUpCommand()),
@@ -276,8 +278,8 @@ void Game::changeScreen(const ChangeScreen& t_event)
 	{
 		delete(m_gameScreen);
 	}
-	createButtonMaps();
 	m_currentScreen = t_event.newScreen;
+	createButtonMaps();
 	switch (m_currentScreen)
 	{
 	case MenuStates::Game:

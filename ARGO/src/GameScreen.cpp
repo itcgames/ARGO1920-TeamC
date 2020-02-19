@@ -2,16 +2,15 @@
 #include "GameScreen.h"
 #include "..\include\GameScreen.h"
 
-GameScreen::GameScreen(SDL_Renderer* t_renderer, MenuStates* t_currentScreen, EventManager& t_eventManager, Controller t_controllers[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[][]) :
+GameScreen::GameScreen(SDL_Renderer* t_renderer, MenuStates* t_currentScreen, EventManager& t_eventManager, Controller t_controllers[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]) :
 	m_renderer{ t_renderer },
 	m_currentScreen{ t_currentScreen },
 	m_eventManager{ t_eventManager },
 	m_transformSystem{ m_eventManager },
 	m_projectileManager{ m_eventManager },
-	m_controllers{ *t_controllers },
-	m_controllerButtonMaps{ *t_controllerButtonMaps }
-{
- 	 
+	m_controllers{ *t_controllers }
+ {
+	setControllerButtonMap(t_controllerButtonMaps);
  	int playerCount = 0;
 	for (Entity& player : m_players)
 	{
@@ -201,6 +200,16 @@ void GameScreen::updateProjectiles(bool t_canTick, bool t_canRender)
 	if (t_canRender)
 	{
 		m_projectileManager.render(m_renderer, &m_renderSystem);
+	}
+}
+
+void GameScreen::setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS])
+{
+	for (int index = 0; index < Utilities::NUMBER_OF_PLAYERS; index++)
+	{
+		m_controllerButtonMaps[(int)ButtonState::Pressed][index] = t_controllerMaps[(int)ButtonState::Pressed][index];
+		m_controllerButtonMaps[(int)ButtonState::Held][index] = t_controllerMaps[(int)ButtonState::Held][index];
+		m_controllerButtonMaps[(int)ButtonState::Released][index] = t_controllerMaps[(int)ButtonState::Released][index];
 	}
 }
 

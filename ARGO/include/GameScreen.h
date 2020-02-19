@@ -14,7 +14,7 @@ class GameScreen
 {
 public:
 
-	GameScreen(SDL_Renderer* t_renderer, MenuStates* t_currentScreen, EventManager& t_eventManager, Controller t_controller[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[][] );
+	GameScreen(SDL_Renderer* t_renderer, MenuStates* t_currentScreen, EventManager& t_eventManager, Controller t_controller[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]);
 	~GameScreen();
 
 	void update(bool t_canTick, bool t_canRender, Uint16 t_deltaTime);
@@ -32,6 +32,7 @@ private:
 	void updateEntities(bool t_canTick, bool t_canRender);
 	void updateLevelTiles(bool t_canTick, bool t_canRender);
 	void updateProjectiles(bool t_canTick, bool t_canRender);
+	void setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]);
 
 	SDL_Renderer* m_renderer;
 	MenuStates* m_currentScreen;
