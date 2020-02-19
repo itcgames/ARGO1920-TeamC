@@ -8,11 +8,10 @@ HealthSystem::~HealthSystem()
 
 void HealthSystem::update(Entity& t_entity)
 {
+	HealthComponent* hpComp = static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health));
 	//if not nullptr
-	if (t_entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))
+	if (hpComp)
 	{
-		HealthComponent* hpComp = static_cast<HealthComponent*>(t_entity.getAllComps().at(COMPONENT_ID::HEALTH_ID));
-
 		//if more than 0 hp
 		if (hpComp->getHealth() > 0)
 		{

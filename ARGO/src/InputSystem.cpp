@@ -17,10 +17,11 @@ void InputSystem::update(Entity& t_entity)
 	//std::cout << "Calling InputComponent.update()" << std::endl;
 #endif
 
-	if (t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID) && t_entity.getAllComps().at(COMPONENT_ID::COMMAND_ID))
+	InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getComponent(ComponentType::Input));
+	CommandComponent* commandComp = static_cast<CommandComponent*>(t_entity.getComponent(ComponentType::Command));
+
+	if (inputComp != nullptr && commandComp != nullptr)
 	{
-		InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID));
-		CommandComponent* commandComp = static_cast<CommandComponent*>(t_entity.getAllComps().at(COMPONENT_ID::COMMAND_ID));
 		inputComp->update();
 		handleInputs(inputComp, commandComp);
 	}
