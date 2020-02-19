@@ -3,11 +3,11 @@
 class FireRateComponent : public Component
 {
 public:
-	FireRateComponent(Uint16 t_delay);
-	Uint16 getNextFire();
-	void setLastFire(Uint16 t_lastFire);
+	FireRateComponent(Uint32 t_delay);
+	Uint32 getNextFire();
+	void setLastFire(Uint32 t_lastFire);
 private:
-	Uint16 m_lastFire;
-	Uint16 m_delay;
+	Uint32 m_lastFire;
+	Uint32 m_delay;
 };
 

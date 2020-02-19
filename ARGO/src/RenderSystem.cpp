@@ -190,7 +190,7 @@ void RenderSystem::setFocus(glm::vec2 t_point)
 	m_focusPoint = t_point;
 }
 
-glm::vec2 RenderSystem::getFocus() const
+glm::vec2& RenderSystem::getFocus()
 {
 	return m_focusPoint;
 }

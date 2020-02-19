@@ -24,7 +24,7 @@ void CollisionSystem::update(Entity& t_entity)
 			Quad quad{ &t_entity, rectPosition, bounds };
 			m_quadTree.insert(quad);
 		}
-		else if (circleComp)
+		else if (circleComp && edgeOfTheWorldToCircle(t_entity))
 		{
 			m_circleColliderBuffer.push_back(&t_entity);
 			glm::vec2 rectPosition = transComp->getPos();
@@ -85,6 +85,56 @@ bool CollisionSystem::circleToAABBCollision(Entity* t_entityCircle, Entity* t_en
 	int deltaX = circlePosition.x - std::max(rectPosition.x, std::min(circlePosition.x, rectPosition.x + bounds.x));
 	int deltaY = circlePosition.y - std::max(rectPosition.y, std::min(circlePosition.y, rectPosition.y + bounds.y));
 	return (deltaX * deltaX + deltaY * deltaY) < (radius * radius);
+}
+
+bool CollisionSystem::edgeOfTheWorldToCircle(Entity& t_entity)
+{
+	TransformComponent* position = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
+	int radius = static_cast<ColliderCircleComponent*>(t_entity.getComponent(ComponentType::ColliderCircle))->getRadius();
+	if (position->getPos().x - radius < 0)
+	{
+		if (!killBulletAtEdgeOfWorld(t_entity))
+		{
+			return false;
+		}
+		position->setPos(radius, position->getPos().y);
+	}
+	else if (position->getPos().x + radius > Utilities::TILE_SIZE* Utilities::LEVEL_TILE_WIDTH)
+	{
+		if (!killBulletAtEdgeOfWorld(t_entity))
+		{
+			return false;
+		}
+		position->setPos(Utilities::TILE_SIZE* Utilities::LEVEL_TILE_WIDTH - radius, position->getPos().y);
+	}
+	if (position->getPos().y - radius < 0)
+	{
+		if (!killBulletAtEdgeOfWorld(t_entity))
+		{
+			return false;
+		}
+		position->setPos(position->getPos().x, radius);
+	}
+	else if(position->getPos().y + radius > Utilities::TILE_SIZE * Utilities::LEVEL_TILE_HEIGHT)
+	{
+		if (!killBulletAtEdgeOfWorld(t_entity))
+		{
+			return false;
+		}
+		position->setPos(position->getPos().x, Utilities::TILE_SIZE * Utilities::LEVEL_TILE_HEIGHT - radius);
+	}
+	return true;
+}
+
+bool CollisionSystem::killBulletAtEdgeOfWorld(Entity& t_entity)
+{
+	Tag tag = static_cast<TagComponent*>(t_entity.getComponent(ComponentType::Tag))->getTag();
+	if (tag == Tag::EnemyBullet || tag == Tag::PlayerBullet)
+	{
+		static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health))->setHealth(0);
+		return false;
+	}
+	return true;
 }
 
 void CollisionSystem::handlePlayerCollision(Entity* t_player)
@@ -301,6 +351,7 @@ void CollisionSystem::playerBulletToWall(Entity* t_playerBullet, Entity* t_wall)
 	if (t_wall->getComponent(ComponentType::ColliderAABB) && circleToAABBCollision(t_playerBullet, t_wall))
 	{
 		static_cast<HealthComponent*>(t_playerBullet->getComponent(ComponentType::Health))->setHealth(0); //kill the bullet
+		static_cast<HealthComponent*>(t_wall->getComponent(ComponentType::Health))->reduceHealth(1);
 	}
 }
 
