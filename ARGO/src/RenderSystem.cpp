@@ -171,10 +171,10 @@ void RenderSystem::renderText(SDL_Renderer* t_renderer, TransformComponent* t_po
 bool RenderSystem::inView(TransformComponent* t_posComp)
 {
 	float left, right, top, down;
-	left = m_focusPoint.x - Utilities::SCREEN_WIDTH * Utilities::OFF_SCREEN_SCALAR;
-	right = m_focusPoint.x + Utilities::SCREEN_WIDTH * Utilities::OFF_SCREEN_SCALAR;
-	top = m_focusPoint.y - Utilities::SCREEN_HEIGHT * Utilities::OFF_SCREEN_SCALAR;
-	down = m_focusPoint.y + Utilities::SCREEN_HEIGHT * Utilities::OFF_SCREEN_SCALAR;
+	left = m_focusPoint.x - Utilities::SCREEN_WIDTH * OFF_SCREEN_SCALAR;
+	right = m_focusPoint.x + Utilities::SCREEN_WIDTH * OFF_SCREEN_SCALAR;
+	top = m_focusPoint.y - Utilities::SCREEN_HEIGHT * OFF_SCREEN_SCALAR;
+	down = m_focusPoint.y + Utilities::SCREEN_HEIGHT * OFF_SCREEN_SCALAR;
 
 	//returns false if object is outside of the window, true if it is in view
 	return left < t_posComp->getPos().x && right > t_posComp->getPos().x && 

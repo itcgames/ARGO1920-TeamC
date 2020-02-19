@@ -51,7 +51,6 @@ private:
 	void createPlayer(Entity& t_player);
 	void createEnemy();
 	void removeDeadEnemies();
-	void playerFireSound(const createBulletEvent& t_event);
 	void closeWindow(const CloseWindow& t_event);
 	void setupIgnoredEvents();
 	void createRenderer();

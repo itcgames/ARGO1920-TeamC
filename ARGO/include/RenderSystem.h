@@ -32,5 +32,7 @@ private:
 	bool inView(TransformComponent* t_posComp);
 
 	glm::vec2 m_focusPoint;
+
+	const float OFF_SCREEN_SCALAR = 0.6f;
 };
 
