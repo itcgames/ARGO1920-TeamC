@@ -108,19 +108,26 @@ void ProjectileManager::updateBullet(Bullet& t_bullet, float t_dt)
 
 void ProjectileManager::tick()
 {
-	for (auto& bullet : m_playerBullets)
+	try
 	{
-		if (!static_cast<TimerComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(1))
+		for (auto& bullet : m_playerBullets)
 		{
-			static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0);
+			if (!static_cast<TimerComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(1))
+			{
+				static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0);
+			}
+		}
+		for (auto& bullet : m_enemyBullets)
+		{
+			if (!static_cast<TimerComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(1))
+			{
+				static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0);
+			}
 		}
 	}
-	for (auto& bullet : m_enemyBullets)
+	catch (const std::exception&)
 	{
-		if (!static_cast<TimerComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(1))
-		{
-			static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0);
-		}
+		throw std::invalid_argument("Timer / health component not found");
 	}
 }
 
