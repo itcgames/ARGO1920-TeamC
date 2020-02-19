@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CreditsScreen.h"
-#include "..\include\CreditsScreen.h"
 
 CreditsScreen::CreditsScreen(EventManager& t_eventManager, Controller& t_controller, SDL_Renderer* t_renderer) :
 	m_eventManager{ t_eventManager },

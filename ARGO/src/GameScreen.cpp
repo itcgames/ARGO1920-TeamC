@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "GameScreen.h"
-#include "..\include\GameScreen.h"
 
 
 bool cleanUpEnemies(const Entity& t_entity)

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "OptionsScreen.h"
-#include "..\include\OptionsScreen.h"
 
 OptionsScreen::OptionsScreen(EventManager& t_eventManager, Controller& t_controller, SDL_Renderer* t_renderer) :
 	m_eventManager{ t_eventManager },

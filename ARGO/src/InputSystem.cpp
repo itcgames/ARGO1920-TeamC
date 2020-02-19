@@ -33,7 +33,7 @@ void InputSystem::handleInputs(InputComponent* t_inputComponent, CommandComponen
 	{
 		ButtonState stateOfButton = controller.getButtonState((ButtonType)index);
 		ButtonCommandMap buttonMap = t_inputComponent->getButtonMap(stateOfButton);
-		if (buttonMap != ButtonCommandMap())
+		if (!buttonMap.empty())
 		{
 			if (buttonMap[(ButtonType)index] != nullptr)
 			{

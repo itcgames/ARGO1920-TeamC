@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "MenuScreen.h"
-#include "..\include\MenuScreen.h"
 
 MenuScreen::MenuScreen(EventManager& t_eventManager, Controller& t_controller, SDL_Renderer* t_renderer) :
 	m_eventManager{ t_eventManager },

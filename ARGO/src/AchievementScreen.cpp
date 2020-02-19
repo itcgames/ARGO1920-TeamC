@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "AchievementScreen.h"
-#include "..\include\AchievementScreen.h"
 
 AchievementScreen::AchievementScreen(EventManager& t_eventManager, Controller& t_controller, SDL_Renderer* t_renderer) :
 	m_eventManager{ t_eventManager },
