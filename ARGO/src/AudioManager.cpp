@@ -197,7 +197,8 @@ void AudioManager::PlayPlayerFireSfx(std::string t_filename, glm::vec2 t_playerP
 	}
 
 #ifdef AUDIO_SYS_DEBUG
-	std::printf("Playing Player Fire Sound %s on channel %s\n", t_filename.c_str(), std::to_string(channel).c_str());
+	//std::printf("Playing Player Fire Sound %s on channel %s\n", t_filename.c_str(), std::to_string(channel).c_str());
+	std::printf("Playing Player Fire Sound on channel %s\n", std::to_string(channel - Utilities::AUDIO_PLAYERS_FIRE_CHANNELS + 1).c_str());
 #endif // AUDIO_SYS_DEBUG
 
 	//then play the sound at a position

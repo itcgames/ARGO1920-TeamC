@@ -134,7 +134,7 @@ ButtonState Controller::getButtonState(ButtonType t_buttonType)
 	else if (currentPressed && !previousPressed) currentState = ButtonState::Pressed;
  	else if (!currentPressed && previousPressed) currentState = ButtonState::Released;
 
- #ifdef _DEBUG
+ #ifdef INPUT_SYS_DEBUG
 	if (ButtonState::NotPressed != currentState)
 	{
 		std::string debugString = "Controller " + std::to_string(m_controllerIndex) + " " + m_controllerName + " " + getButtonName(t_buttonType);
