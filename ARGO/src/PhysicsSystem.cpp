@@ -13,20 +13,19 @@ PhysicsSystem::~PhysicsSystem()
 
 void PhysicsSystem::update(Entity& t_entity, float t_dt)
 {
-	if (t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID))
+	TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
+	if (posComp)
 	{
-		TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
-		if (t_entity.getAllComps().at(COMPONENT_ID::FORCE_ID))
+		ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
+		if (forceComp)
 		{
-			ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
-
 			posComp->addPos(forceComp->getForce() * t_dt);
 			if (forceComp->getHasFriction())
 			{
+				//this might have to be multiplied by t_dt
 				forceComp->setForce(forceComp->getForce() * FRICTION_SCALAR);
 			}
 		}
-
 	}
 }
 
@@ -36,9 +35,9 @@ void PhysicsSystem::update(Entity& t_entity)
 
 void PhysicsSystem::updateWithInput(const PhysicsMove& t_event)
 {
-	if (t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID))
+	ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.m_entity.getComponent(ComponentType::Force));
+	if (forceComp)
 	{
-		ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.m_entity.getAllComps().at(COMPONENT_ID::FORCE_ID));
 		forceComp->addForce(t_event.m_velocity);
 	}
 }

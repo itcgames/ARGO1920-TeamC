@@ -12,9 +12,11 @@ CommandSystem::~CommandSystem()
 
 void CommandSystem::update(Entity& t_entity, EventManager& t_eventManager)
 {
-	if (t_entity.getAllComps().at(COMPONENT_ID::COMMAND_ID))
+	CommandComponent* commandComp = static_cast<CommandComponent*>(t_entity.getComponent(ComponentType::Command));
+
+	if (commandComp)
 	{
-		CommandComponent* commandComp = static_cast<CommandComponent*>(t_entity.getAllComps().at(COMPONENT_ID::COMMAND_ID));
+		InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getComponent(ComponentType::Input));
 		while (!commandComp->getCommands().empty())
 		{
 			if (typeid(*commandComp->getCommands().top()) == typeid(MoveUpCommand))
@@ -35,17 +37,15 @@ void CommandSystem::update(Entity& t_entity, EventManager& t_eventManager)
 			}
 			else if (typeid(*commandComp->getCommands().top()) == typeid(AnalogMoveCommand))
 			{
-				if (t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID))
+				if (inputComp)
 				{
-					InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID));
 					t_eventManager.emitEvent(PhysicsMove{ glm::normalize(inputComp->getController().getCurrent().LeftThumbStick), t_entity });
 				}
 			}
 			else if (typeid(*commandComp->getCommands().top()) == typeid(FireBulletCommand))
 			{
-				if (t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID))
+				if (inputComp)
 				{
-					InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID));
 					if (inputComp->getController().getCurrent().RightThumbStick != glm::vec2(0,0))
 					{
 						t_eventManager.emitEvent(createBulletEvent{ t_entity, glm::normalize(inputComp->getController().getCurrent().RightThumbStick), 32, 0 });

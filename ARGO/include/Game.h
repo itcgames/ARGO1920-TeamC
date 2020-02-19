@@ -51,7 +51,6 @@ private:
 	void createPlayer(Entity& t_player);
 	void createEnemy();
 	void removeDeadEnemies();
-	void playerFireSound(const createBulletEvent& t_event);
 	void closeWindow(const CloseWindow& t_event);
 	void setupIgnoredEvents();
 	void createRenderer();
@@ -59,7 +58,6 @@ private:
 	AssetManager* m_assetMgr;
 	AudioManager* m_audioMgr;
 
-	const int MAX_PLAYERS = 4;
 	const int MAX_ENTITIES = 10000;
 	const int PLAYER_MAX_HEALTH = 10;
 	EventManager m_eventManager;
@@ -74,7 +72,7 @@ private:
 	CommandSystem m_commandSystem;
 
 
-	Entity m_players[4];
+	Entity m_players[Utilities::S_MAX_PLAYERS];
 	std::vector<Entity> m_entities;
 
 	ProjectileManager m_projectileManager;
