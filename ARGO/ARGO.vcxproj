@@ -11,9 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AchievementScreen.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\FireRateComponent.cpp" />
+    <ClCompile Include="src\Particle.cpp" />
+    <ClCompile Include="src\ParticleEmitterComponent.cpp" />
+    <ClCompile Include="src\ParticleSystem.cpp" />
+    <ClCompile Include="src\PrimitiveComponent.cpp" />
     <ClCompile Include="src\CommandComponent.cpp" />
     <ClCompile Include="src\CommandSystem.cpp" />
     <ClCompile Include="src\CreditsScreen.cpp" />
@@ -25,6 +31,7 @@
     <ClCompile Include="src\LicenseScreen.cpp" />
     <ClCompile Include="src\MenuScreen.cpp" />
     <ClCompile Include="src\OptionsScreen.cpp" />
+    <ClCompile Include="src\LevelManager.cpp" />
     <ClCompile Include="src\ProjectileManager.cpp" />
     <ClCompile Include="src\QuadTree.cpp" />
     <ClCompile Include="src\Rumble.cpp" />
@@ -45,6 +52,7 @@
     <ClCompile Include="src\SplashScreen.cpp" />
     <ClCompile Include="src\TagComponent.cpp" />
     <ClCompile Include="src\TextComponent.cpp" />
+    <ClCompile Include="src\TileComponent.cpp" />
     <ClCompile Include="src\TimerComponent.cpp" />
     <ClCompile Include="src\VisualComponent.cpp" />
     <ClCompile Include="src\TransformComponent.cpp" />
@@ -61,9 +69,16 @@
     <ClCompile Include="src\Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ControllerButtonMaps.h" />
+    <ClInclude Include="include\AchievementScreen.h" />
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\AudioManager.h" />
     <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\FireRateComponent.h" />
+    <ClInclude Include="include\Particle.h" />
+    <ClInclude Include="include\ParticleEmitterComponent.h" />
+    <ClInclude Include="include\ParticleSystem.h" />
+    <ClInclude Include="include\PrimitiveComponent.h" />
     <ClInclude Include="include\CommandComponent.h" />
     <ClInclude Include="include\CommandSystem.h" />
     <ClInclude Include="include\CreditsScreen.h" />
@@ -76,6 +91,7 @@
     <ClInclude Include="include\LicenseScreen.h" />
     <ClInclude Include="include\MenuScreen.h" />
     <ClInclude Include="include\OptionsScreen.h" />
+    <ClInclude Include="include\LevelManager.h" />
     <ClInclude Include="include\ProjectileManager.h" />
     <ClInclude Include="include\QuadTree.h" />
     <ClInclude Include="include\Rumble.h" />
@@ -101,6 +117,7 @@
     <ClInclude Include="include\InputComponent.h" />
     <ClInclude Include="include\InputSystem.h" />
     <ClInclude Include="include\TagComponent.h" />
+    <ClInclude Include="include\TileComponent.h" />
     <ClInclude Include="include\TimerComponent.h" />
     <ClInclude Include="include\Utilities.h" />
     <ClInclude Include="include\VisualComponent.h" />

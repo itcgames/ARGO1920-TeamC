@@ -1,13 +1,18 @@
 #pragma once
-#include "Utilities.h"
+#include "EventManager.h"
+#include "Controller.h"
+
 class OptionsScreen
 {
 public:
-	OptionsScreen(MenuStates* t_currentScreen);
+	OptionsScreen(EventManager& t_eventManager, Controller& t_controller, SDL_Renderer* t_renderer);
 	~OptionsScreen();
-	void update(bool t_canTick, bool t_canRender, Uint16 t_deltaTime);
-private:
-	MenuStates* m_currentScreen;
 
+	void update(Uint16 t_deltaTime);
+	void render(SDL_Renderer* t_renderer);
+	void reset();
+private:
+	EventManager& m_eventManager;
+	Controller& m_controller;
 };
 

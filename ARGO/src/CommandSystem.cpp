@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CommandSystem.h"
-#include "..\include\CommandSystem.h"
 
 CommandSystem::CommandSystem()
 {
@@ -13,9 +12,11 @@ CommandSystem::~CommandSystem()
 
 void CommandSystem::update(Entity& t_entity, EventManager& t_eventManager)
 {
-	if (t_entity.getAllComps().at(COMPONENT_ID::COMMAND_ID))
+	CommandComponent* commandComp = static_cast<CommandComponent*>(t_entity.getComponent(ComponentType::Command));
+
+	if (commandComp)
 	{
-		CommandComponent* commandComp = static_cast<CommandComponent*>(t_entity.getAllComps().at(COMPONENT_ID::COMMAND_ID));
+		InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getComponent(ComponentType::Input));
 		while (!commandComp->getCommands().empty())
 		{
 			if (typeid(*commandComp->getCommands().top()) == typeid(MoveUpCommand))
@@ -36,15 +37,36 @@ void CommandSystem::update(Entity& t_entity, EventManager& t_eventManager)
 			}
 			else if (typeid(*commandComp->getCommands().top()) == typeid(AnalogMoveCommand))
 			{
-				if (t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID))
+				if (inputComp)
 				{
-					InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID));
- 					t_eventManager.emitEvent(PhysicsMove{ glm::normalize(inputComp->getController().getCurrent().LeftThumbStick), t_entity });
+					t_eventManager.emitEvent(PhysicsMove{ glm::normalize(inputComp->getController().getCurrent().LeftThumbStick), t_entity });
+				}
+			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(FireBulletCommand))
+			{
+				if (inputComp)
+				{
+					if (inputComp->getController().getCurrent().RightThumbStick != glm::vec2(0,0))
+					{
+						t_eventManager.emitEvent(CreateBulletEvent{ t_entity, glm::normalize(inputComp->getController().getCurrent().RightThumbStick), 32, 0 });
+					}
 				}
 			}
 			else if (typeid(*commandComp->getCommands().top()) == typeid(CloseWindowCommand))
 			{
 				t_eventManager.emitEvent(CloseWindow());
+			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(MenuMoveUpCommand))
+			{
+				t_eventManager.emitEvent(MenuMoveButtonsUpDown{ t_entity, false });
+			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(MenuMoveDownCommand))
+			{
+				t_eventManager.emitEvent(MenuMoveButtonsUpDown{ t_entity, true });
+			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(MenuSelectButtonCommand))
+			{
+				t_eventManager.emitEvent(MenuSelectButton{ t_entity });
 			}
 			else continue;
 			commandComp->popTopCommand();

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Game.h"
 
+
+
 /// <summary>
 /// Constructor for the game class.
 /// </summary>
@@ -15,7 +17,7 @@ Game::Game() :
 	m_timePerTick(0)
 {
 	try
-	{ 
+	{
 		// Try to initalise SDL in general
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
 
@@ -29,32 +31,35 @@ Game::Game() :
 		if (!m_window) throw "Error Loading Window";
 
 		//Create the SDL Renderer 
-		m_renderer = SDL_CreateRenderer(m_window, -1, 0);
+		createRenderer();
+
 		//Check if the renderer was created correctly
 		if (!m_renderer) throw "Error Loading Renderer";
 
 		// Sets clear colour of renderer to black and the color of any primitives
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 
+		for (int index = 0; index < Utilities::NUMBER_OF_PLAYERS; index++)
+		{
+			m_controllers[index].initialiseController();
+		}
+
 		m_assetMgr = AssetManager::Instance(*m_renderer);
 		m_audioMgr = AudioManager::Instance();
+		m_audioMgr->PlayMusic("looping\\Ove - Earth Is All We Have.ogg");
+
 		initialiseScreens();
 
-
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
+		m_eventManager.subscribeToEvent<ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
+
 		m_timePerFrame = 1000 / m_framesPerSecond;
 		m_timePerTick = 1000 / m_ticksPerSecond;
-		
 
-		/*m_textTest1.addComponent(new TransformComponent());
-		m_textTest1.addComponent(new TextComponent("comic.ttf", m_renderer, true, std::string("Static Text")));
-		m_textTest2.addComponent(new TransformComponent());
-		m_textTest2.addComponent(new TextComponent("pt-sans.ttf", m_renderer, Utilities::LARGE_FONT, false, "Not Static Text", 255, 255, 0, 123));*/	 
-	
+		setupIgnoredEvents();
 
 		// Game is running
 		m_isRunning = true;
-
 	}
 	catch (std::string error)
 	{
@@ -78,23 +83,27 @@ Game::~Game()
 /// </summary>
 void Game::run()
 {
-	m_lastTick = SDL_GetTicks();
-	m_lastRender = SDL_GetTicks();
+	Uint32 timePerFrame = 1000 / 60;
+	Uint32 lastTick = SDL_GetTicks();
+	Uint32 nextFrame = SDL_GetTicks() + timePerFrame;
+	Uint32 currentTick = 0;
+	Uint32 timeSinceLastTick = 0;
 	while (m_isRunning)
 	{
 		processEvent();
-		Uint32 currentTick = SDL_GetTicks();
-		Uint16 deltaTime = currentTick - m_lastTick;
-		Uint16 renderTime = currentTick - m_lastRender;
-
-		bool canRender = checkCanRender(renderTime);
-		bool canTick = checkCanTick(deltaTime);
-		update(canRender, canTick, deltaTime);
-
-		if (canRender)
+		while (SDL_GetTicks() < nextFrame)
 		{
-			SDL_RenderPresent(m_renderer);
+			currentTick = SDL_GetTicks();
+			timeSinceLastTick = currentTick - lastTick;
+			if (timeSinceLastTick > 0)
+			{
+				processEvent();
+				update((float)timeSinceLastTick / (float)timePerFrame);
+				lastTick = currentTick;
+			}
 		}
+		nextFrame = SDL_GetTicks() + timePerFrame;
+		render();
 	}
 }
 
@@ -118,84 +127,136 @@ void Game::initLibraries()
 void Game::processEvent()
 {
 	SDL_Event event;
-	SDL_PollEvent(&event);
-
-	switch (event.type)
+	while (SDL_PollEvent(&event))
 	{
-	case SDL_QUIT:
-		closeWindow();
-		break;
-	case SDL_KEYDOWN:
-	{
-		switch (event.key.keysym.sym)
+		switch (event.type)
 		{
-		case SDLK_ESCAPE:
-		{
+		case SDL_QUIT:
 			closeWindow();
 			break;
-		}
-		case SDLK_q:
+		case SDL_KEYDOWN:
 		{
-			m_audioMgr->PlaySfx("airhorn.wav");
-			break;
-		}
-		case SDLK_UP:
-		{
-			m_audioMgr->SetVolume(m_audioMgr->GetVolume() + 10);
-			break;
-		}
-		case SDLK_DOWN:
-		{
-			m_audioMgr->SetVolume(m_audioMgr->GetVolume() - 10);
+			switch (event.key.keysym.sym)
+			{
+			case SDLK_ESCAPE:
+			{
+				closeWindow();
+				break;
+			}
+			case SDLK_q:
+			{
+				m_audioMgr->PlaySfx("airhorn.wav");
+				break;
+			}
+			// master volume
+			case SDLK_UP:
+			{
+				m_audioMgr->SetMasterVolume(m_audioMgr->GetMasterVolume() + Utilities::AUDIO_VOLUME_STEP);
+				break;
+			}
+			case SDLK_DOWN:
+			{
+				m_audioMgr->SetMasterVolume(m_audioMgr->GetMasterVolume() - Utilities::AUDIO_VOLUME_STEP);
+				break;
+			}
+			//sfx volume
+			case SDLK_KP_7:
+			{
+				m_audioMgr->SetSfxVolume(m_audioMgr->GetSfxVolume() + Utilities::AUDIO_VOLUME_STEP);
+				break;
+			}
+			case SDLK_KP_4:
+			{
+				m_audioMgr->SetSfxVolume(m_audioMgr->GetSfxVolume() - Utilities::AUDIO_VOLUME_STEP);
+				break;
+			}
+			//music volume
+			case SDLK_KP_9:
+			{
+				m_audioMgr->SetMusicVolume(m_audioMgr->GetMusicVolume() + Utilities::AUDIO_VOLUME_STEP);
+				break;
+			}
+			case SDLK_KP_6:
+			{
+				m_audioMgr->SetMusicVolume(m_audioMgr->GetMusicVolume() - Utilities::AUDIO_VOLUME_STEP);
+				break;
+			}
+			default:
+				break;
+			}
 			break;
 		}
 		default:
 			break;
 		}
-		break;
-	} 
-	default:
-		break;
 	}
-
 	if (MenuStates::Game == m_currentScreen)
 	{
 		m_gameScreen->processEvents(&event);
 	}
 }
 
-void Game::update(bool t_canTick, bool t_canRender, Uint16 t_dt)
+void Game::update(float t_dt)
 {
 	switch (m_currentScreen)
 	{
 	case MenuStates::Game:
-		m_gameScreen->update(t_canTick, t_canRender, t_dt);
+		m_gameScreen->update(t_dt);
 		break;
 	case MenuStates::MainMenu:
-		m_mainMenuScreen->update(t_canTick, t_canRender, t_dt);
+		m_mainMenuScreen->update(t_dt);
 		break;
 	case MenuStates::Credits:
-		m_creditsScreen->update(t_canTick, t_canRender, t_dt);
+		m_creditsScreen->update(t_dt);
 		break;
 	case MenuStates::Options:
-		m_optionsScreen->update(t_canTick, t_canRender, t_dt);
+		m_optionsScreen->update(t_dt);
 		break;
 	case MenuStates::License:
-		m_licenseScreen->update(t_canTick, t_canRender, t_dt);
+		m_licenseScreen->update(t_dt);
 		break;
 	case MenuStates::Splash:
-		m_splashScreen->update(t_canTick, t_canRender, t_dt);
+		m_splashScreen->update(t_dt);
+		break;
+	case MenuStates::Achievements:
+		m_achievementsScreen->update(t_dt);
 		break;
 	default:
 		break;
 	}
-	/*if (t_canRender)
-	{
-		m_renderSystem.render(m_renderer, m_textTest1);
-		m_renderSystem.render(m_renderer, m_textTest2);
-	}*/
 }
- 
+
+void Game::render()
+{
+	SDL_RenderClear(m_renderer);
+	switch (m_currentScreen)
+	{
+	case MenuStates::Game:
+		m_gameScreen->render(m_renderer);
+		break;
+	case MenuStates::MainMenu:
+		m_mainMenuScreen->render(m_renderer);
+		break;
+	case MenuStates::Credits:
+		m_creditsScreen->render(m_renderer);
+		break;
+	case MenuStates::Options:
+		m_optionsScreen->render(m_renderer);
+		break;
+	case MenuStates::License:
+		m_licenseScreen->render(m_renderer);
+		break;
+	case MenuStates::Splash:
+		m_splashScreen->render(m_renderer);
+		break;
+	case MenuStates::Achievements:
+		m_achievementsScreen->render(m_renderer);
+		break;
+	default:
+		break;
+	}
+	SDL_RenderPresent(m_renderer);
+}
 
 /// <summary>
 /// Cleans up after running by deleting stuff
@@ -207,33 +268,11 @@ void Game::cleanup()
 	AssetManager::Release();
 	m_assetMgr = NULL;
 	IMG_Quit();
-	Mix_Quit();
 	TTF_Quit();
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
 	m_renderer = NULL;
 	SDL_Quit();
-}  
-
-bool Game::checkCanRender(Uint16 t_renderTime)
-{
-	if (t_renderTime > m_timePerFrame)
-	{
-		m_lastRender += m_timePerFrame;
-		SDL_RenderClear(m_renderer);
-		return true;
-	}
-	return false;
-}
-
-bool Game::checkCanTick(Uint16 t_deltaTime)
-{
-	if (t_deltaTime > m_timePerTick)
-	{
-		m_lastTick += m_timePerTick;
-		return true;
-	}
-	return false;
 }
 
 void Game::closeWindow(const CloseWindow& t_event)
@@ -241,13 +280,99 @@ void Game::closeWindow(const CloseWindow& t_event)
 	m_isRunning = false;
 }
 
+void Game::createButtonMaps()
+{
+	using ButtonCommandPair = std::pair<ButtonType, Command*>;
+	for (int index = 0; index < Utilities::NUMBER_OF_PLAYERS; index++)
+	{
+		m_controllerButtonMaps[(int)ButtonState::Pressed][index].clear();
+		m_controllerButtonMaps[(int)ButtonState::Pressed][index] =
+		{
+			ButtonCommandPair(ButtonType::DpadUp, new MoveUpCommand()),
+			ButtonCommandPair(ButtonType::DpadDown, new MoveDownCommand()),
+			ButtonCommandPair(ButtonType::DpadLeft, new MoveLeftCommand()),
+			ButtonCommandPair(ButtonType::DpadRight, new MoveRightCommand()),
+			ButtonCommandPair(ButtonType::Back, new CloseWindowCommand()),
+			ButtonCommandPair(ButtonType::RightTrigger, new FireBulletCommand())
+		};
+		// Set Held To Same as Pressed Commands For Time Being
+		m_controllerButtonMaps[(int)ButtonState::Held][index] = m_controllerButtonMaps[(int)ButtonState::Pressed][index];
+		// Set Release Commands to nothing
+		m_controllerButtonMaps[(int)ButtonState::Released][index] = ButtonCommandMap();
+	}
+}
+
+void Game::changeScreen(const ChangeScreen& t_event)
+{
+	m_currentScreen = t_event.newScreen;
+
+	if (MenuStates::Game == m_currentScreen && m_gameScreen)
+	{
+		delete(m_gameScreen);
+	}
+	createButtonMaps();
+	switch (m_currentScreen)
+	{
+	case MenuStates::Game:
+		m_gameScreen = new GameScreen(m_renderer, m_eventManager, m_controllers, m_controllerButtonMaps);
+		break;
+	case MenuStates::MainMenu:
+		m_mainMenuScreen->reset();
+		break;
+	case MenuStates::Credits:
+		m_creditsScreen->reset();
+		break;
+	case MenuStates::Options:
+		m_optionsScreen->reset();
+		break;
+	case MenuStates::License:
+		m_licenseScreen->reset();
+		break;
+	case MenuStates::Splash:
+		m_splashScreen->reset();
+		break;
+	case MenuStates::Achievements:
+		m_achievementsScreen->reset();
+		break;
+	default:
+		break;
+	}
+}
+
 void Game::initialiseScreens()
 {
-	m_gameScreen = new GameScreen(m_renderer, &m_currentScreen, m_eventManager);
-	m_optionsScreen = new OptionsScreen(&m_currentScreen);
-	m_creditsScreen = new CreditsScreen(&m_currentScreen);
-	m_licenseScreen = new LicenseScreen(&m_currentScreen);
-	m_splashScreen = new SplashScreen(&m_currentScreen);
-	m_mainMenuScreen = new MenuScreen(&m_currentScreen);
-	m_currentScreen = MenuStates::Game;
+	createButtonMaps();
+	m_gameScreen = new GameScreen(m_renderer, m_eventManager, m_controllers, m_controllerButtonMaps);
+	m_optionsScreen = new OptionsScreen(m_eventManager, m_controllers[0], m_renderer);
+	m_creditsScreen = new CreditsScreen(m_eventManager, m_controllers[0], m_renderer);
+	m_licenseScreen = new LicenseScreen(m_eventManager, m_controllers[0], m_renderer);
+	m_splashScreen = new SplashScreen(m_eventManager, m_controllers[0], m_renderer);
+	m_mainMenuScreen = new MenuScreen(m_eventManager, m_controllers[0], m_renderer);
+	m_achievementsScreen = new AchievementScreen(m_eventManager, m_controllers[0], m_renderer);
+	m_currentScreen = MenuStates::MainMenu;
+}
+
+void Game::setupIgnoredEvents()
+{
+	SDL_EventState(SDL_CONTROLLERAXISMOTION, SDL_IGNORE);
+	SDL_EventState(SDL_CONTROLLERBUTTONDOWN, SDL_IGNORE);
+	SDL_EventState(SDL_CONTROLLERBUTTONUP, SDL_IGNORE);
+	SDL_EventState(SDL_CONTROLLERDEVICEADDED, SDL_IGNORE);
+	SDL_EventState(SDL_CONTROLLERDEVICEREMOVED, SDL_IGNORE);
+	SDL_EventState(SDL_CONTROLLERDEVICEREMAPPED, SDL_IGNORE);
+}
+
+void Game::createRenderer()
+{
+	//create renderer with vsync and hardware rendering in DEBUG mode
+#ifdef _DEBUG
+	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+#else
+	//when in release, make window fullscreen
+	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
+	bool IsFullscreen = SDL_GetWindowFlags(m_window) & FullscreenFlag;
+	SDL_SetWindowFullscreen(m_window, IsFullscreen ? 0 : FullscreenFlag);
+	SDL_ShowCursor(IsFullscreen);
+#endif // DEBUG
 }

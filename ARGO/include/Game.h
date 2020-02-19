@@ -1,5 +1,4 @@
 #pragma once
-#include "AssetManager.h"
 #include "EventManager.h"  
 #include "AudioManager.h" 
 #include "GameScreen.h"
@@ -8,6 +7,8 @@
 #include "OptionsScreen.h"
 #include "SplashScreen.h"
 #include "LicenseScreen.h"
+#include "AchievementScreen.h"
+#include "Event.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -19,20 +20,22 @@ public:
 	~Game();
 	void run();
 private:
-
+	void update(float t_deltaTime);
 	void initLibraries();
 	void processEvent();
-	void update(bool t_canTick, bool t_canRender, Uint16 t_dt);
- 	void cleanup(); 
-	bool checkCanRender(Uint16 t_currentTick);
-	bool checkCanTick(Uint16 t_currentTick);
+	void initialiseScreens();
+	void createButtonMaps();
+	void setupIgnoredEvents();
+	void createRenderer();
+	void render();
+	void cleanup();
+
 	void closeWindow(const CloseWindow& t_event = CloseWindow());
+	void changeScreen(const ChangeScreen& t_event);
 
 	AssetManager* m_assetMgr;
 	AudioManager* m_audioMgr;
-
 	EventManager m_eventManager;
-
 
 	// Window used for the game
 	SDL_Window* m_window;
@@ -49,8 +52,6 @@ private:
 	Uint16 m_framesPerSecond;
 	Uint16 m_ticksPerSecond;
 
-
- 
 	MenuStates m_currentScreen;
 	GameScreen* m_gameScreen; 
 	MenuScreen* m_mainMenuScreen;
@@ -58,7 +59,9 @@ private:
 	CreditsScreen* m_creditsScreen;
 	LicenseScreen* m_licenseScreen;
 	SplashScreen* m_splashScreen;
+	AchievementScreen* m_achievementsScreen;
 
-	void initialiseScreens();
+	Controller m_controllers[Utilities::NUMBER_OF_PLAYERS];
 
+	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS];
 };

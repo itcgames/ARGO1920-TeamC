@@ -46,7 +46,15 @@ enum class ButtonType
 	Start,
 	Back,
 	RightTrigger,
-	LeftTrigger 
+	LeftTrigger,
+	LeftThumbStickUp,
+	LeftThumbStickDown,
+	LeftThumbStickLeft,
+	LeftThumbStickRight,
+	RightThumbStickUp,
+	RightThumbStickDown,
+	RightThumbStickLeft,
+	RightThumbStickRight
 };
 
 /// <summary>
@@ -57,6 +65,7 @@ class Controller
 public:
 	Controller();
 	~Controller();
+	void initialiseController();
 	void update();
 	bool isConnected() const;
 	int getIndex() const;
@@ -73,9 +82,13 @@ public:
 	float getRumbleStrength();
 	float getRumbleTime();
 
-private:
+private: 
 	// dead zone used by thumb sticks
 	const int THUMB_STICK_THRESHOLD = 8000;
+
+	//dead zone used for the thumbsticks basic movement
+	const int THUMB_STICK_BUTTON_THRESHOLD = 30000;
+
 	// index of getCurrent controller
 	int m_controllerIndex;
 	// static int to differentiate between several connected controllers
@@ -94,6 +107,7 @@ private:
 	const std::string SWITCH_CONTROLLER_NAME = "Nintendo Switch Pro Controller";
 
 	std::string getButtonName(ButtonType t_ButtonType);
+	int count = 0;
 
 	Rumble m_rumble;
 };

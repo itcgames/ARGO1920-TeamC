@@ -19,6 +19,7 @@ public:
 	int countAll(int count);
 private:
 	int getIndex(Quad t_data);
+	bool intersects(Quad t_data);
 	void split();
 
 	glm::vec2 m_boundsTopLeft;

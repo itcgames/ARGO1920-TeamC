@@ -13,14 +13,15 @@ InputSystem::~InputSystem()
 void InputSystem::update(Entity& t_entity)
 {
 
-#if (INPUT_SYS_DEBUG == 1)
-	std::cout << "Calling InputComponent.update()" << std::endl;
+#ifdef INPUT_SYS_DEBUG
+	//std::cout << "Calling InputComponent.update()" << std::endl;
 #endif
 
-	if (t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID) && t_entity.getAllComps().at(COMPONENT_ID::COMMAND_ID))
+	InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getComponent(ComponentType::Input));
+	CommandComponent* commandComp = static_cast<CommandComponent*>(t_entity.getComponent(ComponentType::Command));
+
+	if (inputComp != nullptr && commandComp != nullptr)
 	{
-		InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getAllComps().at(COMPONENT_ID::INPUT_ID));
-		CommandComponent* commandComp = static_cast<CommandComponent*>(t_entity.getAllComps().at(COMPONENT_ID::COMMAND_ID));
 		inputComp->update();
 		handleInputs(inputComp, commandComp);
 	}
@@ -32,8 +33,8 @@ void InputSystem::handleInputs(InputComponent* t_inputComponent, CommandComponen
 	for (int index = 0; index < Utilities::NUMBER_OF_CONTROLLER_BUTTONS; index++)
 	{
 		ButtonState stateOfButton = controller.getButtonState((ButtonType)index);
-		std::map<ButtonType, Command*> buttonMap = t_inputComponent->getButtonMap(stateOfButton);
-		if (buttonMap != std::map<ButtonType, Command*>())
+		ButtonCommandMap buttonMap = t_inputComponent->getButtonMap(stateOfButton);
+		if (!buttonMap.empty())
 		{
 			if (buttonMap[(ButtonType)index] != nullptr)
 			{
@@ -47,6 +48,5 @@ void InputSystem::handleInputs(InputComponent* t_inputComponent, CommandComponen
 	}
 	if (controller.getCurrent().RightThumbStick != glm::vec2(0.0f, 0.0f))
 	{
-
 	}
 }
