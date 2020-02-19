@@ -110,6 +110,10 @@ void ProjectileManager::tick()
 {
 	for (auto& bullet : m_playerBullets)
 	{
+		if (!static_cast<TimerComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::TIMER_ID))->tick(1))
+		{
+			static_cast<HealthComponent*>(bullet.entity.getAllComps().at(COMPONENT_ID::HEALTH_ID))->setHealth(0);
+		}
 	}
 	for (auto& bullet : m_enemyBullets)
 	{
