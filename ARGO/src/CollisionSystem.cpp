@@ -89,47 +89,35 @@ bool CollisionSystem::edgeOfTheWorldToCircle(Entity& t_entity)
 	int radius = static_cast<ColliderCircleComponent*>(t_entity.getComponent(ComponentType::ColliderCircle))->getRadius();
 	if (position->getPos().x - radius < 0)
 	{
-		if (killBulletAtEdgeOfWorld(t_entity))
-		{
-			position->setPos(radius, position->getPos().y);
-		}
-		else
+		if (!killBulletAtEdgeOfWorld(t_entity))
 		{
 			return false;
 		}
+		position->setPos(radius, position->getPos().y);
 	}
 	else if (position->getPos().x + radius > Utilities::TILE_SIZE* Utilities::LEVEL_TILE_WIDTH)
 	{
-		if (killBulletAtEdgeOfWorld(t_entity))
-		{
-			position->setPos(Utilities::TILE_SIZE * Utilities::LEVEL_TILE_WIDTH - radius, position->getPos().y);
-		}
-		else
+		if (!killBulletAtEdgeOfWorld(t_entity))
 		{
 			return false;
 		}
+		position->setPos(Utilities::TILE_SIZE* Utilities::LEVEL_TILE_WIDTH - radius, position->getPos().y);
 	}
 	if (position->getPos().y - radius < 0)
 	{
-		if (killBulletAtEdgeOfWorld(t_entity))
-		{
-			position->setPos(position->getPos().x, radius);
-		}
-		else
+		if (!killBulletAtEdgeOfWorld(t_entity))
 		{
 			return false;
 		}
+		position->setPos(position->getPos().x, radius);
 	}
 	else if(position->getPos().y + radius > Utilities::TILE_SIZE * Utilities::LEVEL_TILE_HEIGHT)
 	{
-		if (killBulletAtEdgeOfWorld(t_entity))
-		{
-			position->setPos(position->getPos().x, Utilities::TILE_SIZE * Utilities::LEVEL_TILE_HEIGHT - radius);
-		}
-		else
+		if (!killBulletAtEdgeOfWorld(t_entity))
 		{
 			return false;
 		}
+		position->setPos(position->getPos().x, Utilities::TILE_SIZE * Utilities::LEVEL_TILE_HEIGHT - radius);
 	}
 	return true;
 }
