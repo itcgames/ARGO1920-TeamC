@@ -109,7 +109,6 @@ void RenderSystem::renderParticles(SDL_Renderer* t_renderer, ParticleEmitterComp
 		colour.red = 255;
 	}
 
-
 	SDL_SetRenderDrawColor(t_renderer, colour.red, colour.green, colour.blue, colour.alpha);
 	for (int i = 0; i < t_emitter->getMaxParticles(); i++)
 	{
@@ -125,7 +124,6 @@ void RenderSystem::renderParticles(SDL_Renderer* t_renderer, ParticleEmitterComp
 	}
 	//reset the renderer to previous colour
 	SDL_SetRenderDrawColor(t_renderer, prevRGBA[0], prevRGBA[1], prevRGBA[2], prevRGBA[3]);
-
 }
 
 void RenderSystem::renderTexture(VisualComponent* t_visComp, int t_textureLeftPos, int t_textureTopPos, SDL_Renderer* t_renderer, SDL_Rect* t_clip, double t_angle, SDL_Point* t_center, SDL_RendererFlip t_flip)
@@ -173,16 +171,14 @@ void RenderSystem::renderText(SDL_Renderer* t_renderer, TransformComponent* t_po
 bool RenderSystem::inView(TransformComponent* t_posComp)
 {
 	float left, right, top, down;
-	left = m_focusPoint.x - Utilities::SCREEN_WIDTH * 0.75f;
-	right = m_focusPoint.x + Utilities::SCREEN_WIDTH * 0.6f;
-	top = m_focusPoint.y - Utilities::SCREEN_HEIGHT * 0.75f;
-	down = m_focusPoint.y + Utilities::SCREEN_HEIGHT * 0.6f;
-	if (left < t_posComp->getPos().x && right > t_posComp->getPos().x&&
-		top < t_posComp->getPos().y && down > t_posComp->getPos().y)
-	{
-		return true;
-	}
-	return false;
+	left = m_focusPoint.x - Utilities::SCREEN_WIDTH * Utilities::OFF_SCREEN_SCALAR;
+	right = m_focusPoint.x + Utilities::SCREEN_WIDTH * Utilities::OFF_SCREEN_SCALAR;
+	top = m_focusPoint.y - Utilities::SCREEN_HEIGHT * Utilities::OFF_SCREEN_SCALAR;
+	down = m_focusPoint.y + Utilities::SCREEN_HEIGHT * Utilities::OFF_SCREEN_SCALAR;
+
+	//returns false if object is outside of the window, true if it is in view
+	return left < t_posComp->getPos().x && right > t_posComp->getPos().x && 
+			top < t_posComp->getPos().y && down > t_posComp->getPos().y;
 }
 
 void RenderSystem::setFocus(glm::vec2 t_point)

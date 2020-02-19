@@ -26,6 +26,8 @@ namespace Utilities
 	const int SCREEN_HEIGHT = 1080;
 #endif // _DEBUG
 
+	const float OFF_SCREEN_SCALAR = 0.75f;
+
 	const int LEVEL_TILE_WIDTH = 60;
 	const int LEVEL_TILE_HEIGHT = 40;
 	const int TILE_SIZE = 64;
