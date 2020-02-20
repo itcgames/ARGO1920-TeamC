@@ -61,7 +61,7 @@ private:
 	SplashScreen* m_splashScreen;
 	AchievementScreen* m_achievementsScreen;
 
-	Controller m_controllers[Utilities::NUMBER_OF_PLAYERS];
+	Controller m_controllers[Utilities::S_MAX_PLAYERS];
 
-	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS];
+	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
 };

@@ -7,7 +7,7 @@ bool cleanUpEnemies(const Entity& t_entity)
 	return !static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health))->isAlive();
 }
 
-GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]) :
+GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::S_MAX_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]) :
 	m_eventManager{ t_eventManager },
 	m_transformSystem{ m_eventManager },
 	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
@@ -127,9 +127,9 @@ void GameScreen::createPlayer(Entity& t_player, int t_index)
 	t_player.addComponent(new HealthComponent(10, 10));
 	t_player.addComponent(new TransformComponent());
 	t_player.addComponent(new InputComponent(m_controllers[t_index],
-		m_controllerButtonMaps[(int)ButtonState::Pressed][t_index],
-		m_controllerButtonMaps[(int)ButtonState::Held][t_index],
-		m_controllerButtonMaps[(int)ButtonState::Released][t_index]));
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][t_index],
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][t_index],
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][t_index]));
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
@@ -201,13 +201,13 @@ void GameScreen::updateLevelManager()
 	m_levelManager.update(&m_collisionSystem);
 }
 
-void GameScreen::setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS])
+void GameScreen::setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS])
 {
-	for (int index = 0; index < Utilities::NUMBER_OF_PLAYERS; index++)
+	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
 	{
-		m_controllerButtonMaps[(int)ButtonState::Pressed][index] = t_controllerMaps[(int)ButtonState::Pressed][index];
-		m_controllerButtonMaps[(int)ButtonState::Held][index] = t_controllerMaps[(int)ButtonState::Held][index];
-		m_controllerButtonMaps[(int)ButtonState::Released][index] = t_controllerMaps[(int)ButtonState::Released][index];
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][index] = t_controllerMaps[static_cast<int>(ButtonState::Pressed)][index];
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][index] = t_controllerMaps[static_cast<int>(ButtonState::Held)][index];
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][index] = t_controllerMaps[static_cast<int>(ButtonState::Released)][index];
 	}
 }
 

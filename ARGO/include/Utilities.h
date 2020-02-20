@@ -3,7 +3,7 @@
 
 namespace Utilities
 {
-	const static int S_MAX_PLAYERS = 4;
+	const static int S_MAX_PLAYERS =1;
 	//font consts
 	const int SMALL_FONT = 24;
 	const int MEDIUM_FONT = 48;
@@ -19,7 +19,7 @@ namespace Utilities
 	const std::string MUSIC_PATH = "assets\\sounds\\music\\";
 	const std::string FONTS_PATH = "assets\\fonts\\";
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 	const int SCREEN_WIDTH = 1600;
 	const int SCREEN_HEIGHT = 800;
 #else
@@ -33,7 +33,7 @@ namespace Utilities
 	const int WALL_HEALTH = 5;
 
 	const int PLAYER_RADIUS = 32;
-	const int PLAYER_FIRE_DELAY = 1000 / 10;
+	const int PLAYER_FIRE_DELAY = 1;
 
 	const int ENEMY_RADIUS = 32;
 	const int ENEMY_HP = 2;

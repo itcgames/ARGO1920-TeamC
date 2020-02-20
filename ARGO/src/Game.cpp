@@ -39,7 +39,7 @@ Game::Game() :
 		// Sets clear colour of renderer to black and the color of any primitives
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 
-		for (int index = 0; index < Utilities::NUMBER_OF_PLAYERS; index++)
+		for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
 		{
 			m_controllers[index].initialiseController();
 		}
@@ -83,6 +83,7 @@ Game::~Game()
 /// </summary>
 void Game::run()
 {
+
 	Uint32 timePerFrame = 1000 / 60;
 	Uint32 lastTick = SDL_GetTicks();
 	Uint32 nextFrame = SDL_GetTicks() + timePerFrame;
@@ -91,19 +92,19 @@ void Game::run()
 	while (m_isRunning)
 	{
 		processEvent();
-		while (SDL_GetTicks() < nextFrame)
+		while (SDL_GetTicks() <= nextFrame)
 		{
 			currentTick = SDL_GetTicks();
 			timeSinceLastTick = currentTick - lastTick;
 			if (timeSinceLastTick > 0)
 			{
+				lastTick = currentTick;
 				processEvent();
 				update((float)timeSinceLastTick / (float)timePerFrame);
-				lastTick = currentTick;
 			}
 		}
-		nextFrame = SDL_GetTicks() + timePerFrame;
 		render();
+		nextFrame = SDL_GetTicks() + timePerFrame;
 	}
 }
 
@@ -283,10 +284,10 @@ void Game::closeWindow(const CloseWindow& t_event)
 void Game::createButtonMaps()
 {
 	using ButtonCommandPair = std::pair<ButtonType, Command*>;
-	for (int index = 0; index < Utilities::NUMBER_OF_PLAYERS; index++)
+	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
 	{
-		m_controllerButtonMaps[(int)ButtonState::Pressed][index].clear();
-		m_controllerButtonMaps[(int)ButtonState::Pressed][index] =
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][index].clear();
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][index] =
 		{
 			ButtonCommandPair(ButtonType::DpadUp, new MoveUpCommand()),
 			ButtonCommandPair(ButtonType::DpadDown, new MoveDownCommand()),
@@ -296,9 +297,9 @@ void Game::createButtonMaps()
 			ButtonCommandPair(ButtonType::RightTrigger, new FireBulletCommand())
 		};
 		// Set Held To Same as Pressed Commands For Time Being
-		m_controllerButtonMaps[(int)ButtonState::Held][index] = m_controllerButtonMaps[(int)ButtonState::Pressed][index];
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][index] = m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][index];
 		// Set Release Commands to nothing
-		m_controllerButtonMaps[(int)ButtonState::Released][index] = ButtonCommandMap();
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][index] = ButtonCommandMap();
 	}
 }
 
@@ -349,7 +350,7 @@ void Game::initialiseScreens()
 	m_splashScreen = new SplashScreen(m_eventManager, m_controllers[0], m_renderer);
 	m_mainMenuScreen = new MenuScreen(m_eventManager, m_controllers[0], m_renderer);
 	m_achievementsScreen = new AchievementScreen(m_eventManager, m_controllers[0], m_renderer);
-	m_currentScreen = MenuStates::MainMenu;
+	m_currentScreen = MenuStates::Splash;
 }
 
 void Game::setupIgnoredEvents()

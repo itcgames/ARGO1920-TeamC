@@ -186,8 +186,8 @@ GamePadState Controller::getPrevious() const
 ButtonState Controller::getButtonState(ButtonType t_buttonType)
 {
 	ButtonState currentState = ButtonState::NotPressed;
-	bool currentPressed = m_current.button[(int)t_buttonType];
-	bool previousPressed = m_previous.button[(int)t_buttonType];
+	bool currentPressed = m_current.button[static_cast<int>(t_buttonType)];
+	bool previousPressed = m_previous.button[static_cast<int>(t_buttonType)];
 
 	if (currentPressed && previousPressed) currentState = ButtonState::Held;
 	else if (currentPressed && !previousPressed) currentState = ButtonState::Pressed;

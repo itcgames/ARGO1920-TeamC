@@ -16,7 +16,7 @@ class GameScreen
 {
 public:
 
-	GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controller[Utilities::NUMBER_OF_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]);
+	GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controller[Utilities::S_MAX_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]);
 	~GameScreen();
 
 	void update(float t_deltaTime);
@@ -33,7 +33,7 @@ private:
 	void updateEntities(float t_deltaTime);
 	void updateProjectiles(float t_deltaTime);
 	void updateLevelManager();
-	void setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]);
+	void setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]);
 
 
 
@@ -47,8 +47,8 @@ private:
 
  	static const int MAX_ENTITIES = 10000;
 
-	Controller m_controllers[Utilities::NUMBER_OF_PLAYERS];
-	Entity m_players[Utilities::NUMBER_OF_PLAYERS];
+	Controller m_controllers[Utilities::S_MAX_PLAYERS];
+	Entity m_players[Utilities::S_MAX_PLAYERS];
 	std::vector<Entity> m_entities;
 	std::vector<Entity> m_levelTiles;
 
@@ -67,6 +67,6 @@ private:
 	LevelManager m_levelManager;
 
 
-	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::NUMBER_OF_PLAYERS]; 
+	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]; 
 };
 

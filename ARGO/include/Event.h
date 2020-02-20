@@ -18,7 +18,6 @@ struct PhysicsMove
 
 struct MenuMoveButtonsUpDown
 {
-	Entity& entity;
 	// bool for if its moving down or up
 	bool isMoveDown;
 };
