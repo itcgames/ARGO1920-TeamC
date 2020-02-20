@@ -64,6 +64,7 @@
   <ItemGroup>
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\AudioManager.h" />
+    <ClInclude Include="include\BehaviourTree.h" />
     <ClInclude Include="include\Command.h" />
     <ClInclude Include="include\FireRateComponent.h" />
     <ClInclude Include="include\Particle.h" />

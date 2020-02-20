@@ -1,6 +1,17 @@
 #include "stdafx.h"
 #include "AiSystem.h"
 
+AiSystem::AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], std::vector<Entity>& t_enemies) :
+	m_players(t_players),
+	m_enemies(t_enemies)
+{
+	m_behaviourTree.addChild(new RetreatBehaviour(&m_botEnemyData));
+	m_behaviourTree.addChild(new HoldBehaviour(&m_botEnemyData));
+	m_behaviourTree.addChild(new GetAmmoBehaviour(&m_botPickupData));
+	m_behaviourTree.addChild(new MoveToGoalBehaviour(&m_botGoalData));
+	m_behaviourTree.addChild(new MoveToLeaderBehaviour(&m_botLeaderData));
+}
+
 AiSystem::~AiSystem()
 {
 	BaseSystem::~BaseSystem();
@@ -17,7 +28,7 @@ void AiSystem::update(Entity& t_entity)
 		TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
 		AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getComponent(ComponentType::Ai));
 		ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
-
+		
 		switch (aiComp->getType())
 		{
 		case AITypes::eMelee:
@@ -27,7 +38,7 @@ void AiSystem::update(Entity& t_entity)
 			rangedAI(posComp, aiComp, forceComp);
 			break;
 		case AITypes::ePlayerBot:
-			rangedAI(posComp, aiComp, forceComp);
+			playerAI(t_entity);
 			break;
 		}
 	}
@@ -63,29 +74,84 @@ void AiSystem::rangedAI(TransformComponent* t_posComp, AiComponent* t_aiComponen
 
 void AiSystem::playerAI(Entity& t_entity)
 {
-	//get a decision on movement
-
-	//get a decision on shooting
+	glm::vec2& closestEnemy = playerMovementDecision(t_entity);
+	playerShootingDecision(t_entity, closestEnemy);
 }
 
-void AiSystem::playerMovementDecision(Entity& t_entity)
+glm::vec2& AiSystem::playerMovementDecision(Entity& t_entity)
 {
-	//check for closest humie player. (Need to hold reference to all non ai players) otherwise the first ai in the list of ai players is set as the leader.
-	//set goal to leader/closest player
-	
-	//get ammo weight is dependent on the amount of ammo the ai has and how close it is to an ammo pack
-	//hold position weight is dependent on the amount of enemies close to the player.
-	//retreat wieght is based on the distance to the closest enemy
-	//if not leader:
-	//	move toward goal weight is dependant in  on how far away the goal is
-	//if leader: move toward goal is a fixed value 
+	//set up data
+	glm::vec2 botPos = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform))->getPos();
+	m_botEnemyData.nearbyEnemies = 0;
+	setEnemyData(botPos);
+	setClosestLeaderData(botPos);
+	setClosestPickupData(botPos);
+	setGoalData(botPos);
 
-	//create a path towards the the largest weight.
+
+	//query behaviour tree
+	m_behaviourTree.run(t_entity);
+
+	glm::vec2 temp = glm::vec2(0, 0);
+	return temp;
 }
 
-void AiSystem::playerShootingDecision(Entity& t_entity)
+void AiSystem::playerShootingDecision(Entity& t_entity, glm::vec2& t_closestEnemyPosition)
 {
 	//if enemy in range (pew pew)
+}
+void AiSystem::setEnemyData(glm::vec2 t_botPosition)
+{
+	m_botEnemyData.distance = BOT_CAN_SEE_ENEMY_DISTANCE * BOT_CAN_SEE_ENEMY_DISTANCE;
+	for (auto& enemy : m_enemies)
+	{
+		if (enemy.getComponent(ComponentType::ColliderCircle))
+		{
+			TransformComponent* transCompEnemy = static_cast<TransformComponent*>(enemy.getComponent(ComponentType::Transform));
+			if (transCompEnemy)
+			{
+				float newDistance = glm::distance2(t_botPosition, transCompEnemy->getPos());
+				if (newDistance < m_botEnemyData.distance)
+				{
+					m_botEnemyData.nearbyEnemies++;
+					m_botEnemyData.entity = &enemy;
+					m_botEnemyData.distance = newDistance;
+				}
+			}
+		}
+	}
+}
+
+void AiSystem::setClosestLeaderData(glm::vec2 t_botPosition)
+{
+	m_botLeaderData.entity = &m_players[0];
+	m_botLeaderData.distance = std::numeric_limits<float>::max();
+	for (auto& player : m_players) //if there are any players we instead make the goal one of the players
+	{
+		if (player.getComponent(ComponentType::Input))
+		{
+			TransformComponent* transCompPlayer = static_cast<TransformComponent*>(player.getComponent(ComponentType::Transform));
+			if (transCompPlayer)
+			{
+				float newDistance = glm::distance2(t_botPosition, transCompPlayer->getPos());
+				if (newDistance < m_botLeaderData.distance)
+				{
+					m_botLeaderData.entity = &player;
+					m_botLeaderData.distance = newDistance;
+				}
+			}
+		}
+	}
+}
+
+void AiSystem::setClosestPickupData(glm::vec2 t_botPosition)
+{
+	//TODO
+}
+
+void AiSystem::setGoalData(glm::vec2 t_botPosition)
+{
+	m_botGoalData.entity = &m_players[0];
 }
 
 void AiSystem::wander(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent)

@@ -15,7 +15,8 @@ class State;
 Game::Game() :
 	m_transformSystem{ m_eventManager },
 	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
-	m_levelManager(m_renderer)
+	m_levelManager(m_renderer),
+	m_aiSystem(m_players, m_entities)
 {
 	try
 	{
@@ -48,7 +49,6 @@ Game::Game() :
 		m_isRunning = true;
 
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
-		m_eventManager.subscribeToEvent<createBulletEvent>(std::bind(&Game::playerFireSound, this, std::placeholders::_1));
 
 		//add components to player
 		for (auto& player : m_players)
@@ -260,6 +260,7 @@ void Game::update(float t_dt)
 		m_hpSystem.update(player);
 		m_inputSystem.update(player);
 		m_commandSystem.update(player, m_eventManager);
+		m_aiSystem.update(player);
 		m_transformSystem.update(player, t_dt);
 		m_collisionSystem.update(player);
 		m_particleSystem.update(player, t_dt);
@@ -331,11 +332,20 @@ void Game::createPlayer(Entity& t_player)
 		std::pair<ButtonType, Command*>(ButtonType::RightTrigger, new FireBulletCommand()),
 		std::pair<ButtonType,Command*>(ButtonType::Back, new CloseWindowCommand()) };
 
+	InputComponent* impComp = new InputComponent(buttonPressMap, buttonPressMap);
+	if (impComp->getController().getSDLController())
+	{
+		// passing two of the same object as at this moment the commands for button press is the same for button held
+		t_player.addComponent(impComp);
+	}
+	else
+	{
+		t_player.addComponent(new AiComponent(AITypes::ePlayerBot, AIStates::eWander, 0, 0));
+	}
+
 	t_player.addComponent(new CommandComponent());
 	t_player.addComponent(new HealthComponent(10, 10));
 	t_player.addComponent(new TransformComponent());
-	// passing two of the same object as at this moment the commands for button press is the same for button held
-	t_player.addComponent(new InputComponent(buttonPressMap, buttonPressMap));
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
@@ -366,11 +376,6 @@ void Game::removeDeadEnemies()
 		iter->nullAllComponents();
 		iter = m_entities.erase(iter);
 	}
-}
-
-void Game::playerFireSound(const createBulletEvent& t_event)
-{
-	//m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "launcher.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_renderSystem.getFocus());
 }
 
 void Game::closeWindow(const CloseWindow& t_event)
