@@ -344,13 +344,13 @@ void Game::initialiseScreens()
 {
 	createButtonMaps();
 	m_gameScreen = new GameScreen(m_renderer, m_eventManager, m_controllers, m_controllerButtonMaps);
-	m_optionsScreen = new OptionsScreen(m_eventManager, m_controllers[0], m_renderer);
-	m_creditsScreen = new CreditsScreen(m_eventManager, m_controllers[0], m_renderer);
-	m_licenseScreen = new LicenseScreen(m_eventManager, m_controllers[0], m_renderer);
-	m_splashScreen = new SplashScreen(m_eventManager, m_controllers[0], m_renderer);
-	m_mainMenuScreen = new MenuScreen(m_eventManager, m_controllers[0], m_renderer);
+	//m_optionsScreen = new OptionsScreen(m_eventManager, m_controllers[0], m_renderer);
+	//m_creditsScreen = new CreditsScreen(m_eventManager, m_controllers[0], m_renderer);
+	//m_licenseScreen = new LicenseScreen(m_eventManager, m_controllers[0], m_renderer);
+	//m_splashScreen = new SplashScreen(m_eventManager, m_controllers[0], m_renderer);
+	//m_mainMenuScreen = new MenuScreen(m_eventManager, m_controllers[0], m_renderer);
 	m_achievementsScreen = new AchievementScreen(m_eventManager, m_controllers[0], m_renderer);
-	m_currentScreen = MenuStates::Splash;
+	m_currentScreen = MenuStates::Game;
 }
 
 void Game::setupIgnoredEvents()

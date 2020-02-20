@@ -19,7 +19,7 @@ namespace Utilities
 	const std::string MUSIC_PATH = "assets\\sounds\\music\\";
 	const std::string FONTS_PATH = "assets\\fonts\\";
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 	const int SCREEN_WIDTH = 1600;
 	const int SCREEN_HEIGHT = 800;
 #else

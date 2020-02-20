@@ -24,6 +24,8 @@ private:
 	void initLibraries();
 	void processEvent();
 	void initialiseScreens();
+	void createScreen(MenuStates t_screenType);
+	void deleteScreen(MenuStates t_screenType);
 	void createButtonMaps();
 	void setupIgnoredEvents();
 	void createRenderer();

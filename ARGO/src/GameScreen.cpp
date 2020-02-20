@@ -37,7 +37,6 @@ GameScreen::~GameScreen()
 
 void GameScreen::update(float t_deltaTime)
 {
-	preRender();
 	updateLevelManager();
 	updateEntities(t_deltaTime);
 	updatePlayers(t_deltaTime);
@@ -109,6 +108,7 @@ void GameScreen::processEvents(SDL_Event* t_event)
 
 void GameScreen::render(SDL_Renderer* t_renderer)
 {
+	preRender();
 	m_levelManager.render(t_renderer, &m_renderSystem);
 	for (Entity& entity : m_entities)
 	{
