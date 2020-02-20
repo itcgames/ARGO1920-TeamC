@@ -25,8 +25,8 @@ private:
 	void sleep(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent);
 
 	void playerAI(Entity& t_entity);
-	glm::vec2& playerMovementDecision(Entity& t_entity);
-	void playerShootingDecision(Entity& t_entity, glm::vec2& t_closestEnemyPosition);
+	void playerMovementDecision(Entity& t_entity);
+	void playerShootingDecision(Entity& t_entity);
 
 	void setEnemyData(glm::vec2 t_botPosition);
 	void setClosestLeaderData(glm::vec2 t_botPosition);

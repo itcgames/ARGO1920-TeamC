@@ -74,11 +74,11 @@ void AiSystem::rangedAI(TransformComponent* t_posComp, AiComponent* t_aiComponen
 
 void AiSystem::playerAI(Entity& t_entity)
 {
-	glm::vec2& closestEnemy = playerMovementDecision(t_entity);
-	playerShootingDecision(t_entity, closestEnemy);
+	playerMovementDecision(t_entity);
+	playerShootingDecision(t_entity);
 }
 
-glm::vec2& AiSystem::playerMovementDecision(Entity& t_entity)
+void AiSystem::playerMovementDecision(Entity& t_entity)
 {
 	//set up data
 	glm::vec2 botPos = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform))->getPos();
@@ -91,12 +91,9 @@ glm::vec2& AiSystem::playerMovementDecision(Entity& t_entity)
 
 	//query behaviour tree
 	m_behaviourTree.run(t_entity);
-
-	glm::vec2 temp = glm::vec2(0, 0);
-	return temp;
 }
 
-void AiSystem::playerShootingDecision(Entity& t_entity, glm::vec2& t_closestEnemyPosition)
+void AiSystem::playerShootingDecision(Entity& t_entity)
 {
 	//if enemy in range (pew pew)
 }
@@ -114,7 +111,7 @@ void AiSystem::setEnemyData(glm::vec2 t_botPosition)
 				if (newDistance < m_botEnemyData.distance)
 				{
 					m_botEnemyData.nearbyEnemies++;
-					m_botEnemyData.entity = &enemy;
+					m_botEnemyData.enemy = &enemy;
 					m_botEnemyData.distance = newDistance;
 				}
 			}
@@ -125,12 +122,13 @@ void AiSystem::setEnemyData(glm::vec2 t_botPosition)
 void AiSystem::setClosestLeaderData(glm::vec2 t_botPosition)
 {
 	m_botLeaderData.entity = &m_players[0];
-	m_botLeaderData.distance = std::numeric_limits<float>::max();
+	TransformComponent* transCompPlayer = static_cast<TransformComponent*>(m_players[0].getComponent(ComponentType::Transform));
+	m_botLeaderData.distance = glm::distance2(t_botPosition, transCompPlayer->getPos());
 	for (auto& player : m_players) //if there are any players we instead make the goal one of the players
 	{
 		if (player.getComponent(ComponentType::Input))
 		{
-			TransformComponent* transCompPlayer = static_cast<TransformComponent*>(player.getComponent(ComponentType::Transform));
+			transCompPlayer = static_cast<TransformComponent*>(player.getComponent(ComponentType::Transform));
 			if (transCompPlayer)
 			{
 				float newDistance = glm::distance2(t_botPosition, transCompPlayer->getPos());

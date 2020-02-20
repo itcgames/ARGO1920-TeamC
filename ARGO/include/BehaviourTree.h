@@ -8,7 +8,7 @@ const int BOT_DEFAUL_MOVE_TOWARD_GOAL_WEIGHT = 5;
 
 struct EnemyData
 {
-	Entity* entity;
+	Entity* enemy;
 	float distance;
 	int nearbyEnemies;
 };
@@ -84,12 +84,11 @@ public:
 	{
 		glm::vec2 pos = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform))->getPos();
 		ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
-		glm::vec2 enemyPos = static_cast<TransformComponent*>(m_data->entity->getComponent(ComponentType::Transform))->getPos();
+		glm::vec2 enemyPos = static_cast<TransformComponent*>(m_data->enemy->getComponent(ComponentType::Transform))->getPos();
 
 		if (forceComp)
 		{
-			glm::vec2 betweenGoalAndEnemy = enemyPos - pos;
-			forceComp->addForce(glm::normalize(pos - betweenGoalAndEnemy));
+			forceComp->addForce(glm::normalize(pos - enemyPos));
 			return true;
 		}
 		return false;
@@ -155,7 +154,7 @@ public:
 		glm::vec2 pos = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform))->getPos();
 		ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
 		TransformComponent* goalTransComp = static_cast<TransformComponent*>(m_data->entity->getComponent(ComponentType::Transform));
-		if (forceComp)
+		if (forceComp && goalTransComp->getPos() != pos)
 		{
 			forceComp->addForce(glm::normalize(goalTransComp->getPos() - pos));
 			return true;
@@ -164,6 +163,10 @@ public:
 	}
 	virtual float getWeight() override
 	{
+		if (m_data->distance == 0)
+		{
+			return 0.0f;
+		}
 		return m_data->distance / (BOT_DISTANCE_TO_CARE_ABOUT_GOAL_SCALER * BOT_DISTANCE_TO_CARE_ABOUT_GOAL_SCALER);
 	}
 };
