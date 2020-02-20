@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "AiSystem.h"
 
-AiSystem::AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], std::vector<Entity>& t_enemies) :
+AiSystem::AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], std::vector<Entity>& t_enemies, EventManager& t_eventManager) :
 	m_players(t_players),
-	m_enemies(t_enemies)
+	m_enemies(t_enemies),
+	m_eventManager(t_eventManager)
 {
 	m_behaviourTree.addChild(new RetreatBehaviour(&m_botEnemyData));
 	m_behaviourTree.addChild(new HoldBehaviour(&m_botEnemyData));
@@ -87,15 +88,18 @@ void AiSystem::playerMovementDecision(Entity& t_entity)
 	setClosestLeaderData(botPos);
 	setClosestPickupData(botPos);
 	setGoalData(botPos);
-
-
 	//query behaviour tree
 	m_behaviourTree.run(t_entity);
 }
 
 void AiSystem::playerShootingDecision(Entity& t_entity)
 {
-	//if enemy in range (pew pew)
+	if (m_botEnemyData.distance < BOT_CAN_SEE_ENEMY_DISTANCE * BOT_CAN_SEE_ENEMY_DISTANCE)
+	{
+		glm::vec2 playerPos = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform))->getPos();
+		glm::vec2 enemyPos = static_cast<TransformComponent*>(m_botEnemyData.enemy->getComponent(ComponentType::Transform))->getPos();
+		m_eventManager.emitEvent(createBulletEvent{ t_entity, glm::normalize(enemyPos - playerPos) , 32, 0 });
+	}
 }
 void AiSystem::setEnemyData(glm::vec2 t_botPosition)
 {

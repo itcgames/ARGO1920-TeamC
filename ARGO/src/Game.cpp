@@ -16,7 +16,7 @@ Game::Game() :
 	m_transformSystem{ m_eventManager },
 	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
 	m_levelManager(m_renderer),
-	m_aiSystem(m_players, m_entities)
+	m_aiSystem(m_players, m_entities, m_eventManager)
 {
 	try
 	{

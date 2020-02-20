@@ -14,7 +14,7 @@
 class AiSystem : public BaseSystem
 {
 public:
-	AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], std::vector<Entity>& t_enemies);
+	AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], std::vector<Entity>& t_enemies, EventManager& t_eventManager);
 	~AiSystem();
 	void update(Entity& t_entity);
 private:
@@ -35,6 +35,7 @@ private:
 
 	Entity(&m_players)[Utilities::S_MAX_PLAYERS];
 	std::vector<Entity>& m_enemies;
+	EventManager& m_eventManager;
 
 	WeightedSelector m_behaviourTree;
 
