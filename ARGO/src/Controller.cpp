@@ -42,7 +42,7 @@ Controller::Controller()
 
 Controller::~Controller()
 {
-} 
+}
 
 /// <summary>
 /// Updates the states of the gamePadState variables from the current state of the controller
@@ -75,14 +75,14 @@ void Controller::update()
 
 	// Update position values of the left and right thumb sticks - Set positions to 0 if value is under threshold
 	m_current.LeftThumbStick = glm::vec2(SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTX),
-										 SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTY));
+		SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTY));
 	if (abs(m_current.LeftThumbStick.x) < THUMB_STICK_THRESHOLD && abs(m_current.LeftThumbStick.y) < THUMB_STICK_THRESHOLD)
 	{
 		m_current.LeftThumbStick = glm::vec2(0.0f, 0.0f);
 	}
 
 	m_current.RightThumbStick = glm::vec2(SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_RIGHTX),
-										  SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_RIGHTY)); 
+		SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_RIGHTY));
 	if (abs(m_current.RightThumbStick.x) < THUMB_STICK_THRESHOLD && abs(m_current.RightThumbStick.y) < THUMB_STICK_THRESHOLD)
 	{
 		m_current.RightThumbStick = glm::vec2(0.0f, 0.0f);
@@ -130,11 +130,11 @@ ButtonState Controller::getButtonState(ButtonType t_buttonType)
 	bool currentPressed = m_current.button[(int)t_buttonType];
 	bool previousPressed = m_previous.button[(int)t_buttonType];
 
-	if (currentPressed && previousPressed) currentState = ButtonState::Held; 
+	if (currentPressed && previousPressed) currentState = ButtonState::Held;
 	else if (currentPressed && !previousPressed) currentState = ButtonState::Pressed;
- 	else if (!currentPressed && previousPressed) currentState = ButtonState::Released;
+	else if (!currentPressed && previousPressed) currentState = ButtonState::Released;
 
- #ifdef INPUT_SYS_DEBUG
+#ifdef INPUT_SYS_DEBUG
 	if (ButtonState::NotPressed != currentState)
 	{
 		std::string debugString = "Controller " + std::to_string(m_controllerIndex) + " " + m_controllerName + " " + getButtonName(t_buttonType);
@@ -144,8 +144,8 @@ ButtonState Controller::getButtonState(ButtonType t_buttonType)
 		std::cout << debugString << std::endl;
 	}
 #endif // !_DEBUG
-	return currentState; 
-}  
+	return currentState;
+}
 
 SDL_GameController* Controller::getSDLController()
 {
