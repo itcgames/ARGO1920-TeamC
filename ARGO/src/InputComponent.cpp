@@ -2,10 +2,12 @@
 #include "InputComponent.h"
 
 
-InputComponent::InputComponent(std::map<ButtonType, Command*> t_buttonPressMap,
-							   std::map<ButtonType, Command*> t_buttonHeldMap,
-							   std::map<ButtonType, Command*> t_buttonReleasedMap) :
+InputComponent::InputComponent(Controller& t_controller, 
+							   ButtonCommandMap t_buttonPressMap,
+							   ButtonCommandMap t_buttonHeldMap,
+							   ButtonCommandMap t_buttonReleasedMap) :
 	Component(ComponentType::Input),
+	m_controller{t_controller},
 	m_buttonPressedCommands{t_buttonPressMap},
 	m_buttonHeldCommands{t_buttonHeldMap},
 	m_buttonReleaseCommands{t_buttonReleasedMap}
@@ -21,12 +23,12 @@ void InputComponent::update()
 	m_controller.update();
 } 
 
-Controller InputComponent::getController()
+Controller& InputComponent::getController()
 {
 	return m_controller;
 } 
 
-std::map<ButtonType, Command*> InputComponent::getButtonMap(ButtonState t_mapType)
+ButtonCommandMap InputComponent::getButtonMap(ButtonState t_mapType)
 {
 	if (ButtonState::Pressed == t_mapType)
 	{
@@ -41,10 +43,10 @@ std::map<ButtonType, Command*> InputComponent::getButtonMap(ButtonState t_mapTyp
 		return m_buttonReleaseCommands;
 	}
 	// returns empty map if anything else
-	return std::map<ButtonType, Command*>();
+	return ButtonCommandMap();
 }
 
-void InputComponent::setButtonMap(ButtonState t_mapType, std::map<ButtonType, Command*> t_map)
+void InputComponent::setButtonMap(ButtonState t_mapType, ButtonCommandMap t_map)
 {
 	if (ButtonState::Pressed == t_mapType)
 	{
@@ -59,4 +61,3 @@ void InputComponent::setButtonMap(ButtonState t_mapType, std::map<ButtonType, Co
 		m_buttonReleaseCommands = t_map;
 	}
 }
-

@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AchievementScreen.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\Command.cpp" />
@@ -21,10 +22,15 @@
     <ClCompile Include="src\PrimitiveComponent.cpp" />
     <ClCompile Include="src\CommandComponent.cpp" />
     <ClCompile Include="src\CommandSystem.cpp" />
+    <ClCompile Include="src\CreditsScreen.cpp" />
     <ClCompile Include="src\Event.cpp" />
     <ClCompile Include="src\ColliderAABB.cpp" />
     <ClCompile Include="src\ColliderCircle.cpp" />
     <ClCompile Include="src\CollisionSystem.cpp" />
+    <ClCompile Include="src\GameScreen.cpp" />
+    <ClCompile Include="src\LicenseScreen.cpp" />
+    <ClCompile Include="src\MenuScreen.cpp" />
+    <ClCompile Include="src\OptionsScreen.cpp" />
     <ClCompile Include="src\LevelManager.cpp" />
     <ClCompile Include="src\ProjectileManager.cpp" />
     <ClCompile Include="src\QuadTree.cpp" />
@@ -43,6 +49,7 @@
     <ClCompile Include="src\InputComponent.cpp" />
     <ClCompile Include="src\InputSystem.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\SplashScreen.cpp" />
     <ClCompile Include="src\TagComponent.cpp" />
     <ClCompile Include="src\TextComponent.cpp" />
     <ClCompile Include="src\TileComponent.cpp" />
@@ -62,6 +69,7 @@
     <ClCompile Include="src\Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AchievementScreen.h" />
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\AudioManager.h" />
     <ClInclude Include="include\BehaviourTree.h" />
@@ -73,17 +81,23 @@
     <ClInclude Include="include\PrimitiveComponent.h" />
     <ClInclude Include="include\CommandComponent.h" />
     <ClInclude Include="include\CommandSystem.h" />
+    <ClInclude Include="include\CreditsScreen.h" />
     <ClInclude Include="include\Event.h" />
     <ClInclude Include="include\EventManager.h" />
     <ClInclude Include="include\ColliderAABBComponent.h" />
     <ClInclude Include="include\ColliderCircleComponent.h" />
     <ClInclude Include="include\CollisionSystem.h" />
+    <ClInclude Include="include\GameScreen.h" />
+    <ClInclude Include="include\LicenseScreen.h" />
+    <ClInclude Include="include\MenuScreen.h" />
+    <ClInclude Include="include\OptionsScreen.h" />
     <ClInclude Include="include\LevelManager.h" />
     <ClInclude Include="include\ProjectileManager.h" />
     <ClInclude Include="include\QuadTree.h" />
     <ClInclude Include="include\Rumble.h" />
     <ClInclude Include="include\MacroCommand.h" />
     <ClInclude Include="include\Controller.h" />
+    <ClInclude Include="include\SplashScreen.h" />
     <ClInclude Include="include\TextComponent.h" />
   </ItemGroup>
   <ItemGroup>

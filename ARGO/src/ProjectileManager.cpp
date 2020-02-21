@@ -8,7 +8,7 @@ ProjectileManager::ProjectileManager(EventManager& t_eventManager, glm::vec2& t_
 	m_physicsSystem(t_physicsSystem),
 	m_collisionSystem(t_collisionSystem)
 {
-	t_eventManager.subscribeToEvent<createBulletEvent>(std::bind(&ProjectileManager::createPlayerBullet, this, std::placeholders::_1));
+	t_eventManager.subscribeToEvent<CreateBulletEvent>(std::bind(&ProjectileManager::createPlayerBullet, this, std::placeholders::_1));
 
 
 	for (auto& bullet : m_playerBullets)
@@ -38,13 +38,17 @@ void ProjectileManager::init()
 	m_audioMgr = AudioManager::Instance();
 }
 
-void ProjectileManager::createPlayerBullet(const createBulletEvent& t_event)
+void ProjectileManager::createPlayerBullet(const CreateBulletEvent& t_event)
 {
 	FireRateComponent* fireRateComp = static_cast<FireRateComponent*>(t_event.entity.getComponent(ComponentType::FireRate));
 	Uint32 currentTick = SDL_GetTicks();
 	if (fireRateComp && fireRateComp->getNextFire() < currentTick)
 	{
 		m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "ak.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_focusPoint);
+		if (t_event.controller.getSDLController())
+		{
+			t_event.controller.activateRumble(RumbleStrength::Weak, RumbleLength::Short);
+		}
 		fireRateComp->setLastFire(currentTick);
 		glm::vec2 position = static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos();
 		static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Transform))->setPos(position);
@@ -62,7 +66,7 @@ void ProjectileManager::createPlayerBullet(const createBulletEvent& t_event)
 	}
 }
 
-void ProjectileManager::createEnemyBullet(const createBulletEvent& t_event)
+void ProjectileManager::createEnemyBullet(const CreateBulletEvent& t_event)
 {
 	glm::vec2 position = static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos();
 	static_cast<TransformComponent*>(m_enemyBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Transform))->setPos(position);
@@ -80,6 +84,7 @@ void ProjectileManager::createEnemyBullet(const createBulletEvent& t_event)
 
 void ProjectileManager::update(float t_dt)
 {
+	tick(t_dt);
 	for (auto& bullet : m_playerBullets)
 	{
 		updateBullet(bullet, t_dt);

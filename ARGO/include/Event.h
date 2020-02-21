@@ -1,22 +1,41 @@
 #pragma once
 #include "Entity.h" 
+#include "Utilities.h"
+#include "Controller.h"
 
-struct createBulletEvent
+struct CreateBulletEvent
 {
 	Entity& entity;
 	glm::vec2 direction;
 	float forceScale;
 	int type;
+	Controller& controller;
 };
 
 struct PhysicsMove
 {
-	glm::vec2 m_velocity;
-	Entity& m_entity;
+	glm::vec2 velocity;
+	Entity& entity;
 };
+
+struct MenuMoveButtonsUpDown
+{
+	// bool for if its moving down or up
+	bool isMoveDown;
+};
+
+struct MenuSelectButton
+{
+	Entity& entity;
+}; 
 
 struct CloseWindow
 {
+};
+
+struct ChangeScreen
+{
+	MenuStates newScreen;
 };
 
 class BaseEvent

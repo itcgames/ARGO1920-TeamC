@@ -8,6 +8,14 @@ LevelManager::LevelManager(SDL_Renderer* t_renderer):
 
 void LevelManager::setupLevel()
 {
+	if (!m_levelTiles.empty())
+	{
+		for (Entity& tile : m_levelTiles)
+		{
+			tile.removeAllComponents();
+		}
+		m_levelTiles.clear();
+	}
 	m_levelTiles.reserve(Utilities::LEVEL_TILE_HEIGHT * Utilities::LEVEL_TILE_WIDTH);
 	for (int i = 0; i < Utilities::LEVEL_TILE_HEIGHT; i++)
 	{
@@ -24,7 +32,7 @@ void LevelManager::setupLevel()
 		}
 	}
 	setTileNeighbours();
-}
+} 
 
 void LevelManager::update(BaseSystem* t_system)
 {

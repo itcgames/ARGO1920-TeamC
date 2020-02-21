@@ -14,7 +14,7 @@ Entity::~Entity()
 		if (m_components.at(i) == NULL)
 		{
 			continue;
-		}
+		} 
 		delete m_components.at(i);
 		m_components.at(i) = nullptr;
 	}

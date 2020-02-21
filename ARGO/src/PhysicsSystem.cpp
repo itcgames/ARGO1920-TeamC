@@ -35,9 +35,9 @@ void PhysicsSystem::update(Entity& t_entity)
 
 void PhysicsSystem::updateWithInput(const PhysicsMove& t_event)
 {
-	ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.m_entity.getComponent(ComponentType::Force));
+	ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.entity.getComponent(ComponentType::Force));
 	if (forceComp)
 	{
-		forceComp->addForce(t_event.m_velocity);
+		forceComp->addForce(t_event.velocity);
 	}
 }
