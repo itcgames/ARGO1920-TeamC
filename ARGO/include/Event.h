@@ -27,7 +27,6 @@ struct MenuMoveButtonsUpDown
 struct MenuSelectButton
 {
 	Entity& entity;
-
 }; 
 
 struct CloseWindow

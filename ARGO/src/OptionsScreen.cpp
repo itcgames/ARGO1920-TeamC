@@ -11,7 +11,7 @@ OptionsScreen::~OptionsScreen()
 {
 }
 
-void OptionsScreen::update(Uint16 t_deltaTime)
+void OptionsScreen::update(float t_deltaTime)
 {
 }
 

@@ -9,7 +9,7 @@ CreditsScreen::~CreditsScreen()
 {
 }
 
-void CreditsScreen::update(Uint16 t_deltaTime)
+void CreditsScreen::update(float t_deltaTime)
 {
 	m_inputSystem.update(m_inputEntity);
 	m_commandSystem.update(m_inputEntity, m_eventManager);

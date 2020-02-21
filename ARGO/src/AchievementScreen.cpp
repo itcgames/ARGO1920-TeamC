@@ -11,7 +11,7 @@ AchievementScreen::~AchievementScreen()
 {
 }
 
-void AchievementScreen::update(Uint16 t_deltaTime)
+void AchievementScreen::update(float t_deltaTime)
 {
 }
 

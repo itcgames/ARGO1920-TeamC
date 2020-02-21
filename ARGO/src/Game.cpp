@@ -15,15 +15,14 @@ Game::Game() :
 	m_lastRender(0),
 	m_timePerFrame(0),
 	m_timePerTick(0),
-	m_transformSystem{ m_eventManager },
-	m_gameScreen{ m_renderer, m_eventManager, m_controllers },
+ 	m_gameScreen{ m_renderer, m_eventManager, m_controllers },
 	m_optionsScreen{ m_eventManager, m_controllers[0], m_renderer },
 	m_creditsScreen{ m_eventManager},
 	m_licenseScreen{ m_eventManager},
 	m_splashScreen{ m_eventManager},
 	m_mainMenuScreen{ m_eventManager },
-	m_achievementsScreen{ m_eventManager, m_controllers[0], m_renderer }
-
+	m_achievementsScreen{ m_eventManager, m_controllers[0], m_renderer },
+	m_currentScreen{ MenuStates::Splash }
 {
 	try
 	{
@@ -52,12 +51,16 @@ Game::Game() :
 		{
 			m_controllers[index].initialiseController();
 		}
+		for (bool hasBeenSet : m_hasScreenBeenSet)
+		{
+			hasBeenSet = false;
+		}
 
 		m_assetMgr = AssetManager::Instance(*m_renderer);
 		m_audioMgr = AudioManager::Instance();
 		m_audioMgr->PlayMusic("looping\\Ove - Earth Is All We Have.ogg");
 
-		initialiseScreens();
+		initialiseScreen();
 
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 		m_eventManager.subscribeToEvent<ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
@@ -317,7 +320,50 @@ void Game::createButtonMaps()
 void Game::changeScreen(const ChangeScreen& t_event)
 {
 	m_currentScreen = t_event.newScreen;
+	if (m_hasScreenBeenSet[static_cast<int>(m_currentScreen)])
+	{
+		resetScreen();
+	}
+	else
+	{
+		initialiseScreen();
+	}
+}
 
+void Game::initialiseScreen()
+{
+	createButtonMaps();
+	switch (m_currentScreen)
+	{
+	case MenuStates::Game:	
+		m_gameScreen.initialise(m_controllerButtonMaps, m_controllers);
+		break;
+	case MenuStates::MainMenu:	
+		m_mainMenuScreen.initialise(m_renderer, m_controllers[0]);
+ 		break;
+	case MenuStates::Credits:	
+		m_creditsScreen.initialise(m_renderer, m_controllers[0]);
+ 		break;
+	case MenuStates::Options:	
+		m_optionsScreen.initialise();
+ 		break;
+	case MenuStates::License:	
+		m_licenseScreen.initialise(m_renderer, m_controllers[0]);
+ 		break;
+	case MenuStates::Splash:	
+		m_splashScreen.initialise(m_renderer, m_controllers[0]);
+ 		break;
+	case MenuStates::Achievements:	
+		m_achievementsScreen.initialise();
+ 		break;
+	default:
+		break;
+	}
+	m_hasScreenBeenSet[static_cast<int>(m_currentScreen)] = true;
+}
+
+void Game::resetScreen()
+{
 	createButtonMaps();
 	switch (m_currentScreen)
 	{
@@ -345,19 +391,6 @@ void Game::changeScreen(const ChangeScreen& t_event)
 	default:
 		break;
 	}
-}
-
-void Game::initialiseScreens()
-{
-	createButtonMaps();
-	m_gameScreen.initialise(m_controllerButtonMaps);
-	m_mainMenuScreen.initialise(m_renderer, m_controllers[0]);
-	m_licenseScreen.initialise(m_renderer, m_controllers[0]);
-	m_creditsScreen.initialise(m_renderer, m_controllers[0]);
-	m_splashScreen.initialise(m_renderer, m_controllers[0]);
-	m_achievementsScreen.initialise();
-	m_optionsScreen.initialise();
-	m_currentScreen = MenuStates::Splash;
 }
 
 void Game::setupIgnoredEvents()

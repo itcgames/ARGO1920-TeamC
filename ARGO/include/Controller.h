@@ -89,7 +89,7 @@ private:
 	const int THUMB_STICK_THRESHOLD = 8000;
 
 	//dead zone used for the thumbsticks basic movement
-	const int THUMB_STICK_BUTTON_THRESHOLD = 30000;
+	const int THUMB_STICK_BUTTON_THRESHOLD = 32000;
 
 	// index of getCurrent controller
 	int m_controllerIndex;

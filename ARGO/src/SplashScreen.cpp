@@ -10,7 +10,7 @@ SplashScreen::~SplashScreen()
 {
 }
 
-void SplashScreen::update(Uint16 t_deltaTime)
+void SplashScreen::update(float t_deltaTime)
 {
 	m_inputSystem.update(m_inputEntity);
 	m_commandSystem.update(m_inputEntity, m_eventManager);

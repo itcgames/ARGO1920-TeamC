@@ -39,8 +39,7 @@ namespace Utilities
 	const int ENEMY_HP = 2;
 
 	const int NUMBER_OF_CONTROLLER_BUTTONS = 24;
-	const int NUMBER_OF_PLAYERS = 4;
-	const int NUMBER_OF_CONTROLLER_MAPS = 3;
+ 	const int NUMBER_OF_CONTROLLER_MAPS = 3;
 
 	//Particle
 	const int PROJECTILE_SPEED = 32;
@@ -61,6 +60,8 @@ namespace Utilities
 	//channels per player for firing - amount TBD
 	const int AUDIO_CHANNELS_PER_PLAYER = 8;
 	const int AUDIO_PLAYERS_FIRE_CHANNELS = AUDIO_MIX_CHANNELS - AUDIO_CHANNELS_PER_PLAYER * 4;
+
+	static const int S_NUMBER_OF_SCREENS = 7; 
 }
 
 enum class MenuStates

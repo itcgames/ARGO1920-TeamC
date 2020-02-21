@@ -32,32 +32,7 @@ void LevelManager::setupLevel()
 		}
 	}
 	setTileNeighbours();
-}
-
-void LevelManager::resetLevel()
-{
-	for (Entity& tile : m_levelTiles)
-	{
-		tile.removeAllComponents();
-	}
-	m_levelTiles.clear();
-	m_levelTiles.reserve(Utilities::LEVEL_TILE_HEIGHT * Utilities::LEVEL_TILE_WIDTH);
-	for (int i = 0; i < Utilities::LEVEL_TILE_HEIGHT; i++)
-	{
-		for (int j = 0; j < Utilities::LEVEL_TILE_WIDTH; j++)
-		{
-			m_levelTiles.emplace_back();
-
-			m_levelTiles.back().addComponent(new TransformComponent(glm::vec2(j * Utilities::TILE_SIZE, i * Utilities::TILE_SIZE)));
-			m_levelTiles.back().addComponent(new TagComponent(Tag::Tile));
-			m_levelTiles.back().addComponent(new VisualComponent("wall_4.png", m_renderer));
-			m_levelTiles.back().addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
-			m_levelTiles.back().addComponent(new TileComponent());
-			m_levelTiles.back().addComponent(new HealthComponent(Utilities::WALL_HEALTH, Utilities::WALL_HEALTH));
-		}
-	}
-	setTileNeighbours();
-}
+} 
 
 void LevelManager::update(BaseSystem* t_system)
 {

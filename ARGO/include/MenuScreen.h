@@ -24,7 +24,7 @@ public:
 
 	MenuScreen(EventManager& t_eventManager);
 	~MenuScreen();
-	void update(Uint16 t_deltaTime);
+	void update(float t_deltaTime);
 	void reset();
 	void render(SDL_Renderer* t_renderer);
 	void initialise(SDL_Renderer* t_renderer, Controller& t_controller);

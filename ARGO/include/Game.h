@@ -23,7 +23,8 @@ private:
 	void update(float t_deltaTime);
 	void initLibraries();
 	void processEvent();
-	void initialiseScreens();
+	void initialiseScreen();
+	void resetScreen();
  	void createButtonMaps();
 	void setupIgnoredEvents();
 	void createRenderer();
@@ -63,17 +64,7 @@ private:
 
 	Controller m_controllers[Utilities::S_MAX_PLAYERS];
 
-
-	// Systems
-	HealthSystem m_healthSystem;
-	PhysicsSystem m_transformSystem;
-	InputSystem m_inputSystem;
-	RenderSystem m_renderSystem;
-	AiSystem m_aiSystem;
-	CollisionSystem m_collisionSystem;
-	CommandSystem m_commandSystem;
-	ParticleSystem m_particleSystem;
-
-
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
+
+	bool m_hasScreenBeenSet[Utilities::S_NUMBER_OF_SCREENS];
 };

@@ -11,7 +11,7 @@ public:
 	CreditsScreen(EventManager& t_eventManager);
 	~CreditsScreen();
 
-	void update(Uint16 t_deltaTime);
+	void update(float t_deltaTime);
 	void render(SDL_Renderer* t_renderer);
 	void reset();
 	void initialise(SDL_Renderer* t_renderer, Controller& t_controller);

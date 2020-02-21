@@ -242,9 +242,13 @@ void GameScreen::reset(Controller t_controller[Utilities::S_MAX_PLAYERS])
 	setUpLevel();
  }
 
-void GameScreen::initialise(ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS])
+void GameScreen::initialise(ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS])
 {
 	setControllerButtonMap(t_controllerButtonMaps);
+	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
+	{
+		m_controllers[index] = t_controller[index];
+	}
 	int playerCount = 0;
 	for (Entity& player : m_players)
 	{

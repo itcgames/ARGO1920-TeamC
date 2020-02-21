@@ -13,7 +13,7 @@ MenuScreen::~MenuScreen()
 {
 }
 
-void MenuScreen::update(Uint16 t_deltaTime)
+void MenuScreen::update(float t_deltaTime)
 {
  	m_inputSystem.update(m_inputEntity);
 	m_commandSystem.update(m_inputEntity, m_eventManager);
