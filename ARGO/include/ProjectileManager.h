@@ -30,7 +30,7 @@ public:
 	void createEnemyBullet(const createBulletEvent& t_event);
 	void update(float t_dt);
 	void updateBullet(Bullet& t_bullet, float t_dt);
-	void tick();
+	void tick(float t_dt);
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
 private:
 	static const int BULLET_POOL_SIZE = 160;

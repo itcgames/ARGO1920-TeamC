@@ -63,11 +63,41 @@ Game::Game() :
 		}
 
 		m_levelManager.setupLevel();
-		//magic numbers for creating a sandbox level plz ignore.
+
 		m_levelManager.createRoom(glm::vec2(1, 1), 12, 12);
-		m_levelManager.createRoom(glm::vec2(12, 2), 3, 2);
-		m_levelManager.createRoom(glm::vec2(12, 10), 3, 2);
+		m_levelManager.createRoom(glm::vec2(13, 2), 2, 2);
 		m_levelManager.createRoom(glm::vec2(15, 1), 5, 12);
+		m_levelManager.createRoom(glm::vec2(3, 13), 2, 2);
+		m_levelManager.createRoom(glm::vec2(1, 15), 5, 12);
+		m_levelManager.createRoom(glm::vec2(6, 23), 2, 2);
+		m_levelManager.createRoom(glm::vec2(8, 15), 20, 18);
+		m_levelManager.createRoom(glm::vec2(17, 13), 2, 2);
+		m_levelManager.createRoom(glm::vec2(17, 13), 2, 2);
+		m_levelManager.createRoom(glm::vec2(1, 29), 5, 10);
+		m_levelManager.createRoom(glm::vec2(6, 35), 8, 4);
+		m_levelManager.createRoom(glm::vec2(10, 33), 2, 2);
+		m_levelManager.createRoom(glm::vec2(22, 1), 20, 5);
+		m_levelManager.createRoom(glm::vec2(24, 6), 2, 9);
+		m_levelManager.createRoom(glm::vec2(30, 8), 6, 14);
+		m_levelManager.createRoom(glm::vec2(32, 6), 2, 2);
+		m_levelManager.createRoom(glm::vec2(28, 18), 2, 2);
+		m_levelManager.createRoom(glm::vec2(24, 33), 2, 2);
+		m_levelManager.createRoom(glm::vec2(16, 35), 14, 4);
+		m_levelManager.createRoom(glm::vec2(28, 29), 2, 2);
+		m_levelManager.createRoom(glm::vec2(30, 24), 4, 9);
+		m_levelManager.createRoom(glm::vec2(34, 24), 5, 15);
+		m_levelManager.createRoom(glm::vec2(30, 36), 4, 2);
+		m_levelManager.createRoom(glm::vec2(42, 2), 2, 2);
+		m_levelManager.createRoom(glm::vec2(44, 1), 14, 8);
+		m_levelManager.createRoom(glm::vec2(36, 14), 2, 2);
+		m_levelManager.createRoom(glm::vec2(38, 12), 10, 9);
+		m_levelManager.createRoom(glm::vec2(50, 12), 8, 20);
+		m_levelManager.createRoom(glm::vec2(41, 23), 9, 6);
+		m_levelManager.createRoom(glm::vec2(39, 25), 2, 2);
+		m_levelManager.createRoom(glm::vec2(48, 14), 2, 2);
+		m_levelManager.createRoom(glm::vec2(54, 32), 2, 2);
+		m_levelManager.createRoom(glm::vec2(41, 34), 17, 4);
+		m_levelManager.createRoom(glm::vec2(41, 31), 7, 3);
 
 		setupIgnoredEvents();
 	}
@@ -117,12 +147,13 @@ void Game::run()
 			if (timeSinceLastTick > 0)
 			{
 				processEvent();
-				update((float)timeSinceLastTick / (float)timePerFrame);
+				float t_dt = (float)timeSinceLastTick / (float)timePerFrame;
 				lastTick = currentTick;
+				update(t_dt);
 			}
 		}
-		nextFrame = SDL_GetTicks() + timePerFrame;
 		render();
+		nextFrame = SDL_GetTicks() + timePerFrame;
 	}
 }
 
@@ -265,7 +296,7 @@ void Game::update(float t_dt)
 		m_collisionSystem.update(player);
 		m_particleSystem.update(player, t_dt);
 	}
-	m_projectileManager.tick();
+	m_projectileManager.tick(t_dt);
 	m_projectileManager.update(t_dt);
 	m_collisionSystem.handleCollisions();
 

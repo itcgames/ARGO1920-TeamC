@@ -107,20 +107,20 @@ void ProjectileManager::updateBullet(Bullet& t_bullet, float t_dt)
 	}
 }
 
-void ProjectileManager::tick()
+void ProjectileManager::tick(float t_dt)
 {
 	try
 	{
 		for (auto& bullet : m_playerBullets)
 		{
-			if (!static_cast<TimerComponent*>(bullet.entity.getComponent(ComponentType::Timer))->tick(1))
+			if (!static_cast<TimerComponent*>(bullet.entity.getComponent(ComponentType::Timer))->tick(t_dt))
 			{
 				static_cast<HealthComponent*>(bullet.entity.getComponent(ComponentType::Health))->setHealth(0);
 			}
 		}
 		for (auto& bullet : m_enemyBullets)
 		{
-			if (!static_cast<TimerComponent*>(bullet.entity.getComponent(ComponentType::Timer))->tick(1))
+			if (!static_cast<TimerComponent*>(bullet.entity.getComponent(ComponentType::Timer))->tick(t_dt))
 			{
 				static_cast<HealthComponent*>(bullet.entity.getComponent(ComponentType::Health))->setHealth(0);
 			}
