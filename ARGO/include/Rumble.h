@@ -31,6 +31,8 @@ class Rumble
 {
 public:
 	Rumble();
+	Rumble(const Rumble& t_otherRumble);
+	void operator=(const Rumble& t_otherRumble);
 	void init(SDL_GameController* t_controller);
 	void activateRumble();
 	void activateRumble(RumbleStrength t_setStrength, RumbleLength t_setLength);
@@ -53,7 +55,7 @@ private:
 	// const for the different values of RumbleLength for the time the rumble will activate for
 	const int LONG_TIME = 750;
 	const int MEDIUM_TIME = 500;
-	const int SHORT_TIME = 150;
+	const int SHORT_TIME = 50;
 
 	// const for the different values of RumbleStrength for the strength the rumble will be
 	const float STRONG_STRENGTH = 1.0f;

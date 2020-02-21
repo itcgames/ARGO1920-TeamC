@@ -6,9 +6,30 @@ Controller::Controller()
 {
 }
 
+Controller::Controller(const Controller& t_otherController)
+{
+	m_controller = t_otherController.m_controller;
+	m_controllerIndex = t_otherController.m_controllerIndex;
+	m_current = t_otherController.m_current;
+	m_previous = t_otherController.m_previous;
+	m_controllerName = t_otherController.m_controllerName;
+	m_rumble = t_otherController.m_rumble;
+}
+
+void Controller::operator=(const Controller& t_otherController)
+{
+	m_controller = t_otherController.m_controller;
+	m_controllerIndex = t_otherController.m_controllerIndex;
+	m_current = t_otherController.m_current;
+	m_previous = t_otherController.m_previous;
+	m_controllerName = t_otherController.m_controllerName;
+	m_rumble = t_otherController.m_rumble;
+}
+
 Controller::~Controller()
 {
 }
+
 void Controller::initialiseController()
 {
 	m_controller = NULL;
@@ -139,13 +160,7 @@ void Controller::update()
 		{
 			m_current.button[static_cast<int>(ButtonType::RightThumbStickDown)] = true;
 		}
-	}
-
-	if (m_current.button[static_cast<int>(ButtonType::DpadDown)])
-	{
-		count++;
- 		printf("pressing down: %s\n", std::to_string(count).c_str());
-	}
+	} 
 }
 
 /// <summary>

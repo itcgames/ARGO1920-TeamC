@@ -45,6 +45,7 @@ void ProjectileManager::createPlayerBullet(const CreateBulletEvent& t_event)
 	if (fireRateComp && fireRateComp->getNextFire() < currentTick)
 	{
 		m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "ak.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_focusPoint);
+		t_event.controller.activateRumble(RumbleStrength::Weak, RumbleLength::Short);
 		fireRateComp->setLastFire(currentTick);
 		glm::vec2 position = static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos();
 		static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Transform))->setPos(position);

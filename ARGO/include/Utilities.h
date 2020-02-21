@@ -3,7 +3,7 @@
 
 namespace Utilities
 {
-	const static int S_MAX_PLAYERS =1;
+	const static int S_MAX_PLAYERS = 1;
 	//font consts
 	const int SMALL_FONT = 24;
 	const int MEDIUM_FONT = 48;
@@ -33,7 +33,7 @@ namespace Utilities
 	const int WALL_HEALTH = 5;
 
 	const int PLAYER_RADIUS = 32;
-	const int PLAYER_FIRE_DELAY = 1;
+	const int PLAYER_FIRE_DELAY = 1000 / 10;
 
 	const int ENEMY_RADIUS = 32;
 	const int ENEMY_HP = 2;
@@ -72,5 +72,4 @@ enum class MenuStates
 	License,
 	Splash,
 	Achievements
-}; 
- 
+};

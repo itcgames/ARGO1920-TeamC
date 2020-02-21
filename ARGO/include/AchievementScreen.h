@@ -11,6 +11,7 @@ public:
 	void update(Uint16 t_deltaTime);
 	void render(SDL_Renderer* t_renderer);
 	void reset();
+	void initialise();
 private:
 	EventManager& m_eventManager;
 	Controller& m_controller;

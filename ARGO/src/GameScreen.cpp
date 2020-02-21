@@ -7,27 +7,13 @@ bool cleanUpEnemies(const Entity& t_entity)
 	return !static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health))->isAlive();
 }
 
-GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::S_MAX_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]) :
+GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::S_MAX_PLAYERS]) :
 	m_eventManager{ t_eventManager },
-	m_transformSystem{ m_eventManager },
-	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
 	m_controllers{ *t_controllers },
-	m_levelManager{ t_renderer }
+	m_levelManager{ t_renderer },
+	m_transformSystem{ m_eventManager },
+	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem }
 {
-	setControllerButtonMap(t_controllerButtonMaps);
-	int playerCount = 0;
-	for (Entity& player : m_players)
-	{
-		createPlayer(player, playerCount);
-		playerCount++;
-	}
-	m_entities.reserve(MAX_ENTITIES);
-	for (int index = 0; index < 5; index++)
-	{
-		createEnemy();
-	}
-	setUpLevel();
-	m_projectileManager.init();
 }
 
 GameScreen::~GameScreen()
@@ -164,7 +150,7 @@ void GameScreen::setUpLevel()
 	m_levelManager.createRoom(glm::vec2(12, 10), 3, 2);
 	m_levelManager.createRoom(glm::vec2(15, 1), 5, 12);
 }
- 
+
 
 void GameScreen::updatePlayers(float t_deltaTime)
 {
@@ -188,7 +174,7 @@ void GameScreen::updateEntities(float t_deltaTime)
 		m_transformSystem.update(entity, t_deltaTime);
 		m_collisionSystem.update(entity);
 	}
-} 
+}
 
 void GameScreen::updateProjectiles(float t_deltaTime)
 {
@@ -229,7 +215,51 @@ void GameScreen::preRender()
 	}
 	m_renderSystem.setFocus(focusPoint / (float)Utilities::S_MAX_PLAYERS);
 }
- 
+
+void GameScreen::reset(Controller t_controller[Utilities::S_MAX_PLAYERS])
+{
+	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
+	{
+		m_controllers[index] = t_controller[index];
+	}
+	int playerCount = 0;
+	for (Entity& player : m_players)
+	{
+		player.removeAllComponents();
+		createPlayer(player, playerCount);
+		playerCount++;
+	}
+	for (Entity& entity : m_entities)
+	{
+		entity.removeAllComponents();
+	}
+	m_entities.clear();
+
+	for (int index = 0; index < 5; index++)
+	{	
+		createEnemy();
+	}
+	setUpLevel();
+ }
+
+void GameScreen::initialise(ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS])
+{
+	setControllerButtonMap(t_controllerButtonMaps);
+	int playerCount = 0;
+	for (Entity& player : m_players)
+	{
+		createPlayer(player, playerCount);
+		playerCount++;
+	}
+	m_entities.reserve(MAX_ENTITIES);
+	for (int index = 0; index < 5; index++)
+	{
+		createEnemy();
+	}
+	setUpLevel();
+	m_projectileManager.init();
+}
+
 void GameScreen::removeDeadEnemies()
 {
 	std::vector<Entity>::iterator iter = std::remove_if(m_entities.begin(), m_entities.end(), cleanUpEnemies);

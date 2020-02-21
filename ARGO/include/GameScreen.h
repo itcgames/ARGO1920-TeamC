@@ -16,13 +16,18 @@ class GameScreen
 {
 public:
 
-	GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controller[Utilities::S_MAX_PLAYERS], ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]);
+	GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controller[Utilities::S_MAX_PLAYERS]);
 	~GameScreen();
 
 	void update(float t_deltaTime);
 	void processEvents(SDL_Event* t_event);
 	void render(SDL_Renderer* t_renderer);
+	void reset(Controller t_controller[Utilities::S_MAX_PLAYERS]);
+	void initialise(ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]);
+
 private:
+
+	
 
 	void createPlayer(Entity& t_player, int t_index);
 	void createEnemy();
@@ -34,7 +39,6 @@ private:
 	void updateProjectiles(float t_deltaTime);
 	void updateLevelManager();
 	void setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]);
-
 
 
 

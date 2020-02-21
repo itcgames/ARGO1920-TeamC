@@ -24,9 +24,7 @@ private:
 	void initLibraries();
 	void processEvent();
 	void initialiseScreens();
-	void createScreen(MenuStates t_screenType);
-	void deleteScreen(MenuStates t_screenType);
-	void createButtonMaps();
+ 	void createButtonMaps();
 	void setupIgnoredEvents();
 	void createRenderer();
 	void render();
@@ -55,15 +53,27 @@ private:
 	Uint16 m_ticksPerSecond;
 
 	MenuStates m_currentScreen;
-	GameScreen* m_gameScreen; 
-	MenuScreen* m_mainMenuScreen;
-	OptionsScreen* m_optionsScreen;
-	CreditsScreen* m_creditsScreen;
-	LicenseScreen* m_licenseScreen;
-	SplashScreen* m_splashScreen;
-	AchievementScreen* m_achievementsScreen;
+	GameScreen m_gameScreen; 
+	MenuScreen m_mainMenuScreen;
+	OptionsScreen m_optionsScreen;
+	CreditsScreen m_creditsScreen;
+	LicenseScreen m_licenseScreen;
+	SplashScreen m_splashScreen;
+	AchievementScreen m_achievementsScreen;
 
 	Controller m_controllers[Utilities::S_MAX_PLAYERS];
+
+
+	// Systems
+	HealthSystem m_healthSystem;
+	PhysicsSystem m_transformSystem;
+	InputSystem m_inputSystem;
+	RenderSystem m_renderSystem;
+	AiSystem m_aiSystem;
+	CollisionSystem m_collisionSystem;
+	CommandSystem m_commandSystem;
+	ParticleSystem m_particleSystem;
+
 
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
 };

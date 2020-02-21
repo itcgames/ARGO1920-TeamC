@@ -8,12 +8,13 @@
 class LicenseScreen
 {
 public:
-	LicenseScreen(EventManager& t_eventManager, Controller& t_controller, SDL_Renderer* t_renderer);
+	LicenseScreen(EventManager& t_eventManager);
 	~LicenseScreen();
 
 	void update(Uint16 t_deltaTime);
 	void render(SDL_Renderer* t_renderer);
 	void reset();
+	void initialise(SDL_Renderer* t_renderer, Controller& t_controller);
 private:
 
 	void setControllerButtonMaps();

@@ -23,7 +23,7 @@ void InputComponent::update()
 	m_controller.update();
 } 
 
-Controller InputComponent::getController()
+Controller& InputComponent::getController()
 {
 	return m_controller;
 } 

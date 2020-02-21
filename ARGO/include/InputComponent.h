@@ -15,7 +15,7 @@ public:
 				   ButtonCommandMap t_buttonReleasedMap = ButtonCommandMap());
 	~InputComponent();
 	void update();
-	Controller getController();
+	Controller& getController();
 	ButtonCommandMap getButtonMap(ButtonState t_mapType);
 	void setButtonMap(ButtonState t_mapType, ButtonCommandMap t_map);
 private:

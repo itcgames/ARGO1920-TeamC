@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h" 
 #include "Utilities.h"
+#include "Controller.h"
 
 struct CreateBulletEvent
 {
@@ -8,6 +9,7 @@ struct CreateBulletEvent
 	glm::vec2 direction;
 	float forceScale;
 	int type;
+	Controller& controller;
 };
 
 struct PhysicsMove
@@ -26,7 +28,7 @@ struct MenuSelectButton
 {
 	Entity& entity;
 
-};
+}; 
 
 struct CloseWindow
 {

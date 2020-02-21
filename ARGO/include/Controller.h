@@ -64,6 +64,8 @@ class Controller
 {
 public:
 	Controller();
+	Controller(const Controller& t_otherController);
+	void operator=(const Controller& t_otherController);
 	~Controller();
 	void initialiseController();
 	void update();
@@ -107,7 +109,6 @@ private:
 	const std::string SWITCH_CONTROLLER_NAME = "Nintendo Switch Pro Controller";
 
 	std::string getButtonName(ButtonType t_ButtonType);
-	int count = 0;
-
+ 
 	Rumble m_rumble;
 };

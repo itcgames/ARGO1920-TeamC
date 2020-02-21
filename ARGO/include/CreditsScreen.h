@@ -8,12 +8,13 @@
 class CreditsScreen
 {
 public:
-	CreditsScreen(EventManager& t_eventManager, Controller& t_controller, SDL_Renderer* t_renderer);
+	CreditsScreen(EventManager& t_eventManager);
 	~CreditsScreen();
 
 	void update(Uint16 t_deltaTime);
 	void render(SDL_Renderer* t_renderer);
 	void reset();
+	void initialise(SDL_Renderer* t_renderer, Controller& t_controller);
 private:
 	void setControllerButtonMaps();
 

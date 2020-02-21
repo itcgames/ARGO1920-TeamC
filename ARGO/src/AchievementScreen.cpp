@@ -22,3 +22,7 @@ void AchievementScreen::render(SDL_Renderer* t_renderer)
 void AchievementScreen::reset()
 {
 }
+
+void AchievementScreen::initialise()
+{
+}

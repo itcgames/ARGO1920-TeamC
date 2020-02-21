@@ -14,7 +14,16 @@ Game::Game() :
 	m_lastTick(0),
 	m_lastRender(0),
 	m_timePerFrame(0),
-	m_timePerTick(0)
+	m_timePerTick(0),
+	m_transformSystem{ m_eventManager },
+	m_gameScreen{ m_renderer, m_eventManager, m_controllers },
+	m_optionsScreen{ m_eventManager, m_controllers[0], m_renderer },
+	m_creditsScreen{ m_eventManager},
+	m_licenseScreen{ m_eventManager},
+	m_splashScreen{ m_eventManager},
+	m_mainMenuScreen{ m_eventManager },
+	m_achievementsScreen{ m_eventManager, m_controllers[0], m_renderer }
+
 {
 	try
 	{
@@ -57,6 +66,8 @@ Game::Game() :
 		m_timePerTick = 1000 / m_ticksPerSecond;
 
 		setupIgnoredEvents();
+
+
 
 		// Game is running
 		m_isRunning = true;
@@ -193,7 +204,7 @@ void Game::processEvent()
 	}
 	if (MenuStates::Game == m_currentScreen)
 	{
-		m_gameScreen->processEvents(&event);
+		m_gameScreen.processEvents(&event);
 	}
 }
 
@@ -202,25 +213,25 @@ void Game::update(float t_dt)
 	switch (m_currentScreen)
 	{
 	case MenuStates::Game:
-		m_gameScreen->update(t_dt);
+		m_gameScreen.update(t_dt);
 		break;
 	case MenuStates::MainMenu:
-		m_mainMenuScreen->update(t_dt);
+		m_mainMenuScreen.update(t_dt);
 		break;
 	case MenuStates::Credits:
-		m_creditsScreen->update(t_dt);
+		m_creditsScreen.update(t_dt);
 		break;
 	case MenuStates::Options:
-		m_optionsScreen->update(t_dt);
+		m_optionsScreen.update(t_dt);
 		break;
 	case MenuStates::License:
-		m_licenseScreen->update(t_dt);
+		m_licenseScreen.update(t_dt);
 		break;
 	case MenuStates::Splash:
-		m_splashScreen->update(t_dt);
+		m_splashScreen.update(t_dt);
 		break;
 	case MenuStates::Achievements:
-		m_achievementsScreen->update(t_dt);
+		m_achievementsScreen.update(t_dt);
 		break;
 	default:
 		break;
@@ -233,25 +244,25 @@ void Game::render()
 	switch (m_currentScreen)
 	{
 	case MenuStates::Game:
-		m_gameScreen->render(m_renderer);
+		m_gameScreen.render(m_renderer);
 		break;
 	case MenuStates::MainMenu:
-		m_mainMenuScreen->render(m_renderer);
+		m_mainMenuScreen.render(m_renderer);
 		break;
 	case MenuStates::Credits:
-		m_creditsScreen->render(m_renderer);
+		m_creditsScreen.render(m_renderer);
 		break;
 	case MenuStates::Options:
-		m_optionsScreen->render(m_renderer);
+		m_optionsScreen.render(m_renderer);
 		break;
 	case MenuStates::License:
-		m_licenseScreen->render(m_renderer);
+		m_licenseScreen.render(m_renderer);
 		break;
 	case MenuStates::Splash:
-		m_splashScreen->render(m_renderer);
+		m_splashScreen.render(m_renderer);
 		break;
 	case MenuStates::Achievements:
-		m_achievementsScreen->render(m_renderer);
+		m_achievementsScreen.render(m_renderer);
 		break;
 	default:
 		break;
@@ -264,10 +275,10 @@ void Game::render()
 /// </summary>
 void Game::cleanup()
 {
-	AudioManager::Release();
-	m_audioMgr = NULL;
 	AssetManager::Release();
 	m_assetMgr = NULL;
+	AudioManager::Release();
+	m_audioMgr = NULL;
 	IMG_Quit();
 	TTF_Quit();
 	SDL_DestroyWindow(m_window);
@@ -307,33 +318,29 @@ void Game::changeScreen(const ChangeScreen& t_event)
 {
 	m_currentScreen = t_event.newScreen;
 
-	if (MenuStates::Game == m_currentScreen && m_gameScreen)
-	{
-		delete(m_gameScreen);
-	}
 	createButtonMaps();
 	switch (m_currentScreen)
 	{
 	case MenuStates::Game:
-		m_gameScreen = new GameScreen(m_renderer, m_eventManager, m_controllers, m_controllerButtonMaps);
+		m_gameScreen.reset(m_controllers);
 		break;
 	case MenuStates::MainMenu:
-		m_mainMenuScreen->reset();
+		m_mainMenuScreen.reset();
 		break;
 	case MenuStates::Credits:
-		m_creditsScreen->reset();
+		m_creditsScreen.reset();
 		break;
 	case MenuStates::Options:
-		m_optionsScreen->reset();
+		m_optionsScreen.reset();
 		break;
 	case MenuStates::License:
-		m_licenseScreen->reset();
+		m_licenseScreen.reset();
 		break;
 	case MenuStates::Splash:
-		m_splashScreen->reset();
+		m_splashScreen.reset();
 		break;
 	case MenuStates::Achievements:
-		m_achievementsScreen->reset();
+		m_achievementsScreen.reset();
 		break;
 	default:
 		break;
@@ -343,13 +350,13 @@ void Game::changeScreen(const ChangeScreen& t_event)
 void Game::initialiseScreens()
 {
 	createButtonMaps();
-	m_gameScreen = new GameScreen(m_renderer, m_eventManager, m_controllers, m_controllerButtonMaps);
-	m_optionsScreen = new OptionsScreen(m_eventManager, m_controllers[0], m_renderer);
-	m_creditsScreen = new CreditsScreen(m_eventManager, m_controllers[0], m_renderer);
-	m_licenseScreen = new LicenseScreen(m_eventManager, m_controllers[0], m_renderer);
-	m_splashScreen = new SplashScreen(m_eventManager, m_controllers[0], m_renderer);
-	m_mainMenuScreen = new MenuScreen(m_eventManager, m_controllers[0], m_renderer);
-	m_achievementsScreen = new AchievementScreen(m_eventManager, m_controllers[0], m_renderer);
+	m_gameScreen.initialise(m_controllerButtonMaps);
+	m_mainMenuScreen.initialise(m_renderer, m_controllers[0]);
+	m_licenseScreen.initialise(m_renderer, m_controllers[0]);
+	m_creditsScreen.initialise(m_renderer, m_controllers[0]);
+	m_splashScreen.initialise(m_renderer, m_controllers[0]);
+	m_achievementsScreen.initialise();
+	m_optionsScreen.initialise();
 	m_currentScreen = MenuStates::Splash;
 }
 

@@ -22,3 +22,7 @@ void OptionsScreen::render(SDL_Renderer* t_renderer)
 void OptionsScreen::reset()
 {
 }
+
+void OptionsScreen::initialise()
+{
+}

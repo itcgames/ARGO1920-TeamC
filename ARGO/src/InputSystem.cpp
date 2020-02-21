@@ -29,7 +29,7 @@ void InputSystem::update(Entity& t_entity)
 
 void InputSystem::handleInputs(InputComponent* t_inputComponent, CommandComponent* t_commandComponent)
 {
-	Controller controller = t_inputComponent->getController();
+	Controller& controller = t_inputComponent->getController();
 	for (int index = 0; index < Utilities::NUMBER_OF_CONTROLLER_BUTTONS; index++)
 	{
 		ButtonState stateOfButton = controller.getButtonState((ButtonType)index);

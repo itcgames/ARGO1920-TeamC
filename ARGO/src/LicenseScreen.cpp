@@ -1,24 +1,10 @@
 #include "stdafx.h"
 #include "LicenseScreen.h"
 
-LicenseScreen::LicenseScreen(EventManager& t_eventManager, Controller& t_controller, SDL_Renderer* t_renderer) :
+LicenseScreen::LicenseScreen(EventManager& t_eventManager) :
 	m_eventManager{ t_eventManager }
 
 {
-	setControllerButtonMaps();
-
-	m_background.addComponent(new VisualComponent("License_Background.png", t_renderer));
-	m_background.addComponent(new TransformComponent(0, 0));
-
- 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
-
-	m_inputEntity.addComponent(new InputComponent(t_controller,
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)],
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)],
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)]));
-	m_inputEntity.addComponent(new CommandComponent());
-
-	m_screenStartTime = SDL_GetTicks();
 }
 
 LicenseScreen::~LicenseScreen()
@@ -43,6 +29,24 @@ void LicenseScreen::render(SDL_Renderer* t_renderer)
 void LicenseScreen::reset()
 {
  	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
+	m_screenStartTime = SDL_GetTicks();
+}
+
+void LicenseScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
+{
+	setControllerButtonMaps();
+
+	m_background.addComponent(new VisualComponent("License_Background.png", t_renderer));
+	m_background.addComponent(new TransformComponent(0, 0));
+
+	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
+
+	m_inputEntity.addComponent(new InputComponent(t_controller,
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)],
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)],
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)]));
+	m_inputEntity.addComponent(new CommandComponent());
+
 	m_screenStartTime = SDL_GetTicks();
 }
 

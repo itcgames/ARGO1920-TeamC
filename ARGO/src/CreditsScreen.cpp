@@ -1,22 +1,9 @@
 #include "stdafx.h"
 #include "CreditsScreen.h"
 
-CreditsScreen::CreditsScreen(EventManager& t_eventManager, Controller& t_controller, SDL_Renderer* t_renderer) :
+CreditsScreen::CreditsScreen(EventManager& t_eventManager) :
 	m_eventManager{ t_eventManager }
-{
-	setControllerButtonMaps();
-
-	m_bachground.addComponent(new VisualComponent("Credits_Background.png", t_renderer));
-	m_bachground.addComponent(new TransformComponent(0, 0));
-
-	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
-
-	m_inputEntity.addComponent(new InputComponent(t_controller,
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)],
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)],
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)]));
-	m_inputEntity.addComponent(new CommandComponent());
-}
+{}
 
 CreditsScreen::~CreditsScreen()
 {
@@ -36,6 +23,23 @@ void CreditsScreen::render(SDL_Renderer* t_renderer)
 void CreditsScreen::reset()
 {
 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
+}
+
+void CreditsScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
+{
+	setControllerButtonMaps();
+
+	m_bachground.addComponent(new VisualComponent("Credits_Background.png", t_renderer));
+	m_bachground.addComponent(new TransformComponent(0, 0));
+
+	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
+
+	m_inputEntity.addComponent(new InputComponent(t_controller,
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)],
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)],
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)]));
+	m_inputEntity.addComponent(new CommandComponent());
+
 }
 
 void CreditsScreen::setControllerButtonMaps()
