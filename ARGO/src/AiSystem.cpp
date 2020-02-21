@@ -94,7 +94,7 @@ void AiSystem::playerMovementDecision(Entity& t_entity)
 
 void AiSystem::playerShootingDecision(Entity& t_entity)
 {
-	if (m_botEnemyData.distance < BOT_CAN_SEE_ENEMY_DISTANCE * BOT_CAN_SEE_ENEMY_DISTANCE)
+	if (m_botEnemyData.distance < CAN_SEE_ENEMY_DISTANCE * CAN_SEE_ENEMY_DISTANCE)
 	{
 		glm::vec2 playerPos = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform))->getPos();
 		glm::vec2 enemyPos = static_cast<TransformComponent*>(m_botEnemyData.enemy->getComponent(ComponentType::Transform))->getPos();
@@ -103,7 +103,7 @@ void AiSystem::playerShootingDecision(Entity& t_entity)
 }
 void AiSystem::setEnemyData(glm::vec2 t_botPosition)
 {
-	m_botEnemyData.distance = BOT_CAN_SEE_ENEMY_DISTANCE * BOT_CAN_SEE_ENEMY_DISTANCE;
+	m_botEnemyData.distance = CAN_SEE_ENEMY_DISTANCE * CAN_SEE_ENEMY_DISTANCE;
 	for (auto& enemy : m_enemies)
 	{
 		if (enemy.getComponent(ComponentType::ColliderCircle))
@@ -148,7 +148,6 @@ void AiSystem::setClosestLeaderData(glm::vec2 t_botPosition)
 
 void AiSystem::setClosestPickupData(glm::vec2 t_botPosition)
 {
-	//TODO
 }
 
 void AiSystem::setGoalData(glm::vec2 t_botPosition)

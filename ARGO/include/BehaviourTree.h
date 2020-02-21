@@ -2,9 +2,10 @@
 #include <Entity.h>
 
 ////----------------------------This is the data we will need for our behaviour to function.----------------------------
-const int BOT_CAN_SEE_ENEMY_DISTANCE = Utilities::TILE_SIZE * 8;
-const int BOT_DISTANCE_TO_CARE_ABOUT_GOAL_SCALER = Utilities::TILE_SIZE * 2;
-const int BOT_DEFAUL_MOVE_TOWARD_GOAL_WEIGHT = 5;
+const int CAN_SEE_ENEMY_DISTANCE = Utilities::TILE_SIZE * 8;
+const int DISTANCE_TO_CARE_ABOUT_GOAL_SCALER = Utilities::TILE_SIZE * 2;
+const int DEFAULT_MOVE_TOWARD_GOAL_WEIGHT = 5;
+const float RETREAT_WEIGHT_SCALER = 10.0f;
 
 struct EnemyData
 {
@@ -95,7 +96,8 @@ public:
 	}
 	virtual float getWeight() override
 	{
-		return (1 - m_data->distance / (BOT_CAN_SEE_ENEMY_DISTANCE * BOT_CAN_SEE_ENEMY_DISTANCE)) * 10;
+		//inverting the scaler by taking it away from 1.
+		return (1 - m_data->distance / (CAN_SEE_ENEMY_DISTANCE * CAN_SEE_ENEMY_DISTANCE)) * RETREAT_WEIGHT_SCALER;
 	}
 };
 
@@ -114,7 +116,7 @@ public:
 	}
 };
 
-class GetAmmoBehaviour : public WeightedNode { //TODO
+class GetAmmoBehaviour : public WeightedNode {
 private:
 	ClosestPickupData* m_data;
 public:
@@ -129,7 +131,7 @@ public:
 	}
 };
 
-class MoveToGoalBehaviour : public WeightedNode { //TODO
+class MoveToGoalBehaviour : public WeightedNode {
 private:
 	GoalData* m_data;
 public:
@@ -163,10 +165,6 @@ public:
 	}
 	virtual float getWeight() override
 	{
-		if (m_data->distance == 0)
-		{
-			return 0.0f;
-		}
-		return m_data->distance / (BOT_DISTANCE_TO_CARE_ABOUT_GOAL_SCALER * BOT_DISTANCE_TO_CARE_ABOUT_GOAL_SCALER);
+		return m_data->distance == 0 ? 0.0f : m_data->distance / (DISTANCE_TO_CARE_ABOUT_GOAL_SCALER * DISTANCE_TO_CARE_ABOUT_GOAL_SCALER);
 	}
 };

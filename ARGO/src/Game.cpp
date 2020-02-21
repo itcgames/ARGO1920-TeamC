@@ -64,6 +64,7 @@ Game::Game() :
 
 		m_levelManager.setupLevel();
 
+		//Creates a room at a given position with a given width and height
 		m_levelManager.createRoom(glm::vec2(1, 1), 12, 12);
 		m_levelManager.createRoom(glm::vec2(13, 2), 2, 2);
 		m_levelManager.createRoom(glm::vec2(15, 1), 5, 12);
@@ -363,11 +364,10 @@ void Game::createPlayer(Entity& t_player)
 		std::pair<ButtonType, Command*>(ButtonType::RightTrigger, new FireBulletCommand()),
 		std::pair<ButtonType,Command*>(ButtonType::Back, new CloseWindowCommand()) };
 
-	InputComponent* impComp = new InputComponent(buttonPressMap, buttonPressMap);
-	if (impComp->getController().getSDLController())
+	InputComponent* inputComp = new InputComponent(buttonPressMap, buttonPressMap);
+	if (inputComp->getController().getSDLController())
 	{
-		// passing two of the same object as at this moment the commands for button press is the same for button held
-		t_player.addComponent(impComp);
+		t_player.addComponent(inputComp);
 	}
 	else
 	{
