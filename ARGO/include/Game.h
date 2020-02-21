@@ -1,36 +1,14 @@
 #pragma once
-#include <iostream>
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_mixer.h>
-#include "Controller.h"
-#include "MacroCommand.h"
-#include <gtc/random.hpp>
-#include "Entity.h"
-#include "HealthComponent.h"
-#include "TransformComponent.h"
-#include "InputComponent.h"
-#include "ColourComponent.h"
-#include "VisualComponent.h"
-#include "TextComponent.h"
-#include "ColliderAABBComponent.h"
-#include "ColliderCircleComponent.h"
-#include "TagComponent.h"
-#include "HealthSystem.h"
-#include "PhysicsSystem.h"
-#include "InputSystem.h"
-#include "RenderSystem.h"
-#include "AiSystem.h"
-#include "AssetManager.h"
-#include "FiniteStateMachine.h"
-#include "ParticleSystem.h"
-#include "EventManager.h"
-#include "CollisionSystem.h"
-#include "ProjectileManager.h"
-#include "AudioManager.h"
-#include "CommandSystem.h"
-#include "LevelManager.h"
-#include <algorithm>
+#include "EventManager.h"  
+#include "AudioManager.h" 
+#include "GameScreen.h"
+#include "MenuScreen.h"
+#include "CreditsScreen.h"
+#include "OptionsScreen.h"
+#include "SplashScreen.h"
+#include "LicenseScreen.h"
+#include "AchievementScreen.h"
+#include "Event.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -42,41 +20,23 @@ public:
 	~Game();
 	void run();
 private:
+	void update(float t_deltaTime);
 	void initLibraries();
 	void processEvent();
-	void update(float t_dt);
-	void render();
-	void preRender();
-	void cleanup();
-	void createPlayer(Entity& t_player);
-	void createEnemy();
-	void removeDeadEnemies();
-	void closeWindow(const CloseWindow& t_event);
+	void initialiseScreen();
+	void resetScreen();
+ 	void createButtonMaps();
 	void setupIgnoredEvents();
 	void createRenderer();
+	void render();
+	void cleanup();
+
+	void closeWindow(const CloseWindow& t_event = CloseWindow());
+	void changeScreen(const ChangeScreen& t_event);
 
 	AssetManager* m_assetMgr;
 	AudioManager* m_audioMgr;
-
-	const int MAX_ENTITIES = 10000;
-	const int PLAYER_MAX_HEALTH = 10;
 	EventManager m_eventManager;
-
-	HealthSystem m_hpSystem;
-	PhysicsSystem m_transformSystem;
-	InputSystem m_inputSystem;
-	RenderSystem m_renderSystem;
-	AiSystem m_aiSystem;
-	ParticleSystem m_particleSystem;
-	CollisionSystem m_collisionSystem;
-	CommandSystem m_commandSystem;
-
-
-	Entity m_players[Utilities::S_MAX_PLAYERS];
-	std::vector<Entity> m_entities;
-
-	ProjectileManager m_projectileManager;
-	LevelManager m_levelManager;
 
 	// Window used for the game
 	SDL_Window* m_window;
@@ -85,4 +45,19 @@ private:
 
 	// bool for if game is running or not
 	bool m_isRunning;
+
+	MenuStates m_currentScreen;
+	GameScreen m_gameScreen; 
+	MenuScreen m_mainMenuScreen;
+	OptionsScreen m_optionsScreen;
+	CreditsScreen m_creditsScreen;
+	LicenseScreen m_licenseScreen;
+	SplashScreen m_splashScreen;
+	AchievementScreen m_achievementsScreen;
+
+	Controller m_controllers[Utilities::S_MAX_PLAYERS];
+
+	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
+
+	bool m_hasScreenBeenSet[Utilities::S_NUMBER_OF_SCREENS];
 };

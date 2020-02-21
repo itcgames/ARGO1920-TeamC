@@ -46,15 +46,35 @@ void CommandSystem::update(Entity& t_entity, EventManager& t_eventManager)
 			{
 				if (inputComp)
 				{
-					if (inputComp->getController().getCurrent().RightThumbStick != glm::vec2(0,0))
+					if (inputComp->getController().getCurrent().RightThumbStick != glm::vec2(0, 0))
 					{
-						t_eventManager.emitEvent(createBulletEvent{ t_entity, glm::normalize(inputComp->getController().getCurrent().RightThumbStick), 32, 0 });
+						t_eventManager.emitEvent(CreateBulletEvent{ t_entity, glm::normalize(inputComp->getController().getCurrent().RightThumbStick), 32, 0, inputComp->getController() });
 					}
 				}
 			}
 			else if (typeid(*commandComp->getCommands().top()) == typeid(CloseWindowCommand))
 			{
 				t_eventManager.emitEvent(CloseWindow());
+			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(MenuMoveUpCommand))
+			{
+				t_eventManager.emitEvent(MenuMoveButtonsUpDown{ false });
+			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(MenuMoveDownCommand))
+			{
+				t_eventManager.emitEvent(MenuMoveButtonsUpDown{ true });
+			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(MenuSelectButtonCommand))
+			{
+				t_eventManager.emitEvent(MenuSelectButton{ t_entity });
+			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(GoToMainMenuCommand))
+			{
+				t_eventManager.emitEvent(ChangeScreen{MenuStates::MainMenu});
+			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(GoToLicenseScreenCommand))
+			{
+				t_eventManager.emitEvent(ChangeScreen{ MenuStates::License });
 			}
 			else continue;
 			commandComp->popTopCommand();
