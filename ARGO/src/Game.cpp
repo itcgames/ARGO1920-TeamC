@@ -100,9 +100,10 @@ void Game::run()
 			timeSinceLastTick = currentTick - lastTick;
 			if (timeSinceLastTick > 0)
 			{
-				lastTick = currentTick;
 				processEvent();
-				update((float)timeSinceLastTick / (float)timePerFrame);
+				float deltaTime = (float)timeSinceLastTick / (float)timePerFrame;
+				lastTick = currentTick;
+				update(deltaTime);
 			}
 		}
 		render();

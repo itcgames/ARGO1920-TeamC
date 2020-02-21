@@ -12,7 +12,8 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_controllers{ *t_controllers },
 	m_levelManager{ t_renderer },
 	m_transformSystem{ m_eventManager },
-	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem }
+	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
+	m_aiSystem{ m_players, m_entities, m_eventManager }
 {
 }
 
@@ -112,10 +113,7 @@ void GameScreen::createPlayer(Entity& t_player, int t_index)
 {
 	t_player.addComponent(new HealthComponent(10, 10));
 	t_player.addComponent(new TransformComponent());
-	t_player.addComponent(new InputComponent(m_controllers[t_index],
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][t_index],
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][t_index],
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][t_index]));
+
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
@@ -126,8 +124,17 @@ void GameScreen::createPlayer(Entity& t_player, int t_index)
 		Utilities::PARTICLE_MAX_PARTICLES_SAMPLE, Utilities::PARTICLES_PER_SECOND_SAMPLE));
 	t_player.addComponent(new PrimitiveComponent());
 	t_player.addComponent(new FireRateComponent(Utilities::PLAYER_FIRE_DELAY));
-
-
+	if (m_controllers[t_index].getSDLController())
+	{
+		t_player.addComponent(new InputComponent(m_controllers[t_index],
+			m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][t_index],
+			m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][t_index],
+			m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][t_index]));
+	}
+	else
+	{
+		t_player.addComponent(new AiComponent(AITypes::ePlayerBot, AIStates::eWander, 0, 0));
+	}
 }
 
 void GameScreen::createEnemy()
@@ -144,11 +151,41 @@ void GameScreen::createEnemy()
 void GameScreen::setUpLevel()
 {
 	m_levelManager.setupLevel();
-	//magic numbers for creating a sandbox level plz ignore.
+	//Creates a room at a given position with a given width and height
 	m_levelManager.createRoom(glm::vec2(1, 1), 12, 12);
-	m_levelManager.createRoom(glm::vec2(12, 2), 3, 2);
-	m_levelManager.createRoom(glm::vec2(12, 10), 3, 2);
+	m_levelManager.createRoom(glm::vec2(13, 2), 2, 2);
 	m_levelManager.createRoom(glm::vec2(15, 1), 5, 12);
+	m_levelManager.createRoom(glm::vec2(3, 13), 2, 2);
+	m_levelManager.createRoom(glm::vec2(1, 15), 5, 12);
+	m_levelManager.createRoom(glm::vec2(6, 23), 2, 2);
+	m_levelManager.createRoom(glm::vec2(8, 15), 20, 18);
+	m_levelManager.createRoom(glm::vec2(17, 13), 2, 2);
+	m_levelManager.createRoom(glm::vec2(17, 13), 2, 2);
+	m_levelManager.createRoom(glm::vec2(1, 29), 5, 10);
+	m_levelManager.createRoom(glm::vec2(6, 35), 8, 4);
+	m_levelManager.createRoom(glm::vec2(10, 33), 2, 2);
+	m_levelManager.createRoom(glm::vec2(22, 1), 20, 5);
+	m_levelManager.createRoom(glm::vec2(24, 6), 2, 9);
+	m_levelManager.createRoom(glm::vec2(30, 8), 6, 14);
+	m_levelManager.createRoom(glm::vec2(32, 6), 2, 2);
+	m_levelManager.createRoom(glm::vec2(28, 18), 2, 2);
+	m_levelManager.createRoom(glm::vec2(24, 33), 2, 2);
+	m_levelManager.createRoom(glm::vec2(16, 35), 14, 4);
+	m_levelManager.createRoom(glm::vec2(28, 29), 2, 2);
+	m_levelManager.createRoom(glm::vec2(30, 24), 4, 9);
+	m_levelManager.createRoom(glm::vec2(34, 24), 5, 15);
+	m_levelManager.createRoom(glm::vec2(30, 36), 4, 2);
+	m_levelManager.createRoom(glm::vec2(42, 2), 2, 2);
+	m_levelManager.createRoom(glm::vec2(44, 1), 14, 8);
+	m_levelManager.createRoom(glm::vec2(36, 14), 2, 2);
+	m_levelManager.createRoom(glm::vec2(38, 12), 10, 9);
+	m_levelManager.createRoom(glm::vec2(50, 12), 8, 20);
+	m_levelManager.createRoom(glm::vec2(41, 23), 9, 6);
+	m_levelManager.createRoom(glm::vec2(39, 25), 2, 2);
+	m_levelManager.createRoom(glm::vec2(48, 14), 2, 2);
+	m_levelManager.createRoom(glm::vec2(54, 32), 2, 2);
+	m_levelManager.createRoom(glm::vec2(41, 34), 17, 4);
+	m_levelManager.createRoom(glm::vec2(41, 31), 7, 3);
 }
 
 
@@ -158,6 +195,7 @@ void GameScreen::updatePlayers(float t_deltaTime)
 	{
 		m_inputSystem.update(player);
 		m_commandSystem.update(player, m_eventManager);
+		m_aiSystem.update(player);
 		m_healthSystem.update(player);
 		m_transformSystem.update(player, t_deltaTime);
 		m_collisionSystem.update(player);
@@ -236,11 +274,11 @@ void GameScreen::reset(Controller t_controller[Utilities::S_MAX_PLAYERS])
 	m_entities.clear();
 
 	for (int index = 0; index < 5; index++)
-	{	
+	{
 		createEnemy();
 	}
 	setUpLevel();
- }
+}
 
 void GameScreen::initialise(ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS])
 {

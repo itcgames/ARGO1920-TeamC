@@ -32,7 +32,7 @@ public:
 	void updateBullet(Bullet& t_bullet, float t_dt);
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
 private:
-	void tick();
+	void tick(float t_dt);
 
 	static const int BULLET_POOL_SIZE = 160;
 	static const int BULLET_RADIUS = 4;

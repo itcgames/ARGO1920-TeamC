@@ -26,7 +26,7 @@ public:
 	void setPosition(glm::vec2 t_pos);
 	glm::vec2 getEmitterPosition();
 	bool checkParticlePastKillTime(int t_index);
-	void updateParticle(int t_index);
+	void updateParticle(int t_index, float t_dt);
 	bool getParticleAlive(int t_index);
 	void setParticlesPerSecond(float t_particlesPerSecond);
 	float getParticlesPerSecond();

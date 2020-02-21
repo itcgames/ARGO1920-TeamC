@@ -45,7 +45,10 @@ void ProjectileManager::createPlayerBullet(const CreateBulletEvent& t_event)
 	if (fireRateComp && fireRateComp->getNextFire() < currentTick)
 	{
 		m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "ak.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_focusPoint);
-		t_event.controller.activateRumble(RumbleStrength::Weak, RumbleLength::Short);
+		if (t_event.controller.getSDLController())
+		{
+			t_event.controller.activateRumble(RumbleStrength::Weak, RumbleLength::Short);
+		}
 		fireRateComp->setLastFire(currentTick);
 		glm::vec2 position = static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos();
 		static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Transform))->setPos(position);
@@ -81,7 +84,7 @@ void ProjectileManager::createEnemyBullet(const CreateBulletEvent& t_event)
 
 void ProjectileManager::update(float t_dt)
 {
-	tick();
+	tick(t_dt);
 	for (auto& bullet : m_playerBullets)
 	{
 		updateBullet(bullet, t_dt);
@@ -109,20 +112,20 @@ void ProjectileManager::updateBullet(Bullet& t_bullet, float t_dt)
 	}
 }
 
-void ProjectileManager::tick()
+void ProjectileManager::tick(float t_dt)
 {
 	try
 	{
 		for (auto& bullet : m_playerBullets)
 		{
-			if (!static_cast<TimerComponent*>(bullet.entity.getComponent(ComponentType::Timer))->tick(1))
+			if (!static_cast<TimerComponent*>(bullet.entity.getComponent(ComponentType::Timer))->tick(t_dt))
 			{
 				static_cast<HealthComponent*>(bullet.entity.getComponent(ComponentType::Health))->setHealth(0);
 			}
 		}
 		for (auto& bullet : m_enemyBullets)
 		{
-			if (!static_cast<TimerComponent*>(bullet.entity.getComponent(ComponentType::Timer))->tick(1))
+			if (!static_cast<TimerComponent*>(bullet.entity.getComponent(ComponentType::Timer))->tick(t_dt))
 			{
 				static_cast<HealthComponent*>(bullet.entity.getComponent(ComponentType::Health))->setHealth(0);
 			}

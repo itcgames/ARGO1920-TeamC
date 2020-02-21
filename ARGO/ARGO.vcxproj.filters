@@ -407,6 +407,9 @@
     <ClInclude Include="include\FireRateComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\BehaviourTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\AchievementScreen.h">
       <Filter>Header Files\Screens</Filter>
     </ClInclude>
