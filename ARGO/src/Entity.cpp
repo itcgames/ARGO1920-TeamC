@@ -14,11 +14,7 @@ Entity::~Entity()
 		if (m_components.at(i) == NULL)
 		{
 			continue;
-		}
-		if (static_cast<int>(m_components.at(i)->getType()) == -572662307)
-		{
-			int stopHereNggr = 0;
-		}
+		} 
 		delete m_components.at(i);
 		m_components.at(i) = nullptr;
 	}
