@@ -28,7 +28,7 @@ void ParticleSystem::update(Entity& t_entity, float t_dt)
 						adjustParticleAngles((particleComp->getAngle() + particleComp->getRotating()), particleComp);
 					}
 					//Set's the particles movement, places it and decrements the placeTimer
-					particleComp->setParticleMovement(particleComp->getNextParticle(), randomDirectionVectorInRange(particleComp->getAngle(), particleComp->getAngleOffset()) * t_dt);
+					particleComp->setParticleMovement(particleComp->getNextParticle(), randomDirectionVectorInRange(particleComp->getAngle(), particleComp->getAngleOffset()));
 
 					particleComp->setParticle(particleComp->getEmitterPosition() + glm::vec2(randomOffset(particleComp->getOffset()), particleComp->getOffset()));
 					particleComp->setPlaceParticleTimer(particleComp->getPlaceParticleTimer() - 1);
@@ -43,12 +43,12 @@ void ParticleSystem::update(Entity& t_entity, float t_dt)
 					particleComp->killParticle(i);
 				}
 				//Updates all the living particles. Moving them and incrementing their timers.
-				particleComp->updateParticle(i);
+				particleComp->updateParticle(i, t_dt);
 
 			}
 		}
 		//Increment the placeTimer. This value is set by the particlesPerSecond variable. When the place timer is more than 1 a particle is placed.
-		particleComp->setPlaceParticleTimer(particleComp->getPlaceParticleTimer() + particleComp->getParticlesPerSecond());
+		particleComp->setPlaceParticleTimer(particleComp->getPlaceParticleTimer() + particleComp->getParticlesPerSecond() * t_dt);
 	}
 }
 void ParticleSystem::update(Entity& t_entity)
