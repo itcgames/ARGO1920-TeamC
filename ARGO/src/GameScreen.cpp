@@ -304,10 +304,10 @@ void GameScreen::initialise(ButtonCommandMap t_controllerButtonMaps[Utilities::N
 
 void GameScreen::removeDeadEnemies()
 {
-	/*std::vector<Entity>::iterator iter = std::remove_if(m_entities.begin(), m_entities.end(), cleanUpEnemies);
+	std::vector<Entity>::iterator iter = std::remove_if(m_entities.begin(), m_entities.end(), cleanUpEnemies);
 	while (iter != m_entities.end())
 	{
 		iter->nullAllComponents();
 		iter = m_entities.erase(iter);
-	}*/
+	}
 }
