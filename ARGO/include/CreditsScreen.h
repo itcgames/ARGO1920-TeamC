@@ -19,7 +19,7 @@ private:
 	void setControllerButtonMaps();
 
 	Entity m_inputEntity;
-	Entity m_bachground;
+	Entity m_background;
 
 	RenderSystem m_renderSystem;
 	CommandSystem m_commandSystem;

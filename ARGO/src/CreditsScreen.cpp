@@ -17,7 +17,7 @@ void CreditsScreen::update(float t_deltaTime)
 
 void CreditsScreen::render(SDL_Renderer* t_renderer)
 {
-	m_renderSystem.render(t_renderer, m_bachground);
+	m_renderSystem.render(t_renderer, m_background);
 }
 
 void CreditsScreen::reset()
@@ -29,8 +29,8 @@ void CreditsScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controlle
 {
 	setControllerButtonMaps();
 
-	m_bachground.addComponent(new VisualComponent("Credits_Background.png", t_renderer));
-	m_bachground.addComponent(new TransformComponent(0, 0));
+	m_background.addComponent(new VisualComponent("Credits_Background.png", t_renderer));
+	m_background.addComponent(new TransformComponent(0, 0));
 
 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
 
