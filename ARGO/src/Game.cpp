@@ -8,13 +8,7 @@
 /// </summary>
 
 class State;
-Game::Game() :
-	m_framesPerSecond(60),
-	m_ticksPerSecond(60),
-	m_lastTick(0),
-	m_lastRender(0),
-	m_timePerFrame(0),
-	m_timePerTick(0),
+Game::Game() : 
  	m_gameScreen{ m_renderer, m_eventManager, m_controllers },
 	m_optionsScreen{ m_eventManager, m_controllers[0], m_renderer },
 	m_creditsScreen{ m_eventManager},
@@ -65,12 +59,7 @@ Game::Game() :
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 		m_eventManager.subscribeToEvent<ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
 
-		m_timePerFrame = 1000 / m_framesPerSecond;
-		m_timePerTick = 1000 / m_ticksPerSecond;
-
 		setupIgnoredEvents();
-
-
 
 		// Game is running
 		m_isRunning = true;
@@ -97,7 +86,6 @@ Game::~Game()
 /// </summary>
 void Game::run()
 {
-
 	Uint32 timePerFrame = 1000 / 60;
 	Uint32 lastTick = SDL_GetTicks();
 	Uint32 nextFrame = SDL_GetTicks() + timePerFrame;

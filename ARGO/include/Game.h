@@ -46,13 +46,6 @@ private:
 	// bool for if game is running or not
 	bool m_isRunning;
 
-	Uint16 m_timePerFrame;
-	Uint16 m_timePerTick;
-	Uint16 m_lastTick;
-	Uint16 m_lastRender;
-	Uint16 m_framesPerSecond;
-	Uint16 m_ticksPerSecond;
-
 	MenuStates m_currentScreen;
 	GameScreen m_gameScreen; 
 	MenuScreen m_mainMenuScreen;
