@@ -25,14 +25,7 @@ TransformComponent::TransformComponent(glm::vec2 t_pos, float t_rotation) :
 {
 	m_pos = t_pos;
 	m_rotation = t_rotation;
-}
-
-TransformComponent::TransformComponent(float t_rotation, glm::vec2 t_pos) :
-	Component(ComponentType::Transform)
-{
-	m_rotation = t_rotation;
-	m_pos = t_pos;
-}
+} 
 
 /// <summary>
 /// Default constructor that gives random pos and rotation of 0.0f 

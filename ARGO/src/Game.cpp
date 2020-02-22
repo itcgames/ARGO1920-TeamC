@@ -8,15 +8,15 @@
 /// </summary>
 
 class State;
-Game::Game() : 
- 	m_gameScreen{ m_renderer, m_eventManager, m_controllers },
+Game::Game() :
+	m_gameScreen{ m_renderer, m_eventManager, m_controllers },
 	m_optionsScreen{ m_eventManager, m_controllers[0], m_renderer },
-	m_creditsScreen{ m_eventManager},
-	m_licenseScreen{ m_eventManager},
-	m_splashScreen{ m_eventManager},
+	m_creditsScreen{ m_eventManager },
+	m_licenseScreen{ m_eventManager },
+	m_splashScreen{ m_eventManager },
 	m_mainMenuScreen{ m_eventManager },
 	m_achievementsScreen{ m_eventManager, m_controllers[0], m_renderer },
-	m_currentScreen{ MenuStates::Game }
+	m_currentScreen{ MenuStates::Splash }
 {
 	try
 	{
@@ -323,27 +323,27 @@ void Game::initialiseScreen()
 	createButtonMaps();
 	switch (m_currentScreen)
 	{
-	case MenuStates::Game:	
-		m_gameScreen.initialise(m_controllerButtonMaps, m_controllers);
+	case MenuStates::Game:
+		m_gameScreen.initialise(m_renderer, m_controllerButtonMaps, m_controllers);
 		break;
-	case MenuStates::MainMenu:	
+	case MenuStates::MainMenu:
 		m_mainMenuScreen.initialise(m_renderer, m_controllers[0]);
- 		break;
-	case MenuStates::Credits:	
+		break;
+	case MenuStates::Credits:
 		m_creditsScreen.initialise(m_renderer, m_controllers[0]);
- 		break;
-	case MenuStates::Options:	
+		break;
+	case MenuStates::Options:
 		m_optionsScreen.initialise();
- 		break;
-	case MenuStates::License:	
+		break;
+	case MenuStates::License:
 		m_licenseScreen.initialise(m_renderer, m_controllers[0]);
- 		break;
-	case MenuStates::Splash:	
+		break;
+	case MenuStates::Splash:
 		m_splashScreen.initialise(m_renderer, m_controllers[0]);
- 		break;
-	case MenuStates::Achievements:	
+		break;
+	case MenuStates::Achievements:
 		m_achievementsScreen.initialise();
- 		break;
+		break;
 	default:
 		break;
 	}
@@ -356,7 +356,7 @@ void Game::resetScreen()
 	switch (m_currentScreen)
 	{
 	case MenuStates::Game:
-		m_gameScreen.reset(m_controllers);
+		m_gameScreen.reset(m_renderer, m_controllers);
 		break;
 	case MenuStates::MainMenu:
 		m_mainMenuScreen.reset();

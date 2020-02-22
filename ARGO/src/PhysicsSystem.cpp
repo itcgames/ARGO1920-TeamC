@@ -27,18 +27,7 @@ void PhysicsSystem::update(Entity& t_entity, float t_dt)
 				forceComp->setForce(forceComp->getForce() * FRICTION_SCALAR);
 			}
 		}
-		// if -1 rotation is not set
-		if (transformComp->getRightRotation() != -1)
-		{
-			transformComp->setRotation(transformComp->getRightRotation());
-		}
-		else if (transformComp->getLeftRotation() != -1)
-		{
-			transformComp->setRotation(transformComp->getLeftRotation());
-		}
-		// setting to -1 to check if they are not valid
-		transformComp->setRightRotation(-1);
-		transformComp->setLeftRotation(-1);
+		handleRotation(transformComp);
 	}
 }
 
@@ -57,9 +46,7 @@ void PhysicsSystem::updateWithInput(const PhysicsMove& t_event)
 	TransformComponent* transformComp = static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform));
 	if (transformComp)
 	{
-		float rotation = atan2f(t_event.velocity.y , t_event.velocity.x);
-		rotation = glm::degrees(rotation);
-		transformComp->setLeftRotation(rotation);
+		transformComp->setLeftRotation(glm::degrees(atan2f(t_event.velocity.y, t_event.velocity.x)));
 	}
 }
 
@@ -68,8 +55,22 @@ void PhysicsSystem::updateRotation(const PhysicsRotate& t_event)
 	TransformComponent* transformComp = static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform));
 	if (transformComp)
 	{
-		float rotation = atan2f(t_event.rotation.y, t_event.rotation.x);
-		rotation = glm::degrees(rotation);
-		transformComp->setRightRotation(rotation);
+ 		transformComp->setRightRotation(glm::degrees(atan2f(t_event.rotation.y, t_event.rotation.x)));
 	}
+}
+
+void PhysicsSystem::handleRotation(TransformComponent* t_transformComp)
+{
+	// if -1 rotation, it is not set
+	if (t_transformComp->getRightRotation() != -1)
+	{
+		t_transformComp->setRotation(t_transformComp->getRightRotation());
+	}
+	else if (t_transformComp->getLeftRotation() != -1)
+	{
+		t_transformComp->setRotation(t_transformComp->getLeftRotation());
+	}
+	// setting to -1 to allow for check if they are not valid
+	t_transformComp->setRightRotation(-1);
+	t_transformComp->setLeftRotation(-1);
 }

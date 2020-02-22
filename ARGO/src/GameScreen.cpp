@@ -12,8 +12,7 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_controllers{ *t_controllers },
 	m_levelManager{ t_renderer },
 	m_transformSystem{ m_eventManager },
-	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
-	m_renderer{ t_renderer }
+	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem }
 {
 }
 
@@ -109,25 +108,17 @@ void GameScreen::render(SDL_Renderer* t_renderer)
 }
 
 
-void GameScreen::createPlayer(Entity& t_player, int t_index)
+void GameScreen::createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_renderer)
 {
 	t_player.addComponent(new HealthComponent(10, 10));
-	t_player.addComponent(new TransformComponent(0));
+	t_player.addComponent(new TransformComponent());
 	t_player.addComponent(new InputComponent(m_controllers[t_index],
 		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][t_index],
 		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][t_index],
 		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][t_index]));
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
-
-
-	t_player.addComponent(new VisualComponent("player.png", m_renderer, static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255))));
-	
-	//	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
-	//	t_player.addComponent(new PrimitiveComponent());
-
-
-
+	t_player.addComponent(new VisualComponent("player.png", t_renderer, static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255))));
 	t_player.addComponent(new CommandComponent());
 	t_player.addComponent(new TagComponent(Tag::Player));
 	t_player.addComponent(new ParticleEmitterComponent(static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos(), true,
@@ -224,7 +215,7 @@ void GameScreen::preRender()
 	m_renderSystem.setFocus(focusPoint / (float)Utilities::S_MAX_PLAYERS);
 }
 
-void GameScreen::reset(Controller t_controller[Utilities::S_MAX_PLAYERS])
+void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utilities::S_MAX_PLAYERS])
 {
 	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
 	{
@@ -234,7 +225,7 @@ void GameScreen::reset(Controller t_controller[Utilities::S_MAX_PLAYERS])
 	for (Entity& player : m_players)
 	{
 		player.removeAllComponents();
-		createPlayer(player, playerCount);
+		createPlayer(player, playerCount, t_renderer);
 		playerCount++;
 	}
 	for (Entity& entity : m_entities)
@@ -250,7 +241,7 @@ void GameScreen::reset(Controller t_controller[Utilities::S_MAX_PLAYERS])
 	setUpLevel();
 }
 
-void GameScreen::initialise(ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS])
+void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS])
 {
 	setControllerButtonMap(t_controllerButtonMaps);
 	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
@@ -260,7 +251,7 @@ void GameScreen::initialise(ButtonCommandMap t_controllerButtonMaps[Utilities::N
 	int playerCount = 0;
 	for (Entity& player : m_players)
 	{
-		createPlayer(player, playerCount);
+		createPlayer(player, playerCount, t_renderer);
 		playerCount++;
 	}
 	m_entities.reserve(MAX_ENTITIES);

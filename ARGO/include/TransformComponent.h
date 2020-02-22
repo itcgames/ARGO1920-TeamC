@@ -21,7 +21,6 @@ public:
 	TransformComponent();
 	TransformComponent(float t_x, float t_y, float t_rotation = 0.0f);
 	TransformComponent(glm::vec2 t_pos, float t_rotation = 0.0f);
-	TransformComponent(float t_rotataion, glm::vec2 t_pos = glm::vec2(glm::linearRand(50,700), glm::linearRand(50,700)));
 	~TransformComponent();
 
 	glm::vec2 getPos() const;
