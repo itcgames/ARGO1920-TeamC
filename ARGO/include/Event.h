@@ -15,6 +15,12 @@ struct CreateBulletEvent
 struct PhysicsMove
 {
 	glm::vec2 velocity;
+ 	Entity& entity;
+};
+
+struct PhysicsRotate
+{
+	glm::vec2 rotation;
 	Entity& entity;
 };
 

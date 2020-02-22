@@ -12,7 +12,8 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_controllers{ *t_controllers },
 	m_levelManager{ t_renderer },
 	m_transformSystem{ m_eventManager },
-	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem }
+	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
+	m_renderer{ t_renderer }
 {
 }
 
@@ -111,20 +112,27 @@ void GameScreen::render(SDL_Renderer* t_renderer)
 void GameScreen::createPlayer(Entity& t_player, int t_index)
 {
 	t_player.addComponent(new HealthComponent(10, 10));
-	t_player.addComponent(new TransformComponent());
+	t_player.addComponent(new TransformComponent(0));
 	t_player.addComponent(new InputComponent(m_controllers[t_index],
 		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][t_index],
 		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][t_index],
 		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][t_index]));
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
-	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
+
+
+	t_player.addComponent(new VisualComponent("player.png", m_renderer, static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255))));
+	
+	//	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
+	//	t_player.addComponent(new PrimitiveComponent());
+
+
+
 	t_player.addComponent(new CommandComponent());
 	t_player.addComponent(new TagComponent(Tag::Player));
 	t_player.addComponent(new ParticleEmitterComponent(static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos(), true,
 		Utilities::PARTICLE_DIRECTION_ANGLE_SAMPLE, Utilities::PARTICLE_OFFSET_ANGLE_SAMPLE, Utilities::PARTICLE_SPEED_SAMPLE,
 		Utilities::PARTICLE_MAX_PARTICLES_SAMPLE, Utilities::PARTICLES_PER_SECOND_SAMPLE));
-	t_player.addComponent(new PrimitiveComponent());
 	t_player.addComponent(new FireRateComponent(Utilities::PLAYER_FIRE_DELAY));
 
 
@@ -236,11 +244,11 @@ void GameScreen::reset(Controller t_controller[Utilities::S_MAX_PLAYERS])
 	m_entities.clear();
 
 	for (int index = 0; index < 5; index++)
-	{	
+	{
 		createEnemy();
 	}
 	setUpLevel();
- }
+}
 
 void GameScreen::initialise(ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS])
 {

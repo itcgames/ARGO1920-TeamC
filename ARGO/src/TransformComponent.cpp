@@ -27,6 +27,13 @@ TransformComponent::TransformComponent(glm::vec2 t_pos, float t_rotation) :
 	m_rotation = t_rotation;
 }
 
+TransformComponent::TransformComponent(float t_rotation, glm::vec2 t_pos) :
+	Component(ComponentType::Transform)
+{
+	m_rotation = t_rotation;
+	m_pos = t_pos;
+}
+
 /// <summary>
 /// Default constructor that gives random pos and rotation of 0.0f 
 /// </summary>
@@ -117,6 +124,26 @@ void TransformComponent::moveUp()
 void TransformComponent::moveDown()
 {
 	m_pos.y++;
+}
+
+void TransformComponent::setLeftRotation(float t_newLeftRotation)
+{ 
+	m_leftRotation = t_newLeftRotation;
+}
+
+void TransformComponent::setRightRotation(float t_newRightRotation)
+{ 
+	m_rightRotation = t_newRightRotation;
+}
+
+float TransformComponent::getLeftRotation()
+{
+	return m_leftRotation;
+}
+
+float TransformComponent::getRightRotation()
+{
+	return m_rightRotation;
 }
 
 

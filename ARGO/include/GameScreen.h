@@ -45,6 +45,7 @@ private:
 	Entity m_players[Utilities::S_MAX_PLAYERS];
 	std::vector<Entity> m_entities;
 	std::vector<Entity> m_levelTiles;
+	SDL_Renderer* m_renderer;
 
 	// Systems
 	HealthSystem m_healthSystem;
