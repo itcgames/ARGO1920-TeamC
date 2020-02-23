@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "HealthComponent.h"
 
-HealthComponent::HealthComponent(const int t_maxHp, int t_hp) :
+HealthComponent::HealthComponent(const int t_maxHp, int t_hp, float t_invincibilityFrames) :
 	Component(ComponentType::Health),
 	MAX_HEALTH(t_maxHp),
+	INVINCIBILITY_FRAMES(t_invincibilityFrames),
+	m_invincibilityCooldown(0),
 	m_health(t_hp)
 {
 
@@ -44,7 +46,19 @@ void HealthComponent::addHealth(int t_amount)
 
 void HealthComponent::reduceHealth(int t_amount)
 {
-	m_health -= t_amount;
+	if (m_invincibilityCooldown <=0)
+	{
+		m_invincibilityCooldown = INVINCIBILITY_FRAMES;
+		m_health -= t_amount;
+	}
+}
+
+void HealthComponent::reduceInvincibilityCooldown(float t_amount)
+{
+	if (m_invincibilityCooldown > 0)
+	{
+		m_invincibilityCooldown -= t_amount;
+	}
 }
 
 bool HealthComponent::isAlive() const
