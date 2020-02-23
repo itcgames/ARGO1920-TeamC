@@ -1,13 +1,14 @@
 #include "stdafx.h"
 #include "VisualComponent.h"
 
-VisualComponent::VisualComponent(std::string t_filename, SDL_Renderer* t_renderer) :
+VisualComponent::VisualComponent(std::string t_filename, SDL_Renderer* t_renderer, Uint8 t_red, Uint8 t_green, Uint8 t_blue) :
 	Component(ComponentType::Visual)
 {
 	if (!loadFromFile(t_filename, t_renderer))
 	{
 		throw std::invalid_argument("Could not load file");
 	}
+	setColor(t_red, t_green, t_blue);
 }
 
 VisualComponent::~VisualComponent()

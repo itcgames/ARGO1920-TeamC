@@ -20,5 +20,7 @@ public:
 private: 
 
 	void updateWithInput(const PhysicsMove& t_event);
+	void updateRotation(const PhysicsRotate& t_event);
+	void handleRotation(TransformComponent* t_transformComp);
  	const float FRICTION_SCALAR = 0.9f;
 };
