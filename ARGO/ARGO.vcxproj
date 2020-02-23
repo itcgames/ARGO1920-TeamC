@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\AchievementScreen.cpp" />
     <ClCompile Include="src\AnalogMoveCommand.cpp" />
+    <ClCompile Include="src\AnalogRotateCommand.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\CloseWindowCommand.cpp" />
@@ -83,6 +84,7 @@
   <ItemGroup>
     <ClInclude Include="include\AchievementScreen.h" />
     <ClInclude Include="include\AnalogMoveCommand.h" />
+    <ClInclude Include="include\AnalogRotateCommand.h" />
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\AudioManager.h" />
     <ClInclude Include="include\BehaviourTree.h" />

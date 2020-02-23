@@ -1,9 +1,7 @@
 #pragma once
 #include "Command.h"
-#include "TransformComponent.h"
 #include "InputComponent.h"
-#include "Controller.h"
-class FireBulletCommand :
+class AnalogRotateCommand :
 	public Command
 {
 public:

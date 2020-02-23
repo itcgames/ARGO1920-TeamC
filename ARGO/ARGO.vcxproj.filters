@@ -273,6 +273,9 @@
     <ClCompile Include="src\CloseWindowCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
+    <ClCompile Include="src\AnalogRotateCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -489,6 +492,9 @@
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
     <ClInclude Include="include\MoveUpCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AnalogRotateCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
   </ItemGroup>

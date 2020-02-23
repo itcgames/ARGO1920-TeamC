@@ -1,6 +1,7 @@
 #pragma once
 #include "Command.h"
 #include "AnalogMoveCommand.h"
+#include "AnalogRotateCommand.h"
 #include "CloseWindowCommand.h"
 #include "FireBulletCommand.h"
 #include "GoToLicenseScreenCommand.h"
