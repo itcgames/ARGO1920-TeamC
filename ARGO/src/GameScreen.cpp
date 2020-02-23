@@ -240,7 +240,7 @@ void GameScreen::preRender()
 	glm::vec2 focusPoint = glm::vec2(0.0f, 0.0f);
 	for (Entity& player : m_players)
 	{
-		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
+		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getComponent(ComponentType::Transform));
 		if (transformComp)
 		{
 			focusPoint += transformComp->getPos();
