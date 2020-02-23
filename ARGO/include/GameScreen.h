@@ -28,7 +28,8 @@ private:
 
 	void createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_renderer);
 	void createEnemy();
-	void setUpLevel();
+	void createGoal();
+ 	void setUpLevel();
 	void preRender();
 	void updatePlayers(float t_deltaTime);
 	void updateEntities(float t_deltaTime);
@@ -44,7 +45,8 @@ private:
 	Controller m_controllers[Utilities::S_MAX_PLAYERS];
 	Entity m_players[Utilities::S_MAX_PLAYERS];
 	std::vector<Entity> m_entities;
-	std::vector<Entity> m_levelTiles;
+	Entity m_goal;
+	SDL_Renderer* m_renderer;
 
 	// Systems
 	HealthSystem m_healthSystem;

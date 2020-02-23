@@ -8,6 +8,7 @@
 #include "VisualComponent.h"
 #include "ColourComponent.h"
 #include "TextComponent.h"
+#include "ColliderCircleComponent.h"
 #include "Entity.h"
 #include "BaseSystem.h"
 #include "CompEnums.h"
