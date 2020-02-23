@@ -67,6 +67,12 @@
     <Filter Include="Source Files\Screens">
       <UniqueIdentifier>{22848e9b-c91c-4358-b939-d20dc97e0b0c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\CommandPattern\Commands">
+      <UniqueIdentifier>{9f61d44a-1658-48ad-b156-f2efbd0cf1c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CommandPattern\Commands">
+      <UniqueIdentifier>{1e3fa8d9-2d43-4c9d-8cb3-cb80f15e3ee8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -230,6 +236,42 @@
     </ClCompile>
     <ClCompile Include="src\AchievementScreen.cpp">
       <Filter>Source Files\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MoveUpCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuMoveDownCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuMoveUpCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuSelectButtonCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MoveDownCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MoveLeftCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MoveRightCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GoToMainMenuCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GoToLicenseScreenCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FireBulletCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AnalogMoveCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CloseWindowCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -412,6 +454,42 @@
     </ClInclude>
     <ClInclude Include="include\AchievementScreen.h">
       <Filter>Header Files\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MoveRightCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MenuMoveDownCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MenuMoveUpCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MenuSelectButtonCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MoveDownCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MoveLeftCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GoToMainMenuCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GoToLicenseScreenCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FireBulletCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CloseWindowCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AnalogMoveCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MoveUpCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

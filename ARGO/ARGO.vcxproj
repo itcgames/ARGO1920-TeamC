@@ -12,10 +12,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AchievementScreen.cpp" />
+    <ClCompile Include="src\AnalogMoveCommand.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\AudioManager.cpp" />
+    <ClCompile Include="src\CloseWindowCommand.cpp" />
     <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\FireBulletCommand.cpp" />
     <ClCompile Include="src\FireRateComponent.cpp" />
+    <ClCompile Include="src\GoToLicenseScreenCommand.cpp" />
+    <ClCompile Include="src\GoToMainMenuCommand.cpp" />
+    <ClCompile Include="src\MenuMoveDownCommand.cpp" />
+    <ClCompile Include="src\MenuMoveUpCommand.cpp" />
+    <ClCompile Include="src\MenuSelectButtonCommand.cpp" />
+    <ClCompile Include="src\MoveDownCommand.cpp" />
+    <ClCompile Include="src\MoveLeftCommand.cpp" />
+    <ClCompile Include="src\MoveRightCommand.cpp" />
+    <ClCompile Include="src\MoveUpCommand.cpp" />
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\ParticleEmitterComponent.cpp" />
     <ClCompile Include="src\ParticleSystem.cpp" />
@@ -70,11 +82,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AchievementScreen.h" />
+    <ClInclude Include="include\AnalogMoveCommand.h" />
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\AudioManager.h" />
     <ClInclude Include="include\BehaviourTree.h" />
+    <ClInclude Include="include\CloseWindowCommand.h" />
     <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\FireBulletCommand.h" />
     <ClInclude Include="include\FireRateComponent.h" />
+    <ClInclude Include="include\GoToLicenseScreenCommand.h" />
+    <ClInclude Include="include\GoToMainMenuCommand.h" />
+    <ClInclude Include="include\MenuMoveDownCommand.h" />
+    <ClInclude Include="include\MenuMoveUpCommand.h" />
+    <ClInclude Include="include\MenuSelectButtonCommand.h" />
+    <ClInclude Include="include\MoveDownCommand.h" />
+    <ClInclude Include="include\MoveLeftCommand.h" />
+    <ClInclude Include="include\MoveRightCommand.h" />
+    <ClInclude Include="include\MoveUpCommand.h" />
     <ClInclude Include="include\Particle.h" />
     <ClInclude Include="include\ParticleEmitterComponent.h" />
     <ClInclude Include="include\ParticleSystem.h" />

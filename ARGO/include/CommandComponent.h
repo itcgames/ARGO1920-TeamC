@@ -10,6 +10,7 @@ public:
 
 	void addCommand(Command* t_command);
 	void popTopCommand();
+	void executeTopCommand(Entity& t_entity, EventManager& t_eventManager);
 	std::stack<Command*> getCommands();
 
 private:

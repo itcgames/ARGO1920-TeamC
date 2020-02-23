@@ -11,15 +11,22 @@ void MacroCommand::add(Command* t_command)
 	m_commandHistory.push(t_command);
 }
 
-void MacroCommand::addAndExecute(Command* t_command)
+void MacroCommand::addAndExecute(Command* t_command, Entity& t_entity, EventManager& t_eventManager)
 {
 	add(t_command);
-	executeTop();
+	executeTop(t_entity, t_eventManager);
 }
 
-void MacroCommand::executeTop()
+void MacroCommand::executeTop(Entity& t_entity, EventManager& t_eventManager)
 {
-	m_commands.top()->execute();
+	m_commands.top()->execute(t_entity, t_eventManager);
+
+}
+
+void MacroCommand::executeTopAndPop(Entity& t_entity, EventManager& t_eventManager)
+{
+	executeTop(t_entity, t_eventManager);
+	popTopCommand();
 }
 
 std::stack<Command*> MacroCommand::getCommands()
