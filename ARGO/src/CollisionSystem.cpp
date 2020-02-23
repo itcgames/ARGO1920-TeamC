@@ -286,18 +286,6 @@ void CollisionSystem::playerToEnemy(Entity* t_player, Entity* t_enemy)
 		ForceComponent* enemyForce = static_cast<ForceComponent*>(t_enemy->getComponent(ComponentType::Force));
 
 		glm::vec2 distanceBetween = glm::normalize( playerPosition->getPos() - enemyPosition->getPos() ) * PLAYER_TO_ENEMY_REFECTION_SCALER;
-		/*float length = sqrt(distanceBetween.x * distanceBetween.x + distanceBetween.y * distanceBetween.y);
-		float seperation = 1 - length / (playerRadius + enemyRadius);
-		if (length != 0)
-		{
-			distanceBetween /= length;
-			distanceBetween = distanceBetween * seperation * m_seperationScaler;
-		}
-		else
-		{
-			distanceBetween = glm::vec2(m_seperationScaler, m_seperationScaler);
-		}*/
-
 
 		playerHealth->reduceHealth(1);
 		playerForce->addForce(distanceBetween);

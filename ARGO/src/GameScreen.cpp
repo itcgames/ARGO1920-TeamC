@@ -157,7 +157,7 @@ void GameScreen::createEnemy()
 
 void GameScreen::createGoal()
 {
-	m_goal.addComponent(new TransformComponent(glm::vec2(Utilities::TILE_SIZE * 51, Utilities::TILE_SIZE * 36)));
+	m_goal.addComponent(new TransformComponent(Utilities::GOAL_START_POSITION));
 	m_goal.addComponent(new ColliderCircleComponent(32));
 	m_goal.addComponent(new TagComponent(Tag::Goal));
 }
@@ -256,7 +256,7 @@ void GameScreen::preRender()
 {
 	// Setting the focus point for the camera.
 	glm::vec2 focusPoint = glm::vec2(0.0f, 0.0f);
-	float numberOfpoints = 0;
+	float numberOfPoints = 0;
 	for (Entity& player : m_players)
 	{
 		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getComponent(ComponentType::Transform));
