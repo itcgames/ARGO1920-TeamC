@@ -11,9 +11,11 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_eventManager{ t_eventManager },
 	m_controllers{ *t_controllers },
 	m_levelManager{ t_renderer },
+	m_renderer{ t_renderer },
 	m_transformSystem{ m_eventManager },
-	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
-	m_aiSystem{ m_players, m_entities, m_eventManager }
+	m_projectileManager{ t_renderer, m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
+	m_aiSystem{ m_players, m_entities, m_eventManager },
+	m_collisionSystem{ m_eventManager }
 {
 }
 
@@ -28,6 +30,7 @@ void GameScreen::update(float t_deltaTime)
 	updateEntities(t_deltaTime);
 	updatePlayers(t_deltaTime);
 	updateProjectiles(t_deltaTime);
+	m_collisionSystem.update(m_goal);
 	m_collisionSystem.handleCollisions();
 	removeDeadEnemies();
 }
@@ -103,20 +106,24 @@ void GameScreen::render(SDL_Renderer* t_renderer)
 	}
 	for (Entity& player : m_players)
 	{
-		m_renderSystem.render(t_renderer, player);
+		if (static_cast<HealthComponent*>(player.getComponent(ComponentType::Health))->isAlive())
+		{
+			m_renderSystem.render(t_renderer, player);
+		}
 	}
+	m_renderSystem.render(t_renderer, m_goal);
 	m_projectileManager.render(t_renderer, &m_renderSystem);
 }
 
 
 void GameScreen::createPlayer(Entity& t_player, int t_index)
 {
-	t_player.addComponent(new HealthComponent(10, 10));
+	t_player.addComponent(new HealthComponent(10, 10, Utilities::PLAYER_INVINCIBILITY_FRAMES));
 	t_player.addComponent(new TransformComponent());
 
 	t_player.addComponent(new ForceComponent());
 	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
-	t_player.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
+	t_player.addComponent(new VisualComponent("player2.png", m_renderer));
 	t_player.addComponent(new CommandComponent());
 	t_player.addComponent(new TagComponent(Tag::Player));
 	t_player.addComponent(new ParticleEmitterComponent(static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos(), true,
@@ -146,6 +153,14 @@ void GameScreen::createEnemy()
 	m_entities.back().addComponent(new TagComponent(Tag::Enemy));
 	m_entities.back().addComponent(new ForceComponent());
 	m_entities.back().addComponent(new HealthComponent(Utilities::ENEMY_HP, Utilities::ENEMY_HP));
+	m_entities.back().addComponent(new VisualComponent("EnemyFast.png", m_renderer));
+}
+
+void GameScreen::createGoal()
+{
+	m_goal.addComponent(new TransformComponent(glm::vec2(Utilities::TILE_SIZE * 51, Utilities::TILE_SIZE * 36)));
+	m_goal.addComponent(new ColliderCircleComponent(32));
+	m_goal.addComponent(new TagComponent(Tag::Goal));
 }
 
 void GameScreen::setUpLevel()
@@ -193,13 +208,16 @@ void GameScreen::updatePlayers(float t_deltaTime)
 {
 	for (Entity& player : m_players)
 	{
-		m_inputSystem.update(player);
-		m_commandSystem.update(player, m_eventManager);
-		m_aiSystem.update(player);
-		m_healthSystem.update(player);
-		m_transformSystem.update(player, t_deltaTime);
-		m_collisionSystem.update(player);
-		m_particleSystem.update(player, t_deltaTime);
+		if (static_cast<HealthComponent*>(player.getComponent(ComponentType::Health))->isAlive())
+		{
+			m_inputSystem.update(player);
+			m_commandSystem.update(player, m_eventManager);
+			m_aiSystem.update(player);
+			m_healthSystem.update(player, t_deltaTime);
+			m_transformSystem.update(player, t_deltaTime);
+			m_collisionSystem.update(player);
+			m_particleSystem.update(player, t_deltaTime);
+		}
 	}
 }
 
@@ -239,19 +257,24 @@ void GameScreen::preRender()
 {
 	// Setting the focus point for the camera.
 	glm::vec2 focusPoint = glm::vec2(0.0f, 0.0f);
+	float numberOfpoints = 0;
 	for (Entity& player : m_players)
 	{
-		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getAllComps().at(COMPONENT_ID::TRANSFORM_ID));
-		if (transformComp)
+		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getComponent(ComponentType::Transform));
+		InputComponent* inputComp = static_cast<InputComponent*>(player.getComponent(ComponentType::Input));
+		HealthComponent* healthComp = static_cast<HealthComponent*>(player.getComponent(ComponentType::Health));
+		if (transformComp && inputComp && healthComp->isAlive())
 		{
+			numberOfpoints++;
 			focusPoint += transformComp->getPos();
 		}
-		else
-		{
-			throw std::invalid_argument("Player Missing Transform Component!");
-		}
 	}
-	m_renderSystem.setFocus(focusPoint / (float)Utilities::S_MAX_PLAYERS);
+	if (numberOfpoints == 0)
+	{
+		focusPoint = static_cast<TransformComponent*>(m_players[0].getComponent(ComponentType::Transform))->getPos();
+		numberOfpoints = 1;
+	}
+	m_renderSystem.setFocus(focusPoint / numberOfpoints);
 }
 
 void GameScreen::reset(Controller t_controller[Utilities::S_MAX_PLAYERS])
@@ -300,6 +323,7 @@ void GameScreen::initialise(ButtonCommandMap t_controllerButtonMaps[Utilities::N
 	}
 	setUpLevel();
 	m_projectileManager.init();
+	createGoal();
 }
 
 void GameScreen::removeDeadEnemies()

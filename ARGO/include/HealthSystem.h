@@ -11,5 +11,6 @@ class HealthSystem : public BaseSystem
 public:
 	~HealthSystem();
 	void update(Entity& t_entity);
+	void update(Entity& t_entity, float t_deltaTime);
 };
 

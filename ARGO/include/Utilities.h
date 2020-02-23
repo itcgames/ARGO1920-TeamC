@@ -32,11 +32,14 @@ namespace Utilities
 	const int TILE_SIZE = 64;
 	const int WALL_HEALTH = 5;
 
-	const int PLAYER_RADIUS = 32;
+	const int PLAYER_RADIUS = 24;
 	const int PLAYER_FIRE_DELAY = 1000 / 10;
+	const float PLAYER_INVINCIBILITY_FRAMES = 32.0f;
 
-	const int ENEMY_RADIUS = 32;
+	const int ENEMY_RADIUS = 24;
 	const int ENEMY_HP = 2;
+
+	const glm::vec2 GOAL_START_POSITION = glm::vec2(51, 36) * (float)TILE_SIZE;
 
 	const int NUMBER_OF_CONTROLLER_BUTTONS = 24;
  	const int NUMBER_OF_CONTROLLER_MAPS = 3;

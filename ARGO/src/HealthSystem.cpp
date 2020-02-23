@@ -8,6 +8,10 @@ HealthSystem::~HealthSystem()
 
 void HealthSystem::update(Entity& t_entity)
 {
+}
+
+void HealthSystem::update(Entity& t_entity, float t_deltaTime)
+{
 	HealthComponent* hpComp = static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health));
 	//if not nullptr
 	if (hpComp)
@@ -15,15 +19,7 @@ void HealthSystem::update(Entity& t_entity)
 		//if more than 0 hp
 		if (hpComp->getHealth() > 0)
 		{
-			//reduce hp by 1
-			//hpComp->reduceHealth(1);
-		}
-		else //otherwise entity is dead
-		{
-			//mark entity as dead here?
-#ifdef HP_SYS_DEBUG
-			std::cout << "Entity is dead" << std::endl;
-#endif // HP_SYS_DEBUG
+			hpComp->reduceInvincibilityCooldown(t_deltaTime);
 		}
 	}
 }

@@ -25,7 +25,13 @@ void RenderSystem::render(SDL_Renderer* t_renderer, Entity& t_entity)
 
 			if (visComp != nullptr)
 			{
-				renderTexture(visComp, posComp->getPos().x, posComp->getPos().y, t_renderer);
+				glm::vec2 renderPosition = posComp->getPos();
+				ColliderCircleComponent* circleColliderComp = static_cast<ColliderCircleComponent*>(t_entity.getComponent(ComponentType::ColliderCircle));
+				if (circleColliderComp)
+				{
+					renderPosition -= glm::vec2(circleColliderComp->getRadius(), circleColliderComp->getRadius());
+				}
+				renderTexture(visComp, renderPosition.x, renderPosition.y, t_renderer, NULL, posComp->getRotation(), NULL, SDL_FLIP_NONE);
 			}
 			if (textComp != nullptr)
 			{
