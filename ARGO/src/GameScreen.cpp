@@ -264,16 +264,16 @@ void GameScreen::preRender()
 		HealthComponent* healthComp = static_cast<HealthComponent*>(player.getComponent(ComponentType::Health));
 		if (transformComp && inputComp && healthComp->isAlive())
 		{
-			numberOfpoints++;
+			numberOfPoints++;
 			focusPoint += transformComp->getPos();
 		}
 	}
-	if (numberOfpoints == 0)
+	if (numberOfPoints == 0)
 	{
 		focusPoint = static_cast<TransformComponent*>(m_players[0].getComponent(ComponentType::Transform))->getPos();
-		numberOfpoints = 1;
+		numberOfPoints = 1;
 	}
-	m_renderSystem.setFocus(focusPoint / numberOfpoints);
+	m_renderSystem.setFocus(focusPoint / numberOfPoints);
 }
 
 void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utilities::S_MAX_PLAYERS])
