@@ -37,9 +37,17 @@ public:
 	void moveRight();
 	void moveUp();
 	void moveDown();
+	void setLeftRotation(float t_newLeftRotation);
+	void setRightRotation(float t_newRightRotation);
+	float getLeftRotation();
+	float getRightRotation();
 
 private:
 	glm::vec2 m_pos;
 	float m_rotation;
+	// rotation for the left thumb stick
+	float m_leftRotation;
+	// rotation for the right thumb stick
+	float m_rightRotation;
 };
 

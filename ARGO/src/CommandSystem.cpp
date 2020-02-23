@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CommandSystem.h"
-
+#include "TransformComponent.h"
 CommandSystem::CommandSystem()
 {
 }
@@ -17,6 +17,7 @@ void CommandSystem::update(Entity& t_entity, EventManager& t_eventManager)
 	if (commandComp)
 	{
 		InputComponent* inputComp = static_cast<InputComponent*>(t_entity.getComponent(ComponentType::Input));
+		TransformComponent* transformComponent = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
 		while (!commandComp->getCommands().empty())
 		{
 			if (typeid(*commandComp->getCommands().top()) == typeid(MoveUpCommand))
@@ -42,15 +43,20 @@ void CommandSystem::update(Entity& t_entity, EventManager& t_eventManager)
 					t_eventManager.emitEvent(PhysicsMove{ glm::normalize(inputComp->getController().getCurrent().LeftThumbStick), t_entity });
 				}
 			}
-			else if (typeid(*commandComp->getCommands().top()) == typeid(FireBulletCommand))
+			else if (typeid(*commandComp->getCommands().top()) == typeid(AnalogRotateCommand))
 			{
 				if (inputComp)
 				{
-					if (inputComp->getController().getCurrent().RightThumbStick != glm::vec2(0, 0))
-					{
-						t_eventManager.emitEvent(CreateBulletEvent{ t_entity, glm::normalize(inputComp->getController().getCurrent().RightThumbStick), 32, 0, inputComp->getController() });
-					}
+					t_eventManager.emitEvent(PhysicsRotate{ glm::normalize(inputComp->getController().getCurrent().RightThumbStick), t_entity });
 				}
+			}
+			else if (typeid(*commandComp->getCommands().top()) == typeid(FireBulletCommand))
+			{
+				if (transformComponent)
+				{
+					glm::vec2 direction = glm::vec2(std::cos(glm::radians(transformComponent->getRotation())), std::sin(glm::radians(transformComponent->getRotation())));
+					t_eventManager.emitEvent(CreateBulletEvent{ t_entity, direction, 32, 0, inputComp->getController() });
+ 				}
 			}
 			else if (typeid(*commandComp->getCommands().top()) == typeid(CloseWindowCommand))
 			{

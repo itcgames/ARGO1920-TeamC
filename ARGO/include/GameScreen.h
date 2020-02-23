@@ -22,11 +22,11 @@ public:
 	void update(float t_deltaTime);
 	void processEvents(SDL_Event* t_event);
 	void render(SDL_Renderer* t_renderer);
-	void reset(Controller t_controller[Utilities::S_MAX_PLAYERS]);
-	void initialise(ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS]);
+	void reset(SDL_Renderer* t_renderer, Controller t_controller[Utilities::S_MAX_PLAYERS]);
+	void initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS]);
 private:
 
-	void createPlayer(Entity& t_player, int t_index);
+	void createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_renderer);
 	void createEnemy();
 	void createGoal();
  	void setUpLevel();
@@ -40,7 +40,7 @@ private:
 
 	EventManager& m_eventManager;
 
- 	static const int MAX_ENTITIES = 10000;
+	static const int MAX_ENTITIES = 10000;
 
 	Controller m_controllers[Utilities::S_MAX_PLAYERS];
 	Entity m_players[Utilities::S_MAX_PLAYERS];
@@ -61,6 +61,6 @@ private:
 	ProjectileManager m_projectileManager;
 	LevelManager m_levelManager;
 
-	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]; 
+	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
 };
 
