@@ -1,9 +1,13 @@
 #include "stdafx.h"
 #include "CreditsScreen.h"
 
-CreditsScreen::CreditsScreen(EventManager& t_eventManager) :
-	m_eventManager{ t_eventManager }
-{}
+CreditsScreen::CreditsScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_input, RenderSystem& t_renderSystem) :
+	m_eventManager{ t_eventManager },
+	m_commandSystem{ t_commandSystem },
+	m_inputSystem{ t_input },
+	m_renderSystem{ t_renderSystem }
+{
+}
 
 CreditsScreen::~CreditsScreen()
 {
@@ -40,7 +44,7 @@ void CreditsScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controlle
 		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)]));
 	m_inputEntity.addComponent(new CommandComponent());
 
-}
+} 
 
 void CreditsScreen::setControllerButtonMaps()
 {

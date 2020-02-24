@@ -9,12 +9,12 @@
 
 class State;
 Game::Game() :
-	m_gameScreen{ m_renderer, m_eventManager, m_controllers },
+	m_gameScreen{ m_renderer, m_eventManager, m_controllers, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_optionsScreen{ m_eventManager, m_controllers[0], m_renderer },
-	m_creditsScreen{ m_eventManager },
-	m_licenseScreen{ m_eventManager },
-	m_splashScreen{ m_eventManager },
-	m_mainMenuScreen{ m_eventManager },
+	m_creditsScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
+	m_licenseScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
+	m_splashScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
+	m_mainMenuScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_achievementsScreen{ m_eventManager, m_controllers[0], m_renderer },
 	m_currentScreen{ MenuStates::Splash }
 {
@@ -41,6 +41,7 @@ Game::Game() :
 		// Sets clear colour of renderer to black and the color of any primitives
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 
+
 		for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
 		{
 			m_controllers[index].initialiseController();
@@ -56,10 +57,11 @@ Game::Game() :
 
 		initialiseScreen();
 
+
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 		m_eventManager.subscribeToEvent<ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
 
-		setupIgnoredEvents();
+		setupIgnoredEvents(); 
 
 		// Game is running
 		m_isRunning = true;
@@ -317,7 +319,7 @@ void Game::changeScreen(const ChangeScreen& t_event)
 	{
 		initialiseScreen();
 	}
-}
+} 
 
 void Game::initialiseScreen()
 {

@@ -64,7 +64,10 @@ namespace Utilities
 	const int AUDIO_CHANNELS_PER_PLAYER = 8;
 	const int AUDIO_PLAYERS_FIRE_CHANNELS = AUDIO_MIX_CHANNELS - AUDIO_CHANNELS_PER_PLAYER * 4;
 
-	static const int S_NUMBER_OF_SCREENS = 7; 
+	static const int S_NUMBER_OF_SCREENS = 9; 
+
+	static const glm::vec3 MENU_BUTTON_HIGHLIGHTED_COLOUR{ 255,255,240 };
+	static const glm::vec3 MENU_BUTTON_DEFAULT_COLOUR{ 199,163,10 };
 }
 
 enum class MenuStates
@@ -75,5 +78,19 @@ enum class MenuStates
 	Options,
 	License,
 	Splash,
-	Achievements
+	Achievements,
+	GameType,
+	JoinGame
+};
+
+enum class Systems
+{
+	AI,
+	Collision,
+	Command,
+	Health,
+	Input,
+	Particle,
+	Physics,
+	Render
 };

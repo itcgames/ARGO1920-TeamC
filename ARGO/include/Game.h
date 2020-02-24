@@ -10,6 +10,15 @@
 #include "AchievementScreen.h"
 #include "Event.h"
 
+#include "AiSystem.h"
+#include "CollisionSystem.h"
+#include "CommandSystem.h"
+#include "HealthSystem.h"
+#include "InputSystem.h"
+#include "ParticleSystem.h"
+#include "PhysicsSystem.h"
+#include "RenderSystem.h"
+
 /// <summary>
 /// Game class needed for the game
 /// </summary>
@@ -46,6 +55,15 @@ private:
 	// bool for if game is running or not
 	bool m_isRunning;
 
+
+
+ 	CommandSystem m_commandSystem;
+ 	InputSystem m_inputSystem;
+ 	RenderSystem m_renderSystem;
+
+
+	
+
 	MenuStates m_currentScreen;
 	GameScreen m_gameScreen; 
 	MenuScreen m_mainMenuScreen;
@@ -60,4 +78,5 @@ private:
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
 
 	bool m_hasScreenBeenSet[Utilities::S_NUMBER_OF_SCREENS];
-};
+
+ };

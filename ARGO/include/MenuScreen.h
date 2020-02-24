@@ -22,13 +22,13 @@ class MenuScreen
 {
 public:
 
-	MenuScreen(EventManager& t_eventManager);
+	MenuScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_input, RenderSystem& t_renderSystem);
 	~MenuScreen();
 	void update(float t_deltaTime);
 	void reset();
 	void render(SDL_Renderer* t_renderer);
 	void initialise(SDL_Renderer* t_renderer, Controller& t_controller);
-private:
+ private:
  
 	void setControllerButtonMaps();
 	void createMenuButton(Entity& t_menuButton, glm::vec2 t_position);
@@ -37,9 +37,7 @@ private:
 	void buttonPressed(const MenuSelectButton& t_event);
 	void updateButtonColour(Entity& t_menuButton, glm::vec3 t_colour);
 
-	static const int NUMBER_OF_MENU_BUTTONS = 5;
-	const glm::vec3 BUTTON_HIGHLIGHTED_COLOUR;
-	const glm::vec3 BUTTON_DEFAULT_COLOUR;
+	static const int NUMBER_OF_MENU_BUTTONS = 5; 
 
 	Entity m_menuButtons[NUMBER_OF_MENU_BUTTONS];
 	Entity m_background;
@@ -50,8 +48,8 @@ private:
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS];
 
 	EventManager& m_eventManager;
-	InputSystem m_inputSystem;
-	CommandSystem m_commandSystem;
-	RenderSystem m_renderSystem;
+	InputSystem& m_inputSystem;
+	CommandSystem& m_commandSystem;
+	RenderSystem& m_renderSystem;
 };
 

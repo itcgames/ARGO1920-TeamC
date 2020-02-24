@@ -7,7 +7,7 @@ bool cleanUpEnemies(const Entity& t_entity)
 	return !static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health))->isAlive();
 }
 
-GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::S_MAX_PLAYERS]) :
+GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::S_MAX_PLAYERS], CommandSystem& t_commandSystem, InputSystem& t_input, RenderSystem& t_renderSystem) :
 	m_eventManager{ t_eventManager },
 	m_controllers{ *t_controllers },
 	m_levelManager{ t_renderer },
@@ -15,7 +15,10 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_transformSystem{ m_eventManager },
 	m_projectileManager{ t_renderer, m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
 	m_aiSystem{ m_players, m_entities, m_eventManager },
-	m_collisionSystem{ m_eventManager }
+	m_collisionSystem{ m_eventManager },
+	m_commandSystem{ t_commandSystem },
+	m_inputSystem{ t_input },
+	m_renderSystem{ t_renderSystem }
 {
 }
 
@@ -67,7 +70,7 @@ void GameScreen::processEvents(SDL_Event* t_event)
 		case SDLK_RETURN:
 		{
 			//check if we can add 100 entities, if more than 100, set to 100, if less than 0 set to 0
-			int availableSpace = glm::clamp(int(MAX_ENTITIES - m_entities.size()), 0, 100);
+			int availableSpace = glm::clamp(int(MAX_ENTITIES - m_entities.size()), 0, 10);
 			for (int index = 0; index < availableSpace; index++)
 			{
 				createEnemy();

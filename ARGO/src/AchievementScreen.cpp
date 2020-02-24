@@ -26,3 +26,7 @@ void AchievementScreen::reset()
 void AchievementScreen::initialise()
 {
 }
+
+void AchievementScreen::passSystems()
+{
+}

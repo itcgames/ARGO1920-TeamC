@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "RenderSystem.h"
-
+ 
 RenderSystem::~RenderSystem()
 {
 	BaseSystem::~BaseSystem();
@@ -195,4 +195,9 @@ void RenderSystem::setFocus(glm::vec2 t_point)
 glm::vec2& RenderSystem::getFocus()
 {
 	return m_focusPoint;
+}
+
+void RenderSystem::operator=(const RenderSystem& t_otherRenderSystem)
+{
+	m_focusPoint = t_otherRenderSystem.m_focusPoint;
 }

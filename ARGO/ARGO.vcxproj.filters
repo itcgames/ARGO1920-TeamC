@@ -276,6 +276,12 @@
     <ClCompile Include="src\AnalogRotateCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameTypeScreen.cpp">
+      <Filter>Source Files\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="src\JoinGameScreen.cpp">
+      <Filter>Source Files\Screens</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -496,6 +502,12 @@
     </ClInclude>
     <ClInclude Include="include\AnalogRotateCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameTypeScreen.h">
+      <Filter>Header Files\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="include\JoinGameScreen.h">
+      <Filter>Header Files\Screens</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
