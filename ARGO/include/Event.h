@@ -15,6 +15,11 @@ struct PhysicsMove
 	Entity& m_entity;
 };
 
+struct PickupGrabbed
+{
+	Entity* pickup;
+};
+
 struct CloseWindow
 {
 };

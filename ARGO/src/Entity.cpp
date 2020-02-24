@@ -9,7 +9,7 @@ Entity::Entity()
 
 Entity::~Entity()
 {
-	for (int i = m_components.size() - 1; i >= 0; i--)
+ 	for (int i = m_components.size() - 1; i >= 0; i--)
 	{
 		if (m_components.at(i) == NULL)
 		{
@@ -165,6 +165,15 @@ void Entity::addComponent(Component* t_c)
 			}
 			break;
 		}
+		case ComponentType::PickUp:
+		{
+			if (!m_components.at(COMPONENT_ID::PICK_UP_ID))
+			{
+				m_components.at(COMPONENT_ID::PICK_UP_ID) = t_c;
+				return;
+			}
+			break;
+		}
 		case ComponentType::Tile:
 		{
 			if (!m_components.at(COMPONENT_ID::TILE_ID))
@@ -289,6 +298,16 @@ void Entity::removeCompType(ComponentType t_type)
 			{
 				delete m_components.at(COMPONENT_ID::PARTICLE_ID);
 				m_components.at(COMPONENT_ID::PARTICLE_ID) = nullptr;
+				return;
+			}
+			break;
+		}
+		case ComponentType::PickUp:
+		{
+			if (m_components.at(COMPONENT_ID::PICK_UP_ID))
+			{
+				delete m_components.at(COMPONENT_ID::PICK_UP_ID);
+				m_components.at(COMPONENT_ID::PICK_UP_ID) = nullptr;
 				return;
 			}
 			break;
@@ -444,6 +463,8 @@ Component* Entity::getComponent(ComponentType t_type) const
 			return m_components.at(COMPONENT_ID::PRIMITIVE_ID);
 		case ComponentType::ParticleEmitter:
 			return m_components.at(COMPONENT_ID::PARTICLE_ID);
+		case ComponentType::PickUp:
+			return m_components.at(COMPONENT_ID::PICK_UP_ID);
 		case ComponentType::FireRate:
 			return m_components.at(COMPONENT_ID::FIRE_RATE_ID);
 		default:

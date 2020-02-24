@@ -11,7 +11,7 @@
 class CollisionSystem : public BaseSystem
 {
 public:
-	CollisionSystem();
+	CollisionSystem(EventManager& t_eventManager);
 	void update(Entity& t_entity);
 	void handleCollisions();
 
@@ -31,6 +31,7 @@ private:
 	void playerToEnemy(Entity* t_player, Entity* t_enemy);
 	void playerToEnemyBullet(Entity* t_player, Entity* t_enemyBullet);
 	void playerToWall(Entity* t_player, Entity* t_wall);
+	void playerToPickUp(Entity* t_player, Entity* t_pickUp);
 
 	void playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enemy);
 	void playerBulletToWall(Entity* t_playerBullet, Entity* t_wall);
@@ -41,7 +42,7 @@ private:
 	void enemyBulletToWall(Entity* t_enemyBullet, Entity* t_wall);
 
 
-
+	EventManager& m_eventManager;
 	QuadTree m_quadTree;
 	std::vector<Entity*> m_circleColliderBuffer;
 

@@ -16,7 +16,7 @@ void LevelManager::setupLevel()
 			m_levelTiles.emplace_back();
 
 			m_levelTiles.back().addComponent(new TransformComponent(glm::vec2(j * Utilities::TILE_SIZE, i * Utilities::TILE_SIZE)));
-			m_levelTiles.back().addComponent(new TagComponent(Tag::Tile));
+			m_levelTiles.back().addComponent(new TagComponent	(Tag::Tile));
 			m_levelTiles.back().addComponent(new VisualComponent("wall_4.png", m_renderer));
 			m_levelTiles.back().addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
 			m_levelTiles.back().addComponent(new TileComponent());

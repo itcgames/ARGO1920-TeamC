@@ -15,7 +15,9 @@ class State;
 Game::Game() :
 	m_transformSystem{ m_eventManager },
 	m_projectileManager{ m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
-	m_levelManager(m_renderer)
+	m_levelManager(m_renderer),
+	m_collisionSystem(m_eventManager),
+	m_pickUpManager(m_eventManager,m_collisionSystem)
 {
 	try
 	{
@@ -33,6 +35,7 @@ Game::Game() :
 
 		//Create the SDL Renderer 
 		createRenderer();
+		
 
 		//Check if the renderer was created correctly
 		if (!m_renderer) throw "Error Loading Renderer";
@@ -48,12 +51,14 @@ Game::Game() :
 		m_isRunning = true;
 
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
-		m_eventManager.subscribeToEvent<createBulletEvent>(std::bind(&Game::playerFireSound, this, std::placeholders::_1));
+		//m_eventManager.subscribeToEvent<createBulletEvent>(std::bind(&Game::playerFireSound, this, std::placeholders::_1));
 
 		//add components to player
+		PlayerFactory* factory = new PlayerFactory(m_renderer);
 		for (auto& player : m_players)
 		{
-			createPlayer(player);
+			factory->createPlayer(player);
+			//createPlayer(player);
 		}
 
 		m_entities.reserve(MAX_ENTITIES);
@@ -61,6 +66,10 @@ Game::Game() :
 		{
 			createEnemy();
 		}
+
+
+		m_pickUpManager.init(m_renderer);
+
 
 		m_levelManager.setupLevel();
 		//magic numbers for creating a sandbox level plz ignore.
@@ -105,11 +114,11 @@ void Game::run()
 	Uint32 timePerFrame = 1000 / 60;
 	Uint32 lastTick = SDL_GetTicks();
 	Uint32 nextFrame = SDL_GetTicks() + timePerFrame;
-	Uint32 currentTick = 0; 
+	Uint32 currentTick = 0;
 	Uint32 timeSinceLastTick = 0;
 	while (m_isRunning)
 	{
-		processEvent(); 
+		processEvent();
 		while (SDL_GetTicks() < nextFrame)
 		{
 			currentTick = SDL_GetTicks();
@@ -161,7 +170,11 @@ void Game::processEvent()
 			}
 			if (SDLK_SPACE == event.key.keysym.sym)
 			{
-
+				if (m_entities.empty())
+				{ 
+					delete& m_entities[0];
+					m_entities.erase(m_entities.begin() + m_entities.size() - 1, m_entities.end());
+				}
 			}
 			if (SDLK_BACKSPACE == event.key.keysym.sym)
 			{
@@ -267,6 +280,7 @@ void Game::update(float t_dt)
 	m_projectileManager.tick();
 	m_projectileManager.update(t_dt);
 	m_collisionSystem.handleCollisions();
+	m_pickUpManager.update(t_dt);
 
 	removeDeadEnemies();
 }
@@ -284,6 +298,7 @@ void Game::render()
 		m_renderSystem.render(m_renderer, player);
 	}
 	m_projectileManager.render(m_renderer, &m_renderSystem);
+	m_pickUpManager.render(m_renderer, &m_renderSystem);
 	SDL_RenderPresent(m_renderer);
 }
 
@@ -349,13 +364,9 @@ void Game::createPlayer(Entity& t_player)
 
 void Game::createEnemy()
 {
+	EnemyFactory* temp = new EnemyFactory(m_renderer);
 	m_entities.emplace_back();
-	m_entities.back().addComponent(new TransformComponent());
-	m_entities.back().addComponent(new ForceComponent());
-	m_entities.back().addComponent(new AiComponent(AITypes::eMelee, AIStates::eWander, 15.0f, 1.0f));
-	m_entities.back().addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
-	m_entities.back().addComponent(new TagComponent(Tag::Enemy));
-	m_entities.back().addComponent(new HealthComponent(Utilities::ENEMY_HP, Utilities::ENEMY_HP));
+	temp->createEnemy(1, m_entities.back());
 }
 
 void Game::removeDeadEnemies()
@@ -368,10 +379,10 @@ void Game::removeDeadEnemies()
 	}
 }
 
-void Game::playerFireSound(const createBulletEvent& t_event)
-{
+//void Game::playerFireSound(const createBulletEvent& t_event)
+//{
 	//m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "launcher.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_renderSystem.getFocus());
-}
+//}
 
 void Game::closeWindow(const CloseWindow& t_event)
 {

@@ -61,6 +61,12 @@
     <Filter Include="Header Files\EventMessaging">
       <UniqueIdentifier>{e81561f9-bc32-4ada-a2e4-ff7ccd1068fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\FactoryPattern">
+      <UniqueIdentifier>{ad1f1ff9-64cf-4020-af75-59d28d9a8667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FactoryPattern">
+      <UniqueIdentifier>{b4ddc9ef-aa88-4533-be8c-175535ee5ea7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -203,6 +209,21 @@
     </ClCompile>
     <ClCompile Include="src\FireRateComponent.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerFactory.cpp">
+      <Filter>Source Files\FactoryPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EnemyFactory.cpp">
+      <Filter>Source Files\FactoryPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PickUpFactory.cpp">
+      <Filter>Source Files\FactoryPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PickUpManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PickUpComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -361,6 +382,27 @@
     </ClInclude>
     <ClInclude Include="include\FireRateComponent.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerFactory.h">
+      <Filter>Header Files\FactoryPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EntityFactory.h">
+      <Filter>Header Files\FactoryPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FactoryStatSheet.h">
+      <Filter>Header Files\FactoryPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EnemyFactory.h">
+      <Filter>Header Files\FactoryPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PickUpFactory.h">
+      <Filter>Header Files\FactoryPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PickUpManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PickUpComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

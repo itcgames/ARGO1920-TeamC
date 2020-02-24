@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "CollisionSystem.h"
 
-CollisionSystem::CollisionSystem() :
+CollisionSystem::CollisionSystem(EventManager& t_eventManager) :
 	m_quadTree(0, glm::vec2(0, 0), glm::vec2(Utilities::LEVEL_TILE_WIDTH * Utilities::TILE_SIZE, Utilities::LEVEL_TILE_HEIGHT * Utilities::TILE_SIZE)),
-	m_seperationScaler(30)
+	m_seperationScaler(30),
+	m_eventManager(t_eventManager)
 {
 	m_circleColliderBuffer.reserve(100);
 }
@@ -170,6 +171,9 @@ void CollisionSystem::handlePlayerCollision(Entity* t_player)
 		case Tag::Tile:
 			playerToWall(t_player, other);
 			break;
+		case Tag::PickUp:
+			playerToPickUp(t_player, other);
+			break;
 		default:
 			break;
 		}
@@ -335,6 +339,16 @@ void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 			}
 		}
 	}
+}
+
+void CollisionSystem::playerToPickUp(Entity* t_player, Entity* t_pickUp)
+{
+	if (t_pickUp->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_player, t_pickUp))
+	{
+		m_eventManager.emitEvent(PickupGrabbed{ t_pickUp });
+	}
+
+
 }
 
 void CollisionSystem::playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enemy)

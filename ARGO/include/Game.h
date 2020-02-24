@@ -31,6 +31,11 @@
 #include "CommandSystem.h"
 #include "LevelManager.h"
 #include <algorithm>
+#include "FactoryStatSheet.h"
+#include "PlayerFactory.h"
+#include "EnemyFactory.h"
+#include "PickUpManager.h"
+
 
 /// <summary>
 /// Game class needed for the game
@@ -76,6 +81,7 @@ private:
 	std::vector<Entity> m_entities;
 
 	ProjectileManager m_projectileManager;
+	PickUpManager m_pickUpManager;
 	LevelManager m_levelManager;
 
 	// Window used for the game
