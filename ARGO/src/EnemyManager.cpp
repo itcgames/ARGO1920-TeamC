@@ -54,15 +54,13 @@ void EnemyManager::spawnGroup(float t_dt)
 		m_spawnEnemyTimer = SPAWN_ENEMY_RATE;
 		Entity* spawnTile = nullptr;
 		int attempts = 0;
-		while (spawnTile == nullptr && attempts < 20)
+		const int maxAttempts = 20;
+		while (spawnTile == nullptr && attempts < maxAttempts)
 		{
 			int x = glm::linearRand(-5, 5);
 			int y = glm::linearRand(-5, 5);
-			std::cout << x << ", " << y << std::endl;
 			x += x > 0 ? 16 : -16;
 			y += y > 0 ? 10 : -10;
-			std::cout << x << ", " << y << std::endl;
-			std::cout << "---------" << std::endl;
 			spawnTile = m_levelManager.findAtPosition(glm::vec2(x * Utilities::TILE_SIZE, y * Utilities::TILE_SIZE) + m_renderSystem.getFocus());
 			if (spawnTile)
 			{
@@ -125,7 +123,7 @@ Entity(&EnemyManager::getEnemies())[Utilities::ENEMY_POOL_SIZE]
 	return m_enemies;
 }
 
-void EnemyManager::killAlll()
+void EnemyManager::killAll()
 {
 	for (auto& enemy : m_enemies)
 	{

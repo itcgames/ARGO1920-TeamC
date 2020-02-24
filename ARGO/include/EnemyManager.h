@@ -20,7 +20,7 @@ public:
 	void spawnGroup(float t_dt);
 	void createEnemyAtTile(Entity* t_tile);
 	Entity(&getEnemies())[Utilities::ENEMY_POOL_SIZE];
-	void killAlll();
+	void killAll();
 
 private:
 	static const int ENEMY_BASIC_RADIUS = 24;

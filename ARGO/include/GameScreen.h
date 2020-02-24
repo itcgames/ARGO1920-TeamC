@@ -43,7 +43,6 @@ private:
 
 	Controller m_controllers[Utilities::S_MAX_PLAYERS];
 	Entity m_players[Utilities::S_MAX_PLAYERS];
-	//std::vector<Entity> m_entities;
 	Entity m_goal;
 	SDL_Renderer* m_renderer;
 

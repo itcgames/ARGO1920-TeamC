@@ -32,7 +32,6 @@ void GameScreen::update(float t_deltaTime)
 	updateProjectiles(t_deltaTime);
 	m_collisionSystem.update(m_goal);
 	m_collisionSystem.handleCollisions();
-	removeDeadEnemies();
 }
 
 void GameScreen::processEvents(SDL_Event* t_event)
