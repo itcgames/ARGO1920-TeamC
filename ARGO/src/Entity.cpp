@@ -457,8 +457,3 @@ Component* Entity::getComponent(ComponentType t_type) const
 		throw;
 	}
 }
-
-std::vector<Component*>& Entity::getAllComps()
-{
-	return m_components;
-}
