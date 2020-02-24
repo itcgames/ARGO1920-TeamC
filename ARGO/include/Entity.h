@@ -17,7 +17,6 @@ public:
 	void nullAllComponents();
 
 	Component* getComponent(ComponentType t_type) const;
-	std::vector<Component*>& getAllComps();
 
 private:
 	std::vector<Component*> m_components;
