@@ -44,6 +44,11 @@ void HealthComponent::addHealth(int t_amount)
 	}
 }
 
+void HealthComponent::resetHealth()
+{
+	m_health = MAX_HEALTH;
+}
+
 void HealthComponent::reduceHealth(int t_amount)
 {
 	if (m_invincibilityCooldown <=0)

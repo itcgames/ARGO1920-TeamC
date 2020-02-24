@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "AiSystem.h"
 
-AiSystem::AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], std::vector<Entity>& t_enemies, EventManager& t_eventManager) :
+AiSystem::AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], Entity(&t_enemies)[Utilities::ENEMY_POOL_SIZE], EventManager& t_eventManager) :
 	m_players(t_players),
 	m_enemies(t_enemies),
 	m_eventManager(t_eventManager)
@@ -110,7 +110,8 @@ void AiSystem::setEnemyData(glm::vec2 t_botPosition)
 		if (enemy.getComponent(ComponentType::ColliderCircle))
 		{
 			TransformComponent* transCompEnemy = static_cast<TransformComponent*>(enemy.getComponent(ComponentType::Transform));
-			if (transCompEnemy)
+			HealthComponent* healthCompEnemy = static_cast<HealthComponent*>(enemy.getComponent(ComponentType::Health));
+			if (transCompEnemy && healthCompEnemy && healthCompEnemy->isAlive())
 			{
 				float newDistance = glm::distance2(t_botPosition, transCompEnemy->getPos());
 				if (newDistance < m_botEnemyData.distance)

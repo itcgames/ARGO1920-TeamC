@@ -7,6 +7,7 @@
 #include "AiComponent.h"
 #include "TransformComponent.h"
 #include "ForceComponent.h"
+#include "HealthComponent.h"
 #include "AiStates.h"
 #include "Utilities.h"
 #include "BehaviourTree.h"
@@ -14,7 +15,7 @@
 class AiSystem : public BaseSystem
 {
 public:
-	AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], std::vector<Entity>& t_enemies, EventManager& t_eventManager);
+	AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], Entity(&t_enemies)[Utilities::ENEMY_POOL_SIZE] , EventManager& t_eventManager);
 	~AiSystem();
 	void update(Entity& t_entity);
 private:
@@ -34,7 +35,7 @@ private:
 	void setGoalData(glm::vec2 t_botPosition);
 
 	Entity(&m_players)[Utilities::S_MAX_PLAYERS];
-	std::vector<Entity>& m_enemies;
+	Entity(&m_enemies)[Utilities::ENEMY_POOL_SIZE];
 	EventManager& m_eventManager;
 
 	WeightedSelector m_behaviourTree;

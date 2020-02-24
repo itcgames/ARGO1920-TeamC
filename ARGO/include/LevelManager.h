@@ -19,9 +19,9 @@ public:
 	void setToWall(Entity& t_entity);
 	void setToFloor(Entity& t_entity);
 	void createRoom(glm::vec2 t_startPosition, int t_width, int t_height);
+	Entity* findAtPosition(glm::vec2 t_position);
 private:
 	void setTileNeighbours();
-	Entity* findAtPosition(glm::vec2 t_position);
 
 	std::vector<Entity> m_levelTiles;
 	SDL_Renderer* m_renderer;
