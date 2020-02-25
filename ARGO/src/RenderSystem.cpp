@@ -176,15 +176,18 @@ void RenderSystem::renderText(SDL_Renderer* t_renderer, TransformComponent* t_po
 
 bool RenderSystem::inView(TransformComponent* t_posComp)
 {
-	float left, right, top, down;
-	left = m_focusPoint.x - Utilities::SCREEN_WIDTH * OFF_SCREEN_SCALAR;
-	right = m_focusPoint.x + Utilities::SCREEN_WIDTH * OFF_SCREEN_SCALAR;
-	top = m_focusPoint.y - Utilities::SCREEN_HEIGHT * OFF_SCREEN_SCALAR;
-	down = m_focusPoint.y + Utilities::SCREEN_HEIGHT * OFF_SCREEN_SCALAR;
+	//float left, right, top, down;
+	//left = m_focusPoint.x - Utilities::SCREEN_WIDTH * OFF_SCREEN_SCALAR;
+	//right = m_focusPoint.x + Utilities::SCREEN_WIDTH * OFF_SCREEN_SCALAR;
+	//top = m_focusPoint.y - Utilities::SCREEN_HEIGHT * OFF_SCREEN_SCALAR;
+	//down = m_focusPoint.y + Utilities::SCREEN_HEIGHT * OFF_SCREEN_SCALAR;
 
-	//returns false if object is outside of the window, true if it is in view
-	return left < t_posComp->getPos().x && right > t_posComp->getPos().x &&
-		top < t_posComp->getPos().y && down > t_posComp->getPos().y;
+	////returns false if object is outside of the window, true if it is in view
+	//return left < t_posComp->getPos().x && right > t_posComp->getPos().x &&
+	//	top < t_posComp->getPos().y && down > t_posComp->getPos().y;
+	
+	//experimenting with radius view
+	return glm::distance2(t_posComp->getPos(), m_focusPoint) < ((Utilities::SCREEN_HEIGHT / 2.0f) * (Utilities::SCREEN_HEIGHT / 2.0f));
 }
 
 void RenderSystem::setFocus(glm::vec2 t_point)

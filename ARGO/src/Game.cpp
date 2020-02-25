@@ -123,6 +123,15 @@ void Game::initLibraries()
 	{
 		printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
 	}
+
+	if (SDLNet_Init() < 0)
+	{
+		printf("SDL_net could not initialize! SDL_net Error: %s\n", SDLNet_GetError());
+	}
+	else
+	{
+		printf("SDL_net initialised, player ip: %s\n", IPaddress().host);
+	}
 }
 
 /// <summary>
@@ -273,6 +282,7 @@ void Game::cleanup()
 	m_audioMgr = NULL;
 	IMG_Quit();
 	TTF_Quit();
+	SDLNet_Quit();
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
 	m_renderer = NULL;
