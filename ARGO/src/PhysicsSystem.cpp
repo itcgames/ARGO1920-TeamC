@@ -23,8 +23,10 @@ void PhysicsSystem::update(Entity& t_entity, float t_dt)
 			transformComp->addPos(forceComp->getForce() * t_dt);
 			if (forceComp->getHasFriction())
 			{
+				glm::vec2 friction = forceComp->getForce() * FRICTION_SCALAR;
+				glm::vec2 dif = forceComp->getForce() - friction;
 				//this might have to be multiplied by t_dt
-				forceComp->setForce(forceComp->getForce() * FRICTION_SCALAR);
+				forceComp->setForce(forceComp->getForce() - dif);
 			}
 		}
 		handleRotation(transformComp);

@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "AiSystem.h"
 
-AiSystem::AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], Entity(&t_enemies)[Utilities::ENEMY_POOL_SIZE], EventManager& t_eventManager) :
+AiSystem::AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], Entity(&t_enemies)[Utilities::ENEMY_POOL_SIZE], EventManager& t_eventManager, LevelManager& t_levelManager) :
 	m_players(t_players),
 	m_enemies(t_enemies),
-	m_eventManager(t_eventManager)
+	m_eventManager(t_eventManager),
+	m_levelmanager(t_levelManager)
 {
 	m_behaviourTree.addChild(new RetreatBehaviour(&m_botEnemyData));
 	m_behaviourTree.addChild(new HoldBehaviour(&m_botEnemyData));
@@ -22,14 +23,11 @@ void AiSystem::update(Entity& t_entity)
 {
 	TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
 	AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getComponent(ComponentType::Ai));
+	ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
 
 	//make sure that entity is not missing crucial components
-	if (posComp && aiComp)
+	if (posComp && aiComp && forceComp)
 	{
-		TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
-		AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getComponent(ComponentType::Ai));
-		ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
-
 		switch (aiComp->getType())
 		{
 		case AITypes::eMelee:
@@ -47,6 +45,42 @@ void AiSystem::update(Entity& t_entity)
 
 void AiSystem::meleeAI(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent)
 {
+	t_aiComponent->setState(AIStates::eWander);
+	Entity* tile = m_levelmanager.findAtPosition(t_posComp->getPos());
+	glm::vec2 seekPosition = glm::vec2(0, 0);
+	if (tile)
+	{
+		FlowFieldComponent* flowFieldComp = static_cast<FlowFieldComponent*>(tile->getComponent(ComponentType::FlowField));
+		if (flowFieldComp && flowFieldComp->getWeight() < Utilities::MAX_FLOW_FIELD_WEIGHT)
+		{
+			if (flowFieldComp->getWeight() == 0)
+			{
+				for (auto& player : m_players)
+				{
+					HealthComponent* healthComp = static_cast<HealthComponent*>(player.getComponent(ComponentType::Health));
+					if (healthComp && healthComp->isAlive())
+					{
+						TransformComponent* transComp = static_cast<TransformComponent*>(player.getComponent(ComponentType::Transform));
+						if (glm::distance2(t_posComp->getPos(), transComp->getPos()) < Utilities::TILE_SIZE * Utilities::TILE_SIZE)
+						{
+							seekPosition = transComp->getPos();
+							t_aiComponent->setState(AIStates::eSeek);
+						}
+					}
+				}
+			}
+			else if (flowFieldComp->getClosestNeightbour())
+			{
+				TransformComponent* transComp = static_cast<TransformComponent*>(flowFieldComp->getClosestNeightbour()->getComponent(ComponentType::Transform));
+				if (transComp)
+				{
+					seekPosition = transComp->getPos() + glm::vec2(Utilities::TILE_SIZE / 2, Utilities::TILE_SIZE / 2);
+					t_aiComponent->setState(AIStates::eSeek);
+				}
+			}
+		}
+	}
+
 	//The Only Possible States Available to Melee Enemies. Use to limit Behaviours
 	switch (t_aiComponent->getStates())
 	{
@@ -55,6 +89,9 @@ void AiSystem::meleeAI(TransformComponent* t_posComp, AiComponent* t_aiComponent
 		break;
 	case AIStates::eWander:
 		wander(t_posComp, t_aiComponent, t_forceComponent);
+		break;
+	case AIStates::eSeek:
+		seek(t_posComp, t_aiComponent, t_forceComponent, seekPosition);
 		break;
 	}
 }
@@ -71,6 +108,13 @@ void AiSystem::rangedAI(TransformComponent* t_posComp, AiComponent* t_aiComponen
 		wander(t_posComp, t_aiComponent, t_forceComponent);
 		break;
 	}
+}
+
+void AiSystem::seek(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent, glm::vec2 t_destination)
+{
+	glm::vec2 direction = glm::normalize(t_destination - t_posComp->getPos());
+	t_forceComponent->addForce(direction);
+	t_posComp->setRotation(atan2(direction.y, direction.x) * Utilities::RADIANS_TO_DEGREES);
 }
 
 void AiSystem::playerAI(Entity& t_entity)

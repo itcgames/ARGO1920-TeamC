@@ -22,6 +22,8 @@
     <ClCompile Include="src\EnemyManager.cpp" />
     <ClCompile Include="src\FireBulletCommand.cpp" />
     <ClCompile Include="src\FireRateComponent.cpp" />
+    <ClCompile Include="src\FlowField.cpp" />
+    <ClCompile Include="src\FlowFieldComponent.cpp" />
     <ClCompile Include="src\GoToLicenseScreenCommand.cpp" />
     <ClCompile Include="src\GoToMainMenuCommand.cpp" />
     <ClCompile Include="src\MenuMoveDownCommand.cpp" />
@@ -102,6 +104,8 @@
     <ClInclude Include="include\EnemyManager.h" />
     <ClInclude Include="include\FireBulletCommand.h" />
     <ClInclude Include="include\FireRateComponent.h" />
+    <ClInclude Include="include\FlowField.h" />
+    <ClInclude Include="include\FlowFieldComponent.h" />
     <ClInclude Include="include\GoToLicenseScreenCommand.h" />
     <ClInclude Include="include\GoToMainMenuCommand.h" />
     <ClInclude Include="include\MenuMoveDownCommand.h" />
