@@ -171,6 +171,9 @@ void CollisionSystem::handlePlayerCollision(Entity* t_player)
 		case Tag::Tile:
 			playerToWall(t_player, other);
 			break;
+		case Tag::PickUp:
+			playerToPickUp(t_player, other);
+			break;
 		case Tag::Goal:
 			playerToGoal(t_player, other);
 			break;
@@ -358,6 +361,40 @@ void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 			}
 		}
 	}
+}
+
+
+void CollisionSystem::playerToPickUp(Entity* t_player, Entity* t_pickUp)
+{
+	if (t_pickUp->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_player, t_pickUp))
+	{
+		HealthComponent* healthComp = static_cast<HealthComponent*>(t_pickUp->getComponent(ComponentType::Health));
+		if (healthComp->isAlive())
+		{
+			m_eventManager.emitEvent(PickupGrabbed{ t_pickUp });
+			PickUpComponent* pickUpComp = static_cast<PickUpComponent*>(t_pickUp->getComponent(ComponentType::PickUp));
+			switch (pickUpComp->getPickupType())
+			{
+			case 1:
+				//Ammo Pickup
+				//Implement Ammo for the Player First
+				break;
+			case 2:
+				//Health Pickup
+				HealthComponent* playerHealthComp = static_cast<HealthComponent*>(t_player->getComponent(ComponentType::Health));
+				int healthToAdd = playerHealthComp->getMaxHealth() * pickUpComp->getHealthChange();
+				if (healthToAdd <= 0)
+				{
+					healthToAdd = 1;
+				}
+				playerHealthComp->addHealth(healthToAdd);
+				break;
+			}
+
+
+		}
+	}
+
 }
 
 void CollisionSystem::playerToGoal(Entity* t_player, Entity* t_goal)

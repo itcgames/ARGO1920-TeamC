@@ -77,3 +77,8 @@ bool HealthComponent::isAlive() const
 {
 	return m_health > 0;
 }
+
+int HealthComponent::getMaxHealth()
+{
+	return MAX_HEALTH;
+}

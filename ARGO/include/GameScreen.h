@@ -12,6 +12,9 @@
 #include "EnemyManager.h"
 #include "ParticleSystem.h"
 #include "LevelManager.h"
+#include "PlayerFactory.h"
+#include "PickUpManager.h"
+#include "EnemyFactory.h"
 
 class GameScreen
 {
@@ -59,6 +62,10 @@ private:
 	ProjectileManager m_projectileManager;
 	LevelManager m_levelManager;
 	EnemyManager m_enemyManager;
+
+	PlayerFactory m_playerFactory;
+	EnemyFactory m_enemyFactory;
+	PickUpManager m_pickUpManager;
 
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
 };

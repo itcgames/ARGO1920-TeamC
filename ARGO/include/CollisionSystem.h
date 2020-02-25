@@ -6,6 +6,7 @@
 #include "TagComponent.h"
 #include "HealthComponent.h"
 #include "ForceComponent.h"
+#include "PickUpComponent.h"
 #include "InputComponent.h"
 #include "Utilities.h"
 #include "QuadTree.h"
@@ -34,6 +35,7 @@ private:
 	void playerToEnemy(Entity* t_player, Entity* t_enemy);
 	void playerToEnemyBullet(Entity* t_player, Entity* t_enemyBullet);
 	void playerToWall(Entity* t_player, Entity* t_wall);
+	void playerToPickUp(Entity* t_player, Entity* t_pickUp);
 	void playerToGoal(Entity* t_player, Entity* t_goal);
 
 	void playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enemy);
@@ -46,7 +48,6 @@ private:
 
 	EventManager& m_eventManager;
 	const float PLAYER_TO_ENEMY_REFECTION_SCALER = 15.0f;
-
 	QuadTree m_quadTree;
 	std::vector<Entity*> m_circleColliderBuffer;
 
