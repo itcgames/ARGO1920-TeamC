@@ -183,6 +183,15 @@ void Entity::addComponent(Component* t_c)
 			}
 			break;
 		}
+		case ComponentType::FlowField:
+		{
+			if (!m_components.at(COMPONENT_ID::FLOW_FIELD_ID))
+			{
+				m_components.at(COMPONENT_ID::FLOW_FIELD_ID) = t_c;
+				return;
+			}
+			break;
+		}
 		default:
 			throw std::invalid_argument("Invalid component type!");
 			break;
@@ -377,6 +386,16 @@ void Entity::removeCompType(ComponentType t_type)
 			}
 			break;
 		}
+		case ComponentType::FlowField:
+		{
+			if (m_components.at(COMPONENT_ID::FLOW_FIELD_ID))
+			{
+				delete m_components.at(COMPONENT_ID::FLOW_FIELD_ID);
+				m_components.at(COMPONENT_ID::FLOW_FIELD_ID) = nullptr;
+				return;
+			}
+			break;
+		}
 		default:
 			throw std::invalid_argument("trying to delete an unknown component!");
 			break;
@@ -446,6 +465,8 @@ Component* Entity::getComponent(ComponentType t_type) const
 			return m_components.at(COMPONENT_ID::PARTICLE_ID);
 		case ComponentType::FireRate:
 			return m_components.at(COMPONENT_ID::FIRE_RATE_ID);
+		case ComponentType::FlowField:
+			return m_components.at(COMPONENT_ID::FLOW_FIELD_ID);
 		default:
 			throw std::invalid_argument("trying to get an unknown component!");
 			break;

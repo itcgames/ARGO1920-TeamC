@@ -10,7 +10,7 @@ bool cleanUpEnemies(const Entity& t_entity)
 GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::S_MAX_PLAYERS]) :
 	m_eventManager{ t_eventManager },
 	m_controllers{ *t_controllers },
-	m_levelManager{ t_renderer },
+	m_levelManager{ t_renderer, m_players },
 	m_enemyManager{ t_renderer, Utilities::ENEMY_INITIAL_SPAWN_DELAY, t_eventManager, m_transformSystem, m_collisionSystem, m_healthSystem, m_aiSystem, m_renderSystem, m_levelManager },
 	m_renderer{ t_renderer },
 	m_transformSystem{ m_eventManager },

@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "LevelManager.h"
 
-LevelManager::LevelManager(SDL_Renderer* t_renderer):
-	m_renderer(t_renderer)
+LevelManager::LevelManager(SDL_Renderer* t_renderer, Entity(&t_players)[Utilities::S_MAX_PLAYERS]):
+	m_renderer(t_renderer),
+	m_players(t_players)
 {
 }
 
@@ -29,6 +30,8 @@ void LevelManager::setupLevel()
 			m_levelTiles.back().addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
 			m_levelTiles.back().addComponent(new TileComponent());
 			m_levelTiles.back().addComponent(new HealthComponent(Utilities::WALL_HEALTH, Utilities::WALL_HEALTH));
+			m_levelTiles.back().addComponent(new FlowFieldComponent());
+			m_levelTiles.back().addComponent(new TextComponent("ordinary.ttf", m_renderer, 24, false, "test"));
 		}
 	}
 	setTileNeighbours();
@@ -43,6 +46,7 @@ void LevelManager::update(BaseSystem* t_system)
 			t_system->update(entity);
 		}
 	}
+	generateFlowField();
 }
 
 void LevelManager::checkWallDamage()
@@ -112,6 +116,95 @@ void LevelManager::setTileNeighbours()
 		neighbours->topRight = findAtPosition(position + glm::vec2(Utilities::TILE_SIZE, -Utilities::TILE_SIZE));
 		neighbours->bottomLeft = findAtPosition(position + glm::vec2(-Utilities::TILE_SIZE, Utilities::TILE_SIZE));
 		neighbours->bottomRight = findAtPosition(position + glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE));
+	}
+}
+
+void LevelManager::resetFlowField()
+{
+	for (auto& tile : m_levelTiles)
+	{
+		static_cast<FlowFieldComponent*>(tile.getComponent(ComponentType::FlowField))->reset();
+	}
+}
+
+void LevelManager::generateFlowField()
+{
+	resetFlowField();
+
+	std::vector<Entity*> queue;
+	for (auto& player : m_players)
+	{
+		HealthComponent* healthComp = static_cast<HealthComponent*>(player.getComponent(ComponentType::Health));
+		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getComponent(ComponentType::Transform));
+		if (healthComp && transformComp && healthComp->isAlive())
+		{
+			Entity* tile = findAtPosition(transformComp->getPos());
+			FlowFieldComponent* flowFieldComp = static_cast<FlowFieldComponent*>(tile->getComponent(ComponentType::FlowField));
+			if (flowFieldComp)
+			{
+				setTileWeight(tile, nullptr, queue, 0);
+			}
+		}
+	}
+
+	while (!queue.empty())
+	{
+		Entity* current = queue.back();
+		queue.pop_back();
+		setNeighbourWeights(current, queue);
+	}
+}
+
+void LevelManager::setNeighbourWeights(Entity* t_entity, std::vector<Entity*>& t_queue)
+{
+	int newWeight = static_cast<FlowFieldComponent*>(t_entity->getComponent(ComponentType::FlowField))->getWeight() + 1;
+	if (newWeight < MAX_FLOW_FIELD_WEIGHT)
+	{
+		Neighbours* neighbours = static_cast<TileComponent*>(t_entity->getComponent(ComponentType::Tile))->getNeighbours();
+		if (neighbours->topLeft)
+		{
+			setTileWeight(neighbours->topLeft, t_entity, t_queue, newWeight);
+		}
+		if (neighbours->top)
+		{
+			setTileWeight(neighbours->top, t_entity, t_queue, newWeight);
+		}
+		if (neighbours->topRight)
+		{
+			setTileWeight(neighbours->topRight, t_entity, t_queue, newWeight);
+		}
+		if (neighbours->left)
+		{
+			setTileWeight(neighbours->left, t_entity, t_queue, newWeight);
+		}
+		if (neighbours->right)
+		{
+			setTileWeight(neighbours->right, t_entity, t_queue, newWeight);
+		}
+		if (neighbours->bottomLeft)
+		{
+			setTileWeight(neighbours->bottomLeft, t_entity, t_queue, newWeight);
+		}
+		if (neighbours->bottom)
+		{
+			setTileWeight(neighbours->bottom, t_entity, t_queue, newWeight);
+		}
+		if (neighbours->bottomRight)
+		{
+			setTileWeight(neighbours->bottomRight, t_entity, t_queue, newWeight);
+		}
+	}
+}
+
+void LevelManager::setTileWeight(Entity* t_entity, Entity* t_closestNeighbour, std::vector<Entity*>& t_queue, int t_newWeight)
+{
+	FlowFieldComponent* neighbourFlowField = static_cast<FlowFieldComponent*>(t_entity->getComponent(ComponentType::FlowField));
+	if (!static_cast<ColliderAABBComponent*>(t_entity->getComponent(ComponentType::ColliderAABB)) && neighbourFlowField->getWeight() > t_newWeight)
+	{
+		static_cast<TextComponent*>(t_entity->getComponent(ComponentType::Text))->setText(std::to_string(t_newWeight));
+		neighbourFlowField->setClosestNeighbour(t_closestNeighbour);
+		neighbourFlowField->setWeight(t_newWeight);
+		t_queue.insert(t_queue.begin(), t_entity);
 	}
 }
 

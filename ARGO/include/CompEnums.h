@@ -18,6 +18,7 @@ enum class ComponentType
 	Command = 14,
 	Tile = 15,
 	FireRate = 16,
+	FlowField,
 	Count
 };
 
@@ -41,4 +42,5 @@ namespace COMPONENT_ID
 	const int TAG_ID = static_cast<int>(ComponentType::Tag);
 	const int TILE_ID = static_cast<int>(ComponentType::Tile);
 	const int FIRE_RATE_ID = static_cast<int>(ComponentType::FireRate);
+	const int FLOW_FIELD_ID = static_cast<int>(ComponentType::FlowField);
 }
