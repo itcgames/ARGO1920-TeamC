@@ -11,20 +11,20 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_eventManager{ t_eventManager },
 	m_controllers{ *t_controllers },
 	m_levelManager{ t_renderer },
+	m_enemyManager{ t_renderer, Utilities::ENEMY_INITIAL_SPAWN_DELAY, t_eventManager, m_transformSystem, m_collisionSystem, m_healthSystem, m_aiSystem, m_renderSystem, m_levelManager },
 	m_renderer{ t_renderer },
 	m_transformSystem{ m_eventManager },
 	m_projectileManager{ t_renderer, m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
-	m_aiSystem{ m_players, m_entities, m_eventManager },
 	m_collisionSystem{ m_eventManager },
 	m_playerFactory(),
 	m_enemyFactory(),
-	m_pickUpManager(m_eventManager, m_collisionSystem)
+	m_pickUpManager(m_eventManager, m_collisionSystem),
+	m_aiSystem{ m_players, m_enemyManager.getEnemies(), m_eventManager }
 {
 }
 
 GameScreen::~GameScreen()
 {
-	m_entities.clear();
 }
 
 void GameScreen::update(float t_deltaTime)
@@ -36,7 +36,6 @@ void GameScreen::update(float t_deltaTime)
 	m_collisionSystem.update(m_goal);
 	m_collisionSystem.handleCollisions();
 	m_pickUpManager.update(t_deltaTime);
-	removeDeadEnemies();
 }
 
 void GameScreen::processEvents(SDL_Event* t_event)
@@ -52,42 +51,9 @@ void GameScreen::processEvents(SDL_Event* t_event)
 			m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::MainMenu });
 			break;
 		}
-		case SDLK_BACKSPACE:
-		{
-			//delete all entities
-			if (!m_entities.empty())
-			{
-				m_entities.erase(m_entities.begin(), m_entities.end());
-			}
-			std::cout << m_entities.size() << std::endl;
-			break;
-		}
 		case SDLK_DELETE:
 		{
-			//delete all entities
 			m_players[0].removeCompType(ComponentType::Input);
-			break;
-		}
-		case SDLK_RETURN:
-		{
-			//check if we can add 100 entities, if more than 100, set to 100, if less than 0 set to 0
-			int availableSpace = glm::clamp(int(MAX_ENTITIES - m_entities.size()), 0, 100);
-			for (int index = 0; index < availableSpace; index++)
-			{
-				createEnemy();
-			}
-			std::cout << m_entities.size() << std::endl;
-			break;
-		}
-		case SDLK_1:
-		{
-			//create one enemy if space available in the vector
-			if (m_entities.size() < MAX_ENTITIES)
-			{
-				createEnemy();
-			}
-
-			std::cout << m_entities.size() << std::endl;
 			break;
 		}
 		default:
@@ -105,10 +71,7 @@ void GameScreen::render(SDL_Renderer* t_renderer)
 {
 	preRender();
 	m_levelManager.render(t_renderer, &m_renderSystem);
-	for (Entity& entity : m_entities)
-	{
-		m_renderSystem.render(t_renderer, entity);
-	}
+	m_enemyManager.render(t_renderer);
 	for (Entity& player : m_players)
 	{
 		if (static_cast<HealthComponent*>(player.getComponent(ComponentType::Health))->isAlive())
@@ -130,12 +93,6 @@ void GameScreen::createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_ren
 		humanControlledPlayer = false;
 	}
 	m_playerFactory.createPlayer(t_player, humanControlledPlayer, m_controllers[t_index], t_index, m_controllerButtonMaps);
-}
-
-void GameScreen::createEnemy()
-{
-	m_entities.emplace_back();
-	m_enemyFactory.createEnemy(1, m_entities.back());
 }
 
 void GameScreen::createGoal()
@@ -205,13 +162,7 @@ void GameScreen::updatePlayers(float t_deltaTime)
 
 void GameScreen::updateEntities(float t_deltaTime)
 {
-	for (Entity& entity : m_entities)
-	{
-		m_healthSystem.update(entity);
-		m_aiSystem.update(entity);
-		m_transformSystem.update(entity, t_deltaTime);
-		m_collisionSystem.update(entity);
-	}
+	m_enemyManager.update(t_deltaTime);
 }
 
 void GameScreen::updateProjectiles(float t_deltaTime)
@@ -272,16 +223,6 @@ void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utiliti
 		createPlayer(player, playerCount, t_renderer);
 		playerCount++;
 	}
-	for (Entity& entity : m_entities)
-	{
-		entity.removeAllComponents();
-	}
-	m_entities.clear();
-
-	for (int index = 0; index < 5; index++)
-	{
-		createEnemy();
-	}
 	setUpLevel();
 }
 
@@ -299,24 +240,9 @@ void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_control
 		createPlayer(player, playerCount, t_renderer);
 		playerCount++;
 	}
-	m_entities.reserve(MAX_ENTITIES);
-	m_enemyFactory.initialise(t_renderer);
-	for (int index = 0; index < 5; index++)
-	{
-		createEnemy();
-	}
+	m_enemyManager.init();
 	setUpLevel();
 	m_projectileManager.init();
 	createGoal();
 	m_pickUpManager.init(m_renderer);
-}
-
-void GameScreen::removeDeadEnemies()
-{
-	std::vector<Entity>::iterator iter = std::remove_if(m_entities.begin(), m_entities.end(), cleanUpEnemies);
-	while (iter != m_entities.end())
-	{
-		iter->nullAllComponents();
-		iter = m_entities.erase(iter);
-	}
 }

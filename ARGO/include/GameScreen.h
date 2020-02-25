@@ -9,6 +9,7 @@
 #include "CollisionSystem.h"
 #include "CommandSystem.h"
 #include "ProjectileManager.h"
+#include "EnemyManager.h"
 #include "ParticleSystem.h"
 #include "LevelManager.h"
 #include "PlayerFactory.h"
@@ -30,16 +31,14 @@ public:
 private:
 
 	void createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_renderer);
-	void createEnemy();
 	void createGoal();
- 	void setUpLevel();
+	void setUpLevel();
 	void preRender();
 	void updatePlayers(float t_deltaTime);
 	void updateEntities(float t_deltaTime);
 	void updateProjectiles(float t_deltaTime);
 	void updateLevelManager();
 	void setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]);
-	void removeDeadEnemies();
 
 	EventManager& m_eventManager;
 
@@ -47,7 +46,6 @@ private:
 
 	Controller m_controllers[Utilities::S_MAX_PLAYERS];
 	Entity m_players[Utilities::S_MAX_PLAYERS];
-	std::vector<Entity> m_entities;
 	Entity m_goal;
 	SDL_Renderer* m_renderer;
 
@@ -63,6 +61,7 @@ private:
 
 	ProjectileManager m_projectileManager;
 	LevelManager m_levelManager;
+	EnemyManager m_enemyManager;
 
 	PlayerFactory m_playerFactory;
 	EnemyFactory m_enemyFactory;
@@ -70,4 +69,3 @@ private:
 
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
 };
-

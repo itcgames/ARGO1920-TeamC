@@ -14,7 +14,8 @@ public:
 
 	void setHealth(int t_amount);
 	void addHealth(int t_amount);
-	void reduceHealth(int t_amount);
+	void resetHealth();
+	bool reduceHealth(int t_amount);
 	void reduceInvincibilityCooldown(float t_amount);
 
 private:

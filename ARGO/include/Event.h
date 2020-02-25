@@ -15,7 +15,7 @@ struct CreateBulletEvent
 struct PhysicsMove
 {
 	glm::vec2 velocity;
- 	Entity& entity;
+	Entity& entity;
 };
 
 
@@ -39,7 +39,7 @@ struct MenuMoveButtonsUpDown
 struct MenuSelectButton
 {
 	Entity& entity;
-}; 
+};
 
 struct CloseWindow
 {

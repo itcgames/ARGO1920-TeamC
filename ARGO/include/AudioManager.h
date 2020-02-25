@@ -5,7 +5,7 @@
 class AudioManager
 {
 private:
-	int m_masterVolume = 100;
+	int m_masterVolume = 50;
 	int m_musicVolume = 20;
 	int m_sfxVolume = 20;
 	int m_initialisedFlags;

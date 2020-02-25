@@ -28,7 +28,7 @@ void LicenseScreen::render(SDL_Renderer* t_renderer)
 
 void LicenseScreen::reset()
 {
- 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
+	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
 	m_screenStartTime = SDL_GetTicks();
 }
 

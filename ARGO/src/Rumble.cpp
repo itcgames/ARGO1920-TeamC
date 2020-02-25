@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "Rumble.h"
 
-Rumble::Rumble( ):
+Rumble::Rumble() :
 	m_strength{ 0.0f },
 	m_time{ 0.0f }
-{	
+{
 }
 
 Rumble::Rumble(const Rumble& t_otherRumble)
@@ -123,7 +123,7 @@ void Rumble::setStrength(RumbleStrength t_strengthType)
 		break;
 	case RumbleStrength::Weak:
 		m_strength = WEAK_STRENGTH;
-		break; 
+		break;
 	default:
 		break;
 	}

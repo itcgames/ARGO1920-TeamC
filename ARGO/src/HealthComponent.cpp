@@ -44,13 +44,25 @@ void HealthComponent::addHealth(int t_amount)
 	}
 }
 
-void HealthComponent::reduceHealth(int t_amount)
+void HealthComponent::resetHealth()
 {
-	if (m_invincibilityCooldown <=0)
+	m_health = MAX_HEALTH;
+}
+
+/// <summary>
+/// returns a bool if Entity took damage
+/// </summary>
+/// <param name="t_amount">amount to take away from health</param>
+/// <returns>true if Entity took damage or false if not</returns>
+bool HealthComponent::reduceHealth(int t_amount)
+{
+	if (m_invincibilityCooldown <= 0)
 	{
 		m_invincibilityCooldown = INVINCIBILITY_FRAMES;
 		m_health -= t_amount;
+		return true;
 	}
+	return false;
 }
 
 void HealthComponent::reduceInvincibilityCooldown(float t_amount)

@@ -16,4 +16,3 @@ private:
 	EventManager& m_eventManager;
 	Controller& m_controller;
 };
-

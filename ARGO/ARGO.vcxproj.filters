@@ -297,6 +297,12 @@
     <ClCompile Include="src\AnalogRotateCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
+    <ClCompile Include="src\FireRateComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EnemyManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -538,6 +544,12 @@
     </ClInclude>
     <ClInclude Include="include\AnalogRotateCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FireRateComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EnemyManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

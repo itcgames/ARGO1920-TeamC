@@ -8,7 +8,7 @@
 class SplashScreen
 {
 public:
-	SplashScreen(EventManager& t_eventManager );
+	SplashScreen(EventManager& t_eventManager);
 	~SplashScreen();
 
 	void update(float t_deltaTime);
@@ -30,4 +30,4 @@ private:
 
 	Uint32 m_screenStartTime;
 	static const Uint32 S_TIME_ON_SCREEN = 2000;
- };
+};

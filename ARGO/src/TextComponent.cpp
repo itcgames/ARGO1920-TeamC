@@ -81,7 +81,7 @@ void TextComponent::setText(std::string t_text)
 void TextComponent::setSize(int t_size)
 {
 	m_pointSize = t_size;
-	m_texture = AssetManager::Instance()->GetText(m_text, m_fontName, m_pointSize, m_colour );
+	m_texture = AssetManager::Instance()->GetText(m_text, m_fontName, m_pointSize, m_colour);
 }
 
 std::string TextComponent::getText() const
@@ -116,7 +116,6 @@ SDL_Texture* TextComponent::getTexture() const
 
 void TextComponent::updateTexture()
 {
-	TTF_SizeText(AssetManager::Instance()->GetFont(m_fontName, m_pointSize), m_text.c_str(), &m_width, &m_height);
-
 	m_texture = AssetManager::Instance()->GetText(m_text, m_fontName, m_pointSize, m_colour);
+	SDL_QueryTexture(m_texture, NULL, NULL, &m_width, &m_height);
 }

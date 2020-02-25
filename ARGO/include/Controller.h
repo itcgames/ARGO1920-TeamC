@@ -8,8 +8,8 @@
 /// This class is strictly for Xbox controllers
 /// </summary>
 struct GamePadState
-{ 
-	bool button[Utilities::NUMBER_OF_CONTROLLER_BUTTONS];   
+{
+	bool button[Utilities::NUMBER_OF_CONTROLLER_BUTTONS];
 	glm::vec2 RightThumbStick{ 0.0f, 0.0f };
 	glm::vec2 LeftThumbStick{ 0.0f, 0.0f };
 };
@@ -24,7 +24,7 @@ enum class ButtonState
 	Held,
 	Released,
 	NotPressed
-}; 
+};
 
 /// <summary>
 /// The different buttons present on the controller gotten from the SDL button value
@@ -84,7 +84,7 @@ public:
 	float getRumbleStrength();
 	float getRumbleTime();
 
-private: 
+private:
 	// dead zone used by thumb sticks
 	const int THUMB_STICK_THRESHOLD = 8000;
 
@@ -109,6 +109,6 @@ private:
 	const std::string SWITCH_CONTROLLER_NAME = "Nintendo Switch Pro Controller";
 
 	std::string getButtonName(ButtonType t_ButtonType);
- 
+
 	Rumble m_rumble;
 };
