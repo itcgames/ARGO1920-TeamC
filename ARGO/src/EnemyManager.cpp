@@ -53,9 +53,9 @@ void EnemyManager::spawnGroup(float t_dt)
 	{
 		m_spawnEnemyTimer = SPAWN_ENEMY_RATE;
 		Entity* spawnTile = nullptr;
-		int attempts = 0;
+		int spawnAttempts = 0;
 		const int maxAttempts = 20;
-		while (spawnTile == nullptr && attempts < maxAttempts)
+		while (spawnTile == nullptr && spawnAttempts < maxAttempts)
 		{
 			int x = glm::linearRand(-5, 5);
 			int y = glm::linearRand(-5, 5);
@@ -70,7 +70,7 @@ void EnemyManager::spawnGroup(float t_dt)
 					spawnTile = nullptr;
 				}
 			}
-			attempts++;
+			spawnAttempts++;
 		}
 
 		if (spawnTile)
