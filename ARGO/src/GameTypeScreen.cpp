@@ -99,10 +99,29 @@ void GameTypeScreen::initalise(SDL_Renderer* t_renderer, Controller& t_controlle
 		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)],
 		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)],
 		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)]));
+
+
+
+	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
+
+	m_eventManager.subscribeToEvent<GameTypeMoveButtonsUpDown>(std::bind(&GameTypeScreen::changeCurrentSelectedButton, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<GameTypeSelectButton>(std::bind(&GameTypeScreen::buttonPressed, this, std::placeholders::_1));
 }
 
 void GameTypeScreen::setControllerButtonMaps()
 {
+	using ButtonCommandPair = std::pair < ButtonType, Command*>;
+	m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)] =
+	{
+		/*ButtonCommandPair(ButtonType::DpadUp, new Command()),
+		ButtonCommandPair(ButtonType::DpadDown, new Command()),
+		ButtonCommandPair(ButtonType::LeftThumbStickUp, new Command()),
+		ButtonCommandPair(ButtonType::LeftThumbStickRight, new Command()),
+		ButtonCommandPair(ButtonType::A, new Command()),
+		ButtonCommandPair(ButtonType::Start, new Command())*/
+	};
+	m_controllerButtonMaps[static_cast<int>(ButtonState::Held)];
+	m_controllerButtonMaps[static_cast<int>(ButtonState::Released)];
 }
 
 void GameTypeScreen::createGameTypeButton(Entity& t_gameTypeButton, glm::vec2 t_position)
@@ -115,6 +134,12 @@ void GameTypeScreen::createInputEntity(Controller& t_controller)
 
 void GameTypeScreen::changeCurrentSelectedButton(const GameTypeMoveButtonsUpDown& t_event)
 {
+	int currentButtonIndex = static_cast<int>(m_currentButton);
+	updateButtonColour(m_gameTypeButtons[currentButtonIndex], Utilities::MENU_BUTTON_DEFAULT_COLOUR);
+	currentButtonIndex = t_event.isMoveDown ? currentButtonIndex + 1 : currentButtonIndex - 1;
+	currentButtonIndex = glm::clamp(currentButtonIndex, 0, (S_NUMBER_OF_GAME_TYPE_BUTTONS - 1));
+	updateButtonColour(m_gameTypeButtons[currentButtonIndex], Utilities::MENU_BUTTON_HIGHLIGHTED_COLOUR);
+	m_currentButton = static_cast<GameTypeButtonType>(currentButtonIndex);
 }
 
 void GameTypeScreen::updateButtonColour(Entity& t_gameTypeButton, glm::vec3 t_colour)
@@ -123,4 +148,18 @@ void GameTypeScreen::updateButtonColour(Entity& t_gameTypeButton, glm::vec3 t_co
 
 void GameTypeScreen::buttonPressed(const GameTypeSelectButton& t_event)
 {
+	switch (m_currentButton)
+	{
+	case GameTypeButtonType::Offline:
+		m_eventManager.emitEvent(ChangeScreen{ MenuStates::Game });
+		break;
+	case GameTypeButtonType::OnlineHost:
+		// load server and popup ip address
+		break;
+	case GameTypeButtonType::OnlineJoin:
+		// bring up thing to input ip address
+		break;
+	default:
+		break;
+	}
 }

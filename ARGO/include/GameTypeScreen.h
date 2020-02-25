@@ -46,6 +46,8 @@ public:
 	Entity m_inputEntity;
 	Entity m_background;
 
+	Entity m_hostPopup;
+
 	GameTypeButtonType m_currentButton;
 
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS];
