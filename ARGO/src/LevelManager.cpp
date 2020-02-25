@@ -34,7 +34,7 @@ void LevelManager::setupLevel()
 		}
 	}
 	setTileNeighbours();
-} 
+}
 
 void LevelManager::update(BaseSystem* t_system)
 {

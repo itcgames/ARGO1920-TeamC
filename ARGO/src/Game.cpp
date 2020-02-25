@@ -21,7 +21,7 @@ Game::Game() :
 	try
 	{
 		// Try to initalise SDL in general
-		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) throw "Error Loading SDL";
+		if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER) < 0) throw "Error Loading SDL";
 
 		// Create SDL Window Centred in Middle Of Screen
 		m_window = SDL_CreateWindow("ARGO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Utilities::SCREEN_WIDTH, Utilities::SCREEN_HEIGHT, NULL);

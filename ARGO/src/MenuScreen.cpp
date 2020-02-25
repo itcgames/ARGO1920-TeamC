@@ -6,7 +6,7 @@ MenuScreen::MenuScreen(EventManager& t_eventManager) :
 	BUTTON_DEFAULT_COLOUR{ 199,163,10 },
 	BUTTON_HIGHLIGHTED_COLOUR{ 255,255,240 },
 	m_currentButton{ MenuButtonType::Play }
-{	
+{
 }
 
 MenuScreen::~MenuScreen()
@@ -15,7 +15,7 @@ MenuScreen::~MenuScreen()
 
 void MenuScreen::update(float t_deltaTime)
 {
- 	m_inputSystem.update(m_inputEntity);
+	m_inputSystem.update(m_inputEntity);
 	m_commandSystem.update(m_inputEntity, m_eventManager);
 }
 

@@ -9,6 +9,7 @@
 #include "InputComponent.h"
 #include "Utilities.h"
 #include "QuadTree.h"
+#include "AudioManager.h"
 
 class CollisionSystem : public BaseSystem
 {
