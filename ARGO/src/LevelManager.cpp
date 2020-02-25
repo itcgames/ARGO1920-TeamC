@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "LevelManager.h"
 
-LevelManager::LevelManager(SDL_Renderer* t_renderer, Entity(&t_players)[Utilities::S_MAX_PLAYERS]):
+LevelManager::LevelManager(SDL_Renderer* t_renderer, Entity(&t_players)[Utilities::S_MAX_PLAYERS], RenderSystem& t_renderSystem):
 	m_renderer(t_renderer),
-	m_players(t_players)
+	m_players(t_players),
+	m_renderSystem(t_renderSystem)
 {
 }
 
@@ -30,6 +31,7 @@ void LevelManager::setupLevel()
 			m_levelTiles.back().addComponent(new TileComponent());
 			m_levelTiles.back().addComponent(new HealthComponent(Utilities::WALL_HEALTH, Utilities::WALL_HEALTH));
 			m_levelTiles.back().addComponent(new FlowFieldComponent());
+			m_levelTiles.back().addComponent(new lightFieldComponent());
 		}
 	}
 	setTileNeighbours();
@@ -44,6 +46,7 @@ void LevelManager::update(BaseSystem* t_system)
 			t_system->update(entity);
 		}
 	}
+	resetFields();
 	generateFlowField();
 }
 
@@ -117,18 +120,17 @@ void LevelManager::setTileNeighbours()
 	}
 }
 
-void LevelManager::resetFlowField()
+void LevelManager::resetFields()
 {
 	for (auto& tile : m_levelTiles)
 	{
 		static_cast<FlowFieldComponent*>(tile.getComponent(ComponentType::FlowField))->reset();
+		static_cast<lightFieldComponent*>(tile.getComponent(ComponentType::LightField))->reset();
 	}
 }
 
 void LevelManager::generateFlowField()
 {
-	resetFlowField();
-
 	std::vector<Entity*> queue;
 	for (auto& player : m_players)
 	{
@@ -153,6 +155,91 @@ void LevelManager::generateFlowField()
 		Entity* current = queue.back();
 		queue.pop_back();
 		setNeighbourWeights(current, queue);
+	}
+}
+
+void LevelManager::generateLightField()
+{
+	std::vector<Entity*> queue;
+	for (auto& player : m_players)
+	{
+		HealthComponent* healthComp = static_cast<HealthComponent*>(player.getComponent(ComponentType::Health));
+		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getComponent(ComponentType::Transform));
+		if (healthComp && transformComp && healthComp->isAlive())
+		{
+			Entity* tile = findAtPosition(transformComp->getPos());
+			if (tile)
+			{
+				FlowFieldComponent* flowFieldComp = static_cast<FlowFieldComponent*>(tile->getComponent(ComponentType::FlowField));
+				if (flowFieldComp)
+				{
+					setTileLight(tile, queue, 0);
+				}
+			}
+		}
+	}
+
+	while (!queue.empty())
+	{
+		Entity* current = queue.back();
+		queue.pop_back();
+		setNeighbourLights(current, queue);
+	}
+}
+
+void LevelManager::setTileLight(Entity* t_entity, std::vector<Entity*>& t_queue, int t_newWeight)
+{
+	lightFieldComponent* lightField = static_cast<lightFieldComponent*>(t_entity->getComponent(ComponentType::LightField));
+	TransformComponent* transform = static_cast<TransformComponent*>(t_entity->getComponent(ComponentType::Transform));
+	if (lightField && lightField->getWeight() < t_newWeight && transform && m_renderSystem.inView(transform))
+	{
+		//TODO: work on logic for setting weights and adding to queue. (USE A DIAGRAM FUTURE NEMMY)
+		lightField->setWeight(t_newWeight);
+		if (!static_cast<ColliderAABBComponent*>(t_entity->getComponent(ComponentType::ColliderAABB)) && t_newWeight < MAX_LIGHT_WEIGHT)
+		{
+			t_queue.insert(t_queue.begin(), t_entity);
+		}
+	}
+}
+
+void LevelManager::setNeighbourLights(Entity* t_entity, std::vector<Entity*>& t_queue)
+{
+	lightFieldComponent* lightComp = static_cast<lightFieldComponent*>(t_entity->getComponent(ComponentType::LightField));
+	Neighbours* neighbours = static_cast<TileComponent*>(t_entity->getComponent(ComponentType::Tile))->getNeighbours();
+	int newWeight = lightComp->getWeight() + LIGHT_LOST_PER_TILE;
+	int newCornerWeight = lightComp->getWeight() + LIGHT_LOST_PER_CORNER;
+
+	if (neighbours->top)
+	{
+		setTileLight(neighbours->top, t_queue, newWeight);
+	}
+	if (neighbours->left)
+	{
+		setTileLight(neighbours->left, t_queue, newWeight);
+	}
+	if (neighbours->right)
+	{
+		setTileLight(neighbours->right, t_queue, newWeight);
+	}
+	if (neighbours->bottom)
+	{
+		setTileLight(neighbours->bottom, t_queue, newWeight);
+	}
+	if (neighbours->topLeft)
+	{
+		setTileLight(neighbours->topLeft, t_queue, newCornerWeight);
+	}
+	if (neighbours->topRight)
+	{
+		setTileLight(neighbours->topRight, t_queue, newCornerWeight);
+	}
+	if (neighbours->bottomLeft)
+	{
+		setTileLight(neighbours->bottomLeft, t_queue, newCornerWeight);
+	}
+	if (neighbours->bottomRight)
+	{
+		setTileLight(neighbours->bottomRight, t_queue, newCornerWeight);
 	}
 }
 

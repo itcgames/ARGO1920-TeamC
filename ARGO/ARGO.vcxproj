@@ -26,6 +26,7 @@
     <ClCompile Include="src\FlowFieldComponent.cpp" />
     <ClCompile Include="src\GoToLicenseScreenCommand.cpp" />
     <ClCompile Include="src\GoToMainMenuCommand.cpp" />
+    <ClCompile Include="src\lightFieldComponent.cpp" />
     <ClCompile Include="src\MenuMoveDownCommand.cpp" />
     <ClCompile Include="src\MenuMoveUpCommand.cpp" />
     <ClCompile Include="src\MenuSelectButtonCommand.cpp" />
@@ -108,6 +109,7 @@
     <ClInclude Include="include\FlowFieldComponent.h" />
     <ClInclude Include="include\GoToLicenseScreenCommand.h" />
     <ClInclude Include="include\GoToMainMenuCommand.h" />
+    <ClInclude Include="include\lightFieldComponent.h" />
     <ClInclude Include="include\MenuMoveDownCommand.h" />
     <ClInclude Include="include\MenuMoveUpCommand.h" />
     <ClInclude Include="include\MenuSelectButtonCommand.h" />
