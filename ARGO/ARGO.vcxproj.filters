@@ -282,6 +282,27 @@
     <ClCompile Include="src\JoinGameScreen.cpp">
       <Filter>Source Files\Screens</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameTypeSelectCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameTypeConfirmCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameTypeMoveDownCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameTypeMoveUpCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameTypeMoveRightCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameTypeMoveLeftCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameTypeCancelCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -508,6 +529,27 @@
     </ClInclude>
     <ClInclude Include="include\JoinGameScreen.h">
       <Filter>Header Files\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameTypeConfirmCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameTypeMoveDownCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameTypeMoveUpCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameTypeSelectCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameTypeMoveLeftCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameTypeMoveRightCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameTypeCancelCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

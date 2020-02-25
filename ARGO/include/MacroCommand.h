@@ -13,7 +13,14 @@
 #include "MoveLeftCommand.h"
 #include "MoveRightCommand.h"
 #include "MoveUpCommand.h"
- 
+#include "GameTypeConfirmCommand.h"
+#include "GameTypeMoveDownCommand.h"
+#include "GameTypeMoveUpCommand.h"
+#include "GameTypeSelectCommand.h"
+#include "GameTypeMoveRightCommand.h"
+#include "GameTypeMoveLeftCommand.h"
+#include "GameTypeCancelCommand.h"
+
 class MacroCommand
 {
 public:

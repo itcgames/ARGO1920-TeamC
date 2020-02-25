@@ -106,8 +106,15 @@ void MenuScreen::changeCurrentSelectedButton(const MenuMoveButtonsUpDown& t_even
 	int currentButtonIndex = static_cast<int>(m_currentButton);
 	updateButtonColour(m_menuButtons[currentButtonIndex], Utilities::MENU_BUTTON_DEFAULT_COLOUR); 
 	currentButtonIndex = t_event.isMoveDown ? currentButtonIndex + 1 : currentButtonIndex - 1;
-	currentButtonIndex = glm::clamp(currentButtonIndex, 0, (NUMBER_OF_MENU_BUTTONS - 1));
-	updateButtonColour(m_menuButtons[currentButtonIndex], Utilities::MENU_BUTTON_HIGHLIGHTED_COLOUR);
+	if (currentButtonIndex < 0)
+	{
+		currentButtonIndex = static_cast<int>(MenuButtonType::Quit);
+	}
+	else if(currentButtonIndex > NUMBER_OF_MENU_BUTTONS - 1)
+	{
+		currentButtonIndex = static_cast<int>(MenuButtonType::Play);
+	}
+ 	updateButtonColour(m_menuButtons[currentButtonIndex], Utilities::MENU_BUTTON_HIGHLIGHTED_COLOUR);
 	m_currentButton = static_cast<MenuButtonType>(currentButtonIndex);
 }
 
@@ -117,7 +124,7 @@ void MenuScreen::buttonPressed(const MenuSelectButton& t_event)
 	switch (m_currentButton)
 	{
 	case MenuButtonType::Play:
-		newScreen = MenuStates::Game;
+		newScreen = MenuStates::GameType;
 		break;
 	case MenuButtonType::Options:
 		newScreen = MenuStates::Options;

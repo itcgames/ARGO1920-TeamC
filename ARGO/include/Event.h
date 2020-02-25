@@ -35,15 +35,21 @@ struct MenuSelectButton
 	Entity& entity;
 }; 
 
-struct GameTypeMoveButtonsUpDown
+struct GameTypeMoveButtons
 {
-	// bool for if its moving down or up
-	bool isMoveDown;
+	MoveDirection direction;
 };
 
 struct GameTypeSelectButton
 {
-	Entity& t_entity;
+};
+
+struct GameTypeConfirm
+{
+};
+
+struct GameTypeCancel
+{
 };
 
 struct CloseWindow

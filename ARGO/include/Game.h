@@ -8,6 +8,8 @@
 #include "SplashScreen.h"
 #include "LicenseScreen.h"
 #include "AchievementScreen.h"
+#include "GameTypeScreen.h"
+#include "JoinGameScreen.h"
 #include "Event.h"
 
 #include "AiSystem.h"
@@ -72,6 +74,8 @@ private:
 	LicenseScreen m_licenseScreen;
 	SplashScreen m_splashScreen;
 	AchievementScreen m_achievementsScreen;
+	GameTypeScreen m_gameTypeScreen;
+	JoinGameScreen m_joinGameScreen;
 
 	Controller m_controllers[Utilities::S_MAX_PLAYERS];
 

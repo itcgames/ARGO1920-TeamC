@@ -16,7 +16,8 @@ Game::Game() :
 	m_splashScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_mainMenuScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_achievementsScreen{ m_eventManager, m_controllers[0], m_renderer },
-	m_currentScreen{ MenuStates::Splash }
+	m_gameTypeScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
+	m_currentScreen{ MenuStates::MainMenu }
 {
 	try
 	{
@@ -61,7 +62,7 @@ Game::Game() :
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 		m_eventManager.subscribeToEvent<ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
 
-		setupIgnoredEvents(); 
+		setupIgnoredEvents();
 
 		// Game is running
 		m_isRunning = true;
@@ -227,6 +228,12 @@ void Game::update(float t_dt)
 	case MenuStates::Achievements:
 		m_achievementsScreen.update(t_dt);
 		break;
+	case MenuStates::GameType:
+		m_gameTypeScreen.update(t_dt);
+		break;
+	case MenuStates::JoinGame:
+		//m_joinGameScreen.update(t_dt);
+		break;
 	default:
 		break;
 	}
@@ -257,6 +264,12 @@ void Game::render()
 		break;
 	case MenuStates::Achievements:
 		m_achievementsScreen.render(m_renderer);
+		break;
+	case MenuStates::GameType:
+		m_gameTypeScreen.render(m_renderer);
+		break;
+	case MenuStates::JoinGame:
+		//m_joinGameScreen.render(m_renderer);
 		break;
 	default:
 		break;
@@ -319,7 +332,7 @@ void Game::changeScreen(const ChangeScreen& t_event)
 	{
 		initialiseScreen();
 	}
-} 
+}
 
 void Game::initialiseScreen()
 {
@@ -346,6 +359,12 @@ void Game::initialiseScreen()
 		break;
 	case MenuStates::Achievements:
 		m_achievementsScreen.initialise();
+		break;
+	case MenuStates::GameType:
+		m_gameTypeScreen.initialise(m_renderer, m_controllers[0]);
+		break;
+	case MenuStates::JoinGame:
+		//m_joinGameScreen.initialise(m_renderer, m_controllers[0]);
 		break;
 	default:
 		break;
@@ -378,6 +397,12 @@ void Game::resetScreen()
 		break;
 	case MenuStates::Achievements:
 		m_achievementsScreen.reset();
+		break;
+	case MenuStates::GameType:
+		m_gameTypeScreen.reset();
+		break;
+	case MenuStates::JoinGame:
+		//m_joinGameScreen.reset();
 		break;
 	default:
 		break;

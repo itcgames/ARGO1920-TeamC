@@ -94,3 +94,11 @@ enum class Systems
 	Physics,
 	Render
 };
+
+enum class MoveDirection
+{
+	Up,
+	Down,
+	Left,
+	Right
+};
