@@ -18,6 +18,12 @@ struct PhysicsMove
 	Entity& entity;
 };
 
+
+struct PickupGrabbed
+{
+	Entity* pickup;
+};
+
 struct PhysicsRotate
 {
 	glm::vec2 rotation;

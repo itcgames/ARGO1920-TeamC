@@ -18,6 +18,7 @@
     <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\CloseWindowCommand.cpp" />
     <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\EnemyFactory.cpp" />
     <ClCompile Include="src\EnemyManager.cpp" />
     <ClCompile Include="src\FireBulletCommand.cpp" />
     <ClCompile Include="src\FireRateComponent.cpp" />
@@ -35,6 +36,10 @@
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\ParticleEmitterComponent.cpp" />
     <ClCompile Include="src\ParticleSystem.cpp" />
+    <ClCompile Include="src\PickUpComponent.cpp" />
+    <ClCompile Include="src\PickUpFactory.cpp" />
+    <ClCompile Include="src\PickUpManager.cpp" />
+    <ClCompile Include="src\PlayerFactory.cpp" />
     <ClCompile Include="src\PrimitiveComponent.cpp" />
     <ClCompile Include="src\CommandComponent.cpp" />
     <ClCompile Include="src\CommandSystem.cpp" />
@@ -93,6 +98,9 @@
     <ClInclude Include="include\BehaviourTree.h" />
     <ClInclude Include="include\CloseWindowCommand.h" />
     <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\EnemyFactory.h" />
+    <ClInclude Include="include\EntityFactory.h" />
+    <ClInclude Include="include\FactoryStatSheet.h" />
     <ClInclude Include="include\EnemyManager.h" />
     <ClInclude Include="include\FireBulletCommand.h" />
     <ClInclude Include="include\FireRateComponent.h" />
@@ -110,6 +118,10 @@
     <ClInclude Include="include\Particle.h" />
     <ClInclude Include="include\ParticleEmitterComponent.h" />
     <ClInclude Include="include\ParticleSystem.h" />
+    <ClInclude Include="include\PickUpComponent.h" />
+    <ClInclude Include="include\PickUpFactory.h" />
+    <ClInclude Include="include\PickUpManager.h" />
+    <ClInclude Include="include\PlayerFactory.h" />
     <ClInclude Include="include\PrimitiveComponent.h" />
     <ClInclude Include="include\CommandComponent.h" />
     <ClInclude Include="include\CommandSystem.h" />

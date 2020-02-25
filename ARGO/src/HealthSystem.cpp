@@ -14,7 +14,7 @@ void HealthSystem::update(Entity& t_entity, float t_deltaTime)
 {
 	HealthComponent* hpComp = static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health));
 	//if not nullptr
-	if (hpComp)
+	if (hpComp != nullptr)
 	{
 		//if more than 0 hp
 		if (hpComp->getHealth() > 0)

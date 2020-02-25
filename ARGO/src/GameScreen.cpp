@@ -16,7 +16,10 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_transformSystem{ m_eventManager },
 	m_projectileManager{ t_renderer, m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
 	m_aiSystem{ m_players, m_enemyManager.getEnemies(), m_eventManager, m_levelManager },
-	m_collisionSystem{ m_eventManager }
+	m_collisionSystem{ m_eventManager },
+	m_playerFactory(),
+	m_enemyFactory(),
+	m_pickUpManager(m_eventManager, m_collisionSystem)
 {
 }
 
@@ -32,6 +35,7 @@ void GameScreen::update(float t_deltaTime)
 	updateProjectiles(t_deltaTime);
 	m_collisionSystem.update(m_goal);
 	m_collisionSystem.handleCollisions();
+	m_pickUpManager.update(t_deltaTime);
 }
 
 void GameScreen::processEvents(SDL_Event* t_event)
@@ -77,34 +81,18 @@ void GameScreen::render(SDL_Renderer* t_renderer)
 	}
 	m_renderSystem.render(t_renderer, m_goal);
 	m_projectileManager.render(t_renderer, &m_renderSystem);
+	m_pickUpManager.render(t_renderer, &m_renderSystem);
 }
 
 
 void GameScreen::createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_renderer)
 {
-	t_player.addComponent(new HealthComponent(10, 10, Utilities::PLAYER_INVINCIBILITY_FRAMES));
-	t_player.addComponent(new TransformComponent());
-
-	t_player.addComponent(new ForceComponent());
-	t_player.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
-	t_player.addComponent(new VisualComponent("player.png", t_renderer, static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255))));
-	t_player.addComponent(new CommandComponent());
-	t_player.addComponent(new TagComponent(Tag::Player));
-	t_player.addComponent(new ParticleEmitterComponent(static_cast<TransformComponent*>(t_player.getComponent(ComponentType::Transform))->getPos(), true,
-		Utilities::PARTICLE_DIRECTION_ANGLE_SAMPLE, Utilities::PARTICLE_OFFSET_ANGLE_SAMPLE, Utilities::PARTICLE_SPEED_SAMPLE,
-		Utilities::PARTICLE_MAX_PARTICLES_SAMPLE, Utilities::PARTICLES_PER_SECOND_SAMPLE));
-	t_player.addComponent(new FireRateComponent(Utilities::PLAYER_FIRE_DELAY));
-	if (m_controllers[t_index].getSDLController())
+	bool humanControlledPlayer = true;
+	if (!m_controllers[t_index].getSDLController())
 	{
-		t_player.addComponent(new InputComponent(m_controllers[t_index],
-			m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][t_index],
-			m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][t_index],
-			m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][t_index]));
+		humanControlledPlayer = false;
 	}
-	else
-	{
-		t_player.addComponent(new AiComponent(AITypes::ePlayerBot, AIStates::eWander, 0, 0));
-	}
+	m_playerFactory.createPlayer(t_player, humanControlledPlayer, m_controllers[t_index], t_index, m_controllerButtonMaps);
 }
 
 void GameScreen::createGoal()
@@ -246,6 +234,7 @@ void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_control
 		m_controllers[index] = t_controller[index];
 	}
 	int playerCount = 0;
+	m_playerFactory.initialise(t_renderer);
 	for (Entity& player : m_players)
 	{
 		createPlayer(player, playerCount, t_renderer);
@@ -255,4 +244,5 @@ void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_control
 	setUpLevel();
 	m_projectileManager.init();
 	createGoal();
+	m_pickUpManager.init(m_renderer);
 }

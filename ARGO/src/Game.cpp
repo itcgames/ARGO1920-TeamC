@@ -16,7 +16,11 @@ Game::Game() :
 	m_splashScreen{ m_eventManager },
 	m_mainMenuScreen{ m_eventManager },
 	m_achievementsScreen{ m_eventManager, m_controllers[0], m_renderer },
+#ifdef _DEBUG
+	m_currentScreen{ MenuStates::MainMenu }
+#else
 	m_currentScreen{ MenuStates::Splash }
+#endif // _DEBUG
 {
 	try
 	{
@@ -34,6 +38,7 @@ Game::Game() :
 
 		//Create the SDL Renderer 
 		createRenderer();
+
 
 		//Check if the renderer was created correctly
 		if (!m_renderer) throw "Error Loading Renderer";
@@ -55,7 +60,6 @@ Game::Game() :
 		m_audioMgr->PlayMusic("looping\\Ove - Earth Is All We Have.ogg");
 
 		initialiseScreen();
-
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 		m_eventManager.subscribeToEvent<ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
 

@@ -8,6 +8,7 @@ enum class Tag
 	PlayerBullet,
 	EnemyBullet,
 	Tile,
+	PickUp,
 	Goal
 };
 

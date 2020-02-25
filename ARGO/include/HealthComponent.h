@@ -10,6 +10,8 @@ public:
 	int getHealth() const;
 	bool isAlive() const;
 
+	int getMaxHealth();
+
 	void setHealth(int t_amount);
 	void addHealth(int t_amount);
 	void resetHealth();
