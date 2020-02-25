@@ -19,9 +19,9 @@ void EnemyFactory::createPlayer(Entity& t_entity)
 ///Creating an Enemy, pass in what enemy is desired. 1 - Melee, 2 - Ranged (WIP) and a reference to an entity. The required components and values will be added. 
 ///All values are set in the FactoryStatSheet.
 ///</summary>
-void EnemyFactory::createEnemy(int choice, Entity& t_entity)
+void EnemyFactory::createEnemy(int t_type, Entity& t_entity)
 {
-	switch (choice)
+	switch (t_type)
 	{
 	case 1:
 		t_entity.addComponent(new TransformComponent());
@@ -39,6 +39,6 @@ void EnemyFactory::createEnemy(int choice, Entity& t_entity)
 	}
 }
 
-void EnemyFactory::createDrop(int choice, Entity& t_entity)
+void EnemyFactory::createDrop(int t_type, Entity& t_entity)
 {
 }

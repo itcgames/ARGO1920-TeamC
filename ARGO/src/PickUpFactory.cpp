@@ -11,7 +11,7 @@ void PickUpFactory::createPlayer(Entity& t_entity)
 {
 }
 
-void PickUpFactory::createEnemy(int choice, Entity& t_entity)
+void PickUpFactory::createEnemy(int t_type, Entity& t_entity)
 {
 }
 
@@ -19,9 +19,9 @@ void PickUpFactory::createEnemy(int choice, Entity& t_entity)
 ///Creating a Drop, pass in what enemy is desired. 1 - Ammo, 2 - Health and a reference to an entity. The required components and values will be added. 
 ///All values are set in the FactoryStatSheet.
 ///</summary>
-void PickUpFactory::createDrop(int choice, Entity& t_entity)
+void PickUpFactory::createDrop(int t_type, Entity& t_entity)
 {
-	switch (choice)
+	switch (t_type)
 	{
 	case 1:
 		t_entity.addComponent(new TransformComponent(FactoryStatSheet::AMMO_POSITION));

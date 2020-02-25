@@ -21,9 +21,9 @@
 class EntityFactory
 {
 public:
-	virtual void createPlayer(Entity& t_entity) =0;
-	virtual void createEnemy(int choice, Entity& t_entity)=0;
-	virtual void createDrop(int choice, Entity& t_entity) = 0;
+	virtual void createPlayer(Entity& t_entity) = 0;
+	virtual void createEnemy(int t_type, Entity& t_entity) = 0;
+	virtual void createDrop(int t_type, Entity& t_entity) = 0;
 
 };
 

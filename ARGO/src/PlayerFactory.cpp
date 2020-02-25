@@ -51,10 +51,10 @@ void PlayerFactory::createPlayer(Entity& t_entity, bool t_isPlayer, Controller& 
 	}
 }
 
-void PlayerFactory::createEnemy(int choice, Entity& t_entity)
+void PlayerFactory::createEnemy(int t_type, Entity& t_entity)
 {
 }
 
-void PlayerFactory::createDrop(int choice, Entity& t_entity)
+void PlayerFactory::createDrop(int t_type, Entity& t_entity)
 {
 }
