@@ -25,6 +25,4 @@ private:
 
 	std::vector<Entity> m_levelTiles;
 	SDL_Renderer* m_renderer;
-	int test = 0;
 };
-

@@ -33,7 +33,7 @@ void QuadTree::insert(Quad t_data)
 		return;
 	}
 	m_objects.push_back(t_data);
-	if (m_objects.size() > MAX_OBJECTS&& m_level < MAX_LEVEL)
+	if (m_objects.size() > MAX_OBJECTS && m_level < MAX_LEVEL)
 	{
 		if (m_nodes.empty())
 		{

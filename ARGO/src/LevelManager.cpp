@@ -31,24 +31,11 @@ void LevelManager::setupLevel()
 			m_levelTiles.back().addComponent(new HealthComponent(Utilities::WALL_HEALTH, Utilities::WALL_HEALTH));
 		}
 	}
-	for (int i = 0; i < 50; i++)
-	{
-		m_levelTiles[i].addComponent(new TextComponent(std::string("comic.ttf"), m_renderer, Utilities::LARGE_FONT, false, std::to_string(test)));
-	}
 	setTileNeighbours();
 }
 
 void LevelManager::update(BaseSystem* t_system)
 {
-	test++;
-	if (test >= 100)
-	{
-		test = 0;
-	}
-	for (int i = 0; i < 50; i++)
-	{
-		static_cast<TextComponent*>(m_levelTiles[i].getComponent(ComponentType::Text))->setText(std::to_string(test));
-	}
 	for (auto& entity : m_levelTiles)
 	{
 		if (entity.getComponent(ComponentType::ColliderAABB))
