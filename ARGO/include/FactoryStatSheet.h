@@ -6,6 +6,9 @@ namespace FactoryStatSheet
 	//Player Starting Values
 	const int PLAYER_MAX_HP = 10;
 	const int PLAYER_STARTING_HP = 10;
+	const float PLAYER_INVINCIBILITY_FRAMES = 32.0f;
+
+
 
 	const int PARTICLE_DIRECTION_ANGLE_SAMPLE = 90;
 	const int PARTICLE_OFFSET_ANGLE_SAMPLE = 30;
@@ -24,22 +27,24 @@ namespace FactoryStatSheet
 
 
 	// Ammo Box Starting Values
-	const glm::vec2 AMMO_POSITION(100, 100);
+	const glm::vec2 AMMO_POSITION(-1000, -1000);
 	const bool AMMO_ROTATING = true;
-	const float AMMO_ROTATION_SPEED = 0.01f;
+	const float AMMO_ROTATION_SPEED = 0.1f;
 	const int AMMO_TYPE_ID = 1;
 	const float AMMO_AMOUNT_CHANGE = 1;
 	const int AMMO_RADIUS = 32;
-	const int AMMO_HP = 1;
+	const int AMMO_STARTING_HP = 1;
+	const int AMMO_MAX_HP = 1;
 
 
 	//Health Box Startin Values
-	const glm::vec2 HEALTH_POSITION(200, 200);
+	const glm::vec2 HEALTH_POSITION(-1000, -1000);
 	const bool HEALTH_ROTATING = true;
-	const float HEALTH_ROTATION_SPEED = 0.01f;
+	const float HEALTH_ROTATION_SPEED = 0.1f;
 	const int HEALTH_TYPE_ID = 2;
 	const float HEALTH_AMOUNT_CHANGE = 1;
 	const int HEALTH_RADIUS = 32;
-	const int HEALTH_HP = 1;
+	const int HEALTH_STARTING_HP = 1;
+	const int HEALTH_MAX_HP = 1;
 
 }

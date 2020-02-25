@@ -7,6 +7,22 @@ Rumble::Rumble( ):
 {	
 }
 
+Rumble::Rumble(const Rumble& t_otherRumble)
+{
+	m_controller = t_otherRumble.m_controller;
+	m_haptic = t_otherRumble.m_haptic;
+	m_time = t_otherRumble.m_time;
+	m_strength = t_otherRumble.m_strength;
+}
+
+void Rumble::operator=(const Rumble& t_otherRumble)
+{
+	m_controller = t_otherRumble.m_controller;
+	m_haptic = t_otherRumble.m_haptic;
+	m_time = t_otherRumble.m_time;
+	m_strength = t_otherRumble.m_strength;
+}
+
 void Rumble::init(SDL_GameController* t_controller)
 {
 	m_controller = t_controller;

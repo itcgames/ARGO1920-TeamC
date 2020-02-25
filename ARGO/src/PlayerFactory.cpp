@@ -1,7 +1,19 @@
 #include "stdafx.h"
 #include "PlayerFactory.h"
-PlayerFactory::PlayerFactory(SDL_Renderer* t_renderer):
-	m_renderer(t_renderer)
+
+PlayerFactory::PlayerFactory()
+{
+}
+
+///<summary>
+///Setting the rendererer variable now that it isn't null.
+///</summary>
+void PlayerFactory::initialise(SDL_Renderer* t_renderer)
+{
+	m_renderer = t_renderer;
+}
+
+void PlayerFactory::createPlayer(Entity& t_entity)
 {
 }
 
@@ -9,20 +21,11 @@ PlayerFactory::PlayerFactory(SDL_Renderer* t_renderer):
 ///Creating a Player, pass in a reference to an entity. The required components and values will be added. 
 ///All values are set in the FactoryStatSheet.
 ///</summary>
-void PlayerFactory::createPlayer(Entity& t_entity)
+void PlayerFactory::createPlayer(Entity& t_entity, bool t_isPlayer, Controller& t_controllers, int t_index, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS])
 {
-	std::map<ButtonType, Command*> buttonPressMap = {
-	std::pair<ButtonType, Command*>(ButtonType::DpadUp, new MoveUpCommand()),
-	std::pair<ButtonType, Command*>(ButtonType::DpadDown, new MoveDownCommand()),
-	std::pair<ButtonType, Command*>(ButtonType::DpadLeft, new MoveLeftCommand()),
-	std::pair<ButtonType, Command*>(ButtonType::DpadRight, new MoveRightCommand()),
-	std::pair<ButtonType, Command*>(ButtonType::RightTrigger, new FireBulletCommand()),
-	std::pair<ButtonType,Command*>(ButtonType::Back, new CloseWindowCommand()) };
-
 	t_entity.addComponent(new CommandComponent());
-	t_entity.addComponent(new HealthComponent(FactoryStatSheet::PLAYER_MAX_HP, FactoryStatSheet::PLAYER_STARTING_HP));
+	t_entity.addComponent(new HealthComponent(FactoryStatSheet::PLAYER_MAX_HP, FactoryStatSheet::PLAYER_STARTING_HP, FactoryStatSheet::PLAYER_INVINCIBILITY_FRAMES));
 	t_entity.addComponent(new TransformComponent());
-	t_entity.addComponent(new InputComponent(buttonPressMap, buttonPressMap));
 	t_entity.addComponent(new ForceComponent());
 	t_entity.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 	t_entity.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
@@ -31,6 +34,21 @@ void PlayerFactory::createPlayer(Entity& t_entity)
 		FactoryStatSheet::PARTICLE_MAX_PARTICLES_SAMPLE, FactoryStatSheet::PARTICLES_PER_SECOND_SAMPLE));
 	t_entity.addComponent(new PrimitiveComponent());
 	t_entity.addComponent(new TagComponent(Tag::Player));
+	t_entity.addComponent(new VisualComponent("player.png", m_renderer, static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255))));
+	t_entity.addComponent(new FireRateComponent(Utilities::PLAYER_FIRE_DELAY));
+
+	if (t_isPlayer)
+	{
+		t_entity.addComponent(new InputComponent(t_controllers,
+			t_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][t_index],
+			t_controllerButtonMaps[static_cast<int>(ButtonState::Held)][t_index],
+			t_controllerButtonMaps[static_cast<int>(ButtonState::Released)][t_index]));
+			
+	}
+	else
+	{
+		t_entity.addComponent(new AiComponent(AITypes::ePlayerBot, AIStates::eWander, 0, 0));
+	}
 }
 
 void PlayerFactory::createEnemy(int choice, Entity& t_entity)

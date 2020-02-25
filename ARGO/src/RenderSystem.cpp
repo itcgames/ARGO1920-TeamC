@@ -14,28 +14,34 @@ void RenderSystem::update(Entity& t_entity)
 
 void RenderSystem::render(SDL_Renderer* t_renderer, Entity& t_entity)
 {
-	TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
+	TransformComponent* transformComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
 
-	if (posComp != nullptr)
+	if (transformComp != nullptr)
 	{
-		if (inView(posComp))
+		if (inView(transformComp))
 		{
 			VisualComponent* visComp = static_cast<VisualComponent*>(t_entity.getComponent(ComponentType::Visual));
 			TextComponent* textComp = static_cast<TextComponent*>(t_entity.getComponent(ComponentType::Text));
 
 			if (visComp != nullptr)
 			{
-				renderTexture(visComp, posComp->getPos().x, posComp->getPos().y, t_renderer);
+				glm::vec2 renderPosition = transformComp->getPos();
+				ColliderCircleComponent* circleColliderComp = static_cast<ColliderCircleComponent*>(t_entity.getComponent(ComponentType::ColliderCircle));
+				if (circleColliderComp)
+				{
+					renderPosition -= glm::vec2(circleColliderComp->getRadius(), circleColliderComp->getRadius());
+				}
+				renderTexture(visComp, renderPosition.x, renderPosition.y, t_renderer, transformComp->getRotation());
 			}
 			if (textComp != nullptr)
 			{
-				renderText(t_renderer, posComp, textComp);
+				renderText(t_renderer, transformComp, textComp);
 			}
 			else if (!textComp && !visComp)
 			{
 				ColourComponent* colComp = static_cast<ColourComponent*>(t_entity.getComponent(ComponentType::Colour));
 				//we dont need to check if colComp is null as its handled in the function
-				renderPrimitives(t_renderer, posComp, colComp);
+				renderPrimitives(t_renderer, transformComp, colComp);
 			}
 
 			ParticleEmitterComponent* emitComp = static_cast<ParticleEmitterComponent*>(t_entity.getComponent(ComponentType::ParticleEmitter));
@@ -46,7 +52,7 @@ void RenderSystem::render(SDL_Renderer* t_renderer, Entity& t_entity)
 				ColourComponent* colComp = static_cast<ColourComponent*>(t_entity.getComponent(ComponentType::Colour));
 				if (colComp)
 				{
-					renderParticles(t_renderer, emitComp, primComp, colComp, posComp);
+					renderParticles(t_renderer, emitComp, primComp, colComp, transformComp);
 				}
 			}
 		}
@@ -126,7 +132,7 @@ void RenderSystem::renderParticles(SDL_Renderer* t_renderer, ParticleEmitterComp
 	SDL_SetRenderDrawColor(t_renderer, prevRGBA[0], prevRGBA[1], prevRGBA[2], prevRGBA[3]);
 }
 
-void RenderSystem::renderTexture(VisualComponent* t_visComp, int t_textureLeftPos, int t_textureTopPos, SDL_Renderer* t_renderer, SDL_Rect* t_clip, double t_angle, SDL_Point* t_center, SDL_RendererFlip t_flip)
+void RenderSystem::renderTexture(VisualComponent* t_visComp, int t_textureLeftPos, int t_textureTopPos, SDL_Renderer* t_renderer, double t_angle, SDL_Rect* t_clip, SDL_Point* t_center, SDL_RendererFlip t_flip)
 {
 	SDL_Rect renderQuad = { t_textureLeftPos, t_textureTopPos, t_visComp->getWidth(), t_visComp->getHeight() };
 
@@ -177,8 +183,8 @@ bool RenderSystem::inView(TransformComponent* t_posComp)
 	down = m_focusPoint.y + Utilities::SCREEN_HEIGHT * OFF_SCREEN_SCALAR;
 
 	//returns false if object is outside of the window, true if it is in view
-	return left < t_posComp->getPos().x && right > t_posComp->getPos().x && 
-			top < t_posComp->getPos().y && down > t_posComp->getPos().y;
+	return left < t_posComp->getPos().x && right > t_posComp->getPos().x &&
+		top < t_posComp->getPos().y && down > t_posComp->getPos().y;
 }
 
 void RenderSystem::setFocus(glm::vec2 t_point)

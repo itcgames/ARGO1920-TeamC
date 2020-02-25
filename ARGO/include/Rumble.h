@@ -31,6 +31,8 @@ class Rumble
 {
 public:
 	Rumble();
+	Rumble(const Rumble& t_otherRumble);
+	void operator=(const Rumble& t_otherRumble);
 	void init(SDL_GameController* t_controller);
 	void activateRumble();
 	void activateRumble(RumbleStrength t_setStrength, RumbleLength t_setLength);

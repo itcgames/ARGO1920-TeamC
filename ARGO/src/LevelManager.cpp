@@ -8,23 +8,30 @@ LevelManager::LevelManager(SDL_Renderer* t_renderer):
 
 void LevelManager::setupLevel()
 {
+	if (!m_levelTiles.empty())
+	{
+		for (Entity& tile : m_levelTiles)
+		{
+			tile.removeAllComponents();
+		}
+		m_levelTiles.clear();
+	}
 	m_levelTiles.reserve(Utilities::LEVEL_TILE_HEIGHT * Utilities::LEVEL_TILE_WIDTH);
 	for (int i = 0; i < Utilities::LEVEL_TILE_HEIGHT; i++)
 	{
 		for (int j = 0; j < Utilities::LEVEL_TILE_WIDTH; j++)
 		{
 			m_levelTiles.emplace_back();
-
 			m_levelTiles.back().addComponent(new TransformComponent(glm::vec2(j * Utilities::TILE_SIZE, i * Utilities::TILE_SIZE)));
-			m_levelTiles.back().addComponent(new TagComponent	(Tag::Tile));
-			m_levelTiles.back().addComponent(new VisualComponent("wall_4.png", m_renderer));
+			m_levelTiles.back().addComponent(new TagComponent(Tag::Tile));
+			m_levelTiles.back().addComponent(new VisualComponent("wallSmall.png", m_renderer));
 			m_levelTiles.back().addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
 			m_levelTiles.back().addComponent(new TileComponent());
 			m_levelTiles.back().addComponent(new HealthComponent(Utilities::WALL_HEALTH, Utilities::WALL_HEALTH));
 		}
 	}
 	setTileNeighbours();
-}
+} 
 
 void LevelManager::update(BaseSystem* t_system)
 {
@@ -109,15 +116,13 @@ void LevelManager::setTileNeighbours()
 
 Entity* LevelManager::findAtPosition(glm::vec2 t_position)
 {
-	for (auto& tile : m_levelTiles)
+	int x = t_position.x / Utilities::TILE_SIZE;
+	int y = t_position.y / Utilities::TILE_SIZE;
+
+	if (x > 0 && x < Utilities::LEVEL_TILE_WIDTH &&
+		y > 0 && y < Utilities::LEVEL_TILE_HEIGHT)
 	{
-		glm::vec2 position = static_cast<TransformComponent*>(tile.getComponent(ComponentType::Transform))->getPos();
-		glm::vec2 tileBounds = glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE) + position;
-		if (t_position.x >= position.x && t_position.x < tileBounds.x &&
-			t_position.y >= position.y && t_position.y < tileBounds.y)
-		{
-			return &tile;
-		}
+		return &m_levelTiles[(y * Utilities::LEVEL_TILE_WIDTH) + x];
 	}
 	return nullptr;
 }

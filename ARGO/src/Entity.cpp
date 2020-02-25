@@ -14,7 +14,7 @@ Entity::~Entity()
 		if (m_components.at(i) == NULL)
 		{
 			continue;
-		}
+		} 
 		delete m_components.at(i);
 		m_components.at(i) = nullptr;
 	}
@@ -477,9 +477,4 @@ Component* Entity::getComponent(ComponentType t_type) const
 		std::cerr << e.what() << std::endl;
 		throw;
 	}
-}
-
-std::vector<Component*>& Entity::getAllComps()
-{
-	return m_components;
 }

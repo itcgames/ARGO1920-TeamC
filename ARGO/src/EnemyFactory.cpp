@@ -1,9 +1,15 @@
 #include "stdafx.h"
 #include "EnemyFactory.h"
 
-EnemyFactory::EnemyFactory(SDL_Renderer* t_renderer):
-	m_renderer(t_renderer)
+EnemyFactory::EnemyFactory()
 {
+}
+///<summary>
+///Setting the rendererer variable now that it isn't null.
+///</summary>
+void EnemyFactory::initialise(SDL_Renderer* t_renderer)
+{
+	m_renderer = t_renderer;
 }
 
 void EnemyFactory::createPlayer(Entity& t_entity)
@@ -24,6 +30,7 @@ void EnemyFactory::createEnemy(int choice, Entity& t_entity)
 		t_entity.addComponent(new ColliderCircleComponent(FactoryStatSheet::ENEMY_RADIUS));
 		t_entity.addComponent(new TagComponent(Tag::Enemy));
 		t_entity.addComponent(new HealthComponent(FactoryStatSheet::ENEMY_MAX_HP, FactoryStatSheet::ENEMY_HP));
+		t_entity.addComponent(new VisualComponent("EnemyFast.png", m_renderer));
 		break;
 	case 2:
 		break;

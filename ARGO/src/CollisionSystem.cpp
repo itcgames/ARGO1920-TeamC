@@ -2,9 +2,9 @@
 #include "CollisionSystem.h"
 
 CollisionSystem::CollisionSystem(EventManager& t_eventManager) :
+	m_eventManager(t_eventManager),
 	m_quadTree(0, glm::vec2(0, 0), glm::vec2(Utilities::LEVEL_TILE_WIDTH * Utilities::TILE_SIZE, Utilities::LEVEL_TILE_HEIGHT * Utilities::TILE_SIZE)),
-	m_seperationScaler(30),
-	m_eventManager(t_eventManager)
+	m_seperationScaler(30)
 {
 	m_circleColliderBuffer.reserve(100);
 }
@@ -174,6 +174,9 @@ void CollisionSystem::handlePlayerCollision(Entity* t_player)
 		case Tag::PickUp:
 			playerToPickUp(t_player, other);
 			break;
+		case Tag::Goal:
+			playerToGoal(t_player, other);
+			break;
 		default:
 			break;
 		}
@@ -276,26 +279,20 @@ void CollisionSystem::playerToEnemy(Entity* t_player, Entity* t_enemy)
 {
 	if (t_enemy->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_player, t_enemy))
 	{
-		int player1Radius = static_cast<ColliderCircleComponent*>(t_player->getComponent(ComponentType::ColliderCircle))->getRadius();
-		TransformComponent* player1Position = static_cast<TransformComponent*>(t_player->getComponent(ComponentType::Transform));
+		int playerRadius = static_cast<ColliderCircleComponent*>(t_player->getComponent(ComponentType::ColliderCircle))->getRadius();
+		TransformComponent* playerPosition = static_cast<TransformComponent*>(t_player->getComponent(ComponentType::Transform));
+		ForceComponent* playerForce = static_cast<ForceComponent*>(t_player->getComponent(ComponentType::Force));
+		HealthComponent* playerHealth = static_cast<HealthComponent*>(t_player->getComponent(ComponentType::Health));
 
-		int player2Radius = static_cast<ColliderCircleComponent*>(t_enemy->getComponent(ComponentType::ColliderCircle))->getRadius();
-		TransformComponent* player2Position = static_cast<TransformComponent*>(t_enemy->getComponent(ComponentType::Transform));
+		int enemyRadius = static_cast<ColliderCircleComponent*>(t_enemy->getComponent(ComponentType::ColliderCircle))->getRadius();
+		TransformComponent* enemyPosition = static_cast<TransformComponent*>(t_enemy->getComponent(ComponentType::Transform));
+		ForceComponent* enemyForce = static_cast<ForceComponent*>(t_enemy->getComponent(ComponentType::Force));
 
-		glm::vec2 distanceBetween = player1Position->getPos() - player2Position->getPos();
-		float length = sqrt(distanceBetween.x * distanceBetween.x + distanceBetween.y * distanceBetween.y);
-		float seperation = 1 - length / (player1Radius + player2Radius);
-		if (length != 0)
-		{
-			distanceBetween /= length;
-			distanceBetween = distanceBetween * seperation * m_seperationScaler;
-		}
-		else
-		{
-			distanceBetween = glm::vec2(m_seperationScaler, m_seperationScaler);
-		}
-		player1Position->addPos(distanceBetween);
-		player2Position->addPos(-distanceBetween);
+		glm::vec2 distanceBetween = glm::normalize( playerPosition->getPos() - enemyPosition->getPos() ) * PLAYER_TO_ENEMY_REFECTION_SCALER;
+
+		playerHealth->reduceHealth(1);
+		playerForce->addForce(distanceBetween);
+		enemyForce->addForce(-distanceBetween);
 	}
 }
 
@@ -341,14 +338,46 @@ void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 	}
 }
 
+
 void CollisionSystem::playerToPickUp(Entity* t_player, Entity* t_pickUp)
 {
 	if (t_pickUp->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_player, t_pickUp))
 	{
-		m_eventManager.emitEvent(PickupGrabbed{ t_pickUp });
+		HealthComponent* healthComp = static_cast<HealthComponent*>(t_pickUp->getComponent(ComponentType::Health));
+		if (healthComp->isAlive())
+		{
+			m_eventManager.emitEvent(PickupGrabbed{ t_pickUp });
+			PickUpComponent* pickUpComp = static_cast<PickUpComponent*>(t_pickUp->getComponent(ComponentType::PickUp));
+			switch (pickUpComp->getPickupType())
+			{
+			case 1:
+				//Ammo Pickup
+				//Implement Ammo for the Player First
+				break;
+			case 2:
+				//Health Pickup
+				HealthComponent* playerHealthComp = static_cast<HealthComponent*>(t_player->getComponent(ComponentType::Health));
+				int healthToAdd = playerHealthComp->getMaxHealth() * pickUpComp->getHealthChange();
+				if (healthToAdd <= 0)
+				{
+					healthToAdd = 1;
+				}
+				playerHealthComp->addHealth(healthToAdd);
+				break;
+			}
+
+
+		}
 	}
 
+}
 
+void CollisionSystem::playerToGoal(Entity* t_player, Entity* t_goal)
+{
+	if (t_player->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_player, t_goal))
+	{
+		m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::MainMenu });
+	}
 }
 
 void CollisionSystem::playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enemy)

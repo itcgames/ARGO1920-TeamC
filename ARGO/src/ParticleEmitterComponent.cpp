@@ -128,10 +128,10 @@ bool ParticleEmitterComponent::checkParticlePastKillTime(int t_index)
 ///<summary>
 ///Moves the Particle position using its speed. Increments it's timer.
 ///</summary>
-void ParticleEmitterComponent::updateParticle(int t_index)
+void ParticleEmitterComponent::updateParticle(int t_index, float t_dt)
 {
-	m_particles[t_index].setPosition(m_particles[t_index].getPosition() + (m_particles[t_index].getMovement()) * m_speed);
-	m_particles[t_index].setTimer(m_particles[t_index].getTimer() + 1);
+	m_particles[t_index].setPosition(m_particles[t_index].getPosition() + (m_particles[t_index].getMovement()) * m_speed * t_dt);
+	m_particles[t_index].setTimer(m_particles[t_index].getTimer() + 1 * t_dt);
 }
 
 bool ParticleEmitterComponent::getParticleAlive(int t_index)

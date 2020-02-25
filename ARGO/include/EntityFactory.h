@@ -14,6 +14,8 @@
 #include "PrimitiveComponent.h"
 #include "VisualComponent.h"
 #include "PickUpComponent.h"
+#include "Controller.h"
+#include "FireRateComponent.h"
 #include <SDL_image.h>
 
 class EntityFactory
