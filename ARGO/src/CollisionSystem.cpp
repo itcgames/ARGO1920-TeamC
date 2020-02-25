@@ -3,7 +3,7 @@
 
 CollisionSystem::CollisionSystem(EventManager& t_eventManager) :
 	m_eventManager(t_eventManager),
-	m_quadTree(0, glm::vec2(0, 0), glm::vec2(Utilities::LEVEL_TILE_WIDTH * Utilities::TILE_SIZE, Utilities::LEVEL_TILE_HEIGHT * Utilities::TILE_SIZE)),
+	m_quadTree(0, glm::vec2(0, 0), glm::vec2(Utilities::LEVEL_TILE_WIDTH* Utilities::TILE_SIZE, Utilities::LEVEL_TILE_HEIGHT* Utilities::TILE_SIZE)),
 	m_seperationScaler(30)
 {
 	m_circleColliderBuffer.reserve(100);
@@ -106,7 +106,7 @@ bool CollisionSystem::edgeOfTheWorldToCircle(Entity& t_entity)
 		{
 			return false;
 		}
-		position->setPos(Utilities::TILE_SIZE* Utilities::LEVEL_TILE_WIDTH - radius, position->getPos().y);
+		position->setPos(Utilities::TILE_SIZE * Utilities::LEVEL_TILE_WIDTH - radius, position->getPos().y);
 	}
 	if (position->getPos().y - radius < 0)
 	{
@@ -116,7 +116,7 @@ bool CollisionSystem::edgeOfTheWorldToCircle(Entity& t_entity)
 		}
 		position->setPos(position->getPos().x, radius);
 	}
-	else if(position->getPos().y + radius > Utilities::TILE_SIZE * Utilities::LEVEL_TILE_HEIGHT)
+	else if (position->getPos().y + radius > Utilities::TILE_SIZE* Utilities::LEVEL_TILE_HEIGHT)
 	{
 		if (!killBulletAtEdgeOfWorld(t_entity))
 		{
@@ -161,7 +161,7 @@ void CollisionSystem::handlePlayerCollision(Entity* t_player)
 				playerToPlayer(t_player, other);
 			}
 		}
-			break;
+		break;
 		case Tag::Enemy:
 			playerToEnemy(t_player, other);
 			break;
@@ -231,7 +231,7 @@ void CollisionSystem::handleEnemyCollision(Entity* t_enemy)
 				enemyToEnemy(t_enemy, other);
 			}
 		}
-			break;
+		break;
 		case Tag::Tile:
 			enemyToWall(t_enemy, other);
 			break;
@@ -285,7 +285,7 @@ void CollisionSystem::playerToEnemy(Entity* t_player, Entity* t_enemy)
 		TransformComponent* enemyPosition = static_cast<TransformComponent*>(t_enemy->getComponent(ComponentType::Transform));
 		ForceComponent* enemyForce = static_cast<ForceComponent*>(t_enemy->getComponent(ComponentType::Force));
 
-		glm::vec2 distanceBetween = glm::normalize( playerPosition->getPos() - enemyPosition->getPos() ) * PLAYER_TO_ENEMY_REFECTION_SCALER;
+		glm::vec2 distanceBetween = glm::normalize(playerPosition->getPos() - enemyPosition->getPos()) * PLAYER_TO_ENEMY_REFECTION_SCALER;
 
 		playerHealth->reduceHealth(1);
 		std::string filePath = "playerHurt" + std::to_string(glm::linearRand(1, 4)) + ".wav";
@@ -311,12 +311,12 @@ void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 		TransformComponent* wallPosition = static_cast<TransformComponent*>(t_wall->getComponent(ComponentType::Transform));
 
 		glm::vec2 distanceBetween = playerPosition->getPos() - glm::vec2(playerRadius, playerRadius) - wallPosition->getPos();
-		
+
 		if (distanceBetween.x < playerRadius * 2 + wallWidth && (std::abs(distanceBetween.x) > std::abs(distanceBetween.y)))
 		{
 			if (distanceBetween.x < 0)
 			{
-				playerPosition->setPos(-(playerRadius) + wallPosition->getPos().x, playerPosition->getPos().y);
+				playerPosition->setPos(-(playerRadius)+wallPosition->getPos().x, playerPosition->getPos().y);
 			}
 			else
 			{

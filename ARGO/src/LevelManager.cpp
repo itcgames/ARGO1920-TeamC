@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "LevelManager.h"
 
-LevelManager::LevelManager(SDL_Renderer* t_renderer):
+LevelManager::LevelManager(SDL_Renderer* t_renderer) :
 	m_renderer(t_renderer)
 {
 }
@@ -32,7 +32,7 @@ void LevelManager::setupLevel()
 		}
 	}
 	setTileNeighbours();
-} 
+}
 
 void LevelManager::update(BaseSystem* t_system)
 {
