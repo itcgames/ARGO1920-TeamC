@@ -66,7 +66,7 @@ void Controller::initialiseController()
 		}
 	}
 }
- 
+
 /// <summary>
 /// Updates the states of the gamePadState variables from the current state of the controller
 /// </summary>
@@ -115,7 +115,7 @@ void Controller::update()
 	{
 		m_current.LeftThumbStick = glm::vec2(0.0f, 0.0f);
 	}
-	else if(abs(m_current.LeftThumbStick.x) < THUMB_STICK_BUTTON_THRESHOLD && abs(m_current.LeftThumbStick.y) < THUMB_STICK_BUTTON_THRESHOLD)
+	else if (abs(m_current.LeftThumbStick.x) < THUMB_STICK_BUTTON_THRESHOLD && abs(m_current.LeftThumbStick.y) < THUMB_STICK_BUTTON_THRESHOLD)
 	{
 		glm::vec2 normaliseLeftStick = glm::normalize(m_current.LeftThumbStick);
 		if (normaliseLeftStick.x > 0)
@@ -134,7 +134,7 @@ void Controller::update()
 		{
 			m_current.button[static_cast<int>(ButtonType::LeftThumbStickDown)] = true;
 		}
-	} 
+	}
 	m_current.RightThumbStick = glm::vec2(SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_RIGHTX),
 		SDL_GameControllerGetAxis(m_controller, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_RIGHTY));
 	if (abs(m_current.RightThumbStick.x) < THUMB_STICK_THRESHOLD && abs(m_current.RightThumbStick.y) < THUMB_STICK_THRESHOLD)
@@ -160,7 +160,7 @@ void Controller::update()
 		{
 			m_current.button[static_cast<int>(ButtonType::RightThumbStickDown)] = true;
 		}
-	} 
+	}
 }
 
 /// <summary>
@@ -257,7 +257,7 @@ float Controller::getRumbleTime()
 /// <param name="t_buttonType">type of button you want the name of</param>
 /// <returns>name of button</returns>
 std::string Controller::getButtonName(ButtonType t_buttonType)
-{ 
+{
 	switch (t_buttonType)
 	{
 	case ButtonType::A:

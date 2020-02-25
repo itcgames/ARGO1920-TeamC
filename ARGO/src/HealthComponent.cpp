@@ -56,7 +56,7 @@ void HealthComponent::resetHealth()
 /// <returns>true if Entity took damage or false if not</returns>
 bool HealthComponent::reduceHealth(int t_amount)
 {
-	if (m_invincibilityCooldown <=0)
+	if (m_invincibilityCooldown <= 0)
 	{
 		m_invincibilityCooldown = INVINCIBILITY_FRAMES;
 		m_health -= t_amount;

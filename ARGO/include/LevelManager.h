@@ -13,7 +13,7 @@ class LevelManager
 public:
 	LevelManager(SDL_Renderer* t_renderer);
 	void setupLevel();
- 	void update(BaseSystem* t_system);
+	void update(BaseSystem* t_system);
 	void checkWallDamage();
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
 	void setToWall(Entity& t_entity);

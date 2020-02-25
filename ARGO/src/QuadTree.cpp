@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "QuadTree.h"
 
-QuadTree::QuadTree(int t_level, glm::vec2 t_position, glm::vec2 t_size):
+QuadTree::QuadTree(int t_level, glm::vec2 t_position, glm::vec2 t_size) :
 	m_boundsTopLeft(t_position),
 	m_boundsBottomRight(t_size),
 	m_level(t_level)
@@ -33,7 +33,7 @@ void QuadTree::insert(Quad t_data)
 		return;
 	}
 	m_objects.push_back(t_data);
-	if (m_objects.size() > MAX_OBJECTS && m_level < MAX_LEVEL)
+	if (m_objects.size() > MAX_OBJECTS&& m_level < MAX_LEVEL)
 	{
 		if (m_nodes.empty())
 		{
@@ -107,25 +107,25 @@ int QuadTree::getIndex(Quad t_data)
 	bool bottomQuadrant = (t_data.position.y >= horizontalMidpoint);
 
 	// Object can completely fit within the left quadrants
-	if (t_data.position.x + t_data.size.x <= verticalMidpoint) 
+	if (t_data.position.x + t_data.size.x <= verticalMidpoint)
 	{
-		if (topQuadrant) 
+		if (topQuadrant)
 		{
 			index = 1;
 		}
-		else if (bottomQuadrant) 
+		else if (bottomQuadrant)
 		{
 			index = 2;
 		}
 	}
 	// Object can completely fit within the right quadrants
-	else if (t_data.position.x >= verticalMidpoint) 
+	else if (t_data.position.x >= verticalMidpoint)
 	{
-		if (topQuadrant) 
+		if (topQuadrant)
 		{
 			index = 0;
 		}
-		else if (bottomQuadrant) 
+		else if (bottomQuadrant)
 		{
 			index = 3;
 		}
