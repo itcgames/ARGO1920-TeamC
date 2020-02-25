@@ -1,7 +1,7 @@
 #pragma once
 #include "EntityFactory.h"
 class EnemyFactory :
-	public EntityFactory	
+	public EntityFactory
 {
 public:
 	EnemyFactory();
