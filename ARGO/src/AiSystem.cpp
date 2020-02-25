@@ -29,7 +29,7 @@ void AiSystem::update(Entity& t_entity)
 		TransformComponent* posComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
 		AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getComponent(ComponentType::Ai));
 		ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
-		
+
 		switch (aiComp->getType())
 		{
 		case AITypes::eMelee:

@@ -60,6 +60,6 @@ private:
 	// const for the different values of RumbleStrength for the strength the rumble will be
 	const float STRONG_STRENGTH = 1.0f;
 	const float MEDIUM_STRENGTH = 0.5f;
-	const float WEAK_STRENGTH = 0.25f;
+	const float WEAK_STRENGTH = 0.15f;
 };
 

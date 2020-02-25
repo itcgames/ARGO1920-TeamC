@@ -27,5 +27,4 @@ private:
 
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS];
 	EventManager& m_eventManager;
- };
-
+};

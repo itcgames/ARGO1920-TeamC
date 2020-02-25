@@ -166,12 +166,18 @@ void RenderSystem::renderText(SDL_Renderer* t_renderer, TransformComponent* t_po
 		rect.y = rect.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
 	}
 
-	SDL_SetRenderDrawColor(t_renderer, t_textComp->getColour().r, t_textComp->getColour().g, t_textComp->getColour().b, t_textComp->getColour().a);
+	if (t_textComp->getColour().r != 255 && t_textComp->getColour().g != 255 && t_textComp->getColour().b != 255 && t_textComp->getColour().a != 255)
+	{
+		SDL_SetRenderDrawColor(t_renderer, t_textComp->getColour().r, t_textComp->getColour().g, t_textComp->getColour().b, t_textComp->getColour().a);
+	}
 
 	SDL_RenderCopy(t_renderer, t_textComp->getTexture(), NULL, &rect);
 
-	//reset the renderer to previous colour
-	SDL_SetRenderDrawColor(t_renderer, prevRGBA[0], prevRGBA[1], prevRGBA[2], prevRGBA[3]);
+	if (t_textComp->getColour().r != 255 && t_textComp->getColour().g != 255 && t_textComp->getColour().b != 255 && t_textComp->getColour().a != 255)
+	{
+		//reset the renderer to previous colour
+		SDL_SetRenderDrawColor(t_renderer, prevRGBA[0], prevRGBA[1], prevRGBA[2], prevRGBA[3]);
+	}
 }
 
 bool RenderSystem::inView(TransformComponent* t_posComp)

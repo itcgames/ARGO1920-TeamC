@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "SplashScreen.h"
 
-SplashScreen::SplashScreen(EventManager& t_eventManager ) :
+SplashScreen::SplashScreen(EventManager& t_eventManager) :
 	m_eventManager{ t_eventManager }
 {
 }

@@ -56,7 +56,7 @@ private:
 	int m_pointSize;
 
 	bool m_staticPosition;
-
+	bool m_sizeChanged = true;
 	std::string m_text;
 };
 
