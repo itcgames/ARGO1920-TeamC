@@ -31,7 +31,7 @@ namespace FactoryStatSheet
 	const bool AMMO_ROTATING = true;
 	const float AMMO_ROTATION_SPEED = 0.1f;
 	const int AMMO_TYPE_ID = 1;
-	const float AMMO_AMOUNT_CHANGE = 1;
+	const float AMMO_AMOUNT_CHANGE = 1.0f;
 	const int AMMO_RADIUS = 32;
 	const int AMMO_STARTING_HP = 1;
 	const int AMMO_MAX_HP = 1;
@@ -42,7 +42,7 @@ namespace FactoryStatSheet
 	const bool HEALTH_ROTATING = true;
 	const float HEALTH_ROTATION_SPEED = 0.1f;
 	const int HEALTH_TYPE_ID = 2;
-	const float HEALTH_AMOUNT_CHANGE = 1;
+	const float HEALTH_AMOUNT_CHANGE = 1.0f;
 	const int HEALTH_RADIUS = 32;
 	const int HEALTH_STARTING_HP = 1;
 	const int HEALTH_MAX_HP = 1;
