@@ -138,10 +138,13 @@ void LevelManager::generateFlowField()
 		if (healthComp && transformComp && healthComp->isAlive())
 		{
 			Entity* tile = findAtPosition(transformComp->getPos());
-			FlowFieldComponent* flowFieldComp = static_cast<FlowFieldComponent*>(tile->getComponent(ComponentType::FlowField));
-			if (flowFieldComp)
+			if (tile)
 			{
-				setTileWeight(tile, nullptr, queue, 0);
+				FlowFieldComponent* flowFieldComp = static_cast<FlowFieldComponent*>(tile->getComponent(ComponentType::FlowField));
+				if (flowFieldComp)
+				{
+					setTileWeight(tile, nullptr, queue, 0);
+				}
 			}
 		}
 	}
