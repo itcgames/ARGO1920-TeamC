@@ -31,7 +31,6 @@ void LevelManager::setupLevel()
 			m_levelTiles.back().addComponent(new TileComponent());
 			m_levelTiles.back().addComponent(new HealthComponent(Utilities::WALL_HEALTH, Utilities::WALL_HEALTH));
 			m_levelTiles.back().addComponent(new FlowFieldComponent());
-			m_levelTiles.back().addComponent(new TextComponent("ordinary.ttf", m_renderer, 24, false, "test"));
 		}
 	}
 	setTileNeighbours();
@@ -158,20 +157,12 @@ void LevelManager::generateFlowField()
 void LevelManager::setNeighbourWeights(Entity* t_entity, std::vector<Entity*>& t_queue)
 {
 	int newWeight = static_cast<FlowFieldComponent*>(t_entity->getComponent(ComponentType::FlowField))->getWeight() + 1;
-	if (newWeight < MAX_FLOW_FIELD_WEIGHT)
+	if (newWeight < Utilities::MAX_FLOW_FIELD_WEIGHT)
 	{
 		Neighbours* neighbours = static_cast<TileComponent*>(t_entity->getComponent(ComponentType::Tile))->getNeighbours();
-		if (neighbours->topLeft)
-		{
-			setTileWeight(neighbours->topLeft, t_entity, t_queue, newWeight);
-		}
 		if (neighbours->top)
 		{
 			setTileWeight(neighbours->top, t_entity, t_queue, newWeight);
-		}
-		if (neighbours->topRight)
-		{
-			setTileWeight(neighbours->topRight, t_entity, t_queue, newWeight);
 		}
 		if (neighbours->left)
 		{
@@ -181,13 +172,21 @@ void LevelManager::setNeighbourWeights(Entity* t_entity, std::vector<Entity*>& t
 		{
 			setTileWeight(neighbours->right, t_entity, t_queue, newWeight);
 		}
-		if (neighbours->bottomLeft)
-		{
-			setTileWeight(neighbours->bottomLeft, t_entity, t_queue, newWeight);
-		}
 		if (neighbours->bottom)
 		{
 			setTileWeight(neighbours->bottom, t_entity, t_queue, newWeight);
+		}
+		if (neighbours->topLeft)
+		{
+			setTileWeight(neighbours->topLeft, t_entity, t_queue, newWeight);
+		}
+		if (neighbours->topRight)
+		{
+			setTileWeight(neighbours->topRight, t_entity, t_queue, newWeight);
+		}
+		if (neighbours->bottomLeft)
+		{
+			setTileWeight(neighbours->bottomLeft, t_entity, t_queue, newWeight);
 		}
 		if (neighbours->bottomRight)
 		{
@@ -201,7 +200,6 @@ void LevelManager::setTileWeight(Entity* t_entity, Entity* t_closestNeighbour, s
 	FlowFieldComponent* neighbourFlowField = static_cast<FlowFieldComponent*>(t_entity->getComponent(ComponentType::FlowField));
 	if (!static_cast<ColliderAABBComponent*>(t_entity->getComponent(ComponentType::ColliderAABB)) && neighbourFlowField->getWeight() > t_newWeight)
 	{
-		static_cast<TextComponent*>(t_entity->getComponent(ComponentType::Text))->setText(std::to_string(t_newWeight));
 		neighbourFlowField->setClosestNeighbour(t_closestNeighbour);
 		neighbourFlowField->setWeight(t_newWeight);
 		t_queue.insert(t_queue.begin(), t_entity);

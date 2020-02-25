@@ -29,8 +29,6 @@ private:
 	void setNeighbourWeights(Entity* t_entity, std::vector<Entity*>& t_queue);
 	void setTileWeight(Entity* t_entity, Entity* t_closestNeighbour, std::vector<Entity*>& t_queue, int t_newWeight);
 
-	const int MAX_FLOW_FIELD_WEIGHT = 20;
-
 	std::vector<Entity> m_levelTiles;
 	Entity(&m_players)[Utilities::S_MAX_PLAYERS];
 	SDL_Renderer* m_renderer;
