@@ -38,6 +38,8 @@ namespace Utilities
 
 	const int ENEMY_RADIUS = 24;
 	const int ENEMY_HP = 2;
+	const int ENEMY_POOL_SIZE = 100;
+	const float ENEMY_INITIAL_SPAWN_DELAY = 300;
 
 	const glm::vec2 GOAL_START_POSITION = glm::vec2(51, 36) * (float)TILE_SIZE;
 

@@ -6,6 +6,7 @@
 #include "TagComponent.h"
 #include "HealthComponent.h"
 #include "ForceComponent.h"
+#include "InputComponent.h"
 #include "Utilities.h"
 #include "QuadTree.h"
 #include "AudioManager.h"

@@ -280,6 +280,11 @@ void CollisionSystem::playerToEnemy(Entity* t_player, Entity* t_enemy)
 		TransformComponent* playerPosition = static_cast<TransformComponent*>(t_player->getComponent(ComponentType::Transform));
 		ForceComponent* playerForce = static_cast<ForceComponent*>(t_player->getComponent(ComponentType::Force));
 		HealthComponent* playerHealth = static_cast<HealthComponent*>(t_player->getComponent(ComponentType::Health));
+		InputComponent* playerInput = static_cast<InputComponent*>(t_player->getComponent(ComponentType::Input));
+		if (playerInput)
+		{
+			playerInput->getController().activateRumble(RumbleStrength::Strong, RumbleLength::Short);
+		}
 
 		int enemyRadius = static_cast<ColliderCircleComponent*>(t_enemy->getComponent(ComponentType::ColliderCircle))->getRadius();
 		TransformComponent* enemyPosition = static_cast<TransformComponent*>(t_enemy->getComponent(ComponentType::Transform));
@@ -287,16 +292,26 @@ void CollisionSystem::playerToEnemy(Entity* t_player, Entity* t_enemy)
 
 		glm::vec2 distanceBetween = glm::normalize(playerPosition->getPos() - enemyPosition->getPos()) * PLAYER_TO_ENEMY_REFECTION_SCALER;
 
-		playerHealth->reduceHealth(1);
-		if (playerHealth->isAlive())
+		//if took damage and is alive
+		if (playerHealth->reduceHealth(1) && playerHealth->isAlive())
 		{
+			//play hurt sound and bounce back
 			std::string filePath = "playerHurt" + std::to_string(glm::linearRand(1, 3)) + ".wav";
 			AudioManager::Instance()->PlaySfx(filePath);
 			playerForce->addForce(distanceBetween);
 			enemyForce->addForce(-distanceBetween);
 		}
+		//else if in iframes but is alive
+		else if (playerHealth->isAlive())
+		{
+			//bounce back
+			playerForce->addForce(distanceBetween);
+			enemyForce->addForce(-distanceBetween);
+		}
+		//otherwise player died
 		else
 		{
+			//so play death sound
 			std::string filePath = "gameover" + std::to_string(glm::linearRand(1, 3)) + ".wav";
 			AudioManager::Instance()->PlaySfx(filePath);
 		}

@@ -69,12 +69,12 @@ Mix_Music* AssetManager::GetMusic(std::string t_filename)
 
 SDL_Texture* AssetManager::GetText(std::string t_text, std::string t_filename, int t_size, SDL_Color t_colour)
 {
-	TTF_Font* font = GetFont(t_filename, t_size);
 
 	std::string key = t_text + t_filename + (char)t_size + (char)t_colour.r + (char)t_colour.g + (char)t_colour.b + (char)t_colour.a;
 
 	if (!m_text[key])
 	{
+		TTF_Font* font = GetFont(t_filename, t_size);
 		m_text[key] = CreateTextTexture(font, t_text, t_colour);
 	}
 	return m_text[key];

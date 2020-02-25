@@ -20,7 +20,6 @@ void MacroCommand::addAndExecute(Command* t_command, Entity& t_entity, EventMana
 void MacroCommand::executeTop(Entity& t_entity, EventManager& t_eventManager)
 {
 	m_commands.top()->execute(t_entity, t_eventManager);
-
 }
 
 void MacroCommand::executeTopAndPop(Entity& t_entity, EventManager& t_eventManager)
