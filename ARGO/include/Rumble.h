@@ -52,7 +52,7 @@ private:
 	// Strength of the rumble - From 0 to 1
 	float m_strength;
 
-	// const for the different values of RumbleLength for the time the rumble will activate for
+	// const for the different values of RumbleLength for the time the rumble will activate for 
 	const int LONG_TIME = 750;
 	const int MEDIUM_TIME = 500;
 	const int SHORT_TIME = 150;

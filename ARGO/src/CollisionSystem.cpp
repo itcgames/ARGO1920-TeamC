@@ -280,6 +280,11 @@ void CollisionSystem::playerToEnemy(Entity* t_player, Entity* t_enemy)
 		TransformComponent* playerPosition = static_cast<TransformComponent*>(t_player->getComponent(ComponentType::Transform));
 		ForceComponent* playerForce = static_cast<ForceComponent*>(t_player->getComponent(ComponentType::Force));
 		HealthComponent* playerHealth = static_cast<HealthComponent*>(t_player->getComponent(ComponentType::Health));
+		InputComponent* playerInput = static_cast<InputComponent*>(t_player->getComponent(ComponentType::Input));
+		if (playerInput)
+		{
+			playerInput->getController().activateRumble(RumbleStrength::Strong, RumbleLength::Short);
+		}
 
 		int enemyRadius = static_cast<ColliderCircleComponent*>(t_enemy->getComponent(ComponentType::ColliderCircle))->getRadius();
 		TransformComponent* enemyPosition = static_cast<TransformComponent*>(t_enemy->getComponent(ComponentType::Transform));

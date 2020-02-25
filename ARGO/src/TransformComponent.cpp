@@ -12,7 +12,9 @@ TransformComponent::TransformComponent(float t_x, float t_y, float t_rotation) :
 {
 	m_pos.x = t_x;
 	m_pos.y = t_y;
-	m_rotation = t_rotation;
+	m_rotation = t_rotation; 
+	m_leftRotation = -1;
+	m_rightRotation = -1;
 }
 
 /// <summary>
@@ -25,6 +27,8 @@ TransformComponent::TransformComponent(glm::vec2 t_pos, float t_rotation) :
 {
 	m_pos = t_pos;
 	m_rotation = t_rotation;
+	m_leftRotation = -1;
+	m_rightRotation = -1;
 } 
 
 /// <summary>
@@ -36,6 +40,8 @@ TransformComponent::TransformComponent() :
 	m_pos.x = glm::linearRand(50, 700);
 	m_pos.y = glm::linearRand(50, 700);
 	m_rotation = 0.0f;
+	m_leftRotation = -1;
+	m_rightRotation = -1;
 }
 
 TransformComponent::~TransformComponent()
