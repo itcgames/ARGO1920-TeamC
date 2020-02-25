@@ -29,7 +29,7 @@ private:
 	void createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_renderer);
 	void createEnemy();
 	void createGoal();
- 	void setUpLevel();
+	void setUpLevel();
 	void preRender();
 	void updatePlayers(float t_deltaTime);
 	void updateEntities(float t_deltaTime);
@@ -63,4 +63,3 @@ private:
 
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
 };
-
