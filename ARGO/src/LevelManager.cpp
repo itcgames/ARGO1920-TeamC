@@ -179,19 +179,27 @@ void LevelManager::setNeighbourWeights(Entity* t_entity, std::vector<Entity*>& t
 		{
 			setTileWeight(neighbours->bottom, t_entity, t_queue, newWeight);
 		}
-		if (neighbours->topLeft)
+		if (neighbours->topLeft && neighbours->top && neighbours->left && 
+			!static_cast<ColliderAABBComponent*>(neighbours->top->getComponent(ComponentType::ColliderAABB)) &&
+			!static_cast<ColliderAABBComponent*>(neighbours->left->getComponent(ComponentType::ColliderAABB)))
 		{
 			setTileWeight(neighbours->topLeft, t_entity, t_queue, newWeight);
 		}
-		if (neighbours->topRight)
+		if (neighbours->topRight && neighbours->top && neighbours->right &&
+			!static_cast<ColliderAABBComponent*>(neighbours->top->getComponent(ComponentType::ColliderAABB)) &&
+			!static_cast<ColliderAABBComponent*>(neighbours->right->getComponent(ComponentType::ColliderAABB)))
 		{
 			setTileWeight(neighbours->topRight, t_entity, t_queue, newWeight);
 		}
-		if (neighbours->bottomLeft)
+		if (neighbours->bottomLeft && neighbours->bottom && neighbours->left &&
+			!static_cast<ColliderAABBComponent*>(neighbours->bottom->getComponent(ComponentType::ColliderAABB)) &&
+			!static_cast<ColliderAABBComponent*>(neighbours->left->getComponent(ComponentType::ColliderAABB)))
 		{
 			setTileWeight(neighbours->bottomLeft, t_entity, t_queue, newWeight);
 		}
-		if (neighbours->bottomRight)
+		if (neighbours->bottomRight && neighbours->bottom && neighbours->right &&
+			!static_cast<ColliderAABBComponent*>(neighbours->bottom->getComponent(ComponentType::ColliderAABB)) &&
+			!static_cast<ColliderAABBComponent*>(neighbours->right->getComponent(ComponentType::ColliderAABB)))
 		{
 			setTileWeight(neighbours->bottomRight, t_entity, t_queue, newWeight);
 		}

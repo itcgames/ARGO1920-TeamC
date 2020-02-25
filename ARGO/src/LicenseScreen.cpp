@@ -36,7 +36,7 @@ void LicenseScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controlle
 {
 	setControllerButtonMaps();
 
-	//m_background.addComponent(new VisualComponent("License_Background.png", t_renderer));
+	m_background.addComponent(new VisualComponent("License_Background.png", t_renderer));
 	m_background.addComponent(new TransformComponent(0, 0));
 
 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
