@@ -288,6 +288,8 @@ void CollisionSystem::playerToEnemy(Entity* t_player, Entity* t_enemy)
 		glm::vec2 distanceBetween = glm::normalize( playerPosition->getPos() - enemyPosition->getPos() ) * PLAYER_TO_ENEMY_REFECTION_SCALER;
 
 		playerHealth->reduceHealth(1);
+		std::string filePath = "playerHurt" + std::to_string(glm::linearRand(1, 4)) + ".wav";
+		AudioManager::Instance()->PlaySfx(filePath);
 		playerForce->addForce(distanceBetween);
 		enemyForce->addForce(-distanceBetween);
 	}
