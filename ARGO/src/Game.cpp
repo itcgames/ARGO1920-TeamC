@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Game.h"
 
-
-
 /// <summary>
 /// Constructor for the game class.
 /// </summary>
