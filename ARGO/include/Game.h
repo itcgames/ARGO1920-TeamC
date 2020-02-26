@@ -57,7 +57,7 @@ private:
 
 	Controller m_controllers[Utilities::S_MAX_PLAYERS];
 
-	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
+	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS];
 
 	bool m_hasScreenBeenSet[Utilities::S_NUMBER_OF_SCREENS];
 };

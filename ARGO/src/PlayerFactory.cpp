@@ -21,7 +21,7 @@ void PlayerFactory::createPlayer(Entity& t_entity)
 ///Creating a Player, pass in a reference to an entity. The required components and values will be added. 
 ///All values are set in the FactoryStatSheet.
 ///</summary>
-void PlayerFactory::createPlayer(Entity& t_entity, bool t_isPlayer, Controller& t_controllers, int t_index, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS])
+void PlayerFactory::createPlayer(Entity& t_entity, bool t_isPlayer, Controller& t_controllers, int t_index, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS])
 {
 	t_entity.addComponent(new CommandComponent());
 	t_entity.addComponent(new HealthComponent(FactoryStatSheet::PLAYER_MAX_HP, FactoryStatSheet::PLAYER_STARTING_HP, FactoryStatSheet::PLAYER_INVINCIBILITY_FRAMES));
@@ -40,9 +40,9 @@ void PlayerFactory::createPlayer(Entity& t_entity, bool t_isPlayer, Controller& 
 	if (t_isPlayer)
 	{
 		t_entity.addComponent(new InputComponent(t_controllers,
-			t_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][t_index],
-			t_controllerButtonMaps[static_cast<int>(ButtonState::Held)][t_index],
-			t_controllerButtonMaps[static_cast<int>(ButtonState::Released)][t_index]));
+			t_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)],
+			t_controllerButtonMaps[static_cast<int>(ButtonState::Held)],
+			t_controllerButtonMaps[static_cast<int>(ButtonState::Released)]));
 			
 	}
 	else

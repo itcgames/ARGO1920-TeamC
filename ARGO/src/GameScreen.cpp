@@ -176,15 +176,12 @@ void GameScreen::updateLevelManager()
 	m_levelManager.update(&m_collisionSystem);
 }
 
-void GameScreen::setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS])
+void GameScreen::setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS])
 {
-	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
-	{
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][index] = t_controllerMaps[static_cast<int>(ButtonState::Pressed)][index];
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][index] = t_controllerMaps[static_cast<int>(ButtonState::Held)][index];
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][index] = t_controllerMaps[static_cast<int>(ButtonState::Released)][index];
-	}
-}
+ 	m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)] = t_controllerMaps[static_cast<int>(ButtonState::Pressed)];
+	m_controllerButtonMaps[static_cast<int>(ButtonState::Held)] = t_controllerMaps[static_cast<int>(ButtonState::Held)];
+	m_controllerButtonMaps[static_cast<int>(ButtonState::Released)] = t_controllerMaps[static_cast<int>(ButtonState::Released)];
+ }
 
 void GameScreen::preRender()
 {
@@ -226,7 +223,7 @@ void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utiliti
 	setUpLevel();
 }
 
-void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS])
+void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS], Controller t_controller[Utilities::S_MAX_PLAYERS])
 {
 	setControllerButtonMap(t_controllerButtonMaps);
 	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)

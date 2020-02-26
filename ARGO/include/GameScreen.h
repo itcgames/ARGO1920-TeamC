@@ -27,7 +27,7 @@ public:
 	void processEvents(SDL_Event* t_event);
 	void render(SDL_Renderer* t_renderer);
 	void reset(SDL_Renderer* t_renderer, Controller t_controller[Utilities::S_MAX_PLAYERS]);
-	void initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS]);
+	void initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS], Controller t_controller[Utilities::S_MAX_PLAYERS]);
 private:
 
 	void createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_renderer);
@@ -38,7 +38,7 @@ private:
 	void updateEntities(float t_deltaTime);
 	void updateProjectiles(float t_deltaTime);
 	void updateLevelManager();
-	void setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]);
+	void setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS]);
 
 	EventManager& m_eventManager;
 
@@ -67,5 +67,5 @@ private:
 	EnemyFactory m_enemyFactory;
 	PickUpManager m_pickUpManager;
 
-	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
+	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS];
 };

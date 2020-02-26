@@ -291,23 +291,20 @@ void Game::closeWindow(const CloseWindow& t_event)
 void Game::createButtonMaps()
 {
 	using ButtonCommandPair = std::pair<ButtonType, Command*>;
-	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
+ 	m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)].clear();
+	m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)] =
 	{
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][index].clear();
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][index] =
-		{
-			ButtonCommandPair(ButtonType::DpadUp, new MoveUpCommand()),
-			ButtonCommandPair(ButtonType::DpadDown, new MoveDownCommand()),
-			ButtonCommandPair(ButtonType::DpadLeft, new MoveLeftCommand()),
-			ButtonCommandPair(ButtonType::DpadRight, new MoveRightCommand()),
-			ButtonCommandPair(ButtonType::Back, new CloseWindowCommand()),
-			ButtonCommandPair(ButtonType::RightTrigger, new FireBulletCommand())
-		};
-		// Set Held To Same as Pressed Commands For Time Being
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][index] = m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][index];
-		// Set Release Commands to nothing
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][index] = ButtonCommandMap();
-	}
+		ButtonCommandPair(ButtonType::DpadUp, new MoveUpCommand()),
+		ButtonCommandPair(ButtonType::DpadDown, new MoveDownCommand()),
+		ButtonCommandPair(ButtonType::DpadLeft, new MoveLeftCommand()),
+		ButtonCommandPair(ButtonType::DpadRight, new MoveRightCommand()),
+		ButtonCommandPair(ButtonType::Back, new CloseWindowCommand()),
+		ButtonCommandPair(ButtonType::RightTrigger, new FireBulletCommand())
+	};
+	// Set Held To Same as Pressed Commands For Time Being
+	m_controllerButtonMaps[static_cast<int>(ButtonState::Held)] = m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)];
+	// Set Release Commands to nothing
+	m_controllerButtonMaps[static_cast<int>(ButtonState::Released)] = ButtonCommandMap();
 }
 
 void Game::changeScreen(const ChangeScreen& t_event)
