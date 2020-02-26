@@ -15,6 +15,8 @@
 #include "PlayerFactory.h"
 #include "PickUpManager.h"
 #include "EnemyFactory.h"
+#include "HUDManager.h"
+
 
 class GameScreen
 {
@@ -62,7 +64,8 @@ private:
 	ProjectileManager m_projectileManager;
 	LevelManager m_levelManager;
 	EnemyManager m_enemyManager;
-
+	HUDManager m_hudManager;
+ 
 	PlayerFactory m_playerFactory;
 	EnemyFactory m_enemyFactory;
 	PickUpManager m_pickUpManager;

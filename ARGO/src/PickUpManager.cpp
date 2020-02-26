@@ -17,7 +17,7 @@ void PickUpManager::init(SDL_Renderer* t_renderer)
 	PickUpFactory* factory = new PickUpFactory(m_renderer);
 	for (int i = 0; i < PICKUP_POOL_SIZE; i++)
 	{
-		factory->createDrop(1, m_pickUps[i]);
+		factory->createDrop(2, m_pickUps[i]);
 		TransformComponent* transformComp = static_cast<TransformComponent*>(m_pickUps[i].getComponent(ComponentType::Transform));
 		transformComp->setPos(glm::vec2(100 + (90 * i), 100));
 		HealthComponent* healthComp = static_cast<HealthComponent*>(m_pickUps[i].getComponent(ComponentType::Health));

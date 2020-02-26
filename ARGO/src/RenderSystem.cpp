@@ -15,14 +15,14 @@ void RenderSystem::update(Entity& t_entity)
 void RenderSystem::render(SDL_Renderer* t_renderer, Entity& t_entity)
 {
 	TransformComponent* transformComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
-
+	VisualComponent* visComp = static_cast<VisualComponent*>(t_entity.getComponent(ComponentType::Visual));
 	if (transformComp != nullptr)
 	{
-		if (inView(transformComp))
+		if (inView(transformComp) || transformComp->getAlwaysOnscreen())
 		{
-			VisualComponent* visComp = static_cast<VisualComponent*>(t_entity.getComponent(ComponentType::Visual));
+			
 			TextComponent* textComp = static_cast<TextComponent*>(t_entity.getComponent(ComponentType::Text));
-
+			
 			if (visComp != nullptr)
 			{
 				glm::vec2 renderPosition = transformComp->getPos();
@@ -33,20 +33,21 @@ void RenderSystem::render(SDL_Renderer* t_renderer, Entity& t_entity)
 				}
 				renderTexture(visComp, renderPosition.x, renderPosition.y, t_renderer, transformComp->getRotation());
 			}
+			PrimitiveComponent* primComp = static_cast<PrimitiveComponent*>(t_entity.getComponent(ComponentType::Primitive));
+			ParticleEmitterComponent* emitComp = static_cast<ParticleEmitterComponent*>(t_entity.getComponent(ComponentType::ParticleEmitter));
 			if (textComp != nullptr)
 			{
 				renderText(t_renderer, transformComp, textComp);
 			}
-			else if (!textComp && !visComp)
+			
+			if (!textComp && !visComp && !emitComp  && primComp)
 			{
 				ColourComponent* colComp = static_cast<ColourComponent*>(t_entity.getComponent(ComponentType::Colour));
 				//we dont need to check if colComp is null as its handled in the function
-				renderPrimitives(t_renderer, transformComp, colComp);
+				renderPrimitives(t_renderer, transformComp, colComp, primComp);
 			}
 
-			ParticleEmitterComponent* emitComp = static_cast<ParticleEmitterComponent*>(t_entity.getComponent(ComponentType::ParticleEmitter));
-			PrimitiveComponent* primComp = static_cast<PrimitiveComponent*>(t_entity.getComponent(ComponentType::Primitive));
-
+			
 			if (emitComp && primComp)
 			{
 				ColourComponent* colComp = static_cast<ColourComponent*>(t_entity.getComponent(ComponentType::Colour));
@@ -59,7 +60,7 @@ void RenderSystem::render(SDL_Renderer* t_renderer, Entity& t_entity)
 	}
 }
 
-void RenderSystem::renderPrimitives(SDL_Renderer* t_renderer, TransformComponent* t_posComp, ColourComponent* t_colComp)
+void RenderSystem::renderPrimitives(SDL_Renderer* t_renderer, TransformComponent* t_posComp, ColourComponent* t_colComp, PrimitiveComponent* t_primitive)
 {
 	Uint8 prevRGBA[4];
 	SDL_GetRenderDrawColor(t_renderer, &prevRGBA[0], &prevRGBA[1], &prevRGBA[2], &prevRGBA[3]);
@@ -67,13 +68,16 @@ void RenderSystem::renderPrimitives(SDL_Renderer* t_renderer, TransformComponent
 	//hard-coded primitive size
 	//fite me
 	SDL_Rect rect;
-	rect.x = t_posComp->getPos().x - 25;
-	rect.y = t_posComp->getPos().y - 25;
-	rect.w = 50;
-	rect.h = 50;
+	rect.x = t_posComp->getPos().x;
+	rect.y = t_posComp->getPos().y;
+	rect.w = t_primitive->getSize().x;
+	rect.h = t_primitive->getSize().y;
 
-	rect.x = rect.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
-	rect.y = rect.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
+	if (!t_primitive->getStaticPosition())
+	{
+		rect.x = rect.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
+		rect.y = rect.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
+	}
 
 	Colour colour;
 	//set colour from the component
@@ -143,13 +147,47 @@ void RenderSystem::renderTexture(VisualComponent* t_visComp, int t_textureLeftPo
 		renderQuad.h = t_clip->h;
 	}
 
-	renderQuad.x = renderQuad.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
-	renderQuad.y = renderQuad.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
+	if (!t_visComp->getStaticPosition())
+	{
+		renderQuad.x = renderQuad.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
+		renderQuad.y = renderQuad.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
+	}
 	//Render to screen
 	SDL_RenderCopyEx(t_renderer, t_visComp->getTexture(), t_clip, &renderQuad, t_angle, t_center, t_flip);
 }
 
 void RenderSystem::renderText(SDL_Renderer* t_renderer, TransformComponent* t_posComp, TextComponent* t_textComp)
+{
+	Uint8 prevRGBA[4];
+	SDL_GetRenderDrawColor(t_renderer, &prevRGBA[0], &prevRGBA[1], &prevRGBA[2], &prevRGBA[3]);
+
+	SDL_Rect rect;
+	rect.x = t_posComp->getPos().x;
+	rect.y = t_posComp->getPos().y;
+	rect.w = t_textComp->getWidth();
+	rect.h = t_textComp->getHeight();
+
+	if (!t_textComp->hasStaticPos())
+	{
+		rect.x = rect.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
+		rect.y = rect.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
+	}
+
+	if (t_textComp->getColour().r != 255 && t_textComp->getColour().g != 255 && t_textComp->getColour().b != 255 && t_textComp->getColour().a != 255)
+	{
+		SDL_SetRenderDrawColor(t_renderer, t_textComp->getColour().r, t_textComp->getColour().g, t_textComp->getColour().b, t_textComp->getColour().a);
+	}
+
+	SDL_RenderCopy(t_renderer, t_textComp->getTexture(), NULL, &rect);
+
+	if (t_textComp->getColour().r != 255 && t_textComp->getColour().g != 255 && t_textComp->getColour().b != 255 && t_textComp->getColour().a != 255)
+	{
+		//reset the renderer to previous colour
+		SDL_SetRenderDrawColor(t_renderer, prevRGBA[0], prevRGBA[1], prevRGBA[2], prevRGBA[3]);
+	}
+}
+
+void RenderSystem::renderHUD(SDL_Renderer* t_renderer, TransformComponent* t_posComp, TextComponent* t_textComp, VisualComponent* t_visComp, PrimitiveComponent* t_primitiveComp, HUDComponent* t_hudComp)
 {
 	Uint8 prevRGBA[4];
 	SDL_GetRenderDrawColor(t_renderer, &prevRGBA[0], &prevRGBA[1], &prevRGBA[2], &prevRGBA[3]);

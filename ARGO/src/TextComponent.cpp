@@ -82,6 +82,7 @@ void TextComponent::setSize(int t_size)
 {
 	m_pointSize = t_size;
 	m_texture = AssetManager::Instance()->GetText(m_text, m_fontName, m_pointSize, m_colour);
+	updateTexture();
 }
 
 std::string TextComponent::getText() const
