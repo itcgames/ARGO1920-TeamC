@@ -22,6 +22,7 @@ void MenuScreen::update(float t_deltaTime)
 
 void MenuScreen::reset()
 {
+	m_screenActive = true;
 	m_currentButton = MenuButtonType::Play;
 	for (Entity& menuButton : m_menuButtons)
 	{
@@ -42,6 +43,7 @@ void MenuScreen::render(SDL_Renderer* t_renderer)
 
 void MenuScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 {
+	m_screenActive = true;
 	setControllerButtonMaps();
 
 	m_background.addComponent(new VisualComponent("Menu_Background.png", t_renderer));
@@ -65,8 +67,8 @@ void MenuScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 
 	createInputEntity(t_controller);
 
-	m_eventManager.subscribeToEvent<MenuMoveButtonsUpDown>(std::bind(&MenuScreen::changeCurrentSelectedButton, this, std::placeholders::_1));
-	m_eventManager.subscribeToEvent<MenuSelectButton>(std::bind(&MenuScreen::buttonPressed, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<MenuMoveBetweenUI>(std::bind(&MenuScreen::changeCurrentSelectedButton, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<MenuButtonPressed>(std::bind(&MenuScreen::buttonPressed, this, std::placeholders::_1));
 
 
 } 
@@ -78,8 +80,6 @@ void MenuScreen::setControllerButtonMaps()
 	{
 		ButtonCommandPair(ButtonType::DpadUp, new MenuMoveUpCommand()),
 		ButtonCommandPair(ButtonType::DpadDown, new MenuMoveDownCommand()),
-		ButtonCommandPair(ButtonType::LeftThumbStickUp, new MenuMoveUpCommand()),
-		ButtonCommandPair(ButtonType::LeftThumbStickDown, new MenuMoveDownCommand()),
 		ButtonCommandPair(ButtonType::A, new MenuSelectButtonCommand())
 	};
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Held)];
@@ -101,49 +101,63 @@ void MenuScreen::createInputEntity(Controller& t_controller)
 	m_inputEntity.addComponent(new CommandComponent());
 }
 
-void MenuScreen::changeCurrentSelectedButton(const MenuMoveButtonsUpDown& t_event)
+void MenuScreen::changeCurrentSelectedButton(const MenuMoveBetweenUI& t_event)
 {
-	int currentButtonIndex = static_cast<int>(m_currentButton);
-	updateButtonColour(m_menuButtons[currentButtonIndex], Utilities::MENU_BUTTON_DEFAULT_COLOUR); 
-	currentButtonIndex = t_event.isMoveDown ? currentButtonIndex + 1 : currentButtonIndex - 1;
-	if (currentButtonIndex < 0)
+	if (m_screenActive)
 	{
-		currentButtonIndex = static_cast<int>(MenuButtonType::Quit);
+		int currentButtonIndex = static_cast<int>(m_currentButton);
+		updateButtonColour(m_menuButtons[currentButtonIndex], Utilities::MENU_BUTTON_DEFAULT_COLOUR);
+		if (MoveDirection::Up == t_event.direction)
+		{
+			currentButtonIndex--;
+		}
+		else if (MoveDirection::Down == t_event.direction)
+		{
+			currentButtonIndex++;
+		}
+ 		if (currentButtonIndex < 0)
+		{
+			currentButtonIndex = static_cast<int>(MenuButtonType::Quit);
+		}
+		else if (currentButtonIndex > NUMBER_OF_MENU_BUTTONS - 1)
+		{
+			currentButtonIndex = static_cast<int>(MenuButtonType::Play);
+		}
+		updateButtonColour(m_menuButtons[currentButtonIndex], Utilities::MENU_BUTTON_HIGHLIGHTED_COLOUR);
+		m_currentButton = static_cast<MenuButtonType>(currentButtonIndex);
 	}
-	else if(currentButtonIndex > NUMBER_OF_MENU_BUTTONS - 1)
-	{
-		currentButtonIndex = static_cast<int>(MenuButtonType::Play);
-	}
- 	updateButtonColour(m_menuButtons[currentButtonIndex], Utilities::MENU_BUTTON_HIGHLIGHTED_COLOUR);
-	m_currentButton = static_cast<MenuButtonType>(currentButtonIndex);
 }
 
-void MenuScreen::buttonPressed(const MenuSelectButton& t_event)
+void MenuScreen::buttonPressed(const MenuButtonPressed& t_event)
 {
-	MenuStates newScreen = MenuStates::MainMenu;
-	switch (m_currentButton)
+	if (m_screenActive && ButtonType::A == t_event.buttonPressed)
 	{
-	case MenuButtonType::Play:
-		newScreen = MenuStates::GameType;
-		break;
-	case MenuButtonType::Options:
-		newScreen = MenuStates::Options;
-		break;
-	case MenuButtonType::Credits:
-		newScreen = MenuStates::Credits;
-		break;
-	case MenuButtonType::Achievements:
-		newScreen = MenuStates::Achievements;
-		break;
-	case MenuButtonType::Quit:
-		m_eventManager.emitEvent(CloseWindow());
-		break;
-	default:
-		break;
-	}
-	if (MenuStates::MainMenu != newScreen)
-	{
-		m_eventManager.emitEvent(ChangeScreen{ newScreen });
+		MenuStates newScreen = MenuStates::MainMenu;
+		switch (m_currentButton)
+		{
+		case MenuButtonType::Play:
+			newScreen = MenuStates::GameType;
+			break;
+		case MenuButtonType::Options:
+			newScreen = MenuStates::Options;
+			break;
+		case MenuButtonType::Credits:
+			newScreen = MenuStates::Credits;
+			break;
+		case MenuButtonType::Achievements:
+			newScreen = MenuStates::Achievements;
+			break;
+		case MenuButtonType::Quit:
+			m_eventManager.emitEvent(CloseWindow());
+			break;
+		default:
+			break;
+		}
+		if (MenuStates::MainMenu != newScreen)
+		{
+			m_screenActive = false;
+			m_eventManager.emitEvent(ChangeScreen{ newScreen });
+		}
 	}
 }
 

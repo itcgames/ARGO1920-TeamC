@@ -68,6 +68,8 @@ namespace Utilities
 
 	static const glm::vec3 MENU_BUTTON_HIGHLIGHTED_COLOUR{ 255,255,240 };
 	static const glm::vec3 MENU_BUTTON_DEFAULT_COLOUR{ 199,163,10 };
+	static const glm::vec3 UI_COLOUR = glm::vec3(25, 57, 89);
+
 }
 
 enum class MenuStates

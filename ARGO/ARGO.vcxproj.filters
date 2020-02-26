@@ -258,12 +258,6 @@
     <ClCompile Include="src\MoveRightCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
-    <ClCompile Include="src\GoToMainMenuCommand.cpp">
-      <Filter>Source Files\CommandPattern\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GoToLicenseScreenCommand.cpp">
-      <Filter>Source Files\CommandPattern\Commands</Filter>
-    </ClCompile>
     <ClCompile Include="src\FireBulletCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
@@ -282,25 +276,22 @@
     <ClCompile Include="src\JoinGameScreen.cpp">
       <Filter>Source Files\Screens</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameTypeSelectCommand.cpp">
+    <ClCompile Include="src\MenuCancelCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameTypeConfirmCommand.cpp">
+    <ClCompile Include="src\MenuConfirmCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameTypeMoveDownCommand.cpp">
+    <ClCompile Include="src\MenuMoveLeftCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameTypeMoveUpCommand.cpp">
+    <ClCompile Include="src\MenuMoveRightCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameTypeMoveRightCommand.cpp">
+    <ClCompile Include="src\GoToLicenseScreenCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameTypeMoveLeftCommand.cpp">
-      <Filter>Source Files\CommandPattern\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameTypeCancelCommand.cpp">
+    <ClCompile Include="src\GoToMainMenuCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
   </ItemGroup>
@@ -503,12 +494,6 @@
     <ClInclude Include="include\MoveLeftCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="include\GoToMainMenuCommand.h">
-      <Filter>Header Files\CommandPattern\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GoToLicenseScreenCommand.h">
-      <Filter>Header Files\CommandPattern\Commands</Filter>
-    </ClInclude>
     <ClInclude Include="include\FireBulletCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
@@ -530,25 +515,22 @@
     <ClInclude Include="include\JoinGameScreen.h">
       <Filter>Header Files\Screens</Filter>
     </ClInclude>
-    <ClInclude Include="include\GameTypeConfirmCommand.h">
+    <ClInclude Include="include\MenuMoveRightCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="include\GameTypeMoveDownCommand.h">
+    <ClInclude Include="include\MenuCancelCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="include\GameTypeMoveUpCommand.h">
+    <ClInclude Include="include\MenuConfirmCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="include\GameTypeSelectCommand.h">
+    <ClInclude Include="include\MenuMoveLeftCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="include\GameTypeMoveLeftCommand.h">
+    <ClInclude Include="include\GoToLicenseScreenCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="include\GameTypeMoveRightCommand.h">
-      <Filter>Header Files\CommandPattern\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GameTypeCancelCommand.h">
+    <ClInclude Include="include\GoToMainMenuCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
   </ItemGroup>

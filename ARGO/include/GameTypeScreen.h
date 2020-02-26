@@ -47,10 +47,11 @@ private:
 	void setControllerButtonMaps();
 	void updateButtonColour(Entity& t_gameTypeButton, glm::vec3 t_colour);
 
-	void moveThroughUI(const GameTypeMoveButtons& t_event);
-	void buttonPressed(const GameTypeSelectButton& t_event);
-	void gameTypeConfirmed(const GameTypeConfirm& t_event);
-	void cancel(const GameTypeCancel& t_event);
+	void moveThroughUI(const MenuMoveBetweenUI& t_event);
+	void buttonPressed(const MenuButtonPressed& t_event);
+	void gameTypeConfirmed();
+	void gameTypeCancel();
+	void gameTypeChosen();
 
 	static const int S_NUMBER_OF_GAME_TYPE_BUTTONS = 3;
 	static const int S_NUMBER_OF_GAME_TYPE_TITLES = 3;
@@ -79,20 +80,14 @@ private:
 	CommandSystem& m_commandSystem;
 	RenderSystem& m_renderSystem;
 
-
 	int m_currentSelectedIpNumber = 0;
 	int ipNumberValues[S_IP_NUMBER_LENGTH];
-
 
 	bool m_hostPopupActive = false;
 	bool m_joinPopupActive = false;
 
-
-	const glm::vec3 UI_COLOUR = glm::vec3(25, 57, 89);
-
 	void updateIpDial(MoveDirection t_inputDirection);
 	void updateCurrentButton(MoveDirection t_inputDirection);
-
 
 	void createBackgroundEntity(SDL_Renderer* t_renderer);
 	void createMenuButtonsAndTitles(SDL_Renderer* t_renderer);
@@ -105,6 +100,8 @@ private:
 	std::string m_hostsIp;
 
 	void findHostsIp();
+
+	bool m_screenActive = false;
 };
 
 

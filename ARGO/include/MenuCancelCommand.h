@@ -1,6 +1,6 @@
 #pragma once
 #include "Command.h"
-class GameTypeCancelCommand :
+class MenuCancelCommand :
 	public Command
 {
 public:

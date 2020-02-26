@@ -51,9 +51,8 @@ void CreditsScreen::setControllerButtonMaps()
 	using ButtonCommandPair = std::pair<ButtonType, Command*>;
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)] =
 	{
-		ButtonCommandPair(ButtonType::B, new GoToMainMenuCommand()),
-		ButtonCommandPair(ButtonType::Back, new GoToMainMenuCommand())
-	};
+		ButtonCommandPair(ButtonType::B, new GoToMainMenuCommand())
+ 	};
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Held)];
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Released)];
-}
+}  

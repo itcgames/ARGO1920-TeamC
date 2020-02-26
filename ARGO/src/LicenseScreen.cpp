@@ -30,12 +30,14 @@ void LicenseScreen::render(SDL_Renderer* t_renderer)
 
 void LicenseScreen::reset()
 {
+	m_screenActive = true;
 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
 	m_screenStartTime = SDL_GetTicks();
 }
 
 void LicenseScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 {
+	m_screenActive = true;
 	setControllerButtonMaps();
 
 	m_background.addComponent(new VisualComponent("License_Background.png", t_renderer));
@@ -57,8 +59,8 @@ void LicenseScreen::setControllerButtonMaps()
 	using ButtonCommandPair = std::pair<ButtonType, Command*>;
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)] =
 	{
-		ButtonCommandPair(ButtonType::A, new GoToMainMenuCommand()),
-		ButtonCommandPair(ButtonType::Start, new GoToMainMenuCommand())
+		ButtonCommandPair(ButtonType::A, new MenuSelectButtonCommand()),
+		ButtonCommandPair(ButtonType::Start, new MenuConfirmCommand())
 	};
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Held)];
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Released)];

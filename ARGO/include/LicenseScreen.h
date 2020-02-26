@@ -31,4 +31,6 @@ public:
 
 	Uint32 m_screenStartTime;
 	static const Uint32 S_TIME_ON_SCREEN = 2000;
+
+	bool m_screenActive = false;
 };

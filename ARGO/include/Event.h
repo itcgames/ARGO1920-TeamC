@@ -24,33 +24,15 @@ struct PhysicsRotate
 	Entity& entity;
 };
 
-struct MenuMoveButtonsUpDown
+struct MenuMoveBetweenUI 
 {
-	// bool for if its moving down or up
-	bool isMoveDown;
+ 	MoveDirection direction;
 };
 
-struct MenuSelectButton
+struct MenuButtonPressed
 {
-	Entity& entity;
-}; 
-
-struct GameTypeMoveButtons
-{
-	MoveDirection direction;
-};
-
-struct GameTypeSelectButton
-{
-};
-
-struct GameTypeConfirm
-{
-};
-
-struct GameTypeCancel
-{
-};
+	ButtonType buttonPressed;
+};  
 
 struct CloseWindow
 {

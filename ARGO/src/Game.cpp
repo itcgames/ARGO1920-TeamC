@@ -17,6 +17,7 @@ Game::Game() :
 	m_mainMenuScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_achievementsScreen{ m_eventManager, m_controllers[0], m_renderer },
 	m_gameTypeScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
+	m_joinGameScreen{m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem},
 	m_currentScreen{ MenuStates::MainMenu }
 {
 	try
@@ -232,7 +233,7 @@ void Game::update(float t_dt)
 		m_gameTypeScreen.update(t_dt);
 		break;
 	case MenuStates::JoinGame:
-		//m_joinGameScreen.update(t_dt);
+		m_joinGameScreen.update(t_dt);
 		break;
 	default:
 		break;
@@ -269,7 +270,7 @@ void Game::render()
 		m_gameTypeScreen.render(m_renderer);
 		break;
 	case MenuStates::JoinGame:
-		//m_joinGameScreen.render(m_renderer);
+		m_joinGameScreen.render(m_renderer);
 		break;
 	default:
 		break;
@@ -364,7 +365,7 @@ void Game::initialiseScreen()
 		m_gameTypeScreen.initialise(m_renderer, m_controllers[0]);
 		break;
 	case MenuStates::JoinGame:
-		//m_joinGameScreen.initialise(m_renderer, m_controllers[0]);
+		m_joinGameScreen.initialise(m_renderer, m_controllers[0]);
 		break;
 	default:
 		break;
@@ -402,7 +403,7 @@ void Game::resetScreen()
 		m_gameTypeScreen.reset();
 		break;
 	case MenuStates::JoinGame:
-		//m_joinGameScreen.reset();
+		m_joinGameScreen.reset();
 		break;
 	default:
 		break;

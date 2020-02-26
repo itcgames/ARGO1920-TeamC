@@ -3,5 +3,5 @@
 
 void MenuMoveDownCommand::execute(Entity& t_entity, EventManager& t_eventManager)
 {
-	t_eventManager.emitEvent(MenuMoveButtonsUpDown{ true });
+	t_eventManager.emitEvent(MenuMoveBetweenUI{ MoveDirection::Down });
 }

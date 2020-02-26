@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "GameTypeScreen.h"
-#include "..\include\GameTypeScreen.h"
-
+ 
 GameTypeScreen::GameTypeScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_inputSystem, RenderSystem& t_renderSystem) :
 	m_eventManager{ t_eventManager },
 	m_commandSystem{ t_commandSystem },
@@ -22,6 +21,7 @@ void GameTypeScreen::update(float t_deltaTime)
 
 void GameTypeScreen::reset()
 {
+	m_screenActive = true;
 	m_currentButton = MenuButtonsType::Offline;
 	for (Entity& gameTypeButton : m_gameTypeButtons)
 	{
@@ -74,6 +74,7 @@ void GameTypeScreen::render(SDL_Renderer* t_renderer)
 
 void GameTypeScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 {
+	m_screenActive = true;
 	findHostsIp();
 	setControllerButtonMaps();
 
@@ -89,11 +90,8 @@ void GameTypeScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controll
 
 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
 
-	m_eventManager.subscribeToEvent<GameTypeMoveButtons>(std::bind(&GameTypeScreen::moveThroughUI, this, std::placeholders::_1));
-	m_eventManager.subscribeToEvent<GameTypeSelectButton>(std::bind(&GameTypeScreen::buttonPressed, this, std::placeholders::_1));
-	m_eventManager.subscribeToEvent<GameTypeConfirm>(std::bind(&GameTypeScreen::gameTypeConfirmed, this, std::placeholders::_1));
-	m_eventManager.subscribeToEvent<GameTypeCancel>(std::bind(&GameTypeScreen::cancel, this, std::placeholders::_1));
-
+	m_eventManager.subscribeToEvent<MenuMoveBetweenUI>(std::bind(&GameTypeScreen::moveThroughUI, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<MenuButtonPressed>(std::bind(&GameTypeScreen::buttonPressed, this, std::placeholders::_1));
 }
 
 void GameTypeScreen::setControllerButtonMaps()
@@ -101,18 +99,14 @@ void GameTypeScreen::setControllerButtonMaps()
 	using ButtonCommandPair = std::pair < ButtonType, Command*>;
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)] =
 	{
-		ButtonCommandPair(ButtonType::DpadUp, new GameTypeMoveUpCommand()),
-		ButtonCommandPair(ButtonType::DpadDown, new GameTypeMoveDownCommand()),
-		ButtonCommandPair(ButtonType::DpadLeft, new GameTypeMoveLeftCommand()),
-		ButtonCommandPair(ButtonType::DpadRight, new GameTypeMoveRightCommand()),
-		ButtonCommandPair(ButtonType::LeftThumbStickUp, new GameTypeMoveUpCommand()),
-		ButtonCommandPair(ButtonType::LeftThumbStickDown, new GameTypeMoveDownCommand()),
-		ButtonCommandPair(ButtonType::LeftThumbStickLeft, new GameTypeMoveLeftCommand()),
-		ButtonCommandPair(ButtonType::LeftThumbStickRight, new GameTypeMoveRightCommand()),
-
-		ButtonCommandPair(ButtonType::A, new GameTypeSelectCommand()),
-		ButtonCommandPair(ButtonType::Start, new GameTypeConfirmCommand()),
-		ButtonCommandPair(ButtonType::B, new GameTypeCancelCommand())
+		ButtonCommandPair(ButtonType::DpadUp, new MenuMoveUpCommand()),
+		ButtonCommandPair(ButtonType::DpadDown, new MenuMoveDownCommand()),
+		ButtonCommandPair(ButtonType::DpadLeft, new MenuMoveLeftCommand()),
+		ButtonCommandPair(ButtonType::DpadRight, new MenuMoveRightCommand()),
+ 
+		ButtonCommandPair(ButtonType::A, new MenuSelectButtonCommand()),
+		ButtonCommandPair(ButtonType::Start, new MenuConfirmCommand()),
+		ButtonCommandPair(ButtonType::B, new MenuCancelCommand())
 	};
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Held)];
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Released)];
@@ -206,7 +200,7 @@ void GameTypeScreen::createHostText(SDL_Renderer* t_renderer, glm::vec2 t_popUpP
 	};
 	for (int index = 0; index < S_NUMBER_OF_HOST_TEXT_LINES; index++)
 	{
-		m_hostText[index].addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::MEDIUM_FONT, true, linesText[index], UI_COLOUR.x, UI_COLOUR.y, UI_COLOUR.z));
+		m_hostText[index].addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::MEDIUM_FONT, true, linesText[index], Utilities::UI_COLOUR.x, Utilities::UI_COLOUR.y, Utilities::UI_COLOUR.z));
 		TextComponent* textComponent = static_cast<TextComponent*>(m_hostText[index].getComponent(ComponentType::Text));
 		m_hostText[index].addComponent(new TransformComponent(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f - textComponent->getWidth() / 2.0f, textComponent->getHeight() / 2.0f + t_popUpPos.y + (t_popUpHeight / S_NUMBER_OF_HOST_TEXT_LINES + 1) * index)));
 	}
@@ -222,7 +216,7 @@ void GameTypeScreen::createJoinText(SDL_Renderer* t_renderer, glm::vec2 t_popUpP
 	};
 	for (int index = 0; index < S_NUMBER_OF_JOIN_TEXT_LINES; index++)
 	{
-		m_joinText[index].addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::MEDIUM_FONT, true, linesText[index], UI_COLOUR.x, UI_COLOUR.y, UI_COLOUR.z));
+		m_joinText[index].addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::MEDIUM_FONT, true, linesText[index], Utilities::UI_COLOUR.x, Utilities::UI_COLOUR.y, Utilities::UI_COLOUR.z));
 		TextComponent* textComponent = static_cast<TextComponent*>(m_joinText[index].getComponent(ComponentType::Text));
 		m_joinText[index].addComponent(new TransformComponent(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f - textComponent->getWidth() / 2.0f, textComponent->getHeight() / 2.0f + t_popUpPos.y + (t_popUpHeight / 6.0f) * index)));
 	}
@@ -242,7 +236,7 @@ void GameTypeScreen::createIpInputter(SDL_Renderer* t_renderer, glm::vec2 t_popu
 		m_ipNumbers[index][static_cast<int>(DialEntityType::Arrows)].addComponent(new VisualComponent("Dial_Arrows.png", t_renderer));
 		m_ipNumbers[index][static_cast<int>(DialEntityType::Arrows)].addComponent(new TransformComponent(transformComp->getPos()));
 
-		m_ipNumbers[index][static_cast<int>(DialEntityType::Text)].addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::MEDIUM_FONT, true, std::to_string(ipNumberValues[index]), UI_COLOUR.x, UI_COLOUR.y, UI_COLOUR.z));
+		m_ipNumbers[index][static_cast<int>(DialEntityType::Text)].addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::MEDIUM_FONT, true, std::to_string(ipNumberValues[index]), Utilities::UI_COLOUR.x, Utilities::UI_COLOUR.y, Utilities::UI_COLOUR.z));
 		TextComponent* textComp = static_cast<TextComponent*>(m_ipNumbers[index][static_cast<int>(DialEntityType::Text)].getComponent(ComponentType::Text));
 		glm::vec2 textSize = glm::vec2(textComp->getWidth(), textComp->getHeight());
 		m_ipNumbers[index][static_cast<int>(DialEntityType::Text)].addComponent(new TransformComponent(transformComp->getPos() + glm::vec2(dialSize.x / 2.0f - textSize.x / 2.0f, dialSize.y / 2.0f - textSize.y / 2.0f)));
@@ -271,15 +265,18 @@ void GameTypeScreen::findHostsIp()
 	m_hostsIp = ipValue;
 }
 
-void GameTypeScreen::moveThroughUI(const GameTypeMoveButtons& t_event)
+void GameTypeScreen::moveThroughUI(const MenuMoveBetweenUI& t_event)
 {
-	if (!m_hostPopupActive && !m_joinPopupActive)
+	if (m_screenActive)
 	{
-		updateCurrentButton(t_event.direction);
-	}
-	else if (m_joinPopupActive && !m_hostPopupActive)
-	{
-		updateIpDial(t_event.direction);
+		if (!m_hostPopupActive && !m_joinPopupActive)
+		{
+			updateCurrentButton(t_event.direction);
+		}
+		else if (m_joinPopupActive && !m_hostPopupActive)
+		{
+			updateIpDial(t_event.direction);
+		}
 	}
 }
 
@@ -289,11 +286,97 @@ void GameTypeScreen::updateButtonColour(Entity& t_gameTypeButton, glm::vec3 t_co
 	visualComp->setColor(t_colour.x, t_colour.y, t_colour.z);
 }
 
-void GameTypeScreen::buttonPressed(const GameTypeSelectButton& t_event)
+void GameTypeScreen::buttonPressed(const MenuButtonPressed& t_event)
+{
+	if (m_screenActive)
+	{
+		if (ButtonType::A == t_event.buttonPressed)
+		{
+			gameTypeChosen();
+		}
+		else if (ButtonType::B == t_event.buttonPressed)
+		{
+			gameTypeCancel();
+		}
+		else if (ButtonType::Start == t_event.buttonPressed)
+		{
+			gameTypeConfirmed();
+		}
+	}
+}
+
+void GameTypeScreen::gameTypeConfirmed()
+{
+	bool changeScreen = false;
+	if (m_hostPopupActive)
+	{
+		// go to game
+		changeScreen = true;
+	}
+	else if (m_joinPopupActive)
+	{
+		std::string ipValue;
+		for (int index = 0; index < S_IP_NUMBER_LENGTH; index++)
+		{
+			ipValue += std::to_string(ipNumberValues[index]);
+			if ((index + 1) % 3 == 0 && (index + 1 != S_IP_NUMBER_LENGTH))
+			{
+				ipValue += ".";
+			}
+		}
+
+		std::string ipParts[4];
+		ipParts[0] = ipValue.substr(0, ipValue.find(".") + 1);
+		ipValue.erase(0, ipValue.find(".") + 1);
+		ipParts[1] = ipValue.substr(0, ipValue.find(".") + 1);
+		ipValue.erase(0, ipValue.find(".") + 1);
+		ipParts[2] = ipValue.substr(0, ipValue.find(".") + 1);
+		ipValue.erase(0, ipValue.find(".") + 1);
+		ipParts[3] = ipValue.substr(0, ipValue.find("."));
+
+
+		for (int index = 0; index < 4; index++)
+		{
+			if (ipParts[index][0] == '0')
+			{
+				ipParts[index].erase(0, 1);
+				if (ipParts[index][0] == '0')
+				{
+					ipParts[index].erase(0, 1);
+				}
+			}
+		}
+
+		ipValue = ipParts[0] + ipParts[1] + ipParts[2] + ipParts[3];
+
+		std::cout << ipValue << std::endl;
+		//join server and go to game
+		changeScreen = true;
+	}
+	if (changeScreen)
+	{
+		m_screenActive = false;
+		m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::JoinGame });
+	}
+}
+
+void GameTypeScreen::gameTypeCancel()
+{
+	if (m_joinPopupActive) m_joinPopupActive = false;
+	else if (m_hostPopupActive) m_hostPopupActive = false;
+	else
+	{
+		m_screenActive = false;
+		m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::MainMenu });
+	}
+}
+
+void GameTypeScreen::gameTypeChosen()
 {
 	switch (m_currentButton)
 	{
 	case MenuButtonsType::Offline:
+		m_screenActive = false;
 		m_eventManager.emitEvent(ChangeScreen{ MenuStates::Game });
 		break;
 	case MenuButtonsType::OnlineHost:
@@ -310,16 +393,7 @@ void GameTypeScreen::buttonPressed(const GameTypeSelectButton& t_event)
 		break;
 	}
 }
-
-void GameTypeScreen::cancel(const GameTypeCancel& t_event)
-{
-	if (m_joinPopupActive) m_joinPopupActive = false;
-	else if (m_hostPopupActive) m_hostPopupActive = false;
-	else
-	{
-		m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::MainMenu });
-	}
-}
+ 
 
 void GameTypeScreen::updateIpDial(MoveDirection t_inputDirection)
 {
@@ -383,51 +457,4 @@ void GameTypeScreen::updateCurrentButton(MoveDirection t_inputDirection)
 	}
 	updateButtonColour(m_gameTypeButtons[currentButtonIndex], Utilities::MENU_BUTTON_HIGHLIGHTED_COLOUR);
 	m_currentButton = static_cast<MenuButtonsType>(currentButtonIndex);
-}
-
-void GameTypeScreen::gameTypeConfirmed(const GameTypeConfirm& t_event)
-{
-	if (m_hostPopupActive)
-	{
-		// go to game
-	}
-	else if (m_joinPopupActive)
-	{
-		std::string ipValue;
-		for (int index = 0; index < S_IP_NUMBER_LENGTH; index++)
-		{
-			ipValue += std::to_string(ipNumberValues[index]);
-			if ((index + 1) % 3 == 0 && (index + 1 != S_IP_NUMBER_LENGTH))
-			{
-				ipValue += ".";
-			}
-		}
-
-		std::string ipParts[4];
-		ipParts[0] = ipValue.substr(0, ipValue.find(".") + 1);
-		ipValue.erase(0, ipValue.find(".") + 1);
-		ipParts[1] = ipValue.substr(0, ipValue.find(".") + 1);
-		ipValue.erase(0, ipValue.find(".") + 1);
-		ipParts[2] = ipValue.substr(0, ipValue.find(".") + 1);
-		ipValue.erase(0, ipValue.find(".") + 1);
-		ipParts[3] = ipValue.substr(0, ipValue.find("."));
-
-
-		for (int index = 0; index < 4; index++)
-		{
-			if (ipParts[index][0] == '0')
-			{
-				ipParts[index].erase(0, 1);
-				if (ipParts[index][0] == '0')
-				{
-					ipParts[index].erase(0, 1);
-				}
-			}
-		}
-
-		ipValue = ipParts[0] + ipParts[1] + ipParts[2] + ipParts[3];
-
-		std::cout << ipValue << std::endl;
-		//join server and go to game
-	}
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "Command.h"
-class GameTypeConfirmCommand :
+class MenuMoveLeftCommand :
 	public Command
 {
 public:
