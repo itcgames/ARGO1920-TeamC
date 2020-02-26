@@ -1,10 +1,16 @@
 #pragma once
-#include "EventManager.h"
+ #include "EventManager.h"
 #include "InputSystem.h"
 #include "RenderSystem.h"
 #include "Controller.h"
 #include "Utilities.h"
 #include "CommandSystem.h" 
+#include <iostream>
+#include <fstream>
+
+
+
+
 
 enum class MenuButtonsType
 {
@@ -16,7 +22,7 @@ enum class MenuButtonsType
 enum class MenuTitles
 {
 	Main,
-	Offline, 
+	Offline,
 	Online
 };
 
@@ -36,7 +42,7 @@ public:
 	void reset();
 	void render(SDL_Renderer* t_renderer);
 	void initialise(SDL_Renderer* t_renderer, Controller& t_controller);
- private:
+private:
 
 	void setControllerButtonMaps();
 	void updateButtonColour(Entity& t_gameTypeButton, glm::vec3 t_colour);
@@ -46,7 +52,7 @@ public:
 	void gameTypeConfirmed(const GameTypeConfirm& t_event);
 	void cancel(const GameTypeCancel& t_event);
 
-	static const int S_NUMBER_OF_GAME_TYPE_BUTTONS = 3; 
+	static const int S_NUMBER_OF_GAME_TYPE_BUTTONS = 3;
 	static const int S_NUMBER_OF_GAME_TYPE_TITLES = 3;
 
 	Entity m_gameTypeButtons[S_NUMBER_OF_GAME_TYPE_BUTTONS];
@@ -86,8 +92,8 @@ public:
 
 	void updateIpDial(MoveDirection t_inputDirection);
 	void updateCurrentButton(MoveDirection t_inputDirection);
-	
- 	
+
+
 	void createBackgroundEntity(SDL_Renderer* t_renderer);
 	void createMenuButtonsAndTitles(SDL_Renderer* t_renderer);
 	void createPopupEntity(SDL_Renderer* t_renderer);
@@ -96,7 +102,9 @@ public:
 	void createJoinText(SDL_Renderer* t_renderer, glm::vec2 t_popUpPos, float t_popUpHeight);
 	void createIpInputter(SDL_Renderer* t_renderer, glm::vec2 t_popupPos);
 
-	int m_hostsIp;
+	std::string m_hostsIp;
+
+	void findHostsIp();
 };
 
 

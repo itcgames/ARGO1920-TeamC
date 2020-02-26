@@ -74,7 +74,7 @@ void GameTypeScreen::render(SDL_Renderer* t_renderer)
 
 void GameTypeScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 {
-
+	findHostsIp();
 	setControllerButtonMaps();
 
 	createBackgroundEntity(t_renderer);
@@ -199,9 +199,9 @@ void GameTypeScreen::createHostText(SDL_Renderer* t_renderer, glm::vec2 t_popUpP
 {
 	std::string linesText[S_NUMBER_OF_HOST_TEXT_LINES] =
 	{
-		"Your Ip Is: ",
-		std::to_string(m_hostsIp),
-		"Get Other Players To Input Your Ip",
+		"Your IP: ",
+		m_hostsIp,
+		"Get Other Players To Input Your IP",
 		"Press Start To Continue"
 	};
 	for (int index = 0; index < S_NUMBER_OF_HOST_TEXT_LINES; index++)
@@ -217,8 +217,8 @@ void GameTypeScreen::createJoinText(SDL_Renderer* t_renderer, glm::vec2 t_popUpP
 
 	std::string linesText[S_NUMBER_OF_JOIN_TEXT_LINES] =
 	{
-		"Enter The Host's Ip",
-		"Press Start To Confirm Ip"
+		"Enter Host's IP",
+		"Press Start To Join"
 	};
 	for (int index = 0; index < S_NUMBER_OF_JOIN_TEXT_LINES; index++)
 	{
@@ -249,6 +249,28 @@ void GameTypeScreen::createIpInputter(SDL_Renderer* t_renderer, glm::vec2 t_popu
 	}
 }
 
+void GameTypeScreen::findHostsIp()
+{
+	system("ipconfig > ipinfo.txt");
+	std::ifstream ipFile;
+	ipFile.open("ipinfo.txt");
+	std::string lineContents;
+	std::string ipValue;
+	if (ipFile.is_open())
+	{
+		while (std::getline(ipFile, lineContents))
+		{
+			if (lineContents.find("IPv4") != std::string::npos)
+			{
+				int here = 0;
+				ipValue = lineContents.substr(lineContents.find(": ") + 2);
+				break;
+			}
+		}
+	}
+	m_hostsIp = ipValue;
+}
+
 void GameTypeScreen::moveThroughUI(const GameTypeMoveButtons& t_event)
 {
 	if (!m_hostPopupActive && !m_joinPopupActive)
@@ -275,9 +297,11 @@ void GameTypeScreen::buttonPressed(const GameTypeSelectButton& t_event)
 		m_eventManager.emitEvent(ChangeScreen{ MenuStates::Game });
 		break;
 	case MenuButtonsType::OnlineHost:
+	{
 		// load server and popup ip address
 		m_hostPopupActive = true;
 		break;
+	}
 	case MenuButtonsType::OnlineJoin:
 		// bring up thing to input ip address
 		m_joinPopupActive = true;
