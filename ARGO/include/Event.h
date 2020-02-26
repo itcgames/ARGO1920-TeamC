@@ -12,12 +12,19 @@ struct CreateBulletEvent
 	Controller& controller;
 };
 
+struct CreateGlowStickEvent
+{
+	Entity& entity;
+	glm::vec2 direction;
+	float forceScale;
+	Controller& controller;
+};
+
 struct PhysicsMove
 {
 	glm::vec2 velocity;
 	Entity& entity;
 };
-
 
 struct PickupGrabbed
 {

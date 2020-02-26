@@ -13,6 +13,7 @@
 #include "MoveLeftCommand.h"
 #include "MoveRightCommand.h"
 #include "MoveUpCommand.h"
+#include "ThrowGlowstickCommand.h"
  
 class MacroCommand
 {

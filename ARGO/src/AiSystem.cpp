@@ -114,7 +114,7 @@ void AiSystem::seek(TransformComponent* t_posComp, AiComponent* t_aiComponent, F
 {
 	glm::vec2 direction = glm::normalize(t_destination - t_posComp->getPos());
 	t_forceComponent->addForce(direction);
-	t_posComp->setRotation(atan2(direction.y, direction.x) * Utilities::RADIANS_TO_DEGREES);
+	t_posComp->setRotation(glm::degrees(atan2(direction.y, direction.x)));
 }
 
 void AiSystem::playerAI(Entity& t_entity)
