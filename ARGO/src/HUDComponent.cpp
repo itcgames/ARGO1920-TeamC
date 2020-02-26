@@ -82,3 +82,18 @@ float HUDComponent::getAmmoTextSize()
 {
 	return m_ammoTextSize;
 }
+
+glm::vec2 HUDComponent::getAvatarOffset()
+{
+	return m_avatarOffset;
+}
+
+AvatarState HUDComponent::getAvatarState()
+{
+	return m_avatarIconState;
+}
+
+void HUDComponent::setAvatarState(AvatarState t_state)
+{
+	m_avatarIconState = t_state;
+}

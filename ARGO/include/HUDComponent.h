@@ -1,5 +1,11 @@
 #pragma once
 #include "Component.h"
+enum class AvatarState
+{
+	Player,
+	Skull
+};
+
 class HUDComponent :
 	public Component
 {
@@ -26,6 +32,10 @@ public:
 	glm::vec2 getAmmoTextOffset();
 	float getAmmoTextSize();
 
+	glm::vec2 getAvatarOffset();
+	AvatarState getAvatarState();
+	void setAvatarState(AvatarState t_state);
+
 
 private:
 	int m_playerIndex{ 0 };
@@ -44,5 +54,9 @@ private:
 
 	glm::vec2 m_ammoTextOffset{ 150,42 };
 	float m_ammoTextSize{ 20 };
+
+	glm::vec2 m_avatarOffset{ 2,5 };
+	AvatarState m_avatarIconState = AvatarState::Player;
+	
 };
 

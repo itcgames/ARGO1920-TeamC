@@ -35,7 +35,7 @@ void HUDManager::update()
 		transformComp->setPos(hudComp->getHUDPosition().x + hudComp->getAmmoTextOffset().x, hudComp->getHUDPosition().y + hudComp->getAmmoTextOffset().y);
 		TextComponent* textComp = static_cast<TextComponent*>(i.HUDAmmoText.getComponent(ComponentType::Text));
 		//Get the Ammo Componentn Here and do the changes needed to set the correct size of the bar.
-		//This is a stand in
+		//This is a stand in until Emmett is done that.
 		textComp->setText(std::string("100 / 100"));
 
 
@@ -55,21 +55,38 @@ void HUDManager::update()
 		else
 		{
 			textComp->setText(std::to_string(0) + " / " + std::to_string(hpComp->getMaxHealth()));
+			//If the player is dead and hasn't swapped states.
+			if (hudComp->getAvatarState() == AvatarState::Player)
+			{
+				//Removing and readding Component because the Load from File function from the Visual Component isn't Working.
+				i.HUDAvatarIcon.removeCompType(ComponentType::Visual);
+				i.HUDAvatarIcon.addComponent(new VisualComponent("Skull.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+				hudComp->setAvatarState(AvatarState::Skull);
+			}
 		}
 
 		//Health Bar
 		transformComp = static_cast<TransformComponent*>(i.HUDHealthBar.getComponent(ComponentType::Transform));
 		transformComp->setPos(hudComp->getHUDPosition().x + hudComp->getHealthOffset().x, hudComp->getHUDPosition().y + hudComp->getHealthOffset().y);
+		//Convert the Max Health from a Const Int to a float.
 		float tempMaxHealth = hpComp->getMaxHealth();
-		float healthPercentage = (hpComp->getHealth()/ tempMaxHealth); //A percentage number between 1 and 0
-		float healthBarSizeX = hudComp->getMaxHealthSize().x * healthPercentage;//Scale it to the Value
+		//A percentage number between 1 and 0
+		float healthPercentage = (hpComp->getHealth()/ tempMaxHealth); 
+		//Scale it to the Value
+		float healthBarSizeX = hudComp->getMaxHealthSize().x * healthPercentage;
+		//Sets the Bar to the desired Size
 		hudComp->setCurrentHealthSize(healthBarSizeX);
 		PrimitiveComponent* primComp = static_cast<PrimitiveComponent*>(i.HUDHealthBar.getComponent(ComponentType::Primitive));
+		//Applies the size change.
 		primComp->setSize(hudComp->getCurrentHealthSize());
 
 		//Hud Texture
 		transformComp = static_cast<TransformComponent*>(i.HUDVisualTexture.getComponent(ComponentType::Transform));
 		transformComp->setPos(hudComp->getHUDPosition().x, hudComp->getHUDPosition().y);
+
+		//Avatar Texture
+		transformComp = static_cast<TransformComponent*>(i.HUDAvatarIcon.getComponent(ComponentType::Transform));
+		transformComp->setPos(hudComp->getHUDPosition().x + hudComp->getAvatarOffset().x, hudComp->getHUDPosition().y + hudComp->getAvatarOffset().y);
 	}
 }
 /// <summary>
@@ -80,6 +97,7 @@ void HUDManager::update()
 void HUDManager::render(SDL_Renderer* t_renderer, RenderSystem* t_system)
 {
 	for (auto& i : m_playerHUD) {
+		t_system->render(t_renderer, i.HUDAvatarIcon);
 		t_system->render(t_renderer, i.HUDHealthBar);
 		t_system->render(t_renderer, i.HUDAmmoBar);
 		t_system->render(t_renderer, i.HUDVisualTexture);
@@ -124,4 +142,26 @@ void HUDManager::setUpHUD(HUDBlock& t_hudBlock, int t_playerIndex)
 	t_hudBlock.HUDAmmoText.addComponent(new TextComponent(std::string("ariblk.ttf"), m_renderer, true, std::string("HI")));
 	textComp = static_cast<TextComponent*>(t_hudBlock.HUDAmmoText.getComponent(ComponentType::Text));
 	textComp->setSize(hudComp->getAmmoTextSize());
+
+	t_hudBlock.HUDAvatarIcon.addComponent(new TransformComponent(true));
+	switch (t_playerIndex)
+	{
+	case 0:
+		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("RedPlayerAvatar.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+		break;
+	case 1:
+		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("BluePlayerAvatar.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+		break;
+	case 2:
+		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("GreenPlayerAvatar.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+		break;
+	case 3:
+		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("YellowPlayerAvatar.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+		break;
+	}
+}
+
+void HUDManager::swapToSkullAvatar(VisualComponent* t_visComp)
+{
+
 }

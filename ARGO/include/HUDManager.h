@@ -11,14 +11,17 @@
 #include "HealthComponent.h"
 #include "TextComponent.h"
 
-struct HUDBlock {
+struct HUDBlock 
+{
 	Entity HUDVisualTexture;
 	Entity HUDHealthBar;
 	Entity HUDAmmoBar;
 	Entity HUDHealthText;
-	Entity HUDAmmoText;
+	Entity HUDAmmoText;	
+	Entity HUDAvatarIcon;
 	Entity HUDLayoutData;
 };
+
 class HUDManager
 {
 public:
@@ -27,6 +30,7 @@ public:
 	void update();
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
 	void setUpHUD(HUDBlock& t_hudBlock, int t_playerIndex);
+	void swapToSkullAvatar(VisualComponent* t_visComp);
 private:
 	HUDBlock m_playerHUD[Utilities::S_MAX_PLAYERS];
 	Entity(&m_players)[Utilities::S_MAX_PLAYERS];
