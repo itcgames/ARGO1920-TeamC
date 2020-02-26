@@ -28,6 +28,7 @@
     <ClCompile Include="src\GoToMainMenuCommand.cpp" />
     <ClCompile Include="src\HUDComponent.cpp" />
     <ClCompile Include="src\HUDManager.cpp" />
+    <ClCompile Include="src\lightFieldComponent.cpp" />
     <ClCompile Include="src\MenuMoveDownCommand.cpp" />
     <ClCompile Include="src\MenuMoveUpCommand.cpp" />
     <ClCompile Include="src\MenuSelectButtonCommand.cpp" />
@@ -75,6 +76,7 @@
     <ClCompile Include="src\SplashScreen.cpp" />
     <ClCompile Include="src\TagComponent.cpp" />
     <ClCompile Include="src\TextComponent.cpp" />
+    <ClCompile Include="src\ThrowGlowstickCommand.cpp" />
     <ClCompile Include="src\TileComponent.cpp" />
     <ClCompile Include="src\TimerComponent.cpp" />
     <ClCompile Include="src\VisualComponent.cpp" />
@@ -90,6 +92,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Controller.cpp" />
+    <ClCompile Include="src\WeaponSystem.cpp" />
+    <ClCompile Include="src\WeaponComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AchievementScreen.h" />
@@ -113,6 +117,7 @@
     <ClInclude Include="include\HealthComponent.h" />
     <ClInclude Include="include\HUDComponent.h" />
     <ClInclude Include="include\HUDManager.h" />
+    <ClInclude Include="include\lightFieldComponent.h" />
     <ClInclude Include="include\MenuMoveDownCommand.h" />
     <ClInclude Include="include\MenuMoveUpCommand.h" />
     <ClInclude Include="include\MenuSelectButtonCommand.h" />
@@ -148,6 +153,9 @@
     <ClInclude Include="include\Controller.h" />
     <ClInclude Include="include\SplashScreen.h" />
     <ClInclude Include="include\TextComponent.h" />
+    <ClInclude Include="include\ThrowGlowstickCommand.h" />
+    <ClInclude Include="include\WeaponSystem.h" />
+    <ClInclude Include="include\WeaponComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AiComponent.h" />

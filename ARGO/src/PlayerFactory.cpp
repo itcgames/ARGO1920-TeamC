@@ -36,6 +36,7 @@ void PlayerFactory::createPlayer(Entity& t_entity, bool t_isPlayer, Controller& 
 	t_entity.addComponent(new TagComponent(Tag::Player));
 	t_entity.addComponent(new VisualComponent("player.png", m_renderer, static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255))));
 	t_entity.addComponent(new FireRateComponent(Utilities::PLAYER_FIRE_DELAY));
+	t_entity.addComponent(new WeaponComponent());
 
 	if (t_isPlayer)
 	{

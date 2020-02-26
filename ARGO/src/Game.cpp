@@ -43,6 +43,7 @@ Game::Game() :
 		//Check if the renderer was created correctly
 		if (!m_renderer) throw "Error Loading Renderer";
 
+		SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
 		// Sets clear colour of renderer to black and the color of any primitives
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 
@@ -301,10 +302,19 @@ void Game::createButtonMaps()
 			ButtonCommandPair(ButtonType::DpadLeft, new MoveLeftCommand()),
 			ButtonCommandPair(ButtonType::DpadRight, new MoveRightCommand()),
 			ButtonCommandPair(ButtonType::Back, new CloseWindowCommand()),
-			ButtonCommandPair(ButtonType::RightTrigger, new FireBulletCommand())
+			ButtonCommandPair(ButtonType::RightTrigger, new FireBulletCommand()),
+			ButtonCommandPair(ButtonType::LB, new ThrowGlowstickCommand())
 		};
 		// Set Held To Same as Pressed Commands For Time Being
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][index] = m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][index];
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][index] =
+		{
+			ButtonCommandPair(ButtonType::DpadUp, new MoveUpCommand()),
+			ButtonCommandPair(ButtonType::DpadDown, new MoveDownCommand()),
+			ButtonCommandPair(ButtonType::DpadLeft, new MoveLeftCommand()),
+			ButtonCommandPair(ButtonType::DpadRight, new MoveRightCommand()),
+			ButtonCommandPair(ButtonType::Back, new CloseWindowCommand()),
+			ButtonCommandPair(ButtonType::RightTrigger, new FireBulletCommand())
+		};
 		// Set Release Commands to nothing
 		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][index] = ButtonCommandMap();
 	}

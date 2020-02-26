@@ -20,9 +20,9 @@ void RenderSystem::render(SDL_Renderer* t_renderer, Entity& t_entity)
 	{
 		if (inView(transformComp) || transformComp->getAlwaysOnscreen())
 		{
-			
+
 			TextComponent* textComp = static_cast<TextComponent*>(t_entity.getComponent(ComponentType::Text));
-			
+
 			if (visComp != nullptr)
 			{
 				glm::vec2 renderPosition = transformComp->getPos();
@@ -39,15 +39,15 @@ void RenderSystem::render(SDL_Renderer* t_renderer, Entity& t_entity)
 			{
 				renderText(t_renderer, transformComp, textComp);
 			}
-			
-			if (!textComp && !visComp && !emitComp  && primComp)
+
+			if (!textComp && !visComp && !emitComp && primComp)
 			{
 				ColourComponent* colComp = static_cast<ColourComponent*>(t_entity.getComponent(ComponentType::Colour));
 				//we dont need to check if colComp is null as its handled in the function
 				renderPrimitives(t_renderer, transformComp, colComp, primComp);
 			}
 
-			
+
 			if (emitComp && primComp)
 			{
 				ColourComponent* colComp = static_cast<ColourComponent*>(t_entity.getComponent(ComponentType::Colour));
@@ -59,14 +59,41 @@ void RenderSystem::render(SDL_Renderer* t_renderer, Entity& t_entity)
 		}
 	}
 }
+void RenderSystem::renderLight(SDL_Renderer* t_renderer, Entity& t_entity)
+{
+	TransformComponent* transformComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
 
+	if (transformComp != nullptr)
+	{
+		if (inView(transformComp))
+		{
+			Uint8 prevRGBA[4];
+			SDL_GetRenderDrawColor(t_renderer, &prevRGBA[0], &prevRGBA[1], &prevRGBA[2], &prevRGBA[3]);
+
+			SDL_Rect rect;
+			rect.x = transformComp->getPos().x;
+			rect.y = transformComp->getPos().y;
+			rect.w = Utilities::TILE_SIZE;
+			rect.h = Utilities::TILE_SIZE;
+			rect.x = rect.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
+			rect.y = rect.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
+			Uint8 alpha = static_cast<lightFieldComponent*>(t_entity.getComponent(ComponentType::LightField))->getWeight();
+			if (alpha > 245)
+			{
+				alpha = 245;
+			}
+
+			SDL_SetRenderDrawColor(t_renderer, 20, 0, 0, alpha);
+			SDL_RenderFillRect(t_renderer, &rect);
+			SDL_SetRenderDrawColor(t_renderer, prevRGBA[0], prevRGBA[1], prevRGBA[2], prevRGBA[3]);
+		}
+	}
+}
 void RenderSystem::renderPrimitives(SDL_Renderer* t_renderer, TransformComponent* t_posComp, ColourComponent* t_colComp, PrimitiveComponent* t_primitive)
 {
 	Uint8 prevRGBA[4];
 	SDL_GetRenderDrawColor(t_renderer, &prevRGBA[0], &prevRGBA[1], &prevRGBA[2], &prevRGBA[3]);
 
-	//hard-coded primitive size
-	//fite me
 	SDL_Rect rect;
 	rect.x = t_posComp->getPos().x;
 	rect.y = t_posComp->getPos().y;
@@ -90,7 +117,6 @@ void RenderSystem::renderPrimitives(SDL_Renderer* t_renderer, TransformComponent
 	{
 		colour.red = 255;
 	}
-
 	SDL_SetRenderDrawColor(t_renderer, colour.red, colour.green, colour.blue, colour.alpha);
 	SDL_RenderFillRect(t_renderer, &rect);
 
