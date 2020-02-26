@@ -23,7 +23,7 @@ public:
 	void processEvents(SDL_Event* t_event);
 	void render(SDL_Renderer* t_renderer);
 	void reset(SDL_Renderer* t_renderer, Controller t_controller[Utilities::S_MAX_PLAYERS]);
-	void initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS]);
+	void initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS], bool t_isOnline = false);
  private:
 
 	void createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_renderer);
@@ -64,5 +64,8 @@ public:
 	LevelManager m_levelManager;
 
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
+
+	// bool to see if game is being played online or not
+	bool m_isOnline;
 };
 

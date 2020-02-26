@@ -305,8 +305,9 @@ void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utiliti
 	setUpLevel();
 }
 
-void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS])
+void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS], bool t_isOnline)
 {
+	m_isOnline = t_isOnline;
 	setControllerButtonMap(t_controllerButtonMaps);
 	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
 	{

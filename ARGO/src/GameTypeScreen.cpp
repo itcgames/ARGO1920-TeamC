@@ -74,10 +74,11 @@ void GameTypeScreen::render(SDL_Renderer* t_renderer)
 
 void GameTypeScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 {
+
 	setControllerButtonMaps();
 
 	createBackgroundEntity(t_renderer);
-	createMenuButtonsAndTitles(t_renderer); 
+	createMenuButtonsAndTitles(t_renderer);
 	createInputEntity(t_controller);
 	createPopupEntity(t_renderer);
 	glm::vec2 popUpPos = static_cast<TransformComponent*>(m_popup.getComponent(ComponentType::Transform))->getPos();
@@ -116,7 +117,7 @@ void GameTypeScreen::setControllerButtonMaps()
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Held)];
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Released)];
 }
- 
+
 
 void GameTypeScreen::createBackgroundEntity(SDL_Renderer* t_renderer)
 {
@@ -235,7 +236,7 @@ void GameTypeScreen::createIpInputter(SDL_Renderer* t_renderer, glm::vec2 t_popu
 		VisualComponent* visualComp = static_cast<VisualComponent*>(m_ipNumbers[index][static_cast<int>(DialEntityType::Dial)].getComponent(ComponentType::Visual));
 		glm::vec2 dialSize = glm::vec2(visualComp->getWidth(), visualComp->getHeight());
 
-		m_ipNumbers[index][static_cast<int>(DialEntityType::Dial)].addComponent(new TransformComponent(glm::vec2(t_popupPos.x + dialSize.x  + Utilities::SCREEN_WIDTH / 14.0f * (index), Utilities::SCREEN_HEIGHT / 2.0f)));
+		m_ipNumbers[index][static_cast<int>(DialEntityType::Dial)].addComponent(new TransformComponent(glm::vec2(t_popupPos.x + dialSize.x + Utilities::SCREEN_WIDTH / 14.0f * (index), Utilities::SCREEN_HEIGHT / 2.0f)));
 		TransformComponent* transformComp = static_cast<TransformComponent*>(m_ipNumbers[index][static_cast<int>(DialEntityType::Dial)].getComponent(ComponentType::Transform));
 
 		m_ipNumbers[index][static_cast<int>(DialEntityType::Arrows)].addComponent(new VisualComponent("Dial_Arrows.png", t_renderer));
@@ -372,7 +373,36 @@ void GameTypeScreen::gameTypeConfirmed(const GameTypeConfirm& t_event)
 		for (int index = 0; index < S_IP_NUMBER_LENGTH; index++)
 		{
 			ipValue += std::to_string(ipNumberValues[index]);
+			if ((index + 1) % 3 == 0 && (index + 1 != S_IP_NUMBER_LENGTH))
+			{
+				ipValue += ".";
+			}
 		}
+
+		std::string ipParts[4];
+		ipParts[0] = ipValue.substr(0, ipValue.find(".") + 1);
+		ipValue.erase(0, ipValue.find(".") + 1);
+		ipParts[1] = ipValue.substr(0, ipValue.find(".") + 1);
+		ipValue.erase(0, ipValue.find(".") + 1);
+		ipParts[2] = ipValue.substr(0, ipValue.find(".") + 1);
+		ipValue.erase(0, ipValue.find(".") + 1);
+		ipParts[3] = ipValue.substr(0, ipValue.find("."));
+
+
+		for (int index = 0; index < 4; index++)
+		{
+			if (ipParts[index][0] == '0')
+			{
+				ipParts[index].erase(0, 1);
+				if (ipParts[index][0] == '0')
+				{
+					ipParts[index].erase(0, 1);
+				}
+			}
+		}
+
+		ipValue = ipParts[0] + ipParts[1] + ipParts[2] + ipParts[3];
+
 		std::cout << ipValue << std::endl;
 		//join server and go to game
 	}
