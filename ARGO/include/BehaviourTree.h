@@ -2,7 +2,7 @@
 #include <Entity.h>
 
 ////----------------------------This is the data we will need for our behaviour to function.----------------------------
-const int CAN_SEE_ENEMY_DISTANCE = Utilities::TILE_SIZE * 8;
+const int CAN_SEE_ENEMY_DISTANCE = Utilities::TILE_SIZE * 6;
 const int DISTANCE_TO_CARE_ABOUT_GOAL_SCALER = Utilities::TILE_SIZE * 2;
 const int DEFAULT_MOVE_TOWARD_GOAL_WEIGHT = 5;
 const float RETREAT_WEIGHT_SCALER = 10.0f;

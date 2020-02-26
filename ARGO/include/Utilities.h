@@ -70,6 +70,7 @@ namespace Utilities
 
 	//Flow field values
 	const int MAX_FLOW_FIELD_WEIGHT = 20;
+	static const int GLOWSTICK_POOL_SIZE = 20;
 }
 
 enum class MenuStates

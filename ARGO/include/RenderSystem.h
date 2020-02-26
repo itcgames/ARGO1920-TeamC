@@ -14,6 +14,7 @@
 #include "CompEnums.h"
 #include "ParticleEmitterComponent.h"
 #include "PrimitiveComponent.h"
+#include "lightFieldComponent.h"
 #include "Utilities.h"
 
 class RenderSystem : public BaseSystem
@@ -22,6 +23,7 @@ public:
 	~RenderSystem();
 	void update(Entity& t_entity);
 	void render(SDL_Renderer* t_renderer, Entity& t_entity);
+	void renderLight(SDL_Renderer* t_renderer, Entity& t_entity);
 	void setFocus(glm::vec2 t_point);
 	glm::vec2& getFocus();
 	bool inView(TransformComponent* t_posComp);

@@ -9,7 +9,8 @@ enum class Tag
 	EnemyBullet,
 	Tile,
 	PickUp,
-	Goal
+	Goal,
+	GlowStick
 };
 
 class TagComponent : public Component

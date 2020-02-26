@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "LevelManager.h"
 
-LevelManager::LevelManager(SDL_Renderer* t_renderer, Entity(&t_players)[Utilities::S_MAX_PLAYERS], RenderSystem& t_renderSystem):
+LevelManager::LevelManager(SDL_Renderer* t_renderer, Entity(&t_players)[Utilities::S_MAX_PLAYERS], RenderSystem& t_renderSystem, ProjectileManager& t_projectileManager):
 	m_renderer(t_renderer),
 	m_players(t_players),
-	m_renderSystem(t_renderSystem)
+	m_renderSystem(t_renderSystem),
+	m_projectilemanager(t_projectileManager)
 {
 }
 
@@ -48,6 +49,7 @@ void LevelManager::update(BaseSystem* t_system)
 	}
 	resetFields();
 	generateFlowField();
+	generateLightField();
 }
 
 void LevelManager::checkWallDamage()
@@ -66,6 +68,14 @@ void LevelManager::render(SDL_Renderer* t_renderer, RenderSystem* t_system)
 	for (auto& entity : m_levelTiles)
 	{
 		t_system->render(t_renderer, entity);
+	}
+}
+
+void LevelManager::renderLight(SDL_Renderer* t_renderer, RenderSystem* t_system)
+{
+	for (auto& entity : m_levelTiles)
+	{
+		t_system->renderLight(t_renderer, entity);
 	}
 }
 
@@ -179,6 +189,24 @@ void LevelManager::generateLightField()
 		}
 	}
 
+	for (auto& glowStick : m_projectilemanager.getGlowsticks())
+	{
+		HealthComponent* healthComp = static_cast<HealthComponent*>(glowStick.getComponent(ComponentType::Health));
+		TransformComponent* transformComp = static_cast<TransformComponent*>(glowStick.getComponent(ComponentType::Transform));
+		if (healthComp && transformComp && healthComp->isAlive())
+		{
+			Entity* tile = findAtPosition(transformComp->getPos());
+			if (tile)
+			{
+				FlowFieldComponent* flowFieldComp = static_cast<FlowFieldComponent*>(tile->getComponent(ComponentType::FlowField));
+				if (flowFieldComp)
+				{
+					setTileLight(tile, queue, 0);
+				}
+			}
+		}
+	}
+
 	while (!queue.empty())
 	{
 		Entity* current = queue.back();
@@ -191,9 +219,8 @@ void LevelManager::setTileLight(Entity* t_entity, std::vector<Entity*>& t_queue,
 {
 	lightFieldComponent* lightField = static_cast<lightFieldComponent*>(t_entity->getComponent(ComponentType::LightField));
 	TransformComponent* transform = static_cast<TransformComponent*>(t_entity->getComponent(ComponentType::Transform));
-	if (lightField && lightField->getWeight() < t_newWeight && transform && m_renderSystem.inView(transform))
+	if (lightField && lightField->getWeight() > t_newWeight && transform && m_renderSystem.inView(transform))
 	{
-		//TODO: work on logic for setting weights and adding to queue. (USE A DIAGRAM FUTURE NEMMY)
 		lightField->setWeight(t_newWeight);
 		if (!static_cast<ColliderAABBComponent*>(t_entity->getComponent(ComponentType::ColliderAABB)) && t_newWeight < MAX_LIGHT_WEIGHT)
 		{
@@ -308,8 +335,8 @@ Entity* LevelManager::findAtPosition(glm::vec2 t_position)
 	int x = t_position.x / Utilities::TILE_SIZE;
 	int y = t_position.y / Utilities::TILE_SIZE;
 
-	if (x > 0 && x < Utilities::LEVEL_TILE_WIDTH &&
-		y > 0 && y < Utilities::LEVEL_TILE_HEIGHT)
+	if (x >= 0 && x < Utilities::LEVEL_TILE_WIDTH &&
+		y >= 0 && y < Utilities::LEVEL_TILE_HEIGHT)
 	{
 		return &m_levelTiles[(y * Utilities::LEVEL_TILE_WIDTH) + x];
 	}

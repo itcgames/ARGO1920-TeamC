@@ -19,5 +19,5 @@ void lightFieldComponent::setWeight(int t_weight)
 
 void lightFieldComponent::reset()
 {
-	m_weight = 0;
+	m_weight = 255;
 }
