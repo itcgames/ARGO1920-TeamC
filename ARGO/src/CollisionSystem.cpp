@@ -366,12 +366,11 @@ void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 		TransformComponent* wallPosition = static_cast<TransformComponent*>(t_wall->getComponent(ComponentType::Transform));
 
 		glm::vec2 previousPos = playerPosition->getPos() - force->getForce();
-		glm::vec2 distanceBetween = playerPosition->getPos() - glm::vec2(playerRadius, playerRadius) - wallPosition->getPos();
 		glm::vec2 previousDistanceBetween = previousPos - glm::vec2(playerRadius, playerRadius) - wallPosition->getPos();
 
-		if (distanceBetween.x < playerRadius * 2 + wallWidth && (std::abs(previousDistanceBetween.x) > std::abs(previousDistanceBetween.y)))
+		if (previousDistanceBetween.x < playerRadius * 2 + wallWidth && (std::abs(previousDistanceBetween.x) > std::abs(previousDistanceBetween.y)))
 		{
-			if (distanceBetween.x < 0)
+			if (previousDistanceBetween.x < 0)
 			{
 				playerPosition->setPos(-(playerRadius)+wallPosition->getPos().x, playerPosition->getPos().y);
 			}
@@ -380,9 +379,9 @@ void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 				playerPosition->setPos((playerRadius + wallWidth) + wallPosition->getPos().x, playerPosition->getPos().y);
 			}
 		}
-		if (distanceBetween.y < playerRadius * 2 + wallWidth && (std::abs(previousDistanceBetween.x) < std::abs(previousDistanceBetween.y)))
+		if (previousDistanceBetween.y < playerRadius * 2 + wallWidth && (std::abs(previousDistanceBetween.x) < std::abs(previousDistanceBetween.y)))
 		{
-			if (distanceBetween.y < 0)
+			if (previousDistanceBetween.y < 0)
 			{
 				playerPosition->setPos(playerPosition->getPos().x, -(playerRadius)+wallPosition->getPos().y);
 			}
@@ -393,7 +392,6 @@ void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 		}
 	}
 }
-
 
 void CollisionSystem::playerToPickUp(Entity* t_player, Entity* t_pickUp)
 {
@@ -406,11 +404,11 @@ void CollisionSystem::playerToPickUp(Entity* t_player, Entity* t_pickUp)
 			PickUpComponent* pickUpComp = static_cast<PickUpComponent*>(t_pickUp->getComponent(ComponentType::PickUp));
 			switch (pickUpComp->getPickupType())
 			{
-			case 1:
-				//Ammo Pickup
-				//Implement Ammo for the Player First
+			case PickupType::MachineGun:
 				break;
-			case 2:
+			case PickupType::Grenade:
+				break;
+			case PickupType::Health:
 				//Health Pickup
 				HealthComponent* playerHealthComp = static_cast<HealthComponent*>(t_player->getComponent(ComponentType::Health));
 				int healthToAdd = playerHealthComp->getMaxHealth() * pickUpComp->getHealthChange();

@@ -30,7 +30,6 @@ namespace FactoryStatSheet
 	const glm::vec2 AMMO_POSITION(-1000, -1000);
 	const bool AMMO_ROTATING = true;
 	const float AMMO_ROTATION_SPEED = 0.1f;
-	const int AMMO_TYPE_ID = 1;
 	const float AMMO_AMOUNT_CHANGE = 1.0f;
 	const int AMMO_RADIUS = 32;
 	const int AMMO_STARTING_HP = 1;

@@ -19,7 +19,7 @@ public:
 	void nextAvailablePickup();
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
 private:
-	static const int PICKUP_POOL_SIZE = 10;
+	static const int PICKUP_POOL_SIZE = 20;
 	Entity m_pickUps[PICKUP_POOL_SIZE];
 	SDL_Renderer* m_renderer;
 	int m_currentPickup{ 0 };
