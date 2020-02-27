@@ -99,7 +99,7 @@ void GameScreen::render(SDL_Renderer* t_renderer)
 }
 
 
-void GameScreen::createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_renderer)
+void GameScreen::createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_renderer, bool t_isOnline)
 {
 	t_player.addComponent(new HealthComponent(10, 10, Utilities::PLAYER_INVINCIBILITY_FRAMES));
 	t_player.addComponent(new TransformComponent());
@@ -120,7 +120,7 @@ void GameScreen::createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_ren
 			m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][t_index],
 			m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][t_index]));
 	}
-	else
+	else if (!t_isOnline)
 	{
 		t_player.addComponent(new AiComponent(AITypes::ePlayerBot, AIStates::eWander, 0, 0));
 	}
@@ -296,7 +296,7 @@ void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_control
 	int playerCount = 0;
 	for (Entity& player : m_players)
 	{
-		createPlayer(player, playerCount, t_renderer);
+		createPlayer(player, playerCount, t_renderer, t_isOnline);
 		playerCount++;
 	}
 	m_entities.reserve(MAX_ENTITIES);
@@ -342,9 +342,9 @@ void GameScreen::processGameData()
 			posVec.push_back(pos);
 		}
 
-		for (int i = 1; i < Utilities::S_MAX_PLAYERS; i++)
+		//for (int i = 0; i < Utilities::S_MAX_PLAYERS; i++)
 		{
-			static_cast<TransformComponent*>(m_players[i].getComponent(ComponentType::Transform))->setPos(posVec[i], posVec[i + 1]);
+			static_cast<TransformComponent*>(m_players[3].getComponent(ComponentType::Transform))->setPos(posVec[0], posVec[1]);
 		}
 	}
 
