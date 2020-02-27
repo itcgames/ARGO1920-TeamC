@@ -33,7 +33,7 @@ GameScreen::~GameScreen()
 void GameScreen::update(float t_deltaTime)
 {
 	updateLevelManager();
-	updateEntities(t_deltaTime);
+	//updateEntities(t_deltaTime);
 	updatePlayers(t_deltaTime);
 	updateProjectiles(t_deltaTime);
 	m_collisionSystem.update(m_goal);
