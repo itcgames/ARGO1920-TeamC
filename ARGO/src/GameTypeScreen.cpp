@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GameTypeScreen.h"
- 
+
 GameTypeScreen::GameTypeScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_inputSystem, RenderSystem& t_renderSystem) :
 	m_eventManager{ t_eventManager },
 	m_commandSystem{ t_commandSystem },
@@ -103,7 +103,7 @@ void GameTypeScreen::setControllerButtonMaps()
 		ButtonCommandPair(ButtonType::DpadDown, new MenuMoveDownCommand()),
 		ButtonCommandPair(ButtonType::DpadLeft, new MenuMoveLeftCommand()),
 		ButtonCommandPair(ButtonType::DpadRight, new MenuMoveRightCommand()),
- 
+
 		ButtonCommandPair(ButtonType::A, new MenuSelectButtonCommand()),
 		ButtonCommandPair(ButtonType::Start, new MenuConfirmCommand()),
 		ButtonCommandPair(ButtonType::B, new MenuCancelCommand())
@@ -373,30 +373,27 @@ void GameTypeScreen::gameTypeCancel()
 
 void GameTypeScreen::gameTypeChosen()
 {
-	if (m_hostPopupActive || m_joinPopupActive)
+	switch (m_currentButton)
 	{
-		switch (m_currentButton)
-		{
-		case MenuButtonsType::Offline:
-			m_screenActive = false;
-			m_eventManager.emitEvent(ChangeScreen{ MenuStates::Game });
-			break;
-		case MenuButtonsType::OnlineHost:
-		{
-			// load server and popup ip address
-			m_hostPopupActive = true;
-			break;
-		}
-		case MenuButtonsType::OnlineJoin:
-			// bring up thing to input ip address
-			m_joinPopupActive = true;
-			break;
-		default:
-			break;
-		}
+	case MenuButtonsType::Offline:
+		m_screenActive = false;
+		m_eventManager.emitEvent(ChangeScreen{ MenuStates::Game });
+		break;
+	case MenuButtonsType::OnlineHost:
+	{
+		// load server and popup ip address
+		m_hostPopupActive = true;
+		break;
+	}
+	case MenuButtonsType::OnlineJoin:
+		// bring up thing to input ip address
+		m_joinPopupActive = true;
+		break;
+	default:
+		break;
 	}
 }
- 
+
 
 void GameTypeScreen::updateIpDial(MoveDirection t_inputDirection)
 {
