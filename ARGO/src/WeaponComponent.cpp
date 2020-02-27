@@ -5,7 +5,8 @@ WeaponComponent::WeaponComponent() :
 	Component(ComponentType::Weapon),
 	m_currentWeapon(Weapon::Pistol),
 	m_glowStickCooldown(0.0f),
-	m_gunCooldown(0.0f)
+	m_gunCooldown(0.0f),
+	m_ammo(0)
 {
 }
 

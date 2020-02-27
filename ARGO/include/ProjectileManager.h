@@ -19,7 +19,7 @@
 struct Bullet
 {
 	Entity entity;
-	int type;
+	Weapon type;
 };
 
 class ProjectileManager
