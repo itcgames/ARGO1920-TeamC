@@ -7,7 +7,7 @@
 #include "CommandSystem.h" 
 #include <iostream>
 #include <fstream>
-#include <Windows.h>
+#include "OnlineGameHandler.h"
 
 enum class MenuButtonsType
 {
@@ -33,7 +33,7 @@ enum class DialEntityType
 class GameTypeScreen
 {
 public:
-	GameTypeScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_inputSystem, RenderSystem& t_renderSystem);
+	GameTypeScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_inputSystem, RenderSystem& t_renderSystem, OnlineGameHandler& t_onlineHandler);
 	~GameTypeScreen();
 	void update(float t_deltaTime);
 	void reset();
@@ -105,6 +105,8 @@ private:
 
 	STARTUPINFO m_startupInfo = { sizeof(m_startupInfo) };;
 	PROCESS_INFORMATION m_processInfo;
+
+	OnlineGameHandler& m_onlineHandler;
 };
 
 

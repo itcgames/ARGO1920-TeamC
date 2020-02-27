@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "GameClientHandler.h"
+#include "OnlineGameHandler.h"
 
-GameClientHandler::GameClientHandler() :
+OnlineGameHandler::OnlineGameHandler() :
 	m_client(nullptr)
 {
 }
 
-GameClientHandler::~GameClientHandler()
+OnlineGameHandler::~OnlineGameHandler()
 {
 	if (m_client)
 	{
@@ -19,7 +19,7 @@ GameClientHandler::~GameClientHandler()
 	m_client = nullptr;
 }
 
-void GameClientHandler::connectToServer(std::string t_ip, int t_port)
+void OnlineGameHandler::connectToServer(std::string t_ip, int t_port)
 {
 	if (m_client)
 	{
@@ -43,7 +43,7 @@ void GameClientHandler::connectToServer(std::string t_ip, int t_port)
 }
 
 
-void GameClientHandler::disconnect()
+void OnlineGameHandler::disconnect()
 {
 	if (m_client)
 	{
@@ -56,28 +56,28 @@ void GameClientHandler::disconnect()
 	m_client = nullptr;
 }
 
-std::string& GameClientHandler::getGameData()
+std::string& OnlineGameHandler::getGameData()
 {
 	return m_gameData;
 }
 
-std::string& GameClientHandler::getWinData()
+std::string& OnlineGameHandler::getWinData()
 {
 	return m_winData;
 }
 
-std::string& GameClientHandler::getStartData()
+std::string& OnlineGameHandler::getStartData()
 {
 	return m_gameStartData;
 }
 
-std::string& GameClientHandler::getRestartData()
+std::string& OnlineGameHandler::getRestartData()
 {
 
 	return m_restartData;
 }
 
-bool GameClientHandler::isConnected()
+bool OnlineGameHandler::isConnected()
 {
 	if (m_client)
 	{
@@ -89,7 +89,7 @@ bool GameClientHandler::isConnected()
 	}
 }
 
-void GameClientHandler::sendGameData(int t_posX, int t_posY)
+void OnlineGameHandler::sendGameData(int t_posX, int t_posY)
 {
 	std::string data = GAME_DATA;
 	data += std::to_string(t_posX);
@@ -98,33 +98,33 @@ void GameClientHandler::sendGameData(int t_posX, int t_posY)
 	m_client->SendString(data);
 }
 
-void GameClientHandler::sendWinData(int t_ms)
+void OnlineGameHandler::sendWinData(int t_ms)
 {
 	std::string data = WIN_DATA;
 	data += std::to_string(t_ms);
 	m_client->SendString(data);
 }
 
-void GameClientHandler::sendConnectData()
+void OnlineGameHandler::sendConnectData()
 {
 	std::string data = CONNECT_DATA;
 	m_client->SendString(data);
 }
 
-void GameClientHandler::sendStartData()
+void OnlineGameHandler::sendStartData()
 {
 	std::string data = START_DATA;
 	m_client->SendString(data);
 }
 
-void GameClientHandler::sendStartData(std::string t_playerType)
+void OnlineGameHandler::sendStartData(std::string t_playerType)
 {
 	std::string data = START_DATA;
 	data += t_playerType;
 	m_client->SendString(data);
 }
 
-std::string& GameClientHandler::getConnectData()
+std::string& OnlineGameHandler::getConnectData()
 {
 	return m_connectData;
 }

@@ -14,7 +14,7 @@ Game::Game() :
 	m_splashScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_mainMenuScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_achievementsScreen{ m_eventManager, m_controllers[0], m_renderer },
-	m_gameTypeScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
+	m_gameTypeScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem, m_onlineHandler },
 	m_currentScreen{ MenuStates::MainMenu }
 {
 	try
@@ -280,6 +280,15 @@ void Game::render()
 /// </summary>
 void Game::cleanup()
 {
+	if (Utilities::S_ONLINE_STATUS != Utilities::OnlineStatus::Local)
+	{
+		if (Utilities::S_IS_HOST)
+		{
+			killGameServer();
+		}
+
+	}
+
 	AssetManager::Release();
 	m_assetMgr = NULL;
 	AudioManager::Release();
@@ -290,6 +299,11 @@ void Game::cleanup()
 	SDL_DestroyRenderer(m_renderer);
 	m_renderer = NULL;
 	SDL_Quit();
+}
+
+void Game::killGameServer()
+{
+	system("taskkill /F /T /IM ScuffedArgoServer.exe");
 }
 
 void Game::closeWindow(const Events::CloseWindow& t_event)

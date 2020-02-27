@@ -22,7 +22,6 @@
     <ClCompile Include="src\Command.cpp" />
     <ClCompile Include="src\FireBulletCommand.cpp" />
     <ClCompile Include="src\FireRateComponent.cpp" />
-    <ClCompile Include="src\GameClientHandler.cpp" />
     <ClCompile Include="src\GameTypeCancelCommand.cpp" />
     <ClCompile Include="src\GameTypeConfirmCommand.cpp" />
     <ClCompile Include="src\GameTypeMoveDownCommand.cpp" />
@@ -41,6 +40,7 @@
     <ClCompile Include="src\MoveLeftCommand.cpp" />
     <ClCompile Include="src\MoveRightCommand.cpp" />
     <ClCompile Include="src\MoveUpCommand.cpp" />
+    <ClCompile Include="src\OnlineGameHandler.cpp" />
     <ClCompile Include="src\Packet.cpp" />
     <ClCompile Include="src\PacketManager.cpp" />
     <ClCompile Include="src\PacketStructs.cpp" />
@@ -110,7 +110,6 @@
     <ClInclude Include="include\FileTransferData.h" />
     <ClInclude Include="include\FireBulletCommand.h" />
     <ClInclude Include="include\FireRateComponent.h" />
-    <ClInclude Include="include\GameClientHandler.h" />
     <ClInclude Include="include\GameTypeCancelCommand.h" />
     <ClInclude Include="include\GameTypeConfirmCommand.h" />
     <ClInclude Include="include\GameTypeMoveDownCommand.h" />
@@ -129,6 +128,7 @@
     <ClInclude Include="include\MoveLeftCommand.h" />
     <ClInclude Include="include\MoveRightCommand.h" />
     <ClInclude Include="include\MoveUpCommand.h" />
+    <ClInclude Include="include\OnlineGameHandler.h" />
     <ClInclude Include="include\Packet.h" />
     <ClInclude Include="include\PacketManager.h" />
     <ClInclude Include="include\PacketStructs.h" />

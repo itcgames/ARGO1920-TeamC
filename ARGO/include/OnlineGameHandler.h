@@ -1,12 +1,13 @@
+#pragma once
 #include "Client.h"
 #include <iostream>
 #include <string>
 
-class GameClientHandler
+class OnlineGameHandler
 {
 public:
-	GameClientHandler();
-	~GameClientHandler();
+	OnlineGameHandler();
+	~OnlineGameHandler();
 
 	void connectToServer(std::string t_ip, int t_port);
 	void disconnect();

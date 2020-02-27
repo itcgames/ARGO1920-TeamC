@@ -1,8 +1,18 @@
 #pragma once
 
-
 namespace Utilities
 {
+	enum class OnlineStatus
+	{
+		Host,
+		Client,
+		Local
+	};
+
+	static OnlineStatus S_ONLINE_STATUS = OnlineStatus::Local;
+	static bool S_IS_HOST = false;
+	static const int PORT_NUM = 1111;
+
 	const static int S_MAX_PLAYERS = 4;
 	//font consts
 	const int SMALL_FONT = 24;

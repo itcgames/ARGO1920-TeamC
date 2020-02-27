@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "GameTypeScreen.h"
-#include "..\include\GameTypeScreen.h"
 
-GameTypeScreen::GameTypeScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_inputSystem, RenderSystem& t_renderSystem) :
+GameTypeScreen::GameTypeScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_inputSystem, RenderSystem& t_renderSystem, OnlineGameHandler& t_onlineHandler) :
 	m_eventManager{ t_eventManager },
 	m_commandSystem{ t_commandSystem },
 	m_inputSystem{ t_inputSystem },
-	m_renderSystem{ t_renderSystem }
+	m_renderSystem{ t_renderSystem },
+	m_onlineHandler{ t_onlineHandler}
 {
 }
 
@@ -326,6 +326,11 @@ void GameTypeScreen::buttonPressed(const Events::GameTypeSelectButton& t_event)
 		{
 			printf("Failed to start the server!\nError:(%d).\n", GetLastError());
 		}
+		else
+		{
+			Utilities::S_ONLINE_STATUS = Utilities::OnlineStatus::Host;
+			Utilities::S_IS_HOST = true;
+		}
 
 		break;
 	}
@@ -340,7 +345,13 @@ void GameTypeScreen::buttonPressed(const Events::GameTypeSelectButton& t_event)
 
 void GameTypeScreen::cancel(const Events::GameTypeCancel& t_event)
 {
-	if (m_joinPopupActive) m_joinPopupActive = false;
+	Utilities::S_ONLINE_STATUS = Utilities::OnlineStatus::Local;
+	Utilities::S_IS_HOST = false;
+
+	if (m_joinPopupActive)
+	{
+		m_joinPopupActive = false;
+	}
 	else if (m_hostPopupActive)
 	{
 		m_hostPopupActive = false;

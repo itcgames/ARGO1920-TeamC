@@ -23,6 +23,10 @@
 #include <mutex> //for std::mutex
 #include <cstdint> //Required to use std::int32_t
 #include <fstream> //for std::ifstream and std::ofstream
+#include <Ws2tcpip.h> //for inet_pton
+#include <WinSock2.h> //For SOCKET
+#include <stdlib.h>
+
 
 //SDL
 #include <SDL.h>
