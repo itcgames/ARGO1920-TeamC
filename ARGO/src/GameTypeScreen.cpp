@@ -346,7 +346,7 @@ void GameTypeScreen::cancel(const Events::GameTypeCancel& t_event)
 		m_hostPopupActive = false;
 
 		//put kill task command here
-
+		system("taskkill /F /T /IM ScuffedArgoServer.exe");
 	}
 	else
 	{
