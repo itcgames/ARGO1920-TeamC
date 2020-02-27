@@ -24,6 +24,7 @@ public:
 	void sendStartData(std::string t_playerType);
 
 private:
+	void clearReceivedData();
 	std::string m_gameData;
 	std::string m_winData;
 	std::string m_connectData;

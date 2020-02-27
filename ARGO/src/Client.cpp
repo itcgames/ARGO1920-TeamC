@@ -91,7 +91,7 @@ void Client::ClientThread(Client& client)
 	if (client.CloseConnection()) //Try to close socket connection..., If connection socket was closed properly
 	{
 		std::cout << "Socket to the server was closed successfully." << std::endl;
-		client.joinThreads();
+		//client.joinThreads();
 	}
 	else //If connection socket was not closed properly for some reason from our function
 	{

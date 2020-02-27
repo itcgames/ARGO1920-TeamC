@@ -330,6 +330,7 @@ void GameTypeScreen::buttonPressed(const Events::GameTypeSelectButton& t_event)
 		{
 			Utilities::S_ONLINE_STATUS = Utilities::OnlineStatus::Host;
 			Utilities::S_IS_HOST = true;
+			m_onlineHandler.connectToServer(m_hostsIp, Utilities::PORT_NUM);
 		}
 
 		break;
@@ -471,11 +472,20 @@ void GameTypeScreen::gameTypeConfirmed(const Events::GameTypeConfirm& t_event)
 
 		ipValue = ipParts[0] + ipParts[1] + ipParts[2] + ipParts[3];
 
+#ifdef _DEBUG
+		if (ipValue == "0.0.0.0")
+		{
+			findHostsIp();
+			ipValue = m_hostsIp;
+		}
+#endif // _DEBUG
+
 		std::cout << ipValue << std::endl;
 
 		//join server and go to game
 		int timer = SDL_GetTicks();
 		bool failedToConnect = false;
+		m_onlineHandler.connectToServer(ipValue, Utilities::PORT_NUM);
 		while ("" == m_onlineHandler.getConnectData() && !failedToConnect)
 		{
 			//loop until we get data back 

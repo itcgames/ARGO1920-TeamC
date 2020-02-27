@@ -45,6 +45,7 @@ void OnlineGameHandler::connectToServer(std::string t_ip, int t_port)
 
 void OnlineGameHandler::disconnect()
 {
+	clearReceivedData();
 	if (m_client)
 	{
 		if (m_client->getConnected())
@@ -122,6 +123,15 @@ void OnlineGameHandler::sendStartData(std::string t_playerType)
 	std::string data = START_DATA;
 	data += t_playerType;
 	m_client->SendString(data);
+}
+
+void OnlineGameHandler::clearReceivedData()
+{
+	m_gameData = "";
+	m_winData = "";
+	m_connectData = "";
+	m_gameStartData = "";
+	m_restartData = "";
 }
 
 std::string& OnlineGameHandler::getConnectData()

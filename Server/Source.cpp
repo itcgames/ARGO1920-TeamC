@@ -11,30 +11,29 @@ int main()
 	bool running = true;
 	std::cout << "Server started!" << std::endl;
 	const int TIME_OUT = 5.0f;
-	while (running && !MyServer.killServer())
+	while (running/* && !MyServer.killServer()*/)
 	{
-		std::cout << "Before ifs" << std::endl;
-		if (MyServer.getConnectionCount() == 0 && (endTime - startTime) / (double)CLOCKS_PER_SEC <= TIME_OUT)
+		//std::cout << "Before ifs" << std::endl;
+		//if (MyServer.getConnectionCount() == 0 && (endTime - startTime) / (double)CLOCKS_PER_SEC <= TIME_OUT)
 		{
-			std::cout << "0 connections and time less than timeout" << std::endl;
+			//std::cout << "0 connections and time less than timeout" << std::endl;
 			MyServer.ListenForNewConnection(); //Accept new connection (if someones trying to connect)
-			endTime = clock();
+			//endTime = clock();
 		}
-		if (MyServer.getConnectionCount() == 0 && (endTime - startTime) / (double)CLOCKS_PER_SEC > TIME_OUT)
-		{
-			std::cout << "Server timed out" << std::endl;
-			running = false;
-		}
-		else if (MyServer.getConnectionCount() > 0)
-		{
-			std::cout << "1 or more connections" << std::endl;
-			MyServer.ListenForNewConnection(); //Accept new connection (if someones trying to connect)
-			startTime = clock();
-			endTime = clock();
-		}
-		std::cout << ((endTime - startTime) / (double)CLOCKS_PER_SEC) << std::endl;
+		//if (MyServer.getConnectionCount() == 0 && (endTime - startTime) / (double)CLOCKS_PER_SEC > TIME_OUT)
+		//{
+		//	std::cout << "Server timed out" << std::endl;
+		//	running = false;
+		//}
+		//else if (MyServer.getConnectionCount() > 0)
+		//{
+		//	std::cout << "1 or more connections" << std::endl;
+		//	MyServer.ListenForNewConnection(); //Accept new connection (if someones trying to connect)
+		//	startTime = clock();
+		//	endTime = clock();
+		//}
 	}
-	std::cout << "Server timed out" << std::endl;
-	system("pause");
+	std::cout << "Server closed" << std::endl;
+	//system("pause");
 	return 0;
 }
