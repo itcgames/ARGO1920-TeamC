@@ -68,6 +68,7 @@ void PickUpManager::placePickup(glm::vec2 t_pos, int t_pickUpType)
 		nextAvailablePickup();
 	}
 }
+
 ///<summary>
 /// If a Pickup is alive then it rotates it.
 ///</summary>

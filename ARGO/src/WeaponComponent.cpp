@@ -72,3 +72,19 @@ void WeaponComponent::setCurrent(Weapon t_weapon)
 {
 	m_currentWeapon = t_weapon;
 }
+
+void WeaponComponent::fillAmmo(Weapon t_type)
+{
+	m_currentWeapon = t_type;
+	switch (m_currentWeapon)
+	{
+	case Weapon::MachineGun:
+		m_ammo = MACHINEGUN_MAX_AMMO;
+		break;
+	case Weapon::GrenadeLauncher:
+		m_ammo = GRENADE_LAUNCHER_MAX_AMMO;
+		break;
+	default:
+		break;
+	}
+}

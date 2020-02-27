@@ -402,11 +402,15 @@ void CollisionSystem::playerToPickUp(Entity* t_player, Entity* t_pickUp)
 		{
 			m_eventManager.emitEvent(PickupGrabbed{ t_pickUp });
 			PickUpComponent* pickUpComp = static_cast<PickUpComponent*>(t_pickUp->getComponent(ComponentType::PickUp));
+			WeaponComponent* weaponComp = static_cast<WeaponComponent*>(t_player->getComponent(ComponentType::Weapon));
+
 			switch (pickUpComp->getPickupType())
 			{
 			case PickupType::MachineGun:
+				weaponComp->fillAmmo(Weapon::MachineGun);
 				break;
 			case PickupType::Grenade:
+				weaponComp->fillAmmo(Weapon::GrenadeLauncher);
 				break;
 			case PickupType::Health:
 				//Health Pickup
@@ -440,7 +444,7 @@ void CollisionSystem::playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enem
 	{
 		static_cast<HealthComponent*>(t_playerBullet->getComponent(ComponentType::Health))->setHealth(0); //kill the bullet
 		static_cast<HealthComponent*>(t_enemy->getComponent(ComponentType::Health))->reduceHealth(1);
-		if (static_cast<HealthComponent*>(t_enemy->getComponent(ComponentType::Health))->getHealth())
+		if (!static_cast<HealthComponent*>(t_enemy->getComponent(ComponentType::Health))->isAlive())
 		{
 			m_eventManager.emitEvent(EnemyKilled{ t_enemy });
 		}

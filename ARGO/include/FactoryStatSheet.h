@@ -46,4 +46,6 @@ namespace FactoryStatSheet
 	const int HEALTH_STARTING_HP = 1;
 	const int HEALTH_MAX_HP = 1;
 
+	const int PICKUP_DESPAWN_DELAY = 300;
+
 }

@@ -40,5 +40,9 @@ void PickUpFactory::createDrop(int t_type, Entity& t_entity)
 		t_entity.addComponent(new VisualComponent("AmmoBox.png", m_renderer));
 		t_entity.addComponent(new PickUpComponent(PickupType::Grenade));
 		break;
+	default:
+		t_entity.addComponent(new VisualComponent("HealthBox.png", m_renderer));
+		t_entity.addComponent(new PickUpComponent(PickupType::Health));
+		break;
 	}
 }
