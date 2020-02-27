@@ -12,10 +12,15 @@ struct CreateBulletEvent
 	Controller& controller;
 };
 
+struct PickupGrabbed
+{
+	Entity* pickup;
+};
+
 struct PhysicsMove
 {
 	glm::vec2 velocity;
- 	Entity& entity;
+	Entity& entity;
 };
 
 struct PhysicsRotate
@@ -24,19 +29,20 @@ struct PhysicsRotate
 	Entity& entity;
 };
 
-struct MenuMoveBetweenUI 
+struct MenuMoveBetweenUI
 {
- 	MoveDirection direction;
+	MoveDirection direction;
 };
 
 struct MenuButtonPressed
 {
 	ButtonType buttonPressed;
-};  
+};
 
 struct UpdateAchievement
 {
-	AchievementsType type;
+	int enemiesKilled = 0;
+	int gamesWon = 0;
 };
 
 struct CloseWindow

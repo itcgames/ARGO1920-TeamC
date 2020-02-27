@@ -1,0 +1,2 @@
+GamesWon:10
+EnemiesKilled:1000

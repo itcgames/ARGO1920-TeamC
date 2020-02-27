@@ -7,7 +7,7 @@ bool cleanUpEnemies(const Entity& t_entity)
 	return !static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health))->isAlive();
 }
 
-GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::S_MAX_PLAYERS]) :
+GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::S_MAX_PLAYERS], CommandSystem& t_commandSystem, InputSystem& t_input, RenderSystem& t_renderSystem) :
 	m_eventManager{ t_eventManager },
 	m_controllers{ *t_controllers },
 	m_levelManager{ t_renderer, m_players },
@@ -19,7 +19,10 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_collisionSystem{ m_eventManager },
 	m_playerFactory(),
 	m_enemyFactory(),
-	m_pickUpManager(m_eventManager, m_collisionSystem)
+	m_pickUpManager(m_eventManager, m_collisionSystem) ,
+	m_commandSystem{ t_commandSystem },
+	m_inputSystem{ t_input },
+	m_renderSystem{ t_renderSystem }
 {
 }
 
@@ -55,6 +58,27 @@ void GameScreen::processEvents(SDL_Event* t_event)
 		{
 			m_players[0].removeCompType(ComponentType::Input);
 			break;
+		}
+		case SDLK_RETURN:
+		{
+			////check if we can add 100 entities, if more than 100, set to 100, if less than 0 set to 0
+			//int availableSpace = glm::clamp(int(MAX_ENTITIES - m_entities.size()), 0, 10);
+			//for (int index = 0; index < availableSpace; index++)
+			//{
+			//	createEnemy();
+			//}
+			//std::cout << m_entities.size() << std::endl;
+			//break;
+		}
+		case SDLK_1:
+		{
+			////create one enemy if space available in the vector
+			//if (m_entities.size() < MAX_ENTITIES)
+			//{
+			//	createEnemy();
+			//}
+			//std::cout << m_entities.size() << std::endl;
+			//break;
 		}
 		default:
 			break;
@@ -226,8 +250,9 @@ void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utiliti
 	setUpLevel();
 }
 
-void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS])
+void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS], bool t_isOnline)
 {
+	m_isOnline = t_isOnline;
 	setControllerButtonMap(t_controllerButtonMaps);
 	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
 	{

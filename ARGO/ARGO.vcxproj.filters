@@ -279,12 +279,6 @@
     <ClCompile Include="src\MoveRightCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
-    <ClCompile Include="src\GoToMainMenuCommand.cpp">
-      <Filter>Source Files\CommandPattern\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GoToLicenseScreenCommand.cpp">
-      <Filter>Source Files\CommandPattern\Commands</Filter>
-    </ClCompile>
     <ClCompile Include="src\FireBulletCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
@@ -297,7 +291,7 @@
     <ClCompile Include="src\AnalogRotateCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
-    <ClCompile Include="src\FireRateComponent.cpp">
+     <ClCompile Include="src\FireRateComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\EnemyManager.cpp">
@@ -308,6 +302,30 @@
     </ClCompile>
     <ClCompile Include="src\FlowFieldComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+     <ClCompile Include="src\GameTypeScreen.cpp">
+      <Filter>Source Files\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="src\JoinGameScreen.cpp">
+      <Filter>Source Files\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuCancelCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuConfirmCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuMoveLeftCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuMoveRightCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GoToLicenseScreenCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GoToMainMenuCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -505,7 +523,7 @@
     </ClInclude>
     <ClInclude Include="include\PickUpComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
-	</ClInclude>
+	  </ClInclude>
     <ClInclude Include="include\BehaviourTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -530,12 +548,6 @@
     <ClInclude Include="include\MoveLeftCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="include\GoToMainMenuCommand.h">
-      <Filter>Header Files\CommandPattern\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GoToLicenseScreenCommand.h">
-      <Filter>Header Files\CommandPattern\Commands</Filter>
-    </ClInclude>
     <ClInclude Include="include\FireBulletCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
@@ -551,7 +563,7 @@
     <ClInclude Include="include\AnalogRotateCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="include\FireRateComponent.h">
+     <ClInclude Include="include\FireRateComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\EnemyManager.h">
@@ -562,6 +574,30 @@
     </ClInclude>
     <ClInclude Include="include\FlowFieldComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+     <ClInclude Include="include\GameTypeScreen.h">
+      <Filter>Header Files\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="include\JoinGameScreen.h">
+      <Filter>Header Files\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MenuMoveRightCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MenuCancelCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MenuConfirmCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MenuMoveLeftCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GoToLicenseScreenCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GoToMainMenuCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

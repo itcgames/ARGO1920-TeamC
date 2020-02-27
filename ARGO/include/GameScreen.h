@@ -20,15 +20,15 @@ class GameScreen
 {
 public:
 
-	GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controller[Utilities::S_MAX_PLAYERS]);
+	GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controller[Utilities::S_MAX_PLAYERS], CommandSystem& t_commandSystem, InputSystem& t_input, RenderSystem& t_renderSystem);
 	~GameScreen();
 
 	void update(float t_deltaTime);
 	void processEvents(SDL_Event* t_event);
 	void render(SDL_Renderer* t_renderer);
 	void reset(SDL_Renderer* t_renderer, Controller t_controller[Utilities::S_MAX_PLAYERS]);
-	void initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS]);
-private:
+	void initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS], bool t_isOnline = false);
+ private:
 
 	void createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_renderer);
 	void createGoal();
@@ -52,12 +52,14 @@ private:
 	// Systems
 	HealthSystem m_healthSystem;
 	PhysicsSystem m_transformSystem;
-	InputSystem m_inputSystem;
-	RenderSystem m_renderSystem;
 	AiSystem m_aiSystem;
 	CollisionSystem m_collisionSystem;
-	CommandSystem m_commandSystem;
 	ParticleSystem m_particleSystem;
+
+	CommandSystem& m_commandSystem;
+	InputSystem& m_inputSystem;
+	RenderSystem& m_renderSystem;
+
 
 	ProjectileManager m_projectileManager;
 	LevelManager m_levelManager;
@@ -66,6 +68,8 @@ private:
 	PlayerFactory m_playerFactory;
 	EnemyFactory m_enemyFactory;
 	PickUpManager m_pickUpManager;
-
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
+
+	// bool to see if game is being played online or not
+	bool m_isOnline;
 };

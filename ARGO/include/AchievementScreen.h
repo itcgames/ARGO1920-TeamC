@@ -5,6 +5,26 @@
 #include "CommandSystem.h"
 #include "RenderSystem.h"
 
+enum class CheckBoxParts
+{
+	Box,
+	Check
+};
+
+enum class AchievmentParts
+{
+	Box,
+	MainText,
+	SubText
+};
+
+enum class Achievments
+{
+	EnemiesKilled,
+	GameWon,
+	Hidden
+};
+
 class AchievementScreen
 {
 public:
@@ -28,8 +48,29 @@ private:
 	void buttonPressed(const MenuButtonPressed& t_event);
 
 	void updateAchievement(const UpdateAchievement& t_event);
+	void handleAchievements(int t_enemiesKilled, int t_gamesWon);
 
 	InputSystem& m_inputSystem;
 	CommandSystem& m_commandSystem;
 	RenderSystem& m_renderSystem;
+
+	bool m_screenActive = false;
+
+	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS];
+
+	static const int NUMBER_OF_CHECKBOX_PARTS = 2;
+	static const int NUMBER_OF_ACHV_PARTS = 3;
+	static const int NUMBER_OF_ACHIEVEMENTS = 3;
+
+
+	Entity m_checkboxes[NUMBER_OF_CHECKBOX_PARTS][NUMBER_OF_ACHIEVEMENTS];
+	Entity m_achievements[NUMBER_OF_ACHV_PARTS][NUMBER_OF_ACHIEVEMENTS];
+	Entity m_background;	
+	Entity m_inputEntity;
+
+	bool m_hasAchievements[NUMBER_OF_ACHIEVEMENTS];
+
+	std::string m_hiddenAchvString;
+	bool m_showHiddenAchv = false;
+
 };

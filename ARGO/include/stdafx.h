@@ -19,6 +19,7 @@
 #include <memory>
 #include <stdexcept>
 #include <functional>
+#include <fstream>
 
 //SDL
 #include <SDL.h>
@@ -46,5 +47,8 @@
 //#include "FPS.h" //for fps
 
 //more stuff
+
+
+ 
 
 #endif //STDAFX_H
