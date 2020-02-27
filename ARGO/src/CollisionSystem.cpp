@@ -366,12 +366,11 @@ void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 		TransformComponent* wallPosition = static_cast<TransformComponent*>(t_wall->getComponent(ComponentType::Transform));
 
 		glm::vec2 previousPos = playerPosition->getPos() - force->getForce();
-		glm::vec2 distanceBetween = playerPosition->getPos() - glm::vec2(playerRadius, playerRadius) - wallPosition->getPos();
-		glm::vec2 previousDistanceBetween = previousPos - glm::vec2(playerRadius, playerRadius) - wallPosition->getPos();
+		glm::vec2 previousDistanceBetween = previousPos - (wallPosition->getPos() + glm::vec2(wallWidth / 2, wallWidth / 2));
 
-		if (distanceBetween.x < playerRadius * 2 + wallWidth && (std::abs(previousDistanceBetween.x) > std::abs(previousDistanceBetween.y)))
+		if (previousDistanceBetween.x < playerRadius * 2 + wallWidth && (std::abs(previousDistanceBetween.x) > std::abs(previousDistanceBetween.y)))
 		{
-			if (distanceBetween.x < 0)
+			if (previousDistanceBetween.x < 0)
 			{
 				playerPosition->setPos(-(playerRadius)+wallPosition->getPos().x, playerPosition->getPos().y);
 			}
@@ -380,9 +379,9 @@ void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 				playerPosition->setPos((playerRadius + wallWidth) + wallPosition->getPos().x, playerPosition->getPos().y);
 			}
 		}
-		if (distanceBetween.y < playerRadius * 2 + wallWidth && (std::abs(previousDistanceBetween.x) < std::abs(previousDistanceBetween.y)))
+		if (previousDistanceBetween.y < playerRadius * 2 + wallWidth && (std::abs(previousDistanceBetween.x) < std::abs(previousDistanceBetween.y)))
 		{
-			if (distanceBetween.y < 0)
+			if (previousDistanceBetween.y < 0)
 			{
 				playerPosition->setPos(playerPosition->getPos().x, -(playerRadius)+wallPosition->getPos().y);
 			}
@@ -394,7 +393,6 @@ void CollisionSystem::playerToWall(Entity* t_player, Entity* t_wall)
 	}
 }
 
-
 void CollisionSystem::playerToPickUp(Entity* t_player, Entity* t_pickUp)
 {
 	if (t_pickUp->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_player, t_pickUp))
@@ -404,13 +402,17 @@ void CollisionSystem::playerToPickUp(Entity* t_player, Entity* t_pickUp)
 		{
 			m_eventManager.emitEvent(PickupGrabbed{ t_pickUp });
 			PickUpComponent* pickUpComp = static_cast<PickUpComponent*>(t_pickUp->getComponent(ComponentType::PickUp));
+			WeaponComponent* weaponComp = static_cast<WeaponComponent*>(t_player->getComponent(ComponentType::Weapon));
+
 			switch (pickUpComp->getPickupType())
 			{
-			case 1:
-				//Ammo Pickup
-				//Implement Ammo for the Player First
+			case PickupType::MachineGun:
+				weaponComp->fillAmmo(Weapon::MachineGun);
 				break;
-			case 2:
+			case PickupType::Grenade:
+				weaponComp->fillAmmo(Weapon::GrenadeLauncher);
+				break;
+			case PickupType::Health:
 				//Health Pickup
 				HealthComponent* playerHealthComp = static_cast<HealthComponent*>(t_player->getComponent(ComponentType::Health));
 				int healthToAdd = playerHealthComp->getMaxHealth() * pickUpComp->getHealthChange();
@@ -442,6 +444,10 @@ void CollisionSystem::playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enem
 	{
 		static_cast<HealthComponent*>(t_playerBullet->getComponent(ComponentType::Health))->setHealth(0); //kill the bullet
 		static_cast<HealthComponent*>(t_enemy->getComponent(ComponentType::Health))->reduceHealth(1);
+		if (!static_cast<HealthComponent*>(t_enemy->getComponent(ComponentType::Health))->isAlive())
+		{
+			m_eventManager.emitEvent(EnemyKilled{ t_enemy });
+		}
 	}
 }
 
@@ -485,37 +491,36 @@ void CollisionSystem::enemyToWall(Entity* t_enemy, Entity* t_wall)
 {
 	if (t_wall->getComponent(ComponentType::ColliderAABB) && circleToAABBCollision(t_enemy, t_wall))
 	{
-		int playerRadius = static_cast<ColliderCircleComponent*>(t_enemy->getComponent(ComponentType::ColliderCircle))->getRadius();
-		TransformComponent* playerPosition = static_cast<TransformComponent*>(t_enemy->getComponent(ComponentType::Transform));
+		int enemyRadius = static_cast<ColliderCircleComponent*>(t_enemy->getComponent(ComponentType::ColliderCircle))->getRadius();
+		TransformComponent* enemyPosition = static_cast<TransformComponent*>(t_enemy->getComponent(ComponentType::Transform));
 		ForceComponent* force = static_cast<ForceComponent*>(t_enemy->getComponent(ComponentType::Force));
 
 		int wallWidth = static_cast<ColliderAABBComponent*>(t_wall->getComponent(ComponentType::ColliderAABB))->getBounds().x;
 		TransformComponent* wallPosition = static_cast<TransformComponent*>(t_wall->getComponent(ComponentType::Transform));
 
-		glm::vec2 previousPos = playerPosition->getPos() - force->getForce();
-		glm::vec2 distanceBetween = playerPosition->getPos() - glm::vec2(playerRadius, playerRadius) - wallPosition->getPos();
-		glm::vec2 previousDistanceBetween = previousPos - glm::vec2(playerRadius, playerRadius) - wallPosition->getPos();
+		glm::vec2 previousPos = enemyPosition->getPos() - force->getForce();
+		glm::vec2 previousDistanceBetween = previousPos - (wallPosition->getPos() + glm::vec2(wallWidth / 2, wallWidth / 2));
 
-		if (distanceBetween.x < playerRadius * 2 + wallWidth && (std::abs(previousDistanceBetween.x) > std::abs(previousDistanceBetween.y)))
+		if (previousDistanceBetween.x < enemyRadius * 2 + wallWidth && (std::abs(previousDistanceBetween.x) > std::abs(previousDistanceBetween.y)))
 		{
-			if (distanceBetween.x < 0)
+			if (previousDistanceBetween.x < 0)
 			{
-				playerPosition->setPos(-(playerRadius)+wallPosition->getPos().x, playerPosition->getPos().y);
+				enemyPosition->setPos(-(enemyRadius)+wallPosition->getPos().x, enemyPosition->getPos().y);
 			}
 			else
 			{
-				playerPosition->setPos((playerRadius + wallWidth) + wallPosition->getPos().x, playerPosition->getPos().y);
+				enemyPosition->setPos((enemyRadius + wallWidth) + wallPosition->getPos().x, enemyPosition->getPos().y);
 			}
 		}
-		if (distanceBetween.y < playerRadius * 2 + wallWidth && (std::abs(previousDistanceBetween.x) < std::abs(previousDistanceBetween.y)))
+		if (previousDistanceBetween.y < enemyRadius * 2 + wallWidth && (std::abs(previousDistanceBetween.x) < std::abs(previousDistanceBetween.y)))
 		{
-			if (distanceBetween.y < 0)
+			if (previousDistanceBetween.y < 0)
 			{
-				playerPosition->setPos(playerPosition->getPos().x, -(playerRadius)+wallPosition->getPos().y);
+				enemyPosition->setPos(enemyPosition->getPos().x, -(enemyRadius)+wallPosition->getPos().y);
 			}
 			else
 			{
-				playerPosition->setPos(playerPosition->getPos().x, (playerRadius + wallWidth) + wallPosition->getPos().y);
+				enemyPosition->setPos(enemyPosition->getPos().x, (enemyRadius + wallWidth) + wallPosition->getPos().y);
 			}
 		}
 	}
@@ -541,7 +546,7 @@ void CollisionSystem::glowStickToWall(Entity* t_glowstick, Entity* t_wall)
 		TransformComponent* wallPosition = static_cast<TransformComponent*>(t_wall->getComponent(ComponentType::Transform));
 
 		glm::vec2 previousPos = glowStickPosition->getPos() - glowStickForce->getForce();
-		glm::vec2 previousDistanceBetween = previousPos - glm::vec2(glowStickRadius, glowStickRadius) - wallPosition->getPos();
+		glm::vec2 previousDistanceBetween = previousPos - (wallPosition->getPos() + glm::vec2(wallWidth / 2, wallWidth / 2));
 
 		if (previousDistanceBetween.x < glowStickRadius * 2 + wallWidth && (std::abs(previousDistanceBetween.x) > std::abs(previousDistanceBetween.y)))
 		{
