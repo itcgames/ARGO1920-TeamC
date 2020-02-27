@@ -373,24 +373,27 @@ void GameTypeScreen::gameTypeCancel()
 
 void GameTypeScreen::gameTypeChosen()
 {
-	switch (m_currentButton)
+	if (m_hostPopupActive || m_joinPopupActive)
 	{
-	case MenuButtonsType::Offline:
-		m_screenActive = false;
-		m_eventManager.emitEvent(ChangeScreen{ MenuStates::Game });
-		break;
-	case MenuButtonsType::OnlineHost:
-	{
-		// load server and popup ip address
-		m_hostPopupActive = true;
-		break;
-	}
-	case MenuButtonsType::OnlineJoin:
-		// bring up thing to input ip address
-		m_joinPopupActive = true;
-		break;
-	default:
-		break;
+		switch (m_currentButton)
+		{
+		case MenuButtonsType::Offline:
+			m_screenActive = false;
+			m_eventManager.emitEvent(ChangeScreen{ MenuStates::Game });
+			break;
+		case MenuButtonsType::OnlineHost:
+		{
+			// load server and popup ip address
+			m_hostPopupActive = true;
+			break;
+		}
+		case MenuButtonsType::OnlineJoin:
+			// bring up thing to input ip address
+			m_joinPopupActive = true;
+			break;
+		default:
+			break;
+		}
 	}
 }
  
