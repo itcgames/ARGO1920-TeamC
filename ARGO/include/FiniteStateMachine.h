@@ -13,7 +13,7 @@ public:
 	State* getCurrent();
 	State* getPrevious();
 
-	void update();
+	void update(float t_dt);
 
 	void idle();
 	void moving();

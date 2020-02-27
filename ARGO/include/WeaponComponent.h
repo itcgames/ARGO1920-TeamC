@@ -17,6 +17,8 @@ public:
 	bool fireGun();
 	bool throwGlowStick();
 	Weapon getCurrent();
+	int getMaxAmmo();
+	int getAmmo();
 	void setCurrent(Weapon t_weapon);
 	void fillAmmo(Weapon t_type);
 

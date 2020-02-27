@@ -69,6 +69,27 @@ Weapon WeaponComponent::getCurrent()
 	return m_currentWeapon;
 }
 
+int WeaponComponent::getMaxAmmo()
+{
+	switch (m_currentWeapon)
+	{
+	case Weapon::MachineGun:
+		return MACHINEGUN_MAX_AMMO;
+		break;
+	case Weapon::GrenadeLauncher:
+		return GRENADE_LAUNCHER_MAX_AMMO;
+		break;
+	default:
+		break;
+	}
+	return 0;
+}
+
+int WeaponComponent::getAmmo()
+{
+	return m_ammo;
+}
+
 void WeaponComponent::setCurrent(Weapon t_weapon)
 {
 	m_currentWeapon = t_weapon;

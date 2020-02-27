@@ -109,6 +109,7 @@ void GameScreen::createGoal()
 	m_goal.addComponent(new TransformComponent(Utilities::GOAL_START_POSITION));
 	m_goal.addComponent(new ColliderCircleComponent(32));
 	m_goal.addComponent(new TagComponent(Tag::Goal));
+	m_goal.addComponent(new VisualComponent("EscapePod.png", m_renderer));
 }
 
 void GameScreen::setUpLevel()

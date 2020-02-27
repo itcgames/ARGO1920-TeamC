@@ -33,7 +33,7 @@ void ProjectileManager::init()
 		glowStick.addComponent(new ForceComponent(glm::vec2(0, 0)));
 		glowStick.addComponent(new HealthComponent(1, 0));
 		glowStick.addComponent(new ColliderCircleComponent(GLOWSTICK_RADIUS));
-		glowStick.addComponent(new TimerComponent(BULLET_LIFETIME));
+		glowStick.addComponent(new TimerComponent(GLOWSTICK_LIFETIME));
 		glowStick.addComponent(new TagComponent(Tag::GlowStick));
 	}
 	for (auto& bullet : m_enemyBullets)
@@ -54,15 +54,18 @@ void ProjectileManager::createPlayerBullet(const CreateBulletEvent& t_event, Wea
 	{
 		t_event.controller.activateRumble(RumbleStrength::Weak, RumbleLength::Short);
 	}
-	glm::vec2 position = static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos();
+
+	TransformComponent* transformComp = static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform));
+	glm::vec2 position = transformComp->getPos();
 	glm::vec2 fireOffset = glm::vec2(35, 5);
-	float theta = glm::radians(static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getRotation());
+	float theta = glm::radians(transformComp->getRotation());
 	float cs = cos(theta);
 	float sn = sin(theta);
 	position.x += fireOffset.x * cs - fireOffset.y * sn;
 	position.y += fireOffset.x * sn + fireOffset.y * cs;
 
 	static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Transform))->setPos(position);
+	static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Transform))->setRotation(transformComp->getRotation() + 90);
 	static_cast<HealthComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Health))->setHealth(1);
 	static_cast<TimerComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Timer))->reset();
 
@@ -99,8 +102,9 @@ void ProjectileManager::createPlayerBullet(const CreateBulletEvent& t_event, Wea
 
 void ProjectileManager::createGlowStick(const CreateGlowStickEvent& t_event)
 {
-	glm::vec2 position = static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos();
-	static_cast<TransformComponent*>(m_glowsticks[m_nextGlowStick].getComponent(ComponentType::Transform))->setPos(position);
+	TransformComponent* transform = static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform));
+	static_cast<TransformComponent*>(m_glowsticks[m_nextGlowStick].getComponent(ComponentType::Transform))->setPos(transform->getPos());
+	static_cast<TransformComponent*>(m_glowsticks[m_nextGlowStick].getComponent(ComponentType::Transform))->setRotation(transform->getRotation());
 	static_cast<HealthComponent*>(m_glowsticks[m_nextGlowStick].getComponent(ComponentType::Health))->setHealth(1);
 	static_cast<TimerComponent*>(m_glowsticks[m_nextGlowStick].getComponent(ComponentType::Timer))->reset();
 	static_cast<ForceComponent*>(m_glowsticks[m_nextGlowStick].getComponent(ComponentType::Force))->setForce(t_event.direction * GLOWSTICK_SPEED);

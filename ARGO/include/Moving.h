@@ -5,7 +5,9 @@
 class Moving : public State
 {
 public:
-	void update() {  }
+	virtual void update(float t_dt) {}
+	virtual void getTexture() {}
+	virtual void getFrame() {}
 
 	void idle(FiniteStateMachine* a);
 	void moving(FiniteStateMachine* a);
