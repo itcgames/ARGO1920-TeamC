@@ -63,10 +63,16 @@ void ProjectileManager::createPlayerBullet(const CreateBulletEvent& t_event, Wea
 	{
 	case Weapon::Pistol:
 	case Weapon::MachineGun:
-		m_audioMgr->PlayPlayerFireSfx(Utilities::GUN_FIRE_PATH + "ak.wav", static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos(), m_focusPoint);
+		m_playerBullets[m_nextPlayerBullet].entity.removeCompType(ComponentType::Visual);
+		m_playerBullets[m_nextPlayerBullet].entity.addComponent(new VisualComponent("bullet.png", m_renderer));
+		m_audioMgr->PlaySfx(Utilities::GUN_FIRE_PATH + "ak.wav");
 		static_cast<ForceComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Force))->setForce(t_event.direction * PLAYER_BULLET_SPEED);
 		break;
 	case Weapon::GrenadeLauncher:
+		m_playerBullets[m_nextPlayerBullet].entity.removeCompType(ComponentType::Visual);
+		m_playerBullets[m_nextPlayerBullet].entity.addComponent(new VisualComponent("Grenade.png", m_renderer));
+		m_audioMgr->PlaySfx(Utilities::GUN_FIRE_PATH + "launcher.wav");
+		static_cast<ForceComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Force))->setForce(t_event.direction * PLAYER_GRENADE_SPEED);
 		break;
 	default:
 		break;
