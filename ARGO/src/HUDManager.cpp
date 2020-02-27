@@ -147,13 +147,13 @@ void HUDManager::setUpHUD(HUDBlock& t_hudBlock, int t_playerIndex)
 	switch (t_playerIndex)
 	{
 	case 0:
-		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("RedPlayerAvatar.png", m_renderer, glm::vec2(0, 0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
-		break;
-	case 1:
 		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("BluePlayerAvatar.png", m_renderer, glm::vec2(0, 0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
 		break;
-	case 2:
+	case 1:
 		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("GreenPlayerAvatar.png", m_renderer, glm::vec2(0, 0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+		break;
+	case 2:
+		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("RedPlayerAvatar.png", m_renderer, glm::vec2(0, 0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
 		break;
 	case 3:
 		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("YellowPlayerAvatar.png", m_renderer, glm::vec2(0, 0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
