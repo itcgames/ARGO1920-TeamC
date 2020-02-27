@@ -44,6 +44,9 @@ private:
 
 	void closeWindow(const CloseWindow& t_event = CloseWindow());
 	void changeScreen(const ChangeScreen& t_event);
+ 
+	int shownAchv = -1;
+	int timeSincePopup = -1;
 
 	AssetManager* m_assetMgr;
 	AudioManager* m_audioMgr;

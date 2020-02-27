@@ -17,7 +17,8 @@
 #include "MenuMoveRightCommand.h"
 #include "GoToLicenseScreenCommand.h"
 #include "GoToMainMenuCommand.h"
-
+#include "ThrowGlowstickCommand.h"
+ 
 class MacroCommand
 {
 public:

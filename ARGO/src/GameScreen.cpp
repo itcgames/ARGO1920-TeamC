@@ -10,19 +10,21 @@ bool cleanUpEnemies(const Entity& t_entity)
 GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::S_MAX_PLAYERS], CommandSystem& t_commandSystem, InputSystem& t_input, RenderSystem& t_renderSystem) :
 	m_eventManager{ t_eventManager },
 	m_controllers{ *t_controllers },
-	m_levelManager{ t_renderer, m_players },
+	m_levelManager{ t_renderer, m_players, m_renderSystem, m_projectileManager },
 	m_enemyManager{ t_renderer, Utilities::ENEMY_INITIAL_SPAWN_DELAY, t_eventManager, m_transformSystem, m_collisionSystem, m_healthSystem, m_aiSystem, m_renderSystem, m_levelManager },
 	m_renderer{ t_renderer },
 	m_transformSystem{ m_eventManager },
 	m_projectileManager{ t_renderer, m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
 	m_aiSystem{ m_players, m_enemyManager.getEnemies(), m_eventManager, m_levelManager },
 	m_collisionSystem{ m_eventManager },
+	m_weaponSystem{ m_projectileManager, m_eventManager },
 	m_playerFactory(),
 	m_enemyFactory(),
 	m_pickUpManager(m_eventManager, m_collisionSystem) ,
 	m_commandSystem{ t_commandSystem },
 	m_inputSystem{ t_input },
-	m_renderSystem{ t_renderSystem }
+	m_renderSystem{ t_renderSystem },
+ 	m_hudManager(m_players)
 {
 }
 
@@ -33,12 +35,13 @@ GameScreen::~GameScreen()
 void GameScreen::update(float t_deltaTime)
 {
 	updateLevelManager();
-	//updateEntities(t_deltaTime);
+	updateEntities(t_deltaTime);
 	updatePlayers(t_deltaTime);
 	updateProjectiles(t_deltaTime);
 	m_collisionSystem.update(m_goal);
 	m_collisionSystem.handleCollisions();
 	m_pickUpManager.update(t_deltaTime);
+	m_hudManager.update();
 }
 
 void GameScreen::processEvents(SDL_Event* t_event)
@@ -106,6 +109,8 @@ void GameScreen::render(SDL_Renderer* t_renderer)
 	m_renderSystem.render(t_renderer, m_goal);
 	m_projectileManager.render(t_renderer, &m_renderSystem);
 	m_pickUpManager.render(t_renderer, &m_renderSystem);
+	m_levelManager.renderLight(t_renderer, &m_renderSystem);
+	m_hudManager.render(t_renderer, &m_renderSystem);
 }
 
 
@@ -180,6 +185,7 @@ void GameScreen::updatePlayers(float t_deltaTime)
 			m_transformSystem.update(player, t_deltaTime);
 			m_collisionSystem.update(player);
 			m_particleSystem.update(player, t_deltaTime);
+			m_weaponSystem.update(player, t_deltaTime);
 		}
 	}
 }
@@ -270,4 +276,5 @@ void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_control
 	m_projectileManager.init();
 	createGoal();
 	m_pickUpManager.init(m_renderer);
+	m_hudManager.init(t_renderer);
 }

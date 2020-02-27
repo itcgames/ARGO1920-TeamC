@@ -17,10 +17,23 @@ struct PickupGrabbed
 	Entity* pickup;
 };
 
+struct CreateGlowStickEvent
+{
+	Entity& entity;
+	glm::vec2 direction;
+	float forceScale;
+	Controller& controller;
+};
+
 struct PhysicsMove
 {
 	glm::vec2 velocity;
 	Entity& entity;
+};
+
+struct EnemyKilled
+{
+	Entity* enemy;
 };
 
 struct PhysicsRotate
@@ -43,7 +56,7 @@ struct UpdateAchievement
 {
 	int enemiesKilled = 0;
 	int gamesWon = 0;
-};
+}; 
 
 struct CloseWindow
 {

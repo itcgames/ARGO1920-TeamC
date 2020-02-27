@@ -35,20 +35,21 @@ void AchievementScreen::render(SDL_Renderer* t_renderer)
 	{
 		for (int index2 = 0; index2 < NUMBER_OF_ACHIEVEMENTS; index2++)
 		{
-			m_renderSystem.render(t_renderer, m_achievements[index][index2]);
+			m_renderSystem.render(t_renderer, m_achievementBoxes[index][index2]);
 		}
 	}
 }
 
 void AchievementScreen::reset()
 {
+	checkStats();
 	m_screenActive = true;
 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
 }
 
 void AchievementScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 {
-
+	checkStats();
 	m_hiddenAchvString = "Win 10 Games and Kill 1000 Enemies";
 
 	setControllerButtonMaps();
@@ -112,23 +113,23 @@ void AchievementScreen::createAchievementEntities(SDL_Renderer* t_renderer)
 	};
 	for (int index = 0; index < NUMBER_OF_ACHV_PARTS; index++)
 	{
-		m_achievements[static_cast<int>(AchievmentParts::Box)][index].addComponent(new VisualComponent((index == NUMBER_OF_ACHV_PARTS - 1) ? "AchvBoxHidden.png" : "AchvBox.png", t_renderer));
-		m_achievements[static_cast<int>(AchievmentParts::Box)][index].addComponent(new TransformComponent(glm::vec2(Utilities::SCREEN_WIDTH * (1 / 20.0f), Utilities::SCREEN_HEIGHT / 5.0f * (index + 2))));
-		VisualComponent* boxVisual = static_cast<VisualComponent*>(m_achievements[static_cast<int>(AchievmentParts::Box)][index].getComponent(ComponentType::Visual));
+		m_achievementBoxes[static_cast<int>(AchievmentParts::Box)][index].addComponent(new VisualComponent((index == NUMBER_OF_ACHV_PARTS - 1) ? "AchvBoxHidden.png" : "AchvBox.png", t_renderer));
+		m_achievementBoxes[static_cast<int>(AchievmentParts::Box)][index].addComponent(new TransformComponent(glm::vec2(Utilities::SCREEN_WIDTH * (1 / 20.0f), Utilities::SCREEN_HEIGHT / 4.0f * (index + 1))));
+		VisualComponent* boxVisual = static_cast<VisualComponent*>(m_achievementBoxes[static_cast<int>(AchievmentParts::Box)][index].getComponent(ComponentType::Visual));
 		glm::vec2 boxSize = glm::vec2(boxVisual->getWidth(), boxVisual->getHeight());
-		glm::vec2 boxPos = static_cast<TransformComponent*>(m_achievements[static_cast<int>(AchievmentParts::Box)][index].getComponent(ComponentType::Transform))->getPos();
+		glm::vec2 boxPos = static_cast<TransformComponent*>(m_achievementBoxes[static_cast<int>(AchievmentParts::Box)][index].getComponent(ComponentType::Transform))->getPos();
 
-		m_achievements[static_cast<int>(AchievmentParts::MainText)][index].addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::MEDIUM_FONT, true, (index == NUMBER_OF_ACHV_PARTS - 1 && m_showHiddenAchv) ? m_hiddenAchvString : AchievmentStrings[index][0], Utilities::UI_COLOUR.x, Utilities::UI_COLOUR.y, Utilities::UI_COLOUR.z));
-		TextComponent* mainTextComp = static_cast<TextComponent*>(m_achievements[static_cast<int>(AchievmentParts::MainText)][index].getComponent(ComponentType::Text));
+		m_achievementBoxes[static_cast<int>(AchievmentParts::MainText)][index].addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::MEDIUM_FONT, true, (index == NUMBER_OF_ACHV_PARTS - 1 && m_showHiddenAchv) ? m_hiddenAchvString : AchievmentStrings[index][0], Utilities::UI_COLOUR.x, Utilities::UI_COLOUR.y, Utilities::UI_COLOUR.z));
+		TextComponent* mainTextComp = static_cast<TextComponent*>(m_achievementBoxes[static_cast<int>(AchievmentParts::MainText)][index].getComponent(ComponentType::Text));
 		glm::vec2 mainTextSize = glm::vec2(mainTextComp->getWidth(), mainTextComp->getHeight());
 
-		m_achievements[static_cast<int>(AchievmentParts::MainText)][index].addComponent(new TransformComponent(glm::vec2(boxPos.x + (boxSize.x / 40.0f), boxPos.y + (boxSize.y / 3.0f) - mainTextSize.y / 2.0f)));
+		m_achievementBoxes[static_cast<int>(AchievmentParts::MainText)][index].addComponent(new TransformComponent(glm::vec2(boxPos.x + (boxSize.x / 40.0f), boxPos.y + (boxSize.y / 3.0f) - mainTextSize.y / 2.0f)));
 
 
-		m_achievements[static_cast<int>(AchievmentParts::SubText)][index].addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::SMALL_FONT, true, AchievmentStrings[index][1], 0, 0, 0));
-		TextComponent* subTextComp = static_cast<TextComponent*>(m_achievements[static_cast<int>(AchievmentParts::SubText)][index].getComponent(ComponentType::Text));
+		m_achievementBoxes[static_cast<int>(AchievmentParts::SubText)][index].addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::SMALL_FONT, true, AchievmentStrings[index][1], 0, 0, 0));
+		TextComponent* subTextComp = static_cast<TextComponent*>(m_achievementBoxes[static_cast<int>(AchievmentParts::SubText)][index].getComponent(ComponentType::Text));
 		glm::vec2 subTextSize = glm::vec2(subTextComp->getWidth(), subTextComp->getHeight());
-		m_achievements[static_cast<int>(AchievmentParts::SubText)][index].addComponent(new TransformComponent(glm::vec2(boxPos.x + (boxSize.x / 40.0f), boxPos.y + (boxSize.y * 2.0f / 3.0f) - subTextSize.y / 2.0f)));
+		m_achievementBoxes[static_cast<int>(AchievmentParts::SubText)][index].addComponent(new TransformComponent(glm::vec2(boxPos.x + (boxSize.x / 40.0f), boxPos.y + (boxSize.y * 2.0f / 3.0f) - subTextSize.y / 2.0f)));
 	}
 }
 
@@ -137,7 +138,7 @@ void AchievementScreen::createCheckBoxEntities(SDL_Renderer* t_renderer)
 	for (int index = 0; index < NUMBER_OF_ACHIEVEMENTS; index++)
 	{
 		m_checkboxes[static_cast<int>(CheckBoxParts::Box)][index].addComponent(new VisualComponent("Checkbox.png", t_renderer));
-		m_checkboxes[static_cast<int>(CheckBoxParts::Box)][index].addComponent(new TransformComponent(glm::vec2(Utilities::SCREEN_WIDTH * (5.0f / 6.0f), Utilities::SCREEN_HEIGHT / 5.0f * (index + 2))));
+		m_checkboxes[static_cast<int>(CheckBoxParts::Box)][index].addComponent(new TransformComponent(glm::vec2(Utilities::SCREEN_WIDTH * (5.0f / 6.0f), Utilities::SCREEN_HEIGHT / 4.0f * (index + 1))));
 		VisualComponent* boxVisual = static_cast<VisualComponent*>(m_checkboxes[static_cast<int>(CheckBoxParts::Box)][index].getComponent(ComponentType::Visual));
 		glm::vec2 boxSize = glm::vec2(boxVisual->getWidth(), boxVisual->getHeight());
 		glm::vec2 boxPos = static_cast<TransformComponent*>(m_checkboxes[static_cast<int>(CheckBoxParts::Box)][index].getComponent(ComponentType::Transform))->getPos();
@@ -151,21 +152,15 @@ void AchievementScreen::createCheckBoxEntities(SDL_Renderer* t_renderer)
 
 
 		m_checkboxes[static_cast<int>(CheckBoxParts::Check)][index].addComponent(new TransformComponent(boxPos + boxSize / 2.0f - checkSize / 2.0f));
-
-	}
+ 	}
 }
 
 void AchievementScreen::buttonPressed(const MenuButtonPressed& t_event)
 {
 	if (m_screenActive && ButtonType::B == t_event.buttonPressed)
 	{
-		m_eventManager.emitEvent<UpdateAchievement>(UpdateAchievement{ 10, 1 });
-
-		 
-
-
-		/*m_screenActive = false;
-		m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::MainMenu });*/
+		m_screenActive = false;
+		m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::MainMenu });
 	}
 }
 
@@ -228,25 +223,71 @@ void AchievementScreen::updateAchievement(const UpdateAchievement& t_event)
 
 void AchievementScreen::handleAchievements(int t_enemiesKilled, int t_gamesWon)
 {
-	if (!m_hasAchievements[static_cast<int>(Achievments::EnemiesKilled)])
+	if (!m_hasAchievements[static_cast<int>(AchievmentsType::EnemiesKilled)])
 	{
 		if (t_enemiesKilled >= 50)
 		{
-			m_hasAchievements[static_cast<int>(Achievments::EnemiesKilled)] = true;
-		}
+			m_hasAchievements[static_cast<int>(AchievmentsType::EnemiesKilled)] = true;
+			Utilities::Achievements::numberOfUnlockedAchv++;
+ 		}
 	}
-	if (!m_hasAchievements[static_cast<int>(Achievments::GameWon)])
+	if (!m_hasAchievements[static_cast<int>(AchievmentsType::GameWon)])
 	{
 		if (t_gamesWon > 0)
 		{
-			m_hasAchievements[static_cast<int>(Achievments::GameWon)] = true;
+			m_hasAchievements[static_cast<int>(AchievmentsType::GameWon)] = true;
+			Utilities::Achievements::numberOfUnlockedAchv++;
+
 		}
 	}
-	if (!m_hasAchievements[static_cast<int>(Achievments::Hidden)])
+	if (!m_hasAchievements[static_cast<int>(AchievmentsType::Hidden)])
 	{
 		if (t_enemiesKilled >= 1000 && t_gamesWon >= 10)
 		{
-			m_hasAchievements[static_cast<int>(Achievments::Hidden)] = true;
+			m_hasAchievements[static_cast<int>(AchievmentsType::Hidden)] = true;
+			Utilities::Achievements::numberOfUnlockedAchv++;
+
 		}
 	}
+}
+
+void AchievementScreen::checkStats()
+{
+	std::string fullPath = SDL_GetBasePath();
+
+	// get it to point at assets folder inside argo folder
+	if (fullPath.find("\Debug") != std::string::npos)
+	{
+		fullPath.replace(fullPath.find("\Debug"), std::string("\Debug").length(), "\ARGO");
+	}
+	else if (fullPath.find("\Release") != std::string::npos)
+	{
+		fullPath.replace(fullPath.find("\Release"), std::string("\Release").length(), "\ARGO");
+
+	}
+	fullPath.append(Utilities::FILES_PATH + "achievements.txt");
+
+	std::ifstream achievementsFileRead;
+	achievementsFileRead.open(fullPath);
+
+	std::string lineContents;
+
+	int gamesWonValue = 0;
+	int enemiesKilled = 0;
+
+	if (achievementsFileRead.is_open())
+	{
+		while (std::getline(achievementsFileRead, lineContents))
+		{
+			if (lineContents.find("GamesWon:") != std::string::npos)
+			{
+				gamesWonValue = std::stoi(lineContents.substr(lineContents.find(":") + 1));
+			}
+			if (lineContents.find("EnemiesKilled:") != std::string::npos)
+			{
+				enemiesKilled = std::stoi(lineContents.substr(lineContents.find(":") + 1));
+			}
+		}
+	}
+	handleAchievements(enemiesKilled, gamesWonValue);
 }

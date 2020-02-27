@@ -15,6 +15,8 @@
 #include "PlayerFactory.h"
 #include "PickUpManager.h"
 #include "EnemyFactory.h"
+#include "HUDManager.h"
+#include <WeaponSystem.h>
 
 class GameScreen
 {
@@ -55,6 +57,7 @@ public:
 	AiSystem m_aiSystem;
 	CollisionSystem m_collisionSystem;
 	ParticleSystem m_particleSystem;
+	WeaponSystem m_weaponSystem;
 
 	CommandSystem& m_commandSystem;
 	InputSystem& m_inputSystem;
@@ -64,7 +67,8 @@ public:
 	ProjectileManager m_projectileManager;
 	LevelManager m_levelManager;
 	EnemyManager m_enemyManager;
-
+	HUDManager m_hudManager;
+ 
 	PlayerFactory m_playerFactory;
 	EnemyFactory m_enemyFactory;
 	PickUpManager m_pickUpManager;

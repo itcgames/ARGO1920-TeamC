@@ -20,6 +20,9 @@ enum class ComponentType
 	FireRate = 16,
 	PickUp = 17,
 	FlowField = 18,
+	HUD = 19,
+	LightField = 20,
+	Weapon = 21,
 	Count
 };
 
@@ -45,4 +48,7 @@ namespace COMPONENT_ID
 	const int FIRE_RATE_ID = static_cast<int>(ComponentType::FireRate);
 	const int FLOW_FIELD_ID = static_cast<int>(ComponentType::FlowField);
 	const int PICK_UP_ID = static_cast<int>(ComponentType::PickUp);
+	const int HUD_ID = static_cast<int>(ComponentType::HUD);
+	const int LIGHT_FIELD_ID = static_cast<int>(ComponentType::LightField);
+	const int WEAPON_ID = static_cast<int>(ComponentType::Weapon);
 }

@@ -9,7 +9,7 @@ Entity::Entity()
 
 Entity::~Entity()
 {
- 	for (int i = m_components.size() - 1; i >= 0; i--)
+	for (int i = m_components.size() - 1; i >= 0; i--)
 	{
 		if (m_components.at(i) == NULL)
 		{
@@ -183,6 +183,15 @@ void Entity::addComponent(Component* t_c)
 			}
 			break;
 		}
+		case ComponentType::HUD:
+		{
+			if (!m_components.at(COMPONENT_ID::HUD_ID))
+			{
+				m_components.at(COMPONENT_ID::HUD_ID) = t_c;
+				return;
+			}
+			break;
+		}
 		case ComponentType::FireRate:
 		{
 			if (!m_components.at(COMPONENT_ID::FIRE_RATE_ID))
@@ -201,13 +210,31 @@ void Entity::addComponent(Component* t_c)
 			}
 			break;
 		}
+		case ComponentType::LightField:
+		{
+			if (!m_components.at(COMPONENT_ID::LIGHT_FIELD_ID))
+			{
+				m_components.at(COMPONENT_ID::LIGHT_FIELD_ID) = t_c;
+				return;
+			}
+			break;
+		}
+		case ComponentType::Weapon:
+		{
+			if (!m_components.at(COMPONENT_ID::WEAPON_ID))
+			{
+				m_components.at(COMPONENT_ID::WEAPON_ID) = t_c;
+				return;
+			}
+			break;
+		}
 		default:
 			throw std::invalid_argument("Invalid component type!");
 			break;
 		}
 		throw std::invalid_argument("already has this component!");
 	}
-	catch (const std::invalid_argument & e)
+	catch (const std::invalid_argument& e)
 	{
 		std::cerr << e.what() << std::endl;
 		throw e;
@@ -375,6 +402,16 @@ void Entity::removeCompType(ComponentType t_type)
 			}
 			break;
 		}
+		case ComponentType::HUD:
+		{
+			if (m_components.at(COMPONENT_ID::HUD_ID))
+			{
+				delete m_components.at(COMPONENT_ID::HUD_ID);
+				m_components.at(COMPONENT_ID::HUD_ID) = nullptr;
+				return;
+			}
+			break;
+		}
 		case ComponentType::Tag:
 		{
 			if (m_components.at(COMPONENT_ID::TAG_ID))
@@ -415,12 +452,32 @@ void Entity::removeCompType(ComponentType t_type)
 			}
 			break;
 		}
+		case ComponentType::LightField:
+		{
+			if (m_components.at(COMPONENT_ID::LIGHT_FIELD_ID))
+			{
+				delete m_components.at(COMPONENT_ID::LIGHT_FIELD_ID);
+				m_components.at(COMPONENT_ID::LIGHT_FIELD_ID) = nullptr;
+				return;
+			}
+			break;
+		}
+		case ComponentType::Weapon:
+		{
+			if (m_components.at(COMPONENT_ID::WEAPON_ID))
+			{
+				delete m_components.at(COMPONENT_ID::WEAPON_ID);
+				m_components.at(COMPONENT_ID::WEAPON_ID) = nullptr;
+				return;
+			}
+			break;
+		}
 		default:
 			throw std::invalid_argument("trying to delete an unknown component!");
 			break;
 		}
 	}
-	catch (const std::invalid_argument & e)
+	catch (const std::invalid_argument& e)
 	{
 		std::cerr << e.what() << std::endl;
 		throw e;
@@ -486,14 +543,20 @@ Component* Entity::getComponent(ComponentType t_type) const
 			return m_components.at(COMPONENT_ID::PICK_UP_ID);
 		case ComponentType::FireRate:
 			return m_components.at(COMPONENT_ID::FIRE_RATE_ID);
+		case ComponentType::HUD:
+			return m_components.at(COMPONENT_ID::HUD_ID);
 		case ComponentType::FlowField:
 			return m_components.at(COMPONENT_ID::FLOW_FIELD_ID);
+		case ComponentType::LightField:
+			return m_components.at(COMPONENT_ID::LIGHT_FIELD_ID);
+		case ComponentType::Weapon:
+			return m_components.at(COMPONENT_ID::WEAPON_ID);
 		default:
 			throw std::invalid_argument("trying to get an unknown component!");
 			break;
 		}
 	}
-	catch (const std::invalid_argument & e)
+	catch (const std::invalid_argument& e)
 	{
 		std::cerr << e.what() << std::endl;
 		throw;

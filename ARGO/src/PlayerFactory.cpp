@@ -24,7 +24,21 @@ void PlayerFactory::createPlayer(Entity& t_entity)
 void PlayerFactory::createPlayer(Entity& t_entity, bool t_isPlayer, Controller& t_controllers, int t_index, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS])
 {
 	t_entity.addComponent(new CommandComponent());
-	t_entity.addComponent(new HealthComponent(FactoryStatSheet::PLAYER_MAX_HP, FactoryStatSheet::PLAYER_STARTING_HP, FactoryStatSheet::PLAYER_INVINCIBILITY_FRAMES));
+	int playerHp = FactoryStatSheet::PLAYER_MAX_HP;
+	if (Utilities::Achievements::numberOfUnlockedAchv == 1)
+	{
+		playerHp = FactoryStatSheet::PLAYER_MAX_HP_1;
+	}
+	else if (Utilities::Achievements::numberOfUnlockedAchv == 2)
+	{
+		playerHp = FactoryStatSheet::PLAYER_MAX_HP_2;
+	}
+	else if (Utilities::Achievements::numberOfUnlockedAchv == 3)
+	{
+		playerHp = FactoryStatSheet::PLAYER_MAX_HP_3;
+	}
+	const int PLAYER_MAX_HP = playerHp;
+	t_entity.addComponent(new HealthComponent(PLAYER_MAX_HP, PLAYER_MAX_HP, FactoryStatSheet::PLAYER_INVINCIBILITY_FRAMES));
 	t_entity.addComponent(new TransformComponent());
 	t_entity.addComponent(new ForceComponent());
 	t_entity.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
@@ -36,6 +50,7 @@ void PlayerFactory::createPlayer(Entity& t_entity, bool t_isPlayer, Controller& 
 	t_entity.addComponent(new TagComponent(Tag::Player));
 	t_entity.addComponent(new VisualComponent("player.png", m_renderer, static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255))));
 	t_entity.addComponent(new FireRateComponent(Utilities::PLAYER_FIRE_DELAY));
+	t_entity.addComponent(new WeaponComponent());
 
 	if (t_isPlayer)
 	{

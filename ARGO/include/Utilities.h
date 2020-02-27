@@ -3,6 +3,14 @@
 
 namespace Utilities
 {
+
+	class Achievements
+	{
+	public:
+		static int numberOfUnlockedAchv;
+
+	};
+
 	const static int S_MAX_PLAYERS = 4;
 	//font consts
 	const int SMALL_FONT = 24;
@@ -19,6 +27,7 @@ namespace Utilities
 	const std::string MUSIC_PATH = "assets\\sounds\\music\\";
 	const std::string FONTS_PATH = "assets\\fonts\\";
 	const std::string FILES_PATH = "assets\\files\\";
+
 
 #ifdef _DEBUG
 	const int SCREEN_WIDTH = 1600;
@@ -79,6 +88,11 @@ namespace Utilities
 	static const glm::vec3 MENU_BUTTON_DEFAULT_COLOUR{ 199,163,10 };
 	static const glm::vec3 UI_COLOUR = glm::vec3(25, 57, 89);
 
+	static const int GLOWSTICK_POOL_SIZE = 20;
+
+	//HUD Values
+	const float PERCENTAGE_BUFFER_BETWEEN_HUDS = 0.05f;//5% screen space.
+	const float PERCENTAGE_SCREENSPACE_OF_HUD = 0.1875f;//18.75% screen space which is taken by each HUD.
 }
 
 enum class MenuStates
@@ -113,9 +127,3 @@ enum class MoveDirection
 	Left,
 	Right
 }; 
-
-enum class AchievementsType
-{
-	EnemiesKilled,
-	GamesWon,
- };

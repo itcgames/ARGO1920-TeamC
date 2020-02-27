@@ -18,10 +18,10 @@ enum class AchievmentParts
 	SubText
 };
 
-enum class Achievments
+enum class AchievmentsType
 {
-	EnemiesKilled,
 	GameWon,
+	EnemiesKilled,
 	Hidden
 };
 
@@ -49,6 +49,7 @@ private:
 
 	void updateAchievement(const UpdateAchievement& t_event);
 	void handleAchievements(int t_enemiesKilled, int t_gamesWon);
+	void checkStats();
 
 	InputSystem& m_inputSystem;
 	CommandSystem& m_commandSystem;
@@ -64,7 +65,7 @@ private:
 
 
 	Entity m_checkboxes[NUMBER_OF_CHECKBOX_PARTS][NUMBER_OF_ACHIEVEMENTS];
-	Entity m_achievements[NUMBER_OF_ACHV_PARTS][NUMBER_OF_ACHIEVEMENTS];
+	Entity m_achievementBoxes[NUMBER_OF_ACHV_PARTS][NUMBER_OF_ACHIEVEMENTS];
 	Entity m_background;	
 	Entity m_inputEntity;
 

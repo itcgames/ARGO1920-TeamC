@@ -9,7 +9,7 @@
 class VisualComponent : public Component
 {
 public:
-	VisualComponent(std::string t_filename, SDL_Renderer* t_renderer, Uint8 t_red = 255, Uint8 t_green = 255, Uint8 t_blue = 255);
+	VisualComponent(std::string t_filename, SDL_Renderer* t_renderer, Uint8 t_red = 255, Uint8 t_green = 255, Uint8 t_blue = 255, bool t_staticPosition = false);
 	~VisualComponent();
 
 	//Loads image at specified t_path
@@ -30,9 +30,15 @@ public:
 	//get texture ptr
 	SDL_Texture* getTexture() const;
 
+	void setStaticPosition(bool t_staticPosition);
+	bool getStaticPosition();
+
 private:
 	//Pointer to a texture loaded from AssetManager
 	SDL_Texture* m_texture;
+
+	//Does the Sprite Move with the Camera. It doesn't by default
+	bool m_staticPosition = false;
 
 	//Image dimensions
 	int m_width;

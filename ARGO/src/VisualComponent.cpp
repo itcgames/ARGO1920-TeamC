@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "VisualComponent.h"
 
-VisualComponent::VisualComponent(std::string t_filename, SDL_Renderer* t_renderer, Uint8 t_red, Uint8 t_green, Uint8 t_blue) :
-	Component(ComponentType::Visual)
+VisualComponent::VisualComponent(std::string t_filename, SDL_Renderer* t_renderer, Uint8 t_red, Uint8 t_green, Uint8 t_blue, bool t_staticPosition) :
+	Component(ComponentType::Visual),
+	m_staticPosition(t_staticPosition)
 {
 	if (!loadFromFile(t_filename, t_renderer))
 	{
@@ -47,6 +48,16 @@ int VisualComponent::getHeight() const
 SDL_Texture* VisualComponent::getTexture() const
 {
 	return m_texture;
+}
+
+void VisualComponent::setStaticPosition(bool t_staticPosition)
+{
+	m_staticPosition = t_staticPosition;
+}
+
+bool VisualComponent::getStaticPosition()
+{
+	return m_staticPosition;
 }
 
 bool VisualComponent::loadFromFile(std::string t_filename, SDL_Renderer* t_renderer)

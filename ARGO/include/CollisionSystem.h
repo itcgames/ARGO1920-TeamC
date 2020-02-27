@@ -8,6 +8,7 @@
 #include "ForceComponent.h"
 #include "PickUpComponent.h"
 #include "InputComponent.h"
+#include "WeaponComponent.h"
 #include "Utilities.h"
 #include "QuadTree.h"
 #include "AudioManager.h"
@@ -29,6 +30,7 @@ private:
 	void handlePlayerBulletCollision(Entity* t_playerBullet);
 	void handleEnemyCollision(Entity* t_enemy);
 	void handleEnemyBulletCollision(Entity* t_enemyBullet);
+	void handleGlowStickCollision(Entity* t_glowStick);
 
 	//player collisions
 	void playerToPlayer(Entity* t_player1, Entity* t_player2);
@@ -45,6 +47,8 @@ private:
 	void enemyToWall(Entity* t_enemy, Entity* t_wall);
 
 	void enemyBulletToWall(Entity* t_enemyBullet, Entity* t_wall);
+
+	void glowStickToWall(Entity* t_glowstick, Entity* t_wall);
 
 	EventManager& m_eventManager;
 	const float PLAYER_TO_ENEMY_REFECTION_SCALER = 15.0f;

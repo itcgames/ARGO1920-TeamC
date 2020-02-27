@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Game.h"
 
-
+int Utilities::Achievements::numberOfUnlockedAchv = 0;
 
 /// <summary>
 /// Constructor for the game class.
@@ -18,11 +18,11 @@ Game::Game() :
 	m_achievementsScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_gameTypeScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_joinGameScreen{m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem},
-	#ifdef _DEBUG
-	m_currentScreen{ MenuStates::Achievements }
-	#else
+#ifdef _DEBUG
+	m_currentScreen{ MenuStates::Game }
+#else
 	m_currentScreen{ MenuStates::Splash }
-	#endif // _DEBUG
+#endif // _DEBUG
 {
 	try
 	{
@@ -45,9 +45,11 @@ Game::Game() :
 		//Check if the renderer was created correctly
 		if (!m_renderer) throw "Error Loading Renderer";
 
+		SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
 		// Sets clear colour of renderer to black and the color of any primitives
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 
+		//Utilities::numberOfUnlockedAchv = 0;
 
 		for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
 		{
@@ -62,12 +64,16 @@ Game::Game() :
 		m_audioMgr = AudioManager::Instance();
 		m_audioMgr->PlayMusic("looping\\Ove - Earth Is All We Have.ogg");
 
+		m_achievementsScreen.initialise(m_renderer, m_controllers[0]);
+
 		initialiseScreen();
  
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 		m_eventManager.subscribeToEvent<ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
 
 		setupIgnoredEvents();
+
+ 
 
 		// Game is running
 		m_isRunning = true;
@@ -220,7 +226,7 @@ void Game::processEvent()
 }
 
 void Game::update(float t_dt)
-{
+{ 
 	switch (m_currentScreen)
 	{
 	case MenuStates::Game:
@@ -289,7 +295,7 @@ void Game::render()
 		break;
 	default:
 		break;
-	}
+	} 
 	SDL_RenderPresent(m_renderer);
 }
 
@@ -328,10 +334,19 @@ void Game::createButtonMaps()
 			ButtonCommandPair(ButtonType::DpadLeft, new MoveLeftCommand()),
 			ButtonCommandPair(ButtonType::DpadRight, new MoveRightCommand()),
 			ButtonCommandPair(ButtonType::Back, new CloseWindowCommand()),
-			ButtonCommandPair(ButtonType::RightTrigger, new FireBulletCommand())
+			ButtonCommandPair(ButtonType::RightTrigger, new FireBulletCommand()),
+			ButtonCommandPair(ButtonType::LB, new ThrowGlowstickCommand())
 		};
 		// Set Held To Same as Pressed Commands For Time Being
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][index] = m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][index];
+		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][index] =
+		{
+			ButtonCommandPair(ButtonType::DpadUp, new MoveUpCommand()),
+			ButtonCommandPair(ButtonType::DpadDown, new MoveDownCommand()),
+			ButtonCommandPair(ButtonType::DpadLeft, new MoveLeftCommand()),
+			ButtonCommandPair(ButtonType::DpadRight, new MoveRightCommand()),
+			ButtonCommandPair(ButtonType::Back, new CloseWindowCommand()),
+			ButtonCommandPair(ButtonType::RightTrigger, new FireBulletCommand())
+		};
 		// Set Release Commands to nothing
 		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][index] = ButtonCommandMap();
 	}
@@ -348,7 +363,7 @@ void Game::changeScreen(const ChangeScreen& t_event)
 	{
 		initialiseScreen();
 	}
-}
+} 
 
 void Game::initialiseScreen()
 {
@@ -372,9 +387,6 @@ void Game::initialiseScreen()
 		break;
 	case MenuStates::Splash:
 		m_splashScreen.initialise(m_renderer, m_controllers[0]);
-		break;
-	case MenuStates::Achievements:
-		m_achievementsScreen.initialise(m_renderer, m_controllers[0]);
 		break;
 	case MenuStates::GameType:
 		m_gameTypeScreen.initialise(m_renderer, m_controllers[0]);
