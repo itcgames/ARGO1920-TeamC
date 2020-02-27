@@ -3,8 +3,7 @@
 
 CollisionSystem::CollisionSystem(EventManager& t_eventManager) :
 	m_eventManager(t_eventManager),
-	m_quadTree(0, glm::vec2(0, 0), glm::vec2(Utilities::LEVEL_TILE_WIDTH* Utilities::TILE_SIZE, Utilities::LEVEL_TILE_HEIGHT* Utilities::TILE_SIZE)),
-	m_seperationScaler(30)
+	m_quadTree(0, glm::vec2(0, 0), glm::vec2(Utilities::LEVEL_TILE_WIDTH* Utilities::TILE_SIZE, Utilities::LEVEL_TILE_HEIGHT* Utilities::TILE_SIZE))
 {
 	m_circleColliderBuffer.reserve(100);
 }
@@ -369,11 +368,11 @@ void CollisionSystem::playerToPlayer(Entity* t_player1, Entity* t_player2)
 		if (length != 0)
 		{
 			distanceBetween /= length;
-			distanceBetween = distanceBetween * seperation * m_seperationScaler;
+			distanceBetween = distanceBetween * seperation * SEPERATION_SCALER;
 		}
 		else
 		{
-			distanceBetween = glm::vec2(m_seperationScaler, m_seperationScaler);
+			distanceBetween = glm::vec2(SEPERATION_SCALER, SEPERATION_SCALER);
 		}
 		player1Position->addPos(distanceBetween);
 		player2Position->addPos(-distanceBetween);
@@ -553,11 +552,11 @@ void CollisionSystem::enemyToEnemy(Entity* t_enemy1, Entity* t_enemy2)
 		if (length != 0)
 		{
 			distanceBetween /= length;
-			distanceBetween = distanceBetween * seperation * m_seperationScaler;
+			distanceBetween = distanceBetween * seperation * SEPERATION_SCALER;
 		}
 		else
 		{
-			distanceBetween = glm::vec2(m_seperationScaler, m_seperationScaler);
+			distanceBetween = glm::vec2(SEPERATION_SCALER, SEPERATION_SCALER);
 		}
 		enemy1Position->addPos(distanceBetween);
 		enemy2Position->addPos(-distanceBetween);

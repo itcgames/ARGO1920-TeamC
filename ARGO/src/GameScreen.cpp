@@ -230,6 +230,9 @@ void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utiliti
 		playerCount++;
 	}
 	setUpLevel();
+	m_projectileManager.reset();
+	m_enemyManager.killAll();
+	m_hudManager;
 }
 
 void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS])

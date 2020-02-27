@@ -9,7 +9,7 @@
 class VisualComponent : public Component
 {
 public:
-	VisualComponent(std::string t_filename, SDL_Renderer* t_renderer, Uint8 t_red = 255, Uint8 t_green = 255, Uint8 t_blue = 255, bool t_staticPosition = false);
+	VisualComponent(std::string t_filename, SDL_Renderer* t_renderer, glm::vec2 t_offset = glm::vec2(0,0), Uint8 t_red = 255, Uint8 t_green = 255, Uint8 t_blue = 255, bool t_staticPosition = false);
 	~VisualComponent();
 
 	//Loads image at specified t_path
@@ -33,6 +33,9 @@ public:
 	void setStaticPosition(bool t_staticPosition);
 	bool getStaticPosition();
 
+	glm::vec2 getOffset();
+	void setOffset(glm::vec2 t_offset);
+
 private:
 	//Pointer to a texture loaded from AssetManager
 	SDL_Texture* m_texture;
@@ -43,5 +46,7 @@ private:
 	//Image dimensions
 	int m_width;
 	int m_height;
+
+	glm::vec2 m_offset;
 };
 

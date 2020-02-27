@@ -62,7 +62,7 @@ private:
 	QuadTree m_quadTree;
 	std::vector<Entity*> m_circleColliderBuffer;
 
-	float m_seperationScaler;
+	const float SEPERATION_SCALER = 20;
 	const float EXPLOSION_RADIUS = 128;
 };
 

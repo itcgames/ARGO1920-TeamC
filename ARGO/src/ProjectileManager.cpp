@@ -55,9 +55,17 @@ void ProjectileManager::createPlayerBullet(const CreateBulletEvent& t_event, Wea
 		t_event.controller.activateRumble(RumbleStrength::Weak, RumbleLength::Short);
 	}
 	glm::vec2 position = static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos();
+	glm::vec2 fireOffset = glm::vec2(35, 5);
+	float theta = glm::radians(static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getRotation());
+	float cs = cos(theta);
+	float sn = sin(theta);
+	position.x += fireOffset.x * cs - fireOffset.y * sn;
+	position.y += fireOffset.x * sn + fireOffset.y * cs;
+
 	static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Transform))->setPos(position);
 	static_cast<HealthComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Health))->setHealth(1);
 	static_cast<TimerComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Timer))->reset();
+
 
 	switch (t_weapon)
 	{
@@ -211,6 +219,22 @@ void ProjectileManager::render(SDL_Renderer* t_renderer, RenderSystem* t_system)
 		{
 			t_system->render(t_renderer, glowStick);
 		}
+	}
+}
+
+void ProjectileManager::reset()
+{
+	for (auto& bullet : m_playerBullets)
+	{
+		static_cast<HealthComponent*>(bullet.entity.getComponent(ComponentType::Health))->setHealth(0);
+	}
+	for (auto& bullet : m_enemyBullets)
+	{
+		static_cast<HealthComponent*>(bullet.entity.getComponent(ComponentType::Health))->setHealth(0);
+	}
+	for (auto& glowStick : m_glowsticks)
+	{
+		static_cast<HealthComponent*>(glowStick.getComponent(ComponentType::Health))->setHealth(0);
 	}
 }
 

@@ -131,7 +131,7 @@ void HUDManager::setUpHUD(HUDBlock& t_hudBlock, int t_playerIndex)
 	primComp->setStaticPosition(true);
 
 	t_hudBlock.HUDVisualTexture.addComponent(new TransformComponent(true));
-	t_hudBlock.HUDVisualTexture.addComponent(new VisualComponent("HUD.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255),true));
+	t_hudBlock.HUDVisualTexture.addComponent(new VisualComponent("HUD.png", m_renderer, glm::vec2(0,0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255),true));
 
 	t_hudBlock.HUDHealthText.addComponent(new TransformComponent(true));
 	t_hudBlock.HUDHealthText.addComponent(new TextComponent(std::string("ariblk.ttf"), m_renderer, true, std::string("HI")));
@@ -147,16 +147,16 @@ void HUDManager::setUpHUD(HUDBlock& t_hudBlock, int t_playerIndex)
 	switch (t_playerIndex)
 	{
 	case 0:
-		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("RedPlayerAvatar.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("RedPlayerAvatar.png", m_renderer, glm::vec2(0, 0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
 		break;
 	case 1:
-		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("BluePlayerAvatar.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("BluePlayerAvatar.png", m_renderer, glm::vec2(0, 0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
 		break;
 	case 2:
-		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("GreenPlayerAvatar.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("GreenPlayerAvatar.png", m_renderer, glm::vec2(0, 0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
 		break;
 	case 3:
-		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("YellowPlayerAvatar.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("YellowPlayerAvatar.png", m_renderer, glm::vec2(0, 0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
 		break;
 	}
 }
