@@ -18,7 +18,7 @@ class TransformComponent : public Component
 	//};
 
 public:
-	TransformComponent();
+	TransformComponent(bool t_alwaysOnScreen = false);
 	TransformComponent(float t_x, float t_y, float t_rotation = 0.0f);
 	TransformComponent(glm::vec2 t_pos, float t_rotation = 0.0f);
 	~TransformComponent();
@@ -41,6 +41,8 @@ public:
 	void setRightRotation(float t_newRightRotation);
 	float getLeftRotation();
 	float getRightRotation();
+	void setAlwaysOnScreen(bool t_alwaysOnScreen);
+	bool getAlwaysOnscreen();
 
 private:
 	glm::vec2 m_pos;
@@ -49,5 +51,6 @@ private:
 	float m_leftRotation;
 	// rotation for the right thumb stick
 	float m_rightRotation;
+	bool m_alwaysOnScreen = false;
 };
 

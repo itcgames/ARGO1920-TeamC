@@ -34,8 +34,9 @@ TransformComponent::TransformComponent(glm::vec2 t_pos, float t_rotation) :
 /// <summary>
 /// Default constructor that gives random pos and rotation of 0.0f 
 /// </summary>
-TransformComponent::TransformComponent() :
-	Component(ComponentType::Transform)
+TransformComponent::TransformComponent(bool t_alwaysOnScreen) :
+	Component(ComponentType::Transform),
+	m_alwaysOnScreen(t_alwaysOnScreen)
 {
 	m_pos.x = glm::linearRand(50, 700);
 	m_pos.y = glm::linearRand(50, 700);
@@ -143,6 +144,16 @@ float TransformComponent::getLeftRotation()
 float TransformComponent::getRightRotation()
 {
 	return m_rightRotation;
+}
+
+void TransformComponent::setAlwaysOnScreen(bool t_alwaysOnScreen)
+{
+	m_alwaysOnScreen = t_alwaysOnScreen;
+}
+
+bool TransformComponent::getAlwaysOnscreen()
+{
+	return m_alwaysOnScreen;
 }
 
 
