@@ -37,6 +37,11 @@ struct EnemyKilled
 	Entity* enemy;
 };
 
+struct PlayerKilled
+{
+	Entity* player;
+};
+
 struct PhysicsRotate
 {
 	glm::vec2 rotation;

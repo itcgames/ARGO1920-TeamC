@@ -21,7 +21,8 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_playerFactory(),
 	m_enemyFactory(),
 	m_pickUpManager(m_eventManager, m_collisionSystem),
-	m_hudManager(m_players)
+	m_hudManager(m_players),
+	m_particleManager(m_eventManager,m_particleSystem)
 {
 }
 
@@ -39,6 +40,7 @@ void GameScreen::update(float t_deltaTime)
 	m_collisionSystem.handleCollisions();
 	m_pickUpManager.update(t_deltaTime);
 	m_hudManager.update();
+	m_particleManager.update(t_deltaTime);
 }
 
 void GameScreen::processEvents(SDL_Event* t_event)
@@ -85,8 +87,10 @@ void GameScreen::render(SDL_Renderer* t_renderer)
 	m_renderSystem.render(t_renderer, m_goal);
 	m_projectileManager.render(t_renderer, &m_renderSystem);
 	m_pickUpManager.render(t_renderer, &m_renderSystem);
+	m_particleManager.render(t_renderer, &m_renderSystem);
 	m_levelManager.renderLight(t_renderer, &m_renderSystem);
 	m_hudManager.render(t_renderer, &m_renderSystem);
+
 }
 
 

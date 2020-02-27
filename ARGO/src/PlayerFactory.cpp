@@ -29,9 +29,6 @@ void PlayerFactory::createPlayer(Entity& t_entity, bool t_isPlayer, Controller& 
 	t_entity.addComponent(new ForceComponent());
 	t_entity.addComponent(new ColliderCircleComponent(Utilities::PLAYER_RADIUS));
 	t_entity.addComponent(new ColourComponent(glm::linearRand(0, 255), glm::linearRand(0, 255), glm::linearRand(0, 255), 255));
-	t_entity.addComponent(new ParticleEmitterComponent(static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform))->getPos(), true,
-		FactoryStatSheet::PARTICLE_DIRECTION_ANGLE_SAMPLE, FactoryStatSheet::PARTICLE_OFFSET_ANGLE_SAMPLE, FactoryStatSheet::PARTICLE_SPEED_SAMPLE,
-		FactoryStatSheet::PARTICLE_MAX_PARTICLES_SAMPLE, FactoryStatSheet::PARTICLES_PER_SECOND_SAMPLE));
 	t_entity.addComponent(new PrimitiveComponent());
 	t_entity.addComponent(new TagComponent(Tag::Player));
 	//t_entity.addComponent(new VisualComponent("player.png", m_renderer, static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255)), static_cast<Uint8>(glm::linearRand(0, 255))));
