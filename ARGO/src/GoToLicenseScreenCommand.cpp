@@ -3,5 +3,5 @@
 
 void GoToLicenseScreenCommand::execute(Entity& t_entity, EventManager& t_eventManager)
 {
-	t_eventManager.emitEvent(ChangeScreen{ MenuStates::License });
+	t_eventManager.emitEvent(Events::ChangeScreen{ MenuStates::License });
 }

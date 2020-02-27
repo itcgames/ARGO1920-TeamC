@@ -42,8 +42,8 @@ private:
 	void render();
 	void cleanup();
 
-	void closeWindow(const CloseWindow& t_event = CloseWindow());
-	void changeScreen(const ChangeScreen& t_event);
+	void closeWindow(const Events::CloseWindow& t_event = Events::CloseWindow());
+	void changeScreen(const Events::ChangeScreen& t_event);
 
 	AssetManager* m_assetMgr;
 	AudioManager* m_audioMgr;

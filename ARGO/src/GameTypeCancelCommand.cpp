@@ -4,5 +4,5 @@
 
 void GameTypeCancelCommand::execute(Entity& t_entity, EventManager& t_eventManager)
 {
-	t_eventManager.emitEvent<GameTypeCancel>(GameTypeCancel{});
+	t_eventManager.emitEvent<Events::GameTypeCancel>(Events::GameTypeCancel{});
 }

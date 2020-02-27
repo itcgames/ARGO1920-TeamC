@@ -7,10 +7,7 @@
 #include "CommandSystem.h" 
 #include <iostream>
 #include <fstream>
-
-
-
-
+#include <Windows.h>
 
 enum class MenuButtonsType
 {
@@ -47,10 +44,10 @@ private:
 	void setControllerButtonMaps();
 	void updateButtonColour(Entity& t_gameTypeButton, glm::vec3 t_colour);
 
-	void moveThroughUI(const GameTypeMoveButtons& t_event);
-	void buttonPressed(const GameTypeSelectButton& t_event);
-	void gameTypeConfirmed(const GameTypeConfirm& t_event);
-	void cancel(const GameTypeCancel& t_event);
+	void moveThroughUI(const Events::GameTypeMoveButtons& t_event);
+	void buttonPressed(const Events::GameTypeSelectButton& t_event);
+	void gameTypeConfirmed(const Events::GameTypeConfirm& t_event);
+	void cancel(const Events::GameTypeCancel& t_event);
 
 	static const int S_NUMBER_OF_GAME_TYPE_BUTTONS = 3;
 	static const int S_NUMBER_OF_GAME_TYPE_TITLES = 3;
@@ -105,6 +102,9 @@ private:
 	std::string m_hostsIp;
 
 	void findHostsIp();
+
+	STARTUPINFO m_startupInfo = { sizeof(m_startupInfo) };;
+	PROCESS_INFORMATION m_processInfo;
 };
 
 

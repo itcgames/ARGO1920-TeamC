@@ -89,10 +89,10 @@ void GameTypeScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controll
 
 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
 
-	m_eventManager.subscribeToEvent<GameTypeMoveButtons>(std::bind(&GameTypeScreen::moveThroughUI, this, std::placeholders::_1));
-	m_eventManager.subscribeToEvent<GameTypeSelectButton>(std::bind(&GameTypeScreen::buttonPressed, this, std::placeholders::_1));
-	m_eventManager.subscribeToEvent<GameTypeConfirm>(std::bind(&GameTypeScreen::gameTypeConfirmed, this, std::placeholders::_1));
-	m_eventManager.subscribeToEvent<GameTypeCancel>(std::bind(&GameTypeScreen::cancel, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<Events::GameTypeMoveButtons>(std::bind(&GameTypeScreen::moveThroughUI, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<Events::GameTypeSelectButton>(std::bind(&GameTypeScreen::buttonPressed, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<Events::GameTypeConfirm>(std::bind(&GameTypeScreen::gameTypeConfirmed, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<Events::GameTypeCancel>(std::bind(&GameTypeScreen::cancel, this, std::placeholders::_1));
 
 }
 
@@ -271,7 +271,7 @@ void GameTypeScreen::findHostsIp()
 	m_hostsIp = ipValue;
 }
 
-void GameTypeScreen::moveThroughUI(const GameTypeMoveButtons& t_event)
+void GameTypeScreen::moveThroughUI(const Events::GameTypeMoveButtons& t_event)
 {
 	if (!m_hostPopupActive && !m_joinPopupActive)
 	{
@@ -289,17 +289,44 @@ void GameTypeScreen::updateButtonColour(Entity& t_gameTypeButton, glm::vec3 t_co
 	visualComp->setColor(t_colour.x, t_colour.y, t_colour.z);
 }
 
-void GameTypeScreen::buttonPressed(const GameTypeSelectButton& t_event)
+void GameTypeScreen::buttonPressed(const Events::GameTypeSelectButton& t_event)
 {
 	switch (m_currentButton)
 	{
 	case MenuButtonsType::Offline:
-		m_eventManager.emitEvent(ChangeScreen{ MenuStates::Game });
+		m_eventManager.emitEvent(Events::ChangeScreen{ MenuStates::Game });
 		break;
 	case MenuButtonsType::OnlineHost:
 	{
 		// load server and popup ip address
 		m_hostPopupActive = true;
+
+		//set up process info variables
+		ZeroMemory(&m_startupInfo, sizeof(m_startupInfo));
+		m_startupInfo.cb = sizeof(m_startupInfo);
+		ZeroMemory(&m_processInfo, sizeof(m_processInfo));
+
+		std::string path = SDL_GetBasePath();
+		path.append("\\Server.exe");
+		LPCSTR name = path.c_str();
+
+		// Start the child process. 
+		if (!CreateProcess(
+			name,	// No module name (use command line)
+			NULL,			// Command line
+			NULL,           // Process handle not inheritable
+			NULL,           // Thread handle not inheritable
+			FALSE,          // Set handle inheritance to FALSE
+			0,              // No creation flags
+			NULL,           // Use parent's environment block
+			NULL,           // Use parent's starting directory 
+			&m_startupInfo,	// Pointer to STARTUPINFO structure
+			&m_processInfo)	// Pointer to PROCESS_INFORMATION structure
+			)
+		{
+			printf("Failed to start the server!\nError:(%d).\n", GetLastError());
+		}
+
 		break;
 	}
 	case MenuButtonsType::OnlineJoin:
@@ -311,13 +338,19 @@ void GameTypeScreen::buttonPressed(const GameTypeSelectButton& t_event)
 	}
 }
 
-void GameTypeScreen::cancel(const GameTypeCancel& t_event)
+void GameTypeScreen::cancel(const Events::GameTypeCancel& t_event)
 {
 	if (m_joinPopupActive) m_joinPopupActive = false;
-	else if (m_hostPopupActive) m_hostPopupActive = false;
+	else if (m_hostPopupActive)
+	{
+		m_hostPopupActive = false;
+
+		//put kill task command here
+
+	}
 	else
 	{
-		m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::MainMenu });
+		m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::MainMenu });
 	}
 }
 
@@ -385,7 +418,7 @@ void GameTypeScreen::updateCurrentButton(MoveDirection t_inputDirection)
 	m_currentButton = static_cast<MenuButtonsType>(currentButtonIndex);
 }
 
-void GameTypeScreen::gameTypeConfirmed(const GameTypeConfirm& t_event)
+void GameTypeScreen::gameTypeConfirmed(const Events::GameTypeConfirm& t_event)
 {
 	if (m_hostPopupActive)
 	{

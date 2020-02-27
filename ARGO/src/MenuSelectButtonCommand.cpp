@@ -3,5 +3,5 @@
 
 void MenuSelectButtonCommand::execute(Entity& t_entity, EventManager& t_eventManager)
 {
-	t_eventManager.emitEvent(MenuSelectButton{ t_entity });
+	t_eventManager.emitEvent(Events::MenuSelectButton{ t_entity });
 }

@@ -99,7 +99,7 @@ void AiSystem::playerShootingDecision(Entity& t_entity)
 		glm::vec2 playerPos = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform))->getPos();
 		glm::vec2 enemyPos = static_cast<TransformComponent*>(m_botEnemyData.enemy->getComponent(ComponentType::Transform))->getPos();
 		Controller temp;
-		m_eventManager.emitEvent(CreateBulletEvent{ t_entity, glm::normalize(enemyPos - playerPos) , 32, 0 , temp });
+		m_eventManager.emitEvent(Events::CreateBulletEvent{ t_entity, glm::normalize(enemyPos - playerPos) , 32, 0 , temp });
 	}
 }
 void AiSystem::setEnemyData(glm::vec2 t_botPosition)

@@ -3,5 +3,5 @@
 
 void GameTypeSelectCommand::execute(Entity& t_entity, EventManager& t_eventManager)
 {
-	t_eventManager.emitEvent<GameTypeSelectButton>(GameTypeSelectButton{});
+	t_eventManager.emitEvent<Events::GameTypeSelectButton>(Events::GameTypeSelectButton{});
 }

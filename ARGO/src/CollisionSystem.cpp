@@ -339,7 +339,7 @@ void CollisionSystem::playerToGoal(Entity* t_player, Entity* t_goal)
 {
 	if (t_player->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_player, t_goal))
 	{
-		m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::MainMenu });
+		m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::MainMenu });
 	}
 }
 

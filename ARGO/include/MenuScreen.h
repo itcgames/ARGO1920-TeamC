@@ -33,8 +33,8 @@ public:
 	void setControllerButtonMaps();
 	void createMenuButton(Entity& t_menuButton, glm::vec2 t_position);
 	void createInputEntity(Controller& t_controller);
-	void changeCurrentSelectedButton(const MenuMoveButtonsUpDown& t_event);
-	void buttonPressed(const MenuSelectButton& t_event);
+	void changeCurrentSelectedButton(const Events::MenuMoveButtonsUpDown& t_event);
+	void buttonPressed(const Events::MenuSelectButton& t_event);
 	void updateButtonColour(Entity& t_menuButton, glm::vec3 t_colour);
 
 	static const int NUMBER_OF_MENU_BUTTONS = 5; 

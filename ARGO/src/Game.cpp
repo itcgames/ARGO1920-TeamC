@@ -57,8 +57,8 @@ Game::Game() :
 		initialiseScreen();
 
 
-		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
-		m_eventManager.subscribeToEvent<ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
+		m_eventManager.subscribeToEvent<Events::CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
+		m_eventManager.subscribeToEvent<Events::ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
 
 		setupIgnoredEvents();
 
@@ -292,7 +292,7 @@ void Game::cleanup()
 	SDL_Quit();
 }
 
-void Game::closeWindow(const CloseWindow& t_event)
+void Game::closeWindow(const Events::CloseWindow& t_event)
 {
 	m_isRunning = false;
 }
@@ -319,7 +319,7 @@ void Game::createButtonMaps()
 	}
 }
 
-void Game::changeScreen(const ChangeScreen& t_event)
+void Game::changeScreen(const Events::ChangeScreen& t_event)
 {
 	m_currentScreen = t_event.newScreen;
 	if (m_hasScreenBeenSet[static_cast<int>(m_currentScreen)])

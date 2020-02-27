@@ -4,5 +4,5 @@
 
 void GameTypeMoveLeftCommand::execute(Entity& t_entity, EventManager& t_eventManager)
 {
-	t_eventManager.emitEvent<GameTypeMoveButtons>(GameTypeMoveButtons{ MoveDirection::Left });
+	t_eventManager.emitEvent<Events::GameTypeMoveButtons>(Events::GameTypeMoveButtons{ MoveDirection::Left });
 }
