@@ -3,19 +3,24 @@
 namespace Utilities
 {
 	//stuff for online
-	enum class OnlineStatus
+	enum class OnlineState
 	{
 		Host,
 		Client,
 		Local
 	};
 
-	static OnlineStatus S_ONLINE_STATUS = OnlineStatus::Local;
-	static bool S_IS_HOST = false;
-	static const int PORT_NUM = 1111;
-	static const std::string ONLINE_HOST = "host";
-	static const std::string ONLINE_CLIENT = "client";
-	//online stuff end
+	class OnlineData
+	{
+	public:
+		static OnlineState S_ONLINE_STATUS;
+		static bool S_IS_HOST;
+		static const int PORT_NUM = 1111;
+		const std::string ONLINE_HOST = "host";
+		const std::string ONLINE_CLIENT = "client";
+	private:
+		OnlineData() {};
+	};
 
 	const static int S_MAX_PLAYERS = 4;
 	//font consts

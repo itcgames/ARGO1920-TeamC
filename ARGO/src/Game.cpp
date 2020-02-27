@@ -1,10 +1,13 @@
 #include "stdafx.h"
 #include "Game.h"
 
+Utilities::OnlineState Utilities::OnlineData::S_ONLINE_STATUS = OnlineState::Local;
+bool Utilities::OnlineData::S_IS_HOST = false;
+
 /// <summary>
 /// Constructor for the game class.
 /// </summary>
-
+/// 
 class State;
 Game::Game() :
 	m_gameScreen{ m_renderer, m_eventManager, m_controllers, m_commandSystem, m_inputSystem, m_renderSystem },
@@ -280,13 +283,12 @@ void Game::render()
 /// </summary>
 void Game::cleanup()
 {
-	if (Utilities::S_ONLINE_STATUS != Utilities::OnlineStatus::Local)
+	if (Utilities::OnlineData::S_ONLINE_STATUS != Utilities::OnlineState::Local)
 	{
-		if (Utilities::S_IS_HOST)
+		if (Utilities::OnlineData::S_IS_HOST)
 		{
 			killGameServer();
 		}
-
 	}
 
 	AssetManager::Release();

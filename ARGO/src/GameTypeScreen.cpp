@@ -6,7 +6,7 @@ GameTypeScreen::GameTypeScreen(EventManager& t_eventManager, CommandSystem& t_co
 	m_commandSystem{ t_commandSystem },
 	m_inputSystem{ t_inputSystem },
 	m_renderSystem{ t_renderSystem },
-	m_onlineHandler{ t_onlineHandler}
+	m_onlineHandler{ t_onlineHandler }
 {
 }
 
@@ -69,7 +69,6 @@ void GameTypeScreen::render(SDL_Renderer* t_renderer)
 			}
 		}
 	}
-
 }
 
 void GameTypeScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
@@ -93,7 +92,11 @@ void GameTypeScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controll
 	m_eventManager.subscribeToEvent<Events::GameTypeSelectButton>(std::bind(&GameTypeScreen::buttonPressed, this, std::placeholders::_1));
 	m_eventManager.subscribeToEvent<Events::GameTypeConfirm>(std::bind(&GameTypeScreen::gameTypeConfirmed, this, std::placeholders::_1));
 	m_eventManager.subscribeToEvent<Events::GameTypeCancel>(std::bind(&GameTypeScreen::cancel, this, std::placeholders::_1));
+}
 
+void GameTypeScreen::attemptToConnect(std::string t_ip, int t_port)
+{
+	m_onlineHandler.connectToServer(t_ip, t_port);
 }
 
 void GameTypeScreen::setControllerButtonMaps()
@@ -328,9 +331,9 @@ void GameTypeScreen::buttonPressed(const Events::GameTypeSelectButton& t_event)
 		}
 		else
 		{
-			Utilities::S_ONLINE_STATUS = Utilities::OnlineStatus::Host;
-			Utilities::S_IS_HOST = true;
-			m_onlineHandler.connectToServer(m_hostsIp, Utilities::PORT_NUM);
+			Utilities::OnlineData::S_ONLINE_STATUS = Utilities::OnlineState::Host;
+			Utilities::OnlineData::S_IS_HOST = true;
+			attemptToConnect(m_hostsIp);
 		}
 
 		break;
@@ -346,8 +349,8 @@ void GameTypeScreen::buttonPressed(const Events::GameTypeSelectButton& t_event)
 
 void GameTypeScreen::cancel(const Events::GameTypeCancel& t_event)
 {
-	Utilities::S_ONLINE_STATUS = Utilities::OnlineStatus::Local;
-	Utilities::S_IS_HOST = false;
+	Utilities::OnlineData::S_ONLINE_STATUS = Utilities::OnlineState::Local;
+	Utilities::OnlineData::S_IS_HOST = false;
 
 	if (m_joinPopupActive)
 	{
@@ -435,6 +438,8 @@ void GameTypeScreen::gameTypeConfirmed(const Events::GameTypeConfirm& t_event)
 	if (m_hostPopupActive)
 	{
 		// go to game
+		m_onlineHandler.sendStartData();
+		//m_eventManager.emitEvent()
 	}
 	else if (m_joinPopupActive)
 	{
@@ -478,39 +483,13 @@ void GameTypeScreen::gameTypeConfirmed(const Events::GameTypeConfirm& t_event)
 			findHostsIp();
 			ipValue = m_hostsIp;
 		}
-#endif // _DEBUG
-
 		std::cout << ipValue << std::endl;
-
-		//join server and go to game
-		int timer = SDL_GetTicks();
-		bool failedToConnect = false;
-		m_onlineHandler.connectToServer(ipValue, Utilities::PORT_NUM);
-		while ("" == m_onlineHandler.getConnectData() && !failedToConnect)
-		{
-			//loop until we get data back 
-			if ((SDL_GetTicks() - timer) > 5000)
-			{
-				failedToConnect = true;
-			}
-		}
-		if (!failedToConnect)
-		{
-			if (Utilities::ONLINE_HOST == m_onlineHandler.getConnectData())
-			{
-#ifdef _DEBUG
-				std::cout << "Host data received" << std::endl;
 #endif // _DEBUG
-			}
-			else if (Utilities::ONLINE_CLIENT == m_onlineHandler.getConnectData())
-			{
-#ifdef _DEBUG
-				std::cout << "Guest data received" << std::endl;
-#endif // _DEBUG
-				//set players up etc to match host here
 
-				m_onlineHandler.sendStartData();
-			}
-		}
+
+		//join server
+		attemptToConnect(ipValue);
+
+		//switch screen/state to lobby screen with players
 	}
 }

@@ -40,7 +40,7 @@ public:
 	void render(SDL_Renderer* t_renderer);
 	void initialise(SDL_Renderer* t_renderer, Controller& t_controller);
 private:
-
+	void attemptToConnect(std::string t_ip, int t_port = Utilities::OnlineData::PORT_NUM);
 	void setControllerButtonMaps();
 	void updateButtonColour(Entity& t_gameTypeButton, glm::vec3 t_colour);
 

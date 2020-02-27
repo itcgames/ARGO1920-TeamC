@@ -39,7 +39,10 @@ void OnlineGameHandler::connectToServer(std::string t_ip, int t_port)
 	{
 		std::cout << "Failed to connect to server..." << std::endl;
 	}
-	sendConnectData();
+	else
+	{
+		sendConnectData();
+	}
 }
 
 
