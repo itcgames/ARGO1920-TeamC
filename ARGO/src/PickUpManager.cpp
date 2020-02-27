@@ -7,6 +7,7 @@ PickUpManager::PickUpManager(EventManager& t_eventManager, CollisionSystem& t_co
 	m_collisionSystem(t_collisionSystem)
 {
 	t_eventManager.subscribeToEvent<PickupGrabbed>(std::bind(&PickUpManager::removePickup, this, std::placeholders::_1));
+	t_eventManager.subscribeToEvent<EnemyKilled>(std::bind(&PickUpManager::randomPickupSpawn, this, std::placeholders::_1));
 }
 ///<summary>
 /// Initialise the Manager. Sets the renderer.
@@ -23,6 +24,16 @@ void PickUpManager::init(SDL_Renderer* t_renderer)
 	delete factory;
 }
 
+void PickUpManager::randomPickupSpawn(const EnemyKilled& t_event)
+{
+	if (glm::linearRand(0, PICKUP_SPAWN_CHANCE) == 0)
+	{
+		int type = glm::linearRand(1, 3);
+		std::cout << type << std::endl;
+		placePickup(static_cast<TransformComponent*>(t_event.enemy->getComponent(ComponentType::Transform))->getPos(), type);
+	}
+}
+
 ///<summary>
 /// Removes and kills a component if it collides with a player.
 ///</summary>
@@ -37,7 +48,6 @@ void PickUpManager::removePickup(const PickupGrabbed& t_event)
 		healthComp->setHealth(0);
 		nextAvailablePickup();
 	}
-
 }
 
 ///<summary>
@@ -53,8 +63,9 @@ void PickUpManager::placePickup(glm::vec2 t_pos, int t_pickUpType)
 		TransformComponent* transformComp = static_cast<TransformComponent*>(m_pickUps[m_currentPickup].getComponent(ComponentType::Transform));
 		transformComp->setPos(t_pos);
 		HealthComponent* healthComp = static_cast<HealthComponent*>(m_pickUps[m_currentPickup].getComponent(ComponentType::Health));
-		healthComp->addHealth(1);
+		healthComp->setHealth(1);
 		delete factory;
+		nextAvailablePickup();
 	}
 }
 ///<summary>

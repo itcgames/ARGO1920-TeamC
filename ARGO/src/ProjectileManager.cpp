@@ -29,10 +29,10 @@ void ProjectileManager::init()
 	for (auto& glowStick : m_glowsticks)
 	{
 		glowStick.addComponent(new TransformComponent());
-		glowStick.addComponent(new VisualComponent("bullet.png", m_renderer));
+		glowStick.addComponent(new VisualComponent("GlowStick.png", m_renderer));
 		glowStick.addComponent(new ForceComponent(glm::vec2(0, 0)));
 		glowStick.addComponent(new HealthComponent(1, 0));
-		glowStick.addComponent(new ColliderCircleComponent(BULLET_RADIUS));
+		glowStick.addComponent(new ColliderCircleComponent(16));
 		glowStick.addComponent(new TimerComponent(BULLET_LIFETIME));
 		glowStick.addComponent(new TagComponent(Tag::GlowStick));
 	}
