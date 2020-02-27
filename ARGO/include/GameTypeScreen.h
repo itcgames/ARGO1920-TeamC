@@ -7,10 +7,7 @@
 #include "CommandSystem.h" 
 #include <iostream>
 #include <fstream>
-
-
-
-
+#include "OnlineGameHandler.h"
 
 enum class MenuButtonsType
 {
@@ -36,19 +33,19 @@ enum class DialEntityType
 class GameTypeScreen
 {
 public:
-	GameTypeScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_inputSystem, RenderSystem& t_renderSystem);
+	GameTypeScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_inputSystem, RenderSystem& t_renderSystem, OnlineGameHandler& t_onlineHandler);
 	~GameTypeScreen();
 	void update(float t_deltaTime);
 	void reset();
 	void render(SDL_Renderer* t_renderer);
 	void initialise(SDL_Renderer* t_renderer, Controller& t_controller);
 private:
-
+	void attemptToConnect(std::string t_ip, int t_port = Utilities::OnlineData::PORT_NUM);
 	void setControllerButtonMaps();
 	void updateButtonColour(Entity& t_gameTypeButton, glm::vec3 t_colour);
 
-	void moveThroughUI(const MenuMoveBetweenUI& t_event);
-	void buttonPressed(const MenuButtonPressed& t_event);
+	void moveThroughUI(const Events::MenuMoveBetweenUI& t_event);
+	void buttonPressed(const Events::MenuButtonPressed& t_event);
 	void gameTypeConfirmed();
 	void gameTypeCancel();
 	void gameTypeChosen();
@@ -63,13 +60,11 @@ private:
 
 	Entity m_popup;
 
-	static const int S_NUMBER_OF_HOST_TEXT_LINES = 4;
-	Entity m_hostText[S_NUMBER_OF_HOST_TEXT_LINES];
-
 	static const int S_NUMBER_OF_JOIN_TEXT_LINES = 2;
 	Entity m_joinText[2];
 	static const int S_IP_NUMBER_LENGTH = 12;
 	Entity m_ipNumbers[S_IP_NUMBER_LENGTH][3];
+	Entity m_ipDots[3];
 
 	MenuButtonsType m_currentButton;
 
@@ -83,7 +78,6 @@ private:
 	int m_currentSelectedIpNumber = 0;
 	int ipNumberValues[S_IP_NUMBER_LENGTH];
 
-	bool m_hostPopupActive = false;
 	bool m_joinPopupActive = false;
 
 	void updateIpDial(MoveDirection t_inputDirection);
@@ -93,15 +87,17 @@ private:
 	void createMenuButtonsAndTitles(SDL_Renderer* t_renderer);
 	void createPopupEntity(SDL_Renderer* t_renderer);
 	void createInputEntity(Controller& t_controller);
-	void createHostText(SDL_Renderer* t_renderer, glm::vec2 t_popUpPos, float t_popUpHeight);
 	void createJoinText(SDL_Renderer* t_renderer, glm::vec2 t_popUpPos, float t_popUpHeight);
 	void createIpInputter(SDL_Renderer* t_renderer, glm::vec2 t_popupPos);
 
+	void findHostsIp();
 	std::string m_hostsIp;
 
-	void findHostsIp();
-
 	bool m_screenActive = false;
+	STARTUPINFO m_startupInfo = { sizeof(m_startupInfo) };;
+	PROCESS_INFORMATION m_processInfo;
+
+	OnlineGameHandler& m_onlineHandler;
 };
 
 

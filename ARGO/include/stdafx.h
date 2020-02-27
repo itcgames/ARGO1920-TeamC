@@ -19,6 +19,14 @@
 #include <memory>
 #include <stdexcept>
 #include <functional>
+#include <queue> //for std::queue
+#include <mutex> //for std::mutex
+#include <cstdint> //Required to use std::int32_t
+#include <fstream> //for std::ifstream and std::ofstream
+#include <Ws2tcpip.h> //for inet_pton
+#include <WinSock2.h> //For SOCKET
+#include <stdlib.h>
+
 
 //SDL
 #include <SDL.h>
@@ -33,9 +41,6 @@
 #include <gtx/rotate_vector.hpp>
 #include <gtx/vector_angle.hpp> 
  
-//cute_math
-#include <cute_math.h>
-
 //some external libraries
 
 

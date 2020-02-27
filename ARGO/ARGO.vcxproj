@@ -16,6 +16,8 @@
     <ClCompile Include="src\AnalogRotateCommand.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\AudioManager.cpp" />
+    <ClCompile Include="src\Client.cpp" />
+    <ClCompile Include="src\ClientIni.cpp" />
     <ClCompile Include="src\CloseWindowCommand.cpp" />
     <ClCompile Include="src\Command.cpp" />
     <ClCompile Include="src\FireBulletCommand.cpp" />
@@ -35,6 +37,10 @@
     <ClCompile Include="src\MoveLeftCommand.cpp" />
     <ClCompile Include="src\MoveRightCommand.cpp" />
     <ClCompile Include="src\MoveUpCommand.cpp" />
+    <ClCompile Include="src\OnlineGameHandler.cpp" />
+    <ClCompile Include="src\Packet.cpp" />
+    <ClCompile Include="src\PacketManager.cpp" />
+    <ClCompile Include="src\PacketStructs.cpp" />
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\ParticleEmitterComponent.cpp" />
     <ClCompile Include="src\ParticleSystem.cpp" />
@@ -68,6 +74,7 @@
     <ClCompile Include="src\InputComponent.cpp" />
     <ClCompile Include="src\InputSystem.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\SendGetMethods.cpp" />
     <ClCompile Include="src\SplashScreen.cpp" />
     <ClCompile Include="src\TagComponent.cpp" />
     <ClCompile Include="src\TextComponent.cpp" />
@@ -94,8 +101,10 @@
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\AudioManager.h" />
     <ClInclude Include="include\BehaviourTree.h" />
+    <ClInclude Include="include\Client.h" />
     <ClInclude Include="include\CloseWindowCommand.h" />
     <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\FileTransferData.h" />
     <ClInclude Include="include\FireBulletCommand.h" />
     <ClInclude Include="include\FireRateComponent.h" />
     <ClInclude Include="include\GameTypeScreen.h" />
@@ -113,6 +122,11 @@
     <ClInclude Include="include\MoveLeftCommand.h" />
     <ClInclude Include="include\MoveRightCommand.h" />
     <ClInclude Include="include\MoveUpCommand.h" />
+    <ClInclude Include="include\OnlineGameHandler.h" />
+    <ClInclude Include="include\Packet.h" />
+    <ClInclude Include="include\PacketManager.h" />
+    <ClInclude Include="include\PacketStructs.h" />
+    <ClInclude Include="include\PacketType.h" />
     <ClInclude Include="include\Particle.h" />
     <ClInclude Include="include\ParticleEmitterComponent.h" />
     <ClInclude Include="include\ParticleSystem.h" />

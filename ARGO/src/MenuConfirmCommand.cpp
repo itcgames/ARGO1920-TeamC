@@ -4,5 +4,5 @@
 
 void MenuConfirmCommand::execute(Entity& t_entity, EventManager& t_eventManager)
 {
-	t_eventManager.emitEvent(MenuButtonPressed{ ButtonType::Start });
+	t_eventManager.emitEvent(Events::MenuButtonPressed{ ButtonType::Start });
 }

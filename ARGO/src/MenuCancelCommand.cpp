@@ -4,5 +4,5 @@
 
 void MenuCancelCommand::execute(Entity& t_entity, EventManager& t_eventManager)
 {
-	t_eventManager.emitEvent(MenuButtonPressed{ ButtonType::B });
+	t_eventManager.emitEvent(Events::MenuButtonPressed{ ButtonType::B });
 }

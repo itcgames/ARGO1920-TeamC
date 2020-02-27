@@ -26,8 +26,8 @@ class ProjectileManager
 public:
 	ProjectileManager(SDL_Renderer* t_renderer, EventManager& t_eventManager, glm::vec2& t_focusPoint, PhysicsSystem& t_physicsSystem, CollisionSystem& t_collisionSystem);
 	void init();
-	void createPlayerBullet(const CreateBulletEvent& t_event);
-	void createEnemyBullet(const CreateBulletEvent& t_event);
+	void createPlayerBullet(const Events::CreateBulletEvent& t_event);
+	void createEnemyBullet(const Events::CreateBulletEvent& t_event);
 	void update(float t_dt);
 	void updateBullet(Bullet& t_bullet, float t_dt);
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);

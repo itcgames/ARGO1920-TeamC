@@ -9,7 +9,7 @@ ProjectileManager::ProjectileManager(SDL_Renderer* t_renderer, EventManager& t_e
 	m_physicsSystem(t_physicsSystem),
 	m_collisionSystem(t_collisionSystem)
 {
-	t_eventManager.subscribeToEvent<CreateBulletEvent>(std::bind(&ProjectileManager::createPlayerBullet, this, std::placeholders::_1));
+	t_eventManager.subscribeToEvent<Events::CreateBulletEvent>(std::bind(&ProjectileManager::createPlayerBullet, this, std::placeholders::_1));
 }
 
 void ProjectileManager::init()
@@ -38,7 +38,7 @@ void ProjectileManager::init()
 	}
 }
 
-void ProjectileManager::createPlayerBullet(const CreateBulletEvent& t_event)
+void ProjectileManager::createPlayerBullet(const Events::CreateBulletEvent& t_event)
 {
 	FireRateComponent* fireRateComp = static_cast<FireRateComponent*>(t_event.entity.getComponent(ComponentType::FireRate));
 	Uint32 currentTick = SDL_GetTicks();
@@ -66,7 +66,7 @@ void ProjectileManager::createPlayerBullet(const CreateBulletEvent& t_event)
 	}
 }
 
-void ProjectileManager::createEnemyBullet(const CreateBulletEvent& t_event)
+void ProjectileManager::createEnemyBullet(const Events::CreateBulletEvent& t_event)
 {
 	glm::vec2 position = static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform))->getPos();
 	static_cast<TransformComponent*>(m_enemyBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Transform))->setPos(position);

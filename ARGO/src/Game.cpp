@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "Game.h"
 
-
+Utilities::OnlineState Utilities::OnlineData::S_ONLINE_STATUS = OnlineState::Local;
+bool Utilities::OnlineData::S_IS_HOST = false;
 
 /// <summary>
 /// Constructor for the game class.
 /// </summary>
-
+/// 
 class State;
 Game::Game() :
 	m_gameScreen{ m_renderer, m_eventManager, m_controllers, m_commandSystem, m_inputSystem, m_renderSystem },
@@ -16,8 +17,8 @@ Game::Game() :
 	m_splashScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_mainMenuScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_achievementsScreen{ m_eventManager, m_controllers[0], m_renderer },
-	m_gameTypeScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_joinGameScreen{m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem},
+	m_gameTypeScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem, m_onlineHandler },
 	m_currentScreen{ MenuStates::MainMenu }
 {
 	try
@@ -60,8 +61,8 @@ Game::Game() :
 		initialiseScreen();
 
 
-		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
-		m_eventManager.subscribeToEvent<ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
+		m_eventManager.subscribeToEvent<Events::CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
+		m_eventManager.subscribeToEvent<Events::ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
 
 		setupIgnoredEvents();
 
@@ -283,6 +284,14 @@ void Game::render()
 /// </summary>
 void Game::cleanup()
 {
+	if (Utilities::OnlineData::S_ONLINE_STATUS != Utilities::OnlineState::Local)
+	{
+		if (Utilities::OnlineData::S_IS_HOST)
+		{
+			killGameServer();
+		}
+	}
+
 	AssetManager::Release();
 	m_assetMgr = NULL;
 	AudioManager::Release();
@@ -295,7 +304,12 @@ void Game::cleanup()
 	SDL_Quit();
 }
 
-void Game::closeWindow(const CloseWindow& t_event)
+void Game::killGameServer()
+{
+	system("taskkill /F /T /IM ScuffedArgoServer.exe");
+}
+
+void Game::closeWindow(const Events::CloseWindow& t_event)
 {
 	m_isRunning = false;
 }
@@ -322,7 +336,7 @@ void Game::createButtonMaps()
 	}
 }
 
-void Game::changeScreen(const ChangeScreen& t_event)
+void Game::changeScreen(const Events::ChangeScreen& t_event)
 {
 	m_currentScreen = t_event.newScreen;
 	if (m_hasScreenBeenSet[static_cast<int>(m_currentScreen)])

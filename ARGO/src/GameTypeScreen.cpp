@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "GameTypeScreen.h"
 
-GameTypeScreen::GameTypeScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_inputSystem, RenderSystem& t_renderSystem) :
+GameTypeScreen::GameTypeScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_inputSystem, RenderSystem& t_renderSystem, OnlineGameHandler& t_onlineHandler) :
 	m_eventManager{ t_eventManager },
 	m_commandSystem{ t_commandSystem },
 	m_inputSystem{ t_inputSystem },
-	m_renderSystem{ t_renderSystem }
+	m_renderSystem{ t_renderSystem },
+	m_onlineHandler{ t_onlineHandler }
 {
 }
 
@@ -43,16 +44,7 @@ void GameTypeScreen::render(SDL_Renderer* t_renderer)
 		m_renderSystem.render(t_renderer, gameTypeButton);
 	}
 
-
-	if (m_hostPopupActive)
-	{
-		m_renderSystem.render(t_renderer, m_popup);
-		for (Entity& hostTextLine : m_hostText)
-		{
-			m_renderSystem.render(t_renderer, hostTextLine);
-		}
-	}
-	else if (m_joinPopupActive)
+	if (m_joinPopupActive)
 	{
 		m_renderSystem.render(t_renderer, m_popup);
 		for (Entity& joinTextLine : m_joinText)
@@ -68,14 +60,16 @@ void GameTypeScreen::render(SDL_Renderer* t_renderer)
 				m_renderSystem.render(t_renderer, m_ipNumbers[index][static_cast<int>(DialEntityType::Arrows)]);
 			}
 		}
+		for (Entity& dot : m_ipDots)
+		{
+			m_renderSystem.render(t_renderer, dot);
+		}
 	}
-
 }
 
 void GameTypeScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 {
 	m_screenActive = true;
-	findHostsIp();
 	setControllerButtonMaps();
 
 	createBackgroundEntity(t_renderer);
@@ -84,14 +78,18 @@ void GameTypeScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controll
 	createPopupEntity(t_renderer);
 	glm::vec2 popUpPos = static_cast<TransformComponent*>(m_popup.getComponent(ComponentType::Transform))->getPos();
 	float popUpHeight = static_cast<VisualComponent*>(m_popup.getComponent(ComponentType::Visual))->getHeight();
-	createHostText(t_renderer, popUpPos, popUpHeight);
 	createJoinText(t_renderer, popUpPos, popUpHeight);
 	createIpInputter(t_renderer, popUpPos);
 
 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
 
-	m_eventManager.subscribeToEvent<MenuMoveBetweenUI>(std::bind(&GameTypeScreen::moveThroughUI, this, std::placeholders::_1));
-	m_eventManager.subscribeToEvent<MenuButtonPressed>(std::bind(&GameTypeScreen::buttonPressed, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<Events::MenuMoveBetweenUI>(std::bind(&GameTypeScreen::moveThroughUI, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<Events::MenuButtonPressed>(std::bind(&GameTypeScreen::buttonPressed, this, std::placeholders::_1));
+}
+
+void GameTypeScreen::attemptToConnect(std::string t_ip, int t_port)
+{
+	m_onlineHandler.connectToServer(t_ip, t_port);
 }
 
 void GameTypeScreen::setControllerButtonMaps()
@@ -189,23 +187,6 @@ void GameTypeScreen::createInputEntity(Controller& t_controller)
 		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)]));
 }
 
-void GameTypeScreen::createHostText(SDL_Renderer* t_renderer, glm::vec2 t_popUpPos, float t_popUpHeight)
-{
-	std::string linesText[S_NUMBER_OF_HOST_TEXT_LINES] =
-	{
-		"Your IP: ",
-		m_hostsIp,
-		"Get Other Players To Input Your IP",
-		"Press Start To Continue"
-	};
-	for (int index = 0; index < S_NUMBER_OF_HOST_TEXT_LINES; index++)
-	{
-		m_hostText[index].addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::MEDIUM_FONT, true, linesText[index], Utilities::UI_COLOUR.x, Utilities::UI_COLOUR.y, Utilities::UI_COLOUR.z));
-		TextComponent* textComponent = static_cast<TextComponent*>(m_hostText[index].getComponent(ComponentType::Text));
-		m_hostText[index].addComponent(new TransformComponent(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f - textComponent->getWidth() / 2.0f, textComponent->getHeight() / 2.0f + t_popUpPos.y + (t_popUpHeight / S_NUMBER_OF_HOST_TEXT_LINES + 1) * index)));
-	}
-}
-
 void GameTypeScreen::createJoinText(SDL_Renderer* t_renderer, glm::vec2 t_popUpPos, float t_popUpHeight)
 {
 
@@ -240,40 +221,35 @@ void GameTypeScreen::createIpInputter(SDL_Renderer* t_renderer, glm::vec2 t_popu
 		TextComponent* textComp = static_cast<TextComponent*>(m_ipNumbers[index][static_cast<int>(DialEntityType::Text)].getComponent(ComponentType::Text));
 		glm::vec2 textSize = glm::vec2(textComp->getWidth(), textComp->getHeight());
 		m_ipNumbers[index][static_cast<int>(DialEntityType::Text)].addComponent(new TransformComponent(transformComp->getPos() + glm::vec2(dialSize.x / 2.0f - textSize.x / 2.0f, dialSize.y / 2.0f - textSize.y / 2.0f)));
-	}
-}
 
-void GameTypeScreen::findHostsIp()
-{
-	system("ipconfig > ipinfo.txt");
-	std::ifstream ipFile;
-	ipFile.open("ipinfo.txt");
-	std::string lineContents;
-	std::string ipValue;
-	if (ipFile.is_open())
-	{
-		while (std::getline(ipFile, lineContents))
+		if ((index + 1) % 3 == 0 && (index + 1) != S_IP_NUMBER_LENGTH)
 		{
-			if (lineContents.find("IPv4") != std::string::npos)
-			{
-				int here = 0;
-				ipValue = lineContents.substr(lineContents.find(": ") + 2);
-				break;
-			}
+			int dotIndex = ((index + 1) / 3) - 1;
+
+			m_ipDots[dotIndex].addComponent(new VisualComponent("Dial_Selector.png", t_renderer));
+			VisualComponent* dotVisualComp = static_cast<VisualComponent*>(m_ipDots[dotIndex].getComponent(ComponentType::Visual));
+			glm::vec2 dotSize = glm::vec2(dotVisualComp->getWidth(), dotVisualComp->getHeight());
+
+			glm::vec2 dialOnePos = static_cast<TransformComponent*>(m_ipNumbers[index - 1][static_cast<int>(DialEntityType::Dial)].getComponent(ComponentType::Transform))->getPos();
+			glm::vec2 dialTwoPos = static_cast<TransformComponent*>(m_ipNumbers[index][static_cast<int>(DialEntityType::Dial)].getComponent(ComponentType::Transform))->getPos();
+
+			float dotPosX = ((dialOnePos.x + dialTwoPos.x) / 2.0f) + (dialSize.x / 2.0f) - (dotSize.x / 2.0f) + glm::distance(dialOnePos.x, dialTwoPos.x);
+			float dotPosY = dialOnePos.y + (dialSize.y / 2.0f) - (dotSize.y / 2.0f);
+
+			m_ipDots[dotIndex].addComponent(new TransformComponent(glm::vec2(dotPosX, dotPosY)));
 		}
 	}
-	m_hostsIp = ipValue;
 }
 
-void GameTypeScreen::moveThroughUI(const MenuMoveBetweenUI& t_event)
+void GameTypeScreen::moveThroughUI(const Events::MenuMoveBetweenUI& t_event)
 {
 	if (m_screenActive)
 	{
-		if (!m_hostPopupActive && !m_joinPopupActive)
+		if (!m_joinPopupActive)
 		{
 			updateCurrentButton(t_event.direction);
 		}
-		else if (m_joinPopupActive && !m_hostPopupActive)
+		else
 		{
 			updateIpDial(t_event.direction);
 		}
@@ -286,7 +262,7 @@ void GameTypeScreen::updateButtonColour(Entity& t_gameTypeButton, glm::vec3 t_co
 	visualComp->setColor(t_colour.x, t_colour.y, t_colour.z);
 }
 
-void GameTypeScreen::buttonPressed(const MenuButtonPressed& t_event)
+void GameTypeScreen::buttonPressed(const Events::MenuButtonPressed& t_event)
 {
 	if (m_screenActive)
 	{
@@ -307,17 +283,25 @@ void GameTypeScreen::buttonPressed(const MenuButtonPressed& t_event)
 
 void GameTypeScreen::gameTypeConfirmed()
 {
-	bool changeScreen = false;
-	if (m_hostPopupActive)
-	{
-		// go to game
-		changeScreen = true;
-	}
-	else if (m_joinPopupActive)
+	if (m_joinPopupActive)
 	{
 		std::string ipValue;
 		for (int index = 0; index < S_IP_NUMBER_LENGTH; index++)
 		{
+			if (index == 0 || index % 3 == 0)
+			{
+				if (ipNumberValues[index] == 0)
+				{
+					if (ipNumberValues[index + 1] == 0)
+					{
+						index += 2;
+					}
+					else
+					{
+						index++;
+					}
+				}
+			}
 			ipValue += std::to_string(ipNumberValues[index]);
 			if ((index + 1) % 3 == 0 && (index + 1 != S_IP_NUMBER_LENGTH))
 			{
@@ -325,49 +309,38 @@ void GameTypeScreen::gameTypeConfirmed()
 			}
 		}
 
-		std::string ipParts[4];
-		ipParts[0] = ipValue.substr(0, ipValue.find(".") + 1);
-		ipValue.erase(0, ipValue.find(".") + 1);
-		ipParts[1] = ipValue.substr(0, ipValue.find(".") + 1);
-		ipValue.erase(0, ipValue.find(".") + 1);
-		ipParts[2] = ipValue.substr(0, ipValue.find(".") + 1);
-		ipValue.erase(0, ipValue.find(".") + 1);
-		ipParts[3] = ipValue.substr(0, ipValue.find("."));
-
-
-		for (int index = 0; index < 4; index++)
+#ifdef _DEBUG
+		if (ipValue == "0.0.0.0")
 		{
-			if (ipParts[index][0] == '0')
-			{
-				ipParts[index].erase(0, 1);
-				if (ipParts[index][0] == '0')
-				{
-					ipParts[index].erase(0, 1);
-				}
-			}
+			findHostsIp();
+			ipValue = m_hostsIp;
 		}
-
-		ipValue = ipParts[0] + ipParts[1] + ipParts[2] + ipParts[3];
-
 		std::cout << ipValue << std::endl;
-		//join server and go to game
-		changeScreen = true;
-	}
-	if (changeScreen)
-	{
+#endif // _DEBUG
+
+		//join server
+		attemptToConnect(ipValue);
+
+		//switch screen/state to lobby screen with players
+
 		m_screenActive = false;
-		m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::JoinGame });
-	}
-}
+		m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::JoinGame });
+ 	} 
+} 
 
 void GameTypeScreen::gameTypeCancel()
 {
-	if (m_joinPopupActive) m_joinPopupActive = false;
-	else if (m_hostPopupActive) m_hostPopupActive = false;
+	Utilities::OnlineData::S_ONLINE_STATUS = Utilities::OnlineState::Local;
+	Utilities::OnlineData::S_IS_HOST = false;
+
+	if (m_joinPopupActive)
+	{
+		m_joinPopupActive = false;
+	} 
 	else
 	{
 		m_screenActive = false;
-		m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::MainMenu });
+		m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::MainMenu });
 	}
 }
 
@@ -377,12 +350,42 @@ void GameTypeScreen::gameTypeChosen()
 	{
 	case MenuButtonsType::Offline:
 		m_screenActive = false;
-		m_eventManager.emitEvent(ChangeScreen{ MenuStates::Game });
+		m_eventManager.emitEvent(Events::ChangeScreen{ MenuStates::Game });
 		break;
 	case MenuButtonsType::OnlineHost:
 	{
-		// load server and popup ip address
-		m_hostPopupActive = true;
+		//set up process info variables
+		ZeroMemory(&m_startupInfo, sizeof(m_startupInfo));
+		m_startupInfo.cb = sizeof(m_startupInfo);
+		ZeroMemory(&m_processInfo, sizeof(m_processInfo));
+
+		std::string path = SDL_GetBasePath();
+		path.append("ScuffedArgoServer.exe");
+		LPCSTR name = path.c_str();
+
+		// Start the child process. 
+		if (!CreateProcess(
+			name,	// No module name (use command line)
+			NULL,			// Command line
+			NULL,           // Process handle not inheritable
+			NULL,           // Thread handle not inheritable
+			FALSE,          // Set handle inheritance to FALSE
+			0,              // No creation flags
+			NULL,           // Use parent's environment block
+			NULL,           // Use parent's starting directory 
+			&m_startupInfo,	// Pointer to STARTUPINFO structure
+			&m_processInfo)	// Pointer to PROCESS_INFORMATION structure
+			)
+		{
+			printf("Failed to start the server!\nError:(%d).\n", GetLastError());
+		}
+		else
+		{
+			Utilities::OnlineData::S_ONLINE_STATUS = Utilities::OnlineState::Host;
+			Utilities::OnlineData::S_IS_HOST = true;
+			attemptToConnect(m_hostsIp);
+			m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::JoinGame });
+		}
 		break;
 	}
 	case MenuButtonsType::OnlineJoin:
@@ -393,7 +396,6 @@ void GameTypeScreen::gameTypeChosen()
 		break;
 	}
 }
-
 
 void GameTypeScreen::updateIpDial(MoveDirection t_inputDirection)
 {
@@ -457,4 +459,26 @@ void GameTypeScreen::updateCurrentButton(MoveDirection t_inputDirection)
 	}
 	updateButtonColour(m_gameTypeButtons[currentButtonIndex], Utilities::MENU_BUTTON_HIGHLIGHTED_COLOUR);
 	m_currentButton = static_cast<MenuButtonsType>(currentButtonIndex);
+}
+
+void GameTypeScreen::findHostsIp()
+{
+	system("ipconfig > ipinfo.txt");
+	std::ifstream ipFile;
+	ipFile.open("ipinfo.txt");
+	std::string lineContents;
+	std::string ipValue;
+	if (ipFile.is_open())
+	{
+		while (std::getline(ipFile, lineContents))
+		{
+			if (lineContents.find("IPv4") != std::string::npos)
+			{
+				int here = 0;
+				ipValue = lineContents.substr(lineContents.find(": ") + 2);
+				break;
+			}
+		}
+	}
+	m_hostsIp = ipValue;
 }

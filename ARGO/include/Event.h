@@ -3,45 +3,48 @@
 #include "Utilities.h"
 #include "Controller.h"
 
-struct CreateBulletEvent
+namespace Events
 {
-	Entity& entity;
-	glm::vec2 direction;
-	float forceScale;
-	int type;
-	Controller& controller;
-};
+	struct CreateBulletEvent
+	{
+		Entity& entity;
+		glm::vec2 direction;
+		float forceScale;
+		int type;
+		Controller& controller;
+	};
 
-struct PhysicsMove
-{
-	glm::vec2 velocity;
- 	Entity& entity;
-};
+	struct PhysicsMove
+	{
+		glm::vec2 velocity;
+		Entity& entity;
+	};
 
-struct PhysicsRotate
-{
-	glm::vec2 rotation;
-	Entity& entity;
-};
+	struct PhysicsRotate
+	{
+		glm::vec2 rotation;
+		Entity& entity;
+	};
 
-struct MenuMoveBetweenUI 
-{
- 	MoveDirection direction;
-};
+	struct MenuMoveBetweenUI 
+	{
+		MoveDirection direction;
+	};
 
-struct MenuButtonPressed
-{
-	ButtonType buttonPressed;
-};  
+	struct MenuButtonPressed
+	{
+		ButtonType buttonPressed;
+	};  
 
-struct CloseWindow
-{
-};
+	struct CloseWindow
+	{
+	};
 
-struct ChangeScreen
-{
-	MenuStates newScreen;
-};
+	struct ChangeScreen
+	{
+		MenuStates newScreen;
+	};
+}
 
 class BaseEvent
 {

@@ -28,7 +28,10 @@ void JoinGameScreen::reset()
 void JoinGameScreen::render(SDL_Renderer* t_renderer)
 {
 	m_renderSystem.render(t_renderer, m_background);
-	m_renderSystem.render(t_renderer, m_helpText);
+	for (Entity& text : m_helpText)
+	{
+		m_renderSystem.render(t_renderer, text);
+	}
 	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
 	{
 		if (m_playersHaveJoined[index])
@@ -86,7 +89,7 @@ void JoinGameScreen::setControllerButtonMaps()
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Released)];
 }
 
-void JoinGameScreen::buttonPressed(const MenuButtonPressed& t_event)
+void JoinGameScreen::buttonPressed(const Events::MenuButtonPressed& t_event)
 {
 	if (m_screenActive)
 	{
@@ -105,13 +108,14 @@ void JoinGameScreen::buttonPressed(const MenuButtonPressed& t_event)
 void JoinGameScreen::startGame()
 {
 	m_screenActive = false;
-	m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::Game });
+	m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::Game });
 }
 
 void JoinGameScreen::cancel()
 {
+	system("taskkill /F /T /IM ScuffedArgoServer.exe");
 	m_screenActive = false;
-	m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::GameType });
+	m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::GameType });
 }
 
 void JoinGameScreen::createInputEntity(Controller& t_controller)
@@ -150,7 +154,7 @@ void JoinGameScreen::createPlayerJoinedEntities(SDL_Renderer* t_renderer)
 
 		TransformComponent* playerTransformComp = static_cast<TransformComponent*>(m_playerJoinedEntity[index][static_cast<int>(PlayerJoinedParts::Player)].getComponent(ComponentType::Transform));
 
-		m_playerJoinedEntity[index][static_cast<int>(PlayerJoinedParts::Text)].addComponent(new TextComponent("ariblk.ttf", t_renderer, 20, true, std::string("Player " + std::to_string(index + 1) + " Joined" ), Utilities::UI_COLOUR.x, Utilities::UI_COLOUR.y, Utilities::UI_COLOUR.z));
+		m_playerJoinedEntity[index][static_cast<int>(PlayerJoinedParts::Text)].addComponent(new TextComponent("ariblk.ttf", t_renderer, 20, true, std::string("Player " + std::to_string(index + 1) + " Joined"), Utilities::UI_COLOUR.x, Utilities::UI_COLOUR.y, Utilities::UI_COLOUR.z));
 		TextComponent* textComp = static_cast<TextComponent*>(m_playerJoinedEntity[index][static_cast<int>(PlayerJoinedParts::Text)].getComponent(ComponentType::Text));
 		glm::vec2 textSize = glm::vec2(textComp->getWidth(), textComp->getHeight());
 
@@ -160,8 +164,37 @@ void JoinGameScreen::createPlayerJoinedEntities(SDL_Renderer* t_renderer)
 
 void JoinGameScreen::createHelpText(SDL_Renderer* t_renderer)
 {
-	m_helpText.addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::MEDIUM_FONT, true, std::string("Press Start or A To Begin Game! Press B To Return"), 255, 255, 255));
-	TextComponent* textComp = static_cast<TextComponent*>(m_helpText.getComponent(ComponentType::Text));
+	findHostsIp();
+
+	m_helpText[0].addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::MEDIUM_FONT, true, m_hostsIp, 255, 255, 255));
+	TextComponent* textComp = static_cast<TextComponent*>(m_helpText[0].getComponent(ComponentType::Text));
 	glm::vec2 textSize = glm::vec2(textComp->getWidth(), textComp->getHeight());
-	m_helpText.addComponent(new TransformComponent(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f - textSize.x / 2.0f, Utilities::SCREEN_HEIGHT * (5.0f / 6.0f))));
+	m_helpText[0].addComponent(new TransformComponent(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f - textSize.x / 2.0f, Utilities::SCREEN_HEIGHT * (4.0f / 6.0f))));
+
+	m_helpText[1].addComponent(new TextComponent("ariblk.ttf", t_renderer, Utilities::MEDIUM_FONT, true, std::string("Press Start or A To Begin Game! Press B To Return"), 255, 255, 255));
+	textComp = static_cast<TextComponent*>(m_helpText[1].getComponent(ComponentType::Text));
+	textSize = glm::vec2(textComp->getWidth(), textComp->getHeight());
+	m_helpText[1].addComponent(new TransformComponent(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f - textSize.x / 2.0f, Utilities::SCREEN_HEIGHT * (5.0f / 6.0f))));
+}
+
+void JoinGameScreen::findHostsIp()
+{
+	system("ipconfig > ipinfo.txt");
+	std::ifstream ipFile;
+	ipFile.open("ipinfo.txt");
+	std::string lineContents;
+	std::string ipValue;
+	if (ipFile.is_open())
+	{
+		while (std::getline(ipFile, lineContents))
+		{
+			if (lineContents.find("IPv4") != std::string::npos)
+			{
+				int here = 0;
+				ipValue = lineContents.substr(lineContents.find(": ") + 2);
+				break;
+			}
+		}
+	}
+	m_hostsIp = ipValue;
 }

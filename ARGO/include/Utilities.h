@@ -3,6 +3,27 @@
 
 namespace Utilities
 {
+	//stuff for online
+	enum class OnlineState
+	{
+		Host,
+		Client,
+		Local
+	};
+
+	class OnlineData
+	{
+	public:
+		static OnlineState S_ONLINE_STATUS;
+		static bool S_IS_HOST;
+		static const int PORT_NUM = 1111;
+		const std::string ONLINE_HOST = "host";
+		const std::string ONLINE_CLIENT = "client";
+	private:
+		OnlineData();
+	};
+
+
 	const static int S_MAX_PLAYERS = 4;
 	//font consts
 	const int SMALL_FONT = 24;
@@ -58,6 +79,7 @@ namespace Utilities
 	const int AUDIO_INFINITE_LOOP = -1;
 	const int AUDIO_MIX_CHANNELS = 128;
 	const int AUDIO_VOLUME_STEP = 5;
+	const int AUDIO_START_VOLUMES = 25;
 
 
 	//channels per player for firing - amount TBD
@@ -69,6 +91,8 @@ namespace Utilities
 	static const glm::vec3 MENU_BUTTON_HIGHLIGHTED_COLOUR{ 255,255,240 };
 	static const glm::vec3 MENU_BUTTON_DEFAULT_COLOUR{ 199,163,10 };
 	static const glm::vec3 UI_COLOUR = glm::vec3(25, 57, 89);
+
+
 
 }
 

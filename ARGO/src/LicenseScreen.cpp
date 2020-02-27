@@ -19,7 +19,7 @@ void LicenseScreen::update(float t_deltaTime)
 	m_commandSystem.update(m_inputEntity, m_eventManager);
 	if (SDL_GetTicks() - m_screenStartTime > S_TIME_ON_SCREEN)
 	{
-		m_eventManager.emitEvent(ChangeScreen{ MenuStates::MainMenu });
+		m_eventManager.emitEvent(Events::ChangeScreen{ MenuStates::MainMenu });
 	}
 }
 

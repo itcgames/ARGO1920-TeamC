@@ -67,8 +67,8 @@ void MenuScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 
 	createInputEntity(t_controller);
 
-	m_eventManager.subscribeToEvent<MenuMoveBetweenUI>(std::bind(&MenuScreen::changeCurrentSelectedButton, this, std::placeholders::_1));
-	m_eventManager.subscribeToEvent<MenuButtonPressed>(std::bind(&MenuScreen::buttonPressed, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<Events::MenuMoveBetweenUI>(std::bind(&MenuScreen::changeCurrentSelectedButton, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<Events::MenuButtonPressed>(std::bind(&MenuScreen::buttonPressed, this, std::placeholders::_1));
 
 
 } 
@@ -101,7 +101,8 @@ void MenuScreen::createInputEntity(Controller& t_controller)
 	m_inputEntity.addComponent(new CommandComponent());
 }
 
-void MenuScreen::changeCurrentSelectedButton(const MenuMoveBetweenUI& t_event)
+ 
+void MenuScreen::changeCurrentSelectedButton(const Events::MenuMoveBetweenUI& t_event)
 {
 	if (m_screenActive)
 	{
@@ -128,7 +129,7 @@ void MenuScreen::changeCurrentSelectedButton(const MenuMoveBetweenUI& t_event)
 	}
 }
 
-void MenuScreen::buttonPressed(const MenuButtonPressed& t_event)
+void MenuScreen::buttonPressed(const Events::MenuButtonPressed& t_event)
 {
 	if (m_screenActive && ButtonType::A == t_event.buttonPressed)
 	{
@@ -148,7 +149,7 @@ void MenuScreen::buttonPressed(const MenuButtonPressed& t_event)
 			newScreen = MenuStates::Achievements;
 			break;
 		case MenuButtonType::Quit:
-			m_eventManager.emitEvent(CloseWindow());
+			m_eventManager.emitEvent<Events::CloseWindow>(Events::CloseWindow());
 			break;
 		default:
 			break;
@@ -156,14 +157,13 @@ void MenuScreen::buttonPressed(const MenuButtonPressed& t_event)
 		if (MenuStates::MainMenu != newScreen)
 		{
 			m_screenActive = false;
-			m_eventManager.emitEvent(ChangeScreen{ newScreen });
+			m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ newScreen });
 		}
 	}
-}
+} 
 
 void MenuScreen::updateButtonColour(Entity& t_menuButton, glm::vec3 t_colour)
 { 
 	VisualComponent* visualComp = static_cast<VisualComponent*>(t_menuButton.getComponent(ComponentType::Visual));
 	visualComp->setColor(t_colour.x, t_colour.y, t_colour.z);
 }
-

@@ -27,7 +27,7 @@ private:
 
 	void setControllerButtonMaps();
 
-	void buttonPressed(const MenuButtonPressed& t_event);
+	void buttonPressed(const Events::MenuButtonPressed& t_event);
 	void startGame();
 	void cancel();
 
@@ -35,6 +35,9 @@ private:
 	void createBackground(SDL_Renderer* t_renderer);
 	void createPlayerJoinedEntities(SDL_Renderer* t_renderer);
 	void createHelpText(SDL_Renderer* t_renderer);
+	void findHostsIp();
+
+	std::string m_hostsIp;
 
 	Entity m_background;
 	Entity m_inputEntity;
@@ -42,7 +45,7 @@ private:
 	static const int S_NUMBER_OF_PLAYER_JOINED_ENTITIES_PARTS = 3;
 	Entity m_playerJoinedEntity[Utilities::S_MAX_PLAYERS][S_NUMBER_OF_PLAYER_JOINED_ENTITIES_PARTS];
 
-	Entity m_helpText;
+	Entity m_helpText[2];
 
 	bool m_playersHaveJoined[Utilities::S_MAX_PLAYERS];
 

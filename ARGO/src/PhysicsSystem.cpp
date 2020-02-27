@@ -3,8 +3,8 @@
 
 PhysicsSystem::PhysicsSystem(EventManager& t_eventManager)
 {
-	t_eventManager.subscribeToEvent<PhysicsMove>(std::bind(&PhysicsSystem::updateWithInput, this, std::placeholders::_1));
-	t_eventManager.subscribeToEvent<PhysicsRotate>(std::bind(&PhysicsSystem::updateRotation, this, std::placeholders::_1));
+	t_eventManager.subscribeToEvent<Events::PhysicsMove>(std::bind(&PhysicsSystem::updateWithInput, this, std::placeholders::_1));
+	t_eventManager.subscribeToEvent<Events::PhysicsRotate>(std::bind(&PhysicsSystem::updateRotation, this, std::placeholders::_1));
 }
 
 PhysicsSystem::~PhysicsSystem()
@@ -35,7 +35,7 @@ void PhysicsSystem::update(Entity& t_entity)
 {
 }
 
-void PhysicsSystem::updateWithInput(const PhysicsMove& t_event)
+void PhysicsSystem::updateWithInput(const Events::PhysicsMove& t_event)
 {
 	glm::vec2 normalisedVelocity = glm::normalize(t_event.velocity);
 	ForceComponent* forceComp = static_cast<ForceComponent*>(t_event.entity.getComponent(ComponentType::Force));
@@ -50,7 +50,7 @@ void PhysicsSystem::updateWithInput(const PhysicsMove& t_event)
 	}
 }
 
-void PhysicsSystem::updateRotation(const PhysicsRotate& t_event)
+void PhysicsSystem::updateRotation(const Events::PhysicsRotate& t_event)
 { 
 	TransformComponent* transformComp = static_cast<TransformComponent*>(t_event.entity.getComponent(ComponentType::Transform));
 	if (transformComp)

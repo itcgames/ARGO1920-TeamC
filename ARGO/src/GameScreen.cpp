@@ -48,7 +48,7 @@ void GameScreen::processEvents(SDL_Event* t_event)
 		{
 		case SDLK_HOME:
 		{
-			m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::MainMenu });
+			m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::MainMenu });
 			break;
 		}
 		case SDLK_BACKSPACE:

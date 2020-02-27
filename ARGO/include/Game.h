@@ -21,6 +21,8 @@
 #include "PhysicsSystem.h"
 #include "RenderSystem.h"
 
+#include "OnlineGameHandler.h"
+
 /// <summary>
 /// Game class needed for the game
 /// </summary>
@@ -41,9 +43,10 @@ private:
 	void createRenderer();
 	void render();
 	void cleanup();
+	void killGameServer();
 
-	void closeWindow(const CloseWindow& t_event = CloseWindow());
-	void changeScreen(const ChangeScreen& t_event);
+	void closeWindow(const Events::CloseWindow& t_event = Events::CloseWindow());
+	void changeScreen(const Events::ChangeScreen& t_event);
 
 	AssetManager* m_assetMgr;
 	AudioManager* m_audioMgr;
@@ -57,15 +60,12 @@ private:
 	// bool for if game is running or not
 	bool m_isRunning;
 
-
-
+	//ECS systems
  	CommandSystem m_commandSystem;
  	InputSystem m_inputSystem;
  	RenderSystem m_renderSystem;
 
-
-	
-
+	//Screens and states
 	MenuStates m_currentScreen;
 	GameScreen m_gameScreen; 
 	MenuScreen m_mainMenuScreen;
@@ -83,4 +83,6 @@ private:
 
 	bool m_hasScreenBeenSet[Utilities::S_NUMBER_OF_SCREENS];
 
+	OnlineGameHandler m_onlineHandler;
+	
  };
