@@ -4,7 +4,7 @@ class EnemyFactory :
 	public EntityFactory
 {
 public:
-	EnemyFactory();
+	EnemyFactory(SDL_Renderer* t_renderer);
 	void initialise(SDL_Renderer* t_renderer);
 	void createPlayer(Entity& t_entity);
 	void createEnemy(int t_type, Entity& t_entity);

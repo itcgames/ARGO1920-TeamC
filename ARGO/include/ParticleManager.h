@@ -18,6 +18,7 @@ public:
 	void createParticleEmitter(Entity& t_entity);
 	void placeEmitterEnemyDeath(const EnemyKilled& t_event);
 	void placeEmitterPlayerDeath(const PlayerKilled& t_event);
+	void placeEmitterExplosion(const Explosion& t_event);
 	void update(float t_dt);
 	void nextAvailableEmitter();
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
@@ -27,4 +28,3 @@ private:
 	ParticleSystem& m_particleSystem;
 	int m_currentEmitter{ 0 };
 };
-

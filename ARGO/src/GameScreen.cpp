@@ -19,7 +19,6 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_collisionSystem{ m_eventManager },
 	m_weaponSystem{ m_projectileManager, m_eventManager },
 	m_playerFactory(),
-	m_enemyFactory(),
 	m_pickUpManager(m_eventManager, m_collisionSystem),
 	m_hudManager(m_players),
 	m_particleManager(m_eventManager,m_particleSystem)
@@ -237,7 +236,7 @@ void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utiliti
 	setUpLevel();
 	m_projectileManager.reset();
 	m_enemyManager.killAll();
-	m_hudManager;
+	m_hudManager.reset();
 }
 
 void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS])

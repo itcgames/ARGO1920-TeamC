@@ -42,6 +42,11 @@ struct PlayerKilled
 	Entity* player;
 };
 
+struct Explosion
+{
+	glm::vec2 position;
+};
+
 struct PhysicsRotate
 {
 	glm::vec2 rotation;

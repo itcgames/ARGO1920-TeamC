@@ -48,7 +48,7 @@ void ProjectileManager::init()
 	}
 }
 
-void ProjectileManager::createPlayerBullet(const CreateBulletEvent& t_event, Weapon t_weapon)
+void ProjectileManager::createPlayerBullet(const CreateBulletEvent& t_event, Weapon t_weapon, float t_angleOffset)
 {
 	if (t_event.controller.getSDLController())
 	{
@@ -65,7 +65,7 @@ void ProjectileManager::createPlayerBullet(const CreateBulletEvent& t_event, Wea
 	position.y += fireOffset.x * sn + fireOffset.y * cs;
 
 	static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Transform))->setPos(position);
-	static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Transform))->setRotation(transformComp->getRotation() + 90);
+	static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Transform))->setRotation(transformComp->getRotation() + t_angleOffset + 90);
 	static_cast<HealthComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Health))->setHealth(1);
 	static_cast<TimerComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Timer))->reset();
 
@@ -86,6 +86,14 @@ void ProjectileManager::createPlayerBullet(const CreateBulletEvent& t_event, Wea
 		m_audioMgr->PlaySfx(Utilities::GUN_FIRE_PATH + "launcher.wav");
 		static_cast<ForceComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Force))->setForce(t_event.direction * PLAYER_GRENADE_SPEED);
 		static_cast<TagComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Tag))->setTag(Tag::Grenade);
+		break;
+	case Weapon::Shotgun:
+		m_playerBullets[m_nextPlayerBullet].entity.removeCompType(ComponentType::Visual);
+		m_playerBullets[m_nextPlayerBullet].entity.addComponent(new VisualComponent("Grenade.png", m_renderer));
+		m_audioMgr->PlaySfx(Utilities::GUN_FIRE_PATH + "Shotgun_Shot.wav");
+		glm::vec2 direction = glm::vec2(std::cos(glm::radians(static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Transform))->getRotation() -90.0f)), std::sin(glm::radians(static_cast<TransformComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Transform))->getRotation()-90.0f)));
+		static_cast<ForceComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Force))->setForce(direction * PLAYER_SHOTGUN_SPEED);
+		static_cast<TagComponent*>(m_playerBullets[m_nextPlayerBullet].entity.getComponent(ComponentType::Tag))->setTag(Tag::PlayerBullet);
 		break;
 	default:
 		break;

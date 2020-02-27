@@ -69,7 +69,6 @@ private:
 	HUDManager m_hudManager;
  
 	PlayerFactory m_playerFactory;
-	EnemyFactory m_enemyFactory;
 	PickUpManager m_pickUpManager;
 	ParticleManager m_particleManager;
 
