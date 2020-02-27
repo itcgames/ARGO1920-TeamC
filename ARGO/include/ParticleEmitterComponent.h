@@ -2,6 +2,13 @@
 #include "Component.h"
 #include "Particle.h"
 #include <vector>
+
+enum class EmitterType
+{
+	Spray,
+	Burst
+};
+
 class ParticleEmitterComponent :
 	public Component
 {
@@ -9,7 +16,7 @@ public:
 	ParticleEmitterComponent();
 	ParticleEmitterComponent(glm::vec2 t_position, bool t_emitting = true, float t_angle = 10,
 		float t_angleOffset = 45.0f, float t_speed = 8, int t_maxParticles = 100,
-		float t_particlesPerSecond = 60.0f, int t_timeToKillParticle = 150, bool t_rotating = false, float t_rotateAnglePerFrame = 0.05f);
+		float t_particlesPerSecond = 60.0f, int t_timeToKillParticle = 150, bool t_rotating = false, float t_rotateAnglePerFrame = 0.05f, EmitterType t_emitterType = EmitterType::Spray);
 
 	void setParticle(glm::vec2 t_pos);
 	void killParticle(int t_index);
@@ -41,6 +48,8 @@ public:
 	bool getRotating();
 	void setRotatingSpeed(float t_rotateAnglePerFrame);
 	float getRotatingSpeed();
+	EmitterType getEmitterType();
+	void setEmitterType(EmitterType t_emitterType);
 
 private:
 	//The Vector for Particles
@@ -67,5 +76,6 @@ private:
 	float m_placeParticleTimer{ 0 };
 	bool m_rotating{ false };
 	float m_rotateAnglePerFrame{ 0 };
+	EmitterType m_emitterType = EmitterType::Spray;
 };
 
