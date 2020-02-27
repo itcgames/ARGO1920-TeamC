@@ -10,7 +10,9 @@ EnemyManager::EnemyManager(SDL_Renderer* t_renderer, float t_initialSpawnDelay, 
 	m_healthSystem(t_healthSystem),
 	m_aiSytem(t_aiSystem),
 	m_renderSystem(t_renderSystem),
-	m_levelManager(t_levelManager)
+	m_levelManager(t_levelManager),
+	m_difficultyLevel(0),
+	m_difficultyTimer(0)
 {
 }
 
@@ -32,12 +34,12 @@ void EnemyManager::init()
 
 void EnemyManager::update(float t_dt)
 {
-	difficultyTimer += t_dt;
-	if (difficultyTimer >= DIFFICULTY_INCREASE_RATE)
+	m_difficultyTimer += t_dt;
+	if (m_difficultyTimer >= DIFFICULTY_INCREASE_RATE)
 	{
-		difficultyTimer = 0;
-		difficultyLevel++;
-		std::cout << difficultyLevel << std::endl;
+		m_difficultyTimer = 0;
+		m_difficultyLevel++;
+		std::cout << m_difficultyLevel << std::endl;
 	}
 	spawnGroup(t_dt);
 	for (auto& enemy : m_enemies)
@@ -59,9 +61,9 @@ void EnemyManager::spawnGroup(float t_dt)
 	if (m_spawnEnemyTimer <= 0)
 	{
 		float nextSpawn = SPAWN_ENEMY_RATE;
-		if (difficultyLevel > 4)
+		if (m_difficultyLevel > 4)
 		{
-			nextSpawn -= (difficultyLevel + 4) * 60;
+			nextSpawn -= (m_difficultyLevel + 4) * 60;
 			if (nextSpawn < 60) nextSpawn = 60;
 		}
 
@@ -93,17 +95,17 @@ void EnemyManager::spawnGroup(float t_dt)
 			createEnemyAtTile(spawnTile);
 			createEnemyAtTile(neighbours->top);
 			createEnemyAtTile(neighbours->left);
-			if (difficultyLevel > 1)
+			if (m_difficultyLevel > 1)
 			{
 				createEnemyAtTile(neighbours->right);
 				createEnemyAtTile(neighbours->bottom);
 			}
-			if (difficultyLevel > 2)
+			if (m_difficultyLevel > 2)
 			{
 				createEnemyAtTile(neighbours->topLeft);
 				createEnemyAtTile(neighbours->topRight);
 			}
-			if (difficultyLevel > 3)
+			if (m_difficultyLevel > 3)
 			{
 				createEnemyAtTile(neighbours->bottomLeft);
 				createEnemyAtTile(neighbours->bottomRight);

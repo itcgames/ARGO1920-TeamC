@@ -27,8 +27,8 @@ private:
 	Entity m_enemies[Utilities::ENEMY_POOL_SIZE];
 	int m_nextEnemy;
 	float m_spawnEnemyTimer;
-	int difficultyLevel;
-	float difficultyTimer;
+	int m_difficultyLevel;
+	float m_difficultyTimer;
 	const float DIFFICULTY_INCREASE_RATE = 600;
 	const float SPAWN_ENEMY_RATE = 300; //1 second is 60 ticks
 	AudioManager* m_audioMgr;
