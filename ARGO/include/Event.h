@@ -31,6 +31,11 @@ struct PickupGrabbed
 	Entity* pickup;
 };
 
+struct EnemyKilled
+{
+	Entity* enemy;
+};
+
 struct PhysicsRotate
 {
 	glm::vec2 rotation;

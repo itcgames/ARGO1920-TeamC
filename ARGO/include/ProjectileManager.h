@@ -39,10 +39,12 @@ private:
 	void tick(float t_dt);
 
 	static const int BULLET_POOL_SIZE = 160;
-	static const int BULLET_RADIUS = 4;
+	static const int BULLET_RADIUS = 6;
+	static const int GLOWSTICK_RADIUS = 16;
 	static const int BULLET_LIFETIME = 90;
 	static const int GLOWSTICK_LIFETIME = 300;
 	const float PLAYER_BULLET_SPEED = 16.0f;
+	const float PLAYER_GRENADE_SPEED = 16.0f;
 	const float GLOWSTICK_SPEED = 64;
 
 	Bullet m_playerBullets[BULLET_POOL_SIZE];

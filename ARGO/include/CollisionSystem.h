@@ -8,6 +8,7 @@
 #include "ForceComponent.h"
 #include "PickUpComponent.h"
 #include "InputComponent.h"
+#include "WeaponComponent.h"
 #include "Utilities.h"
 #include "QuadTree.h"
 #include "AudioManager.h"

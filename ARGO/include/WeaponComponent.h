@@ -18,6 +18,7 @@ public:
 	bool throwGlowStick();
 	Weapon getCurrent();
 	void setCurrent(Weapon t_weapon);
+	void fillAmmo(Weapon t_type);
 
 private:
 	float m_gunCooldown;
