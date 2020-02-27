@@ -20,7 +20,8 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_weaponSystem{ m_projectileManager, m_eventManager },
 	m_playerFactory(),
 	m_enemyFactory(),
-	m_pickUpManager(m_eventManager, m_collisionSystem)
+	m_pickUpManager(m_eventManager, m_collisionSystem),
+	m_hudManager(m_players)
 {
 }
 
@@ -37,6 +38,7 @@ void GameScreen::update(float t_deltaTime)
 	m_collisionSystem.update(m_goal);
 	m_collisionSystem.handleCollisions();
 	m_pickUpManager.update(t_deltaTime);
+	m_hudManager.update();
 }
 
 void GameScreen::processEvents(SDL_Event* t_event)
@@ -84,6 +86,7 @@ void GameScreen::render(SDL_Renderer* t_renderer)
 	m_projectileManager.render(t_renderer, &m_renderSystem);
 	m_pickUpManager.render(t_renderer, &m_renderSystem);
 	m_levelManager.renderLight(t_renderer, &m_renderSystem);
+	m_hudManager.render(t_renderer, &m_renderSystem);
 }
 
 
@@ -248,4 +251,5 @@ void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_control
 	m_projectileManager.init();
 	createGoal();
 	m_pickUpManager.init(m_renderer);
+	m_hudManager.init(t_renderer);
 }

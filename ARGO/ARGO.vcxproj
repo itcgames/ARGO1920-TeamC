@@ -26,6 +26,8 @@
     <ClCompile Include="src\FlowFieldComponent.cpp" />
     <ClCompile Include="src\GoToLicenseScreenCommand.cpp" />
     <ClCompile Include="src\GoToMainMenuCommand.cpp" />
+    <ClCompile Include="src\HUDComponent.cpp" />
+    <ClCompile Include="src\HUDManager.cpp" />
     <ClCompile Include="src\lightFieldComponent.cpp" />
     <ClCompile Include="src\MenuMoveDownCommand.cpp" />
     <ClCompile Include="src\MenuMoveUpCommand.cpp" />
@@ -112,6 +114,9 @@
     <ClInclude Include="include\FlowFieldComponent.h" />
     <ClInclude Include="include\GoToLicenseScreenCommand.h" />
     <ClInclude Include="include\GoToMainMenuCommand.h" />
+    <ClInclude Include="include\HealthComponent.h" />
+    <ClInclude Include="include\HUDComponent.h" />
+    <ClInclude Include="include\HUDManager.h" />
     <ClInclude Include="include\lightFieldComponent.h" />
     <ClInclude Include="include\MenuMoveDownCommand.h" />
     <ClInclude Include="include\MenuMoveUpCommand.h" />
@@ -164,7 +169,6 @@
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\ForceComponent.h" />
     <ClInclude Include="include\Game.h" />
-    <ClInclude Include="include\HealthComponent.h" />
     <ClInclude Include="include\HealthSystem.h" />
     <ClInclude Include="include\InputComponent.h" />
     <ClInclude Include="include\InputSystem.h" />
