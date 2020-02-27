@@ -16,7 +16,7 @@ int main()
 		std::cout << "Before ifs" << std::endl;
 		if (MyServer.getConnectionCount() == 0 && (endTime - startTime) / (double)CLOCKS_PER_SEC <= TIME_OUT)
 		{
-			std::cout << "0 connections and time less than 30" << std::endl;
+			std::cout << "0 connections and time less than timeout" << std::endl;
 			MyServer.ListenForNewConnection(); //Accept new connection (if someones trying to connect)
 			endTime = clock();
 		}

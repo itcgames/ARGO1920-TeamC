@@ -58,6 +58,7 @@ namespace Utilities
 	const int AUDIO_INFINITE_LOOP = -1;
 	const int AUDIO_MIX_CHANNELS = 128;
 	const int AUDIO_VOLUME_STEP = 5;
+	const int AUDIO_START_VOLUMES = 25;
 
 
 	//channels per player for firing - amount TBD

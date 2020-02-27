@@ -307,7 +307,7 @@ void GameTypeScreen::buttonPressed(const Events::GameTypeSelectButton& t_event)
 		ZeroMemory(&m_processInfo, sizeof(m_processInfo));
 
 		std::string path = SDL_GetBasePath();
-		path.append("\\Server.exe");
+		path.append("ScuffedArgoServer.exe");
 		LPCSTR name = path.c_str();
 
 		// Start the child process. 

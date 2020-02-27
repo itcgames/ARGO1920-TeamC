@@ -5,9 +5,9 @@
 class AudioManager
 {
 private:
-	int m_masterVolume = 100;
-	int m_musicVolume = 20;
-	int m_sfxVolume = 20;
+	int m_masterVolume = Utilities::AUDIO_START_VOLUMES;
+	int m_musicVolume = Utilities::AUDIO_START_VOLUMES;
+	int m_sfxVolume = Utilities::AUDIO_START_VOLUMES;
 	int m_initialisedFlags;
 
 public:
