@@ -26,6 +26,7 @@
 #include <Ws2tcpip.h> //for inet_pton
 #include <WinSock2.h> //For SOCKET
 #include <stdlib.h>
+#include <sstream>
 
 
 //SDL

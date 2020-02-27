@@ -11,12 +11,14 @@
 #include "ProjectileManager.h"
 #include "ParticleSystem.h"
 #include "LevelManager.h"
+#include "OnlineGameHandler.h"
+#include <sstream>
 
 class GameScreen
 {
 public:
 
-	GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controller[Utilities::S_MAX_PLAYERS], CommandSystem& t_commandSystem, InputSystem& t_input, RenderSystem& t_renderSystem);
+	GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controller[Utilities::S_MAX_PLAYERS], CommandSystem& t_commandSystem, InputSystem& t_input, RenderSystem& t_renderSystem, OnlineGameHandler& t_onlineHandler);
 	~GameScreen();
 
 	void update(float t_deltaTime);
@@ -37,6 +39,7 @@ public:
 	void updateLevelManager();
 	void setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]);
 	void removeDeadEnemies();
+	void processGameData();
 
 	EventManager& m_eventManager;
 
@@ -66,6 +69,8 @@ public:
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
 
 	// bool to see if game is being played online or not
-	bool m_isOnline;
+	//bool m_isOnline;
+
+	OnlineGameHandler& m_onlineHandler;
 };
 

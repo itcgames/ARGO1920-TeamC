@@ -18,6 +18,12 @@ void GameTypeScreen::update(float t_deltaTime)
 {
 	m_inputSystem.update(m_inputEntity);
 	m_commandSystem.update(m_inputEntity, m_eventManager);
+
+	if (m_onlineHandler.isConnected() && !m_onlineHandler.getStartData().empty())
+	{
+		Utilities::OnlineData::S_ONLINE_STATUS = Utilities::OnlineState::Client;
+		m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::Game });
+	}
 }
 
 void GameTypeScreen::reset()
@@ -439,7 +445,7 @@ void GameTypeScreen::gameTypeConfirmed(const Events::GameTypeConfirm& t_event)
 	{
 		// go to game
 		m_onlineHandler.sendStartData();
-		//m_eventManager.emitEvent()
+		m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::Game });
 	}
 	else if (m_joinPopupActive)
 	{

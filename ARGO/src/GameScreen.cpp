@@ -7,7 +7,7 @@ bool cleanUpEnemies(const Entity& t_entity)
 	return !static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health))->isAlive();
 }
 
-GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::S_MAX_PLAYERS], CommandSystem& t_commandSystem, InputSystem& t_input, RenderSystem& t_renderSystem) :
+GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, Controller t_controllers[Utilities::S_MAX_PLAYERS], CommandSystem& t_commandSystem, InputSystem& t_input, RenderSystem& t_renderSystem, OnlineGameHandler& t_onlineHandler) :
 	m_eventManager{ t_eventManager },
 	m_controllers{ *t_controllers },
 	m_levelManager{ t_renderer },
@@ -18,7 +18,8 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_collisionSystem{ m_eventManager },
 	m_commandSystem{ t_commandSystem },
 	m_inputSystem{ t_input },
-	m_renderSystem{ t_renderSystem }
+	m_renderSystem{ t_renderSystem },
+	m_onlineHandler{ t_onlineHandler }
 {
 }
 
@@ -29,13 +30,34 @@ GameScreen::~GameScreen()
 
 void GameScreen::update(float t_deltaTime)
 {
-	updateLevelManager();
-	updateEntities(t_deltaTime);
-	updatePlayers(t_deltaTime);
-	updateProjectiles(t_deltaTime);
-	m_collisionSystem.update(m_goal);
-	m_collisionSystem.handleCollisions();
-	removeDeadEnemies();
+	switch (Utilities::OnlineData::S_ONLINE_STATUS)
+	{
+	case Utilities::OnlineState::Client:
+	{
+		if (static_cast<HealthComponent*>(m_players[0].getComponent(ComponentType::Health))->isAlive())
+		{
+			m_onlineHandler.sendGameData(static_cast<TransformComponent*>(m_players[0].getComponent(ComponentType::Transform))->getPos());
+		}
+		processGameData();
+
+
+		break;
+	}
+	case Utilities::OnlineState::Host:
+		m_onlineHandler.sendGameData(static_cast<TransformComponent*>(m_players[0].getComponent(ComponentType::Transform))->getPos());
+		processGameData();
+	case Utilities::OnlineState::Local:
+		updateLevelManager();
+		updateEntities(t_deltaTime);
+		updatePlayers(t_deltaTime);
+		updateProjectiles(t_deltaTime);
+		m_collisionSystem.update(m_goal);
+		m_collisionSystem.handleCollisions();
+		removeDeadEnemies();
+		break;
+	default:
+		break;
+	}
 }
 
 void GameScreen::processEvents(SDL_Event* t_event)
@@ -46,48 +68,6 @@ void GameScreen::processEvents(SDL_Event* t_event)
 	{
 		switch (t_event->key.keysym.sym)
 		{
-		case SDLK_HOME:
-		{
-			m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::MainMenu });
-			break;
-		}
-		case SDLK_BACKSPACE:
-		{
-			//delete all entities
-			if (!m_entities.empty())
-			{
-				m_entities.erase(m_entities.begin(), m_entities.end());
-			}
-			std::cout << m_entities.size() << std::endl;
-			break;
-		}
-		case SDLK_DELETE:
-		{
-			//delete all entities
-			m_players[0].removeCompType(ComponentType::Input);
-			break;
-		}
-		case SDLK_RETURN:
-		{
-			//check if we can add 100 entities, if more than 100, set to 100, if less than 0 set to 0
-			int availableSpace = glm::clamp(int(MAX_ENTITIES - m_entities.size()), 0, 10);
-			for (int index = 0; index < availableSpace; index++)
-			{
-				createEnemy();
-			}
-			std::cout << m_entities.size() << std::endl;
-			break;
-		}
-		case SDLK_1:
-		{
-			//create one enemy if space available in the vector
-			if (m_entities.size() < MAX_ENTITIES)
-			{
-				createEnemy();
-			}
-			std::cout << m_entities.size() << std::endl;
-			break;
-		}
 		default:
 			break;
 		}
@@ -307,7 +287,7 @@ void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utiliti
 
 void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS], bool t_isOnline)
 {
-	m_isOnline = t_isOnline;
+	//m_isOnline = t_isOnline;
 	setControllerButtonMap(t_controllerButtonMaps);
 	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
 	{
@@ -337,4 +317,35 @@ void GameScreen::removeDeadEnemies()
 		iter->nullAllComponents();
 		iter = m_entities.erase(iter);
 	}
+}
+
+void GameScreen::processGameData()
+{
+	if (!m_onlineHandler.getGameData().empty())
+	{
+		std::string& gameData = m_onlineHandler.getGameData();
+		std::vector<std::string> tokens;
+		std::size_t start = 0, end = 0;
+		while ((end = gameData.find(",", start)) != std::string::npos) {
+			tokens.push_back(gameData.substr(start, end - start));
+			start = end + 1;
+		}
+		tokens.push_back(gameData.substr(start));
+
+		std::vector<float> posVec;
+
+		for (int i = 0; i < tokens.size(); i++)
+		{
+			std::stringstream ss(tokens.at(i));
+			float pos;
+			ss >> pos;
+			posVec.push_back(pos);
+		}
+
+		for (int i = 1; i < Utilities::S_MAX_PLAYERS; i++)
+		{
+			static_cast<TransformComponent*>(m_players[i].getComponent(ComponentType::Transform))->setPos(posVec[i], posVec[i + 1]);
+		}
+	}
+
 }

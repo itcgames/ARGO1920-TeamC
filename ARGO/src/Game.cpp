@@ -10,7 +10,7 @@ bool Utilities::OnlineData::S_IS_HOST = false;
 /// 
 class State;
 Game::Game() :
-	m_gameScreen{ m_renderer, m_eventManager, m_controllers, m_commandSystem, m_inputSystem, m_renderSystem },
+	m_gameScreen{ m_renderer, m_eventManager, m_controllers, m_commandSystem, m_inputSystem, m_renderSystem, m_onlineHandler },
 	m_optionsScreen{ m_eventManager, m_controllers[0], m_renderer },
 	m_creditsScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_licenseScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },

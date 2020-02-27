@@ -93,12 +93,13 @@ bool OnlineGameHandler::isConnected()
 	}
 }
 
-void OnlineGameHandler::sendGameData(int t_posX, int t_posY)
+void OnlineGameHandler::sendGameData(glm::vec2 t_pos)
 {
 	std::string data = GAME_DATA;
-	data += std::to_string(t_posX);
+	data += std::to_string(t_pos.x);
 	data += ",";
-	data += std::to_string(t_posY);
+	data += std::to_string(t_pos.y);
+	std::cout << "Sent data: " << data << std::endl;
 	m_client->SendString(data);
 }
 

@@ -17,7 +17,7 @@ public:
 	std::string& getRestartData();
 	std::string& getConnectData();
 	bool isConnected();
-	void sendGameData(int t_posX, int t_posY);
+	void sendGameData(glm::vec2 t_pos);
 	void sendWinData(int t_ms);
 	void sendConnectData();
 	void sendStartData();
