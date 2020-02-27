@@ -34,6 +34,11 @@ void GameScreen::update(float t_deltaTime)
 	{
 	case Utilities::OnlineState::Client:
 	{
+		updateLevelManager();
+		updatePlayers(t_deltaTime);
+		updateProjectiles(t_deltaTime);
+		m_collisionSystem.update(m_goal);
+		m_collisionSystem.handleCollisions();
 		if (static_cast<HealthComponent*>(m_players[0].getComponent(ComponentType::Health))->isAlive())
 		{
 			m_onlineHandler.sendGameData(static_cast<TransformComponent*>(m_players[0].getComponent(ComponentType::Transform))->getPos());
@@ -269,7 +274,7 @@ void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utiliti
 	for (Entity& player : m_players)
 	{
 		player.removeAllComponents();
-		createPlayer(player, playerCount, t_renderer);
+		createPlayer(player, playerCount, t_renderer, false);
 		playerCount++;
 	}
 	for (Entity& entity : m_entities)
