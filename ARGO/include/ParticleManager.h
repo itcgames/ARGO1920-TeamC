@@ -15,15 +15,14 @@ class ParticleManager
 {
 public:
 	ParticleManager(EventManager& t_eventManager, ParticleSystem& t_particleSystem);
-	void init(SDL_Renderer* t_renderer);
 	void createParticleEmitter(Entity& t_entity);
-	void placeEmitter(glm::vec2 t_pos, int t_pickUpType);
+	void placeEmitterEnemyDeath(const EnemyKilled& t_event);
+	void placeEmitterPlayerDeath(const PlayerKilled& t_event);
 	void update(float t_dt);
 	void nextAvailableEmitter();
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
 private:
-	static const int EMITTER_POOL_SIZE = 1;
-	Entity m_particleEmitter[EMITTER_POOL_SIZE];
+	Entity m_particleEmitter[Utilities::PARTICLE_MAX_EMITTER_POOL];
 	SDL_Renderer* m_renderer;
 	ParticleSystem& m_particleSystem;
 	int m_currentEmitter{ 0 };

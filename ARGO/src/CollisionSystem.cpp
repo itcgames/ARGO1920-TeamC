@@ -343,6 +343,7 @@ void CollisionSystem::playerToEnemy(Entity* t_player, Entity* t_enemy)
 		else
 		{
 			//so play death sound
+			m_eventManager.emitEvent(PlayerKilled{ t_player });
 			std::string filePath = "gameover" + std::to_string(glm::linearRand(1, 3)) + ".wav";
 			AudioManager::Instance()->PlaySfx(filePath);
 		}

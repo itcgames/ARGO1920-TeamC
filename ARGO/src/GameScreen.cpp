@@ -87,9 +87,10 @@ void GameScreen::render(SDL_Renderer* t_renderer)
 	m_renderSystem.render(t_renderer, m_goal);
 	m_projectileManager.render(t_renderer, &m_renderSystem);
 	m_pickUpManager.render(t_renderer, &m_renderSystem);
+	m_particleManager.render(t_renderer, &m_renderSystem);
 	m_levelManager.renderLight(t_renderer, &m_renderSystem);
 	m_hudManager.render(t_renderer, &m_renderSystem);
-	m_particleManager.render(t_renderer, &m_renderSystem);
+
 }
 
 

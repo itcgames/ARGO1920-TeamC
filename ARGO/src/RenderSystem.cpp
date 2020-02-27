@@ -131,8 +131,6 @@ void RenderSystem::renderParticles(SDL_Renderer* t_renderer, ParticleEmitterComp
 	SDL_GetRenderDrawColor(t_renderer, &prevRGBA[0], &prevRGBA[1], &prevRGBA[2], &prevRGBA[3]);
 
 	SDL_Rect rect;
-	rect.w = t_primitive->getSize().x;
-	rect.h = t_primitive->getSize().y;
 	Colour colour;
 	//set colour from the component
 	if (t_colComp)
@@ -145,14 +143,17 @@ void RenderSystem::renderParticles(SDL_Renderer* t_renderer, ParticleEmitterComp
 		colour.red = 255;
 	}
 
-	SDL_SetRenderDrawColor(t_renderer, colour.red, colour.green, colour.blue, colour.alpha);
+
 	for (int i = 0; i < t_emitter->getMaxParticles(); i++)
 	{
-
 		if (t_emitter->getParticleAlive(i))
 		{
+			SDL_SetRenderDrawColor(t_renderer, t_emitter->getParticleColour(i).x, t_emitter->getParticleColour(i).y, t_emitter->getParticleColour(i).z, t_emitter->getParticleColour(i).a);
+			rect.w = t_emitter->getParticleSize(i);
+			rect.h = t_emitter->getParticleSize(i);
 			rect.x = t_emitter->getParticlePosition(i).x;
 			rect.y = t_emitter->getParticlePosition(i).y;
+
 			rect.x = rect.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
 			rect.y = rect.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
 			SDL_RenderFillRect(t_renderer, &rect);
