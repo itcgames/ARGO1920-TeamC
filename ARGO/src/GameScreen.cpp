@@ -109,6 +109,7 @@ void GameScreen::createGoal()
 	m_goal.addComponent(new TransformComponent(Utilities::GOAL_START_POSITION));
 	m_goal.addComponent(new ColliderCircleComponent(32));
 	m_goal.addComponent(new TagComponent(Tag::Goal));
+	m_goal.addComponent(new VisualComponent("EscapePod.png", m_renderer));
 }
 
 void GameScreen::setUpLevel()
@@ -234,6 +235,9 @@ void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utiliti
 		playerCount++;
 	}
 	setUpLevel();
+	m_projectileManager.reset();
+	m_enemyManager.killAll();
+	m_hudManager;
 }
 
 void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS])

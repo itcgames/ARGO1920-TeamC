@@ -29,7 +29,7 @@ private:
 	float m_spawnEnemyTimer;
 	int m_difficultyLevel;
 	float m_difficultyTimer;
-	const float DIFFICULTY_INCREASE_RATE = 600;
+	const float DIFFICULTY_INCREASE_RATE = 900;
 	const float SPAWN_ENEMY_RATE = 300; //1 second is 60 ticks
 	AudioManager* m_audioMgr;
 	LevelManager& m_levelManager;

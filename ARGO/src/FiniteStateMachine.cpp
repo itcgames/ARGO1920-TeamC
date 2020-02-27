@@ -31,9 +31,9 @@ State* FiniteStateMachine::getPrevious()
 	return m_previous;
 }
 
-void FiniteStateMachine::update()
+void FiniteStateMachine::update(float t_dt)
 {
-	m_current->update();
+	m_current->update(t_dt);
 }
 
 void FiniteStateMachine::idle()

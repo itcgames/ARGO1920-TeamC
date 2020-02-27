@@ -19,7 +19,7 @@
 struct Bullet
 {
 	Entity entity;
-	int type;
+	Weapon type;
 };
 
 class ProjectileManager
@@ -34,6 +34,7 @@ public:
 	void updateBullet(Bullet& t_bullet, float t_dt);
 	void updateGlowStick(Entity& t_glowStick, float t_dt);
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
+	void reset();
 	Entity(&getGlowsticks())[Utilities::GLOWSTICK_POOL_SIZE];
 private:
 	void tick(float t_dt);

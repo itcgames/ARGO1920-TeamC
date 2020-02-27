@@ -3,8 +3,7 @@
 
 CollisionSystem::CollisionSystem(EventManager& t_eventManager) :
 	m_eventManager(t_eventManager),
-	m_quadTree(0, glm::vec2(0, 0), glm::vec2(Utilities::LEVEL_TILE_WIDTH* Utilities::TILE_SIZE, Utilities::LEVEL_TILE_HEIGHT* Utilities::TILE_SIZE)),
-	m_seperationScaler(30)
+	m_quadTree(0, glm::vec2(0, 0), glm::vec2(Utilities::LEVEL_TILE_WIDTH* Utilities::TILE_SIZE, Utilities::LEVEL_TILE_HEIGHT* Utilities::TILE_SIZE))
 {
 	m_circleColliderBuffer.reserve(100);
 }
@@ -60,6 +59,9 @@ void CollisionSystem::handleCollisions()
 		case Tag::GlowStick:
 			handleGlowStickCollision(m_circleColliderBuffer[i]);
 			break;
+		case Tag::Grenade:
+			handleGrenadeCollision(m_circleColliderBuffer[i]);
+			break;
 		default:
 			break;
 		}
@@ -89,6 +91,19 @@ bool CollisionSystem::circleToAABBCollision(Entity* t_entityCircle, Entity* t_en
 	int deltaX = circlePosition.x - std::max(rectPosition.x, std::min(circlePosition.x, rectPosition.x + bounds.x));
 	int deltaY = circlePosition.y - std::max(rectPosition.y, std::min(circlePosition.y, rectPosition.y + bounds.y));
 	return (deltaX * deltaX + deltaY * deltaY) < (radius * radius);
+}
+
+bool CollisionSystem::circleToCircleCollision(glm::vec2 t_pos1, float t_radius1, glm::vec2 t_pos2, float t_radius2)
+{
+	glm::vec2 distanceBetween = t_pos1 - t_pos2;
+	return sqrt(distanceBetween.x * distanceBetween.x + distanceBetween.y * distanceBetween.y) < t_radius1 + t_radius2;
+}
+
+bool CollisionSystem::circleToAABBCollision(glm::vec2 t_pos1, float t_radius, glm::vec2 t_pos2, glm::vec2 t_bounds)
+{
+	int deltaX = t_pos1.x - std::max(t_pos2.x, std::min(t_pos1.x, t_pos2.x + t_bounds.x));
+	int deltaY = t_pos1.y - std::max(t_pos2.y, std::min(t_pos1.y, t_pos2.y + t_bounds.y));
+	return (deltaX * deltaX + deltaY * deltaY) < (t_radius * t_radius);
 }
 
 bool CollisionSystem::edgeOfTheWorldToCircle(Entity& t_entity)
@@ -214,6 +229,34 @@ void CollisionSystem::handlePlayerBulletCollision(Entity* t_playerBullet)
 	}
 }
 
+void CollisionSystem::handleGrenadeCollision(Entity* t_grenade)
+{
+	TransformComponent* rectPosition = static_cast<TransformComponent*>(t_grenade->getComponent(ComponentType::Transform));
+	int radius = static_cast<ColliderCircleComponent*>(t_grenade->getComponent(ComponentType::ColliderCircle))->getRadius();
+	glm::vec2 bounds{ radius, radius };
+	Quad quad{ NULL, rectPosition->getPos() - bounds, bounds * 2.0f };
+
+	std::vector<Entity*> entities;
+	m_quadTree.retrieve(&entities, quad);
+
+	for (auto& other : entities)
+	{
+		TagComponent* tag = static_cast<TagComponent*>(other->getComponent(ComponentType::Tag));
+
+		switch (tag->getTag())
+		{
+		case Tag::Enemy:
+			grenadeToEnemy(t_grenade, other);
+			break;
+		case Tag::Tile:
+			greandeToWall(t_grenade, other);
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 void CollisionSystem::handleEnemyCollision(Entity* t_enemy)
 {
 	TransformComponent* rectPosition = static_cast<TransformComponent*>(t_enemy->getComponent(ComponentType::Transform));
@@ -276,6 +319,39 @@ void CollisionSystem::handleGlowStickCollision(Entity* t_glowStick)
 	}
 }
 
+void CollisionSystem::createExplosion(glm::vec2 t_position)
+{
+	glm::vec2 bounds{ EXPLOSION_RADIUS, EXPLOSION_RADIUS };
+	Quad quad{ NULL, t_position - bounds, bounds * 2.0f };
+
+	std::vector<Entity*> entities;
+	m_quadTree.retrieve(&entities, quad); 
+	for (auto& other : entities)
+	{
+		TagComponent* tag = static_cast<TagComponent*>(other->getComponent(ComponentType::Tag));
+		TransformComponent* transform = static_cast<TransformComponent*>(other->getComponent(ComponentType::Transform));
+
+		switch (tag->getTag())
+		{
+		case Tag::Enemy:
+			if (other->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_position, EXPLOSION_RADIUS, transform->getPos(), static_cast<ColliderCircleComponent*>(other->getComponent(ComponentType::ColliderCircle))->getRadius()))
+			{
+				static_cast<HealthComponent*>(other->getComponent(ComponentType::Health))->setHealth(0);
+				m_eventManager.emitEvent(EnemyKilled{ other });
+			}
+			break;
+		case Tag::Tile:
+			if (other->getComponent(ComponentType::ColliderAABB) && circleToAABBCollision(t_position, EXPLOSION_RADIUS, transform->getPos(), static_cast<ColliderAABBComponent*>(other->getComponent(ComponentType::ColliderAABB))->getBounds()))
+			{
+				static_cast<HealthComponent*>(other->getComponent(ComponentType::Health))->setHealth(0);
+			}
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 void CollisionSystem::playerToPlayer(Entity* t_player1, Entity* t_player2)
 {
 	if (t_player2->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_player1, t_player2))
@@ -292,11 +368,11 @@ void CollisionSystem::playerToPlayer(Entity* t_player1, Entity* t_player2)
 		if (length != 0)
 		{
 			distanceBetween /= length;
-			distanceBetween = distanceBetween * seperation * m_seperationScaler;
+			distanceBetween = distanceBetween * seperation * SEPERATION_SCALER;
 		}
 		else
 		{
-			distanceBetween = glm::vec2(m_seperationScaler, m_seperationScaler);
+			distanceBetween = glm::vec2(SEPERATION_SCALER, SEPERATION_SCALER);
 		}
 		player1Position->addPos(distanceBetween);
 		player2Position->addPos(-distanceBetween);
@@ -477,11 +553,11 @@ void CollisionSystem::enemyToEnemy(Entity* t_enemy1, Entity* t_enemy2)
 		if (length != 0)
 		{
 			distanceBetween /= length;
-			distanceBetween = distanceBetween * seperation * m_seperationScaler;
+			distanceBetween = distanceBetween * seperation * SEPERATION_SCALER;
 		}
 		else
 		{
-			distanceBetween = glm::vec2(m_seperationScaler, m_seperationScaler);
+			distanceBetween = glm::vec2(SEPERATION_SCALER, SEPERATION_SCALER);
 		}
 		enemy1Position->addPos(distanceBetween);
 		enemy2Position->addPos(-distanceBetween);
@@ -571,5 +647,23 @@ void CollisionSystem::glowStickToWall(Entity* t_glowstick, Entity* t_wall)
 				glowStickPosition->setPos(glowStickPosition->getPos().x, (glowStickRadius + wallWidth) + wallPosition->getPos().y);
 			}
 		}
+	}
+}
+
+void CollisionSystem::grenadeToEnemy(Entity* t_grenade, Entity* t_enemy)
+{
+	if (t_enemy->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_grenade, t_enemy))
+	{
+		static_cast<HealthComponent*>(t_grenade->getComponent(ComponentType::Health))->setHealth(0); //kill the bullet
+		createExplosion(static_cast<TransformComponent*>(t_grenade->getComponent(ComponentType::Transform))->getPos());
+	}
+}
+
+void CollisionSystem::greandeToWall(Entity* t_grenade, Entity* t_wall)
+{
+	if (t_wall->getComponent(ComponentType::ColliderAABB) && circleToAABBCollision(t_grenade, t_wall))
+	{
+		createExplosion(static_cast<TransformComponent*>(t_grenade->getComponent(ComponentType::Transform))->getPos());
+		static_cast<HealthComponent*>(t_grenade->getComponent(ComponentType::Health))->setHealth(0); //kill the bullet
 	}
 }
