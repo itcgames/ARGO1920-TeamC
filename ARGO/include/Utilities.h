@@ -2,6 +2,7 @@
 
 namespace Utilities
 {
+	//stuff for online
 	enum class OnlineStatus
 	{
 		Host,
@@ -12,6 +13,9 @@ namespace Utilities
 	static OnlineStatus S_ONLINE_STATUS = OnlineStatus::Local;
 	static bool S_IS_HOST = false;
 	static const int PORT_NUM = 1111;
+	static const std::string ONLINE_HOST = "host";
+	static const std::string ONLINE_CLIENT = "client";
+	//online stuff end
 
 	const static int S_MAX_PLAYERS = 4;
 	//font consts
@@ -52,7 +56,7 @@ namespace Utilities
 	const glm::vec2 GOAL_START_POSITION = glm::vec2(51, 36) * (float)TILE_SIZE;
 
 	const int NUMBER_OF_CONTROLLER_BUTTONS = 24;
- 	const int NUMBER_OF_CONTROLLER_MAPS = 3;
+	const int NUMBER_OF_CONTROLLER_MAPS = 3;
 
 	//Particle
 	const int PROJECTILE_SPEED = 32;
@@ -75,7 +79,7 @@ namespace Utilities
 	const int AUDIO_CHANNELS_PER_PLAYER = 8;
 	const int AUDIO_PLAYERS_FIRE_CHANNELS = AUDIO_MIX_CHANNELS - AUDIO_CHANNELS_PER_PLAYER * 4;
 
-	static const int S_NUMBER_OF_SCREENS = 9; 
+	static const int S_NUMBER_OF_SCREENS = 9;
 
 	static const glm::vec3 MENU_BUTTON_HIGHLIGHTED_COLOUR{ 255,255,240 };
 	static const glm::vec3 MENU_BUTTON_DEFAULT_COLOUR{ 199,163,10 };

@@ -472,6 +472,35 @@ void GameTypeScreen::gameTypeConfirmed(const Events::GameTypeConfirm& t_event)
 		ipValue = ipParts[0] + ipParts[1] + ipParts[2] + ipParts[3];
 
 		std::cout << ipValue << std::endl;
+
 		//join server and go to game
+		int timer = SDL_GetTicks();
+		bool failedToConnect = false;
+		while ("" == m_onlineHandler.getConnectData() && !failedToConnect)
+		{
+			//loop until we get data back 
+			if ((SDL_GetTicks() - timer) > 5000)
+			{
+				failedToConnect = true;
+			}
+		}
+		if (!failedToConnect)
+		{
+			if (Utilities::ONLINE_HOST == m_onlineHandler.getConnectData())
+			{
+#ifdef _DEBUG
+				std::cout << "Host data received" << std::endl;
+#endif // _DEBUG
+			}
+			else if (Utilities::ONLINE_CLIENT == m_onlineHandler.getConnectData())
+			{
+#ifdef _DEBUG
+				std::cout << "Guest data received" << std::endl;
+#endif // _DEBUG
+				//set players up etc to match host here
+
+				m_onlineHandler.sendStartData();
+			}
+		}
 	}
 }
