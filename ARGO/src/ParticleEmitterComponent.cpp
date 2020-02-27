@@ -13,7 +13,7 @@ ParticleEmitterComponent::ParticleEmitterComponent() :
 /// <summary>
 ///Constructor Function.
 /// </summary>
-ParticleEmitterComponent::ParticleEmitterComponent(glm::vec2 t_position, bool t_emitting, float t_angle, float t_angleOffset, float t_speed, int t_maxParticles, float t_particlesPerSecond, int t_timeToKillParticle, bool t_rotating, float t_rotateAnglePerFrame) :
+ParticleEmitterComponent::ParticleEmitterComponent(glm::vec2 t_position, bool t_emitting, float t_angle, float t_angleOffset, float t_speed, int t_maxParticles, float t_particlesPerSecond, int t_timeToKillParticle, bool t_rotating, float t_rotateAnglePerFrame, EmitterType t_emitterType) :
 	Component(ComponentType::ParticleEmitter),
 	m_position(t_position),
 	m_angle(t_angle),
@@ -24,10 +24,30 @@ ParticleEmitterComponent::ParticleEmitterComponent(glm::vec2 t_position, bool t_
 	m_emitting(t_emitting),
 	m_particlesPerSecond(t_particlesPerSecond / 60.0f),
 	m_rotating(t_rotating),
-	m_rotateAnglePerFrame(t_rotateAnglePerFrame)
+	m_rotateAnglePerFrame(t_rotateAnglePerFrame),
+	m_emitterType(t_emitterType)
 {
 	for (int i = 0; i < m_maxParticles; i++)
-	{	
+	{
+		Particle particle;
+		m_particles.push_back(particle);
+	}
+}
+ParticleEmitterComponent::ParticleEmitterComponent(bool t_emitting, float t_speedOffset, float t_speed, int t_maxParticles, int t_timeToKillParticle, float t_particlesPerSecond) :
+	Component(ComponentType::ParticleEmitter),
+	m_position(glm::vec2(-100, -100)),
+	m_angle(90.0f),
+	m_angleOffset(180.0f),
+	m_speed(t_speed),
+	m_maxParticles(t_maxParticles),
+	m_timeToKillParticle(t_timeToKillParticle),
+	m_emitting(t_emitting),
+	m_particlesPerSecond(t_particlesPerSecond / 60.0f),
+	m_speedOffset(t_speedOffset),
+	m_emitterType(EmitterType::Burst)
+{
+	for (int i = 0; i < m_maxParticles; i++)
+	{
 		Particle particle;
 		m_particles.push_back(particle);
 	}
@@ -49,6 +69,10 @@ void ParticleEmitterComponent::setParticle(glm::vec2 t_pos)
 	if (m_placeParticle >= m_maxParticles)//Flips the tracker once it overflows.
 	{
 		m_placeParticle = 0;
+		if (m_emitterType == EmitterType::Burst)
+		{
+			m_emitting = false;
+		}
 	}
 }
 ///Kills a particle at a given index. Killed particles are not rendered, updated or moved. They will be reused once the queue reaches them again.
@@ -219,5 +243,41 @@ float ParticleEmitterComponent::getRotatingSpeed()
 {
 	return m_rotateAnglePerFrame;
 }
+
+EmitterType ParticleEmitterComponent::getEmitterType()
+{
+	return m_emitterType;
+}
+
+void ParticleEmitterComponent::setEmitterType(EmitterType t_emitterType)
+{
+	m_emitterType = t_emitterType;
+}
+
+int ParticleEmitterComponent::getSpeedOffset()
+{
+	return m_speedOffset;
+}
+
+void ParticleEmitterComponent::setParticleColour(int t_index, glm::uvec4 t_colour)
+{
+	m_particles[t_index].setColour(t_colour);
+}
+
+glm::uvec4 ParticleEmitterComponent::getParticleColour(int t_index)
+{
+	return m_particles[t_index].getColour();
+}
+
+void ParticleEmitterComponent::setParticleSize(int t_index, float t_size)
+{
+	m_particles[t_index].setSize(t_size);
+}
+
+float ParticleEmitterComponent::getParticleSize(int t_index)
+{
+	return m_particles[t_index].getSize();
+}
+
 
 

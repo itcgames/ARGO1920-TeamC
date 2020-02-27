@@ -59,3 +59,23 @@ glm::vec2 Particle::getMovement()
 {
 	return m_movement;
 }
+
+void Particle::setColour(glm::uvec4 t_colour)
+{
+	m_colour = t_colour;
+}
+
+glm::uvec4 Particle::getColour()
+{
+	return m_colour;
+}
+
+void Particle::setSize(float t_size)
+{
+	m_size = t_size;
+}
+
+float Particle::getSize()
+{
+	return m_size;
+}
