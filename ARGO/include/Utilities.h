@@ -70,7 +70,6 @@ namespace Utilities
 
 	//Flow field values
 	const int MAX_FLOW_FIELD_WEIGHT = 20;
-	const float RADIANS_TO_DEGREES = 57.2958;
 
 	static const int GLOWSTICK_POOL_SIZE = 20;
 

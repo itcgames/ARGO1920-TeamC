@@ -24,29 +24,29 @@ void HUDManager::init(SDL_Renderer* t_renderer)
 /// </summary>
 void HUDManager::update()
 {
-	for (auto& i : m_playerHUD) {
+	for (auto& hudElement : m_playerHUD) {
 		//Get the layout Data
-		HUDComponent* hudComp = static_cast<HUDComponent*>(i.HUDLayoutData.getComponent(ComponentType::HUD));
+		HUDComponent* hudComp = static_cast<HUDComponent*>(hudElement.HUDLayoutData.getComponent(ComponentType::HUD));
 		//Calculates the position of the HUD. The " 1 " is needed because there is a buffer between the screen edge and the first HUD.
 		hudComp->setHUDPosition(glm::vec2(((Utilities::SCREEN_WIDTH * Utilities::PERCENTAGE_BUFFER_BETWEEN_HUDS) * (hudComp->getIndex() + 1)) + ((Utilities::SCREEN_WIDTH * Utilities::PERCENTAGE_SCREENSPACE_OF_HUD) * hudComp->getIndex()), hudComp->getHUDPosition().y));
 
 		//Ammo Text
-		TransformComponent* transformComp = static_cast<TransformComponent*>(i.HUDAmmoText.getComponent(ComponentType::Transform));
+		TransformComponent* transformComp = static_cast<TransformComponent*>(hudElement.HUDAmmoText.getComponent(ComponentType::Transform));
 		transformComp->setPos(hudComp->getHUDPosition().x + hudComp->getAmmoTextOffset().x, hudComp->getHUDPosition().y + hudComp->getAmmoTextOffset().y);
-		TextComponent* textComp = static_cast<TextComponent*>(i.HUDAmmoText.getComponent(ComponentType::Text));
+		TextComponent* textComp = static_cast<TextComponent*>(hudElement.HUDAmmoText.getComponent(ComponentType::Text));
 		//Get the Ammo Componentn Here and do the changes needed to set the correct size of the bar.
 		//This is a stand in until Emmett is done that.
 		textComp->setText(std::string("100 / 100"));
 
 
 		//Ammo Bar
-		transformComp = static_cast<TransformComponent*>(i.HUDAmmoBar.getComponent(ComponentType::Transform));
+		transformComp = static_cast<TransformComponent*>(hudElement.HUDAmmoBar.getComponent(ComponentType::Transform));
 		transformComp->setPos(hudComp->getHUDPosition().x + hudComp->getAmmoOffset().x, hudComp->getHUDPosition().y + hudComp->getAmmoOffset().y);
 
 		//Health Text
-		transformComp = static_cast<TransformComponent*>(i.HUDHealthText.getComponent(ComponentType::Transform));
+		transformComp = static_cast<TransformComponent*>(hudElement.HUDHealthText.getComponent(ComponentType::Transform));
 		transformComp->setPos(hudComp->getHUDPosition().x + hudComp->getHealthTextOffset().x, hudComp->getHUDPosition().y + hudComp->getHealthTextOffset().y);
-		textComp = static_cast<TextComponent*>(i.HUDHealthText.getComponent(ComponentType::Text));
+		textComp = static_cast<TextComponent*>(hudElement.HUDHealthText.getComponent(ComponentType::Text));
 		HealthComponent* hpComp = static_cast<HealthComponent*>(m_players[hudComp->getIndex()].getComponent(ComponentType::Health));
 		if (hpComp->isAlive())
 		{
@@ -58,15 +58,15 @@ void HUDManager::update()
 			//If the player is dead and hasn't swapped states.
 			if (hudComp->getAvatarState() == AvatarState::Player)
 			{
-				//Removing and readding Component because the Load from File function from the Visual Component isn't Working.
-				i.HUDAvatarIcon.removeCompType(ComponentType::Visual);
-				i.HUDAvatarIcon.addComponent(new VisualComponent("Skull.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+				//Removing and readding Component because the Load from File function from the Visual Component isn't Working.    
+				VisualComponent* visiComp = static_cast<VisualComponent*>(hudElement.HUDAvatarIcon.getComponent(ComponentType::Visual));
+				visiComp->loadFromFile("Skull.png", m_renderer);
 				hudComp->setAvatarState(AvatarState::Skull);
 			}
 		}
 
 		//Health Bar
-		transformComp = static_cast<TransformComponent*>(i.HUDHealthBar.getComponent(ComponentType::Transform));
+		transformComp = static_cast<TransformComponent*>(hudElement.HUDHealthBar.getComponent(ComponentType::Transform));
 		transformComp->setPos(hudComp->getHUDPosition().x + hudComp->getHealthOffset().x, hudComp->getHUDPosition().y + hudComp->getHealthOffset().y);
 		//Convert the Max Health from a Const Int to a float.
 		float tempMaxHealth = hpComp->getMaxHealth();
@@ -76,16 +76,16 @@ void HUDManager::update()
 		float healthBarSizeX = hudComp->getMaxHealthSize().x * healthPercentage;
 		//Sets the Bar to the desired Size
 		hudComp->setCurrentHealthSize(healthBarSizeX);
-		PrimitiveComponent* primComp = static_cast<PrimitiveComponent*>(i.HUDHealthBar.getComponent(ComponentType::Primitive));
+		PrimitiveComponent* primComp = static_cast<PrimitiveComponent*>(hudElement.HUDHealthBar.getComponent(ComponentType::Primitive));
 		//Applies the size change.
 		primComp->setSize(hudComp->getCurrentHealthSize());
 
 		//Hud Texture
-		transformComp = static_cast<TransformComponent*>(i.HUDVisualTexture.getComponent(ComponentType::Transform));
+		transformComp = static_cast<TransformComponent*>(hudElement.HUDVisualTexture.getComponent(ComponentType::Transform));
 		transformComp->setPos(hudComp->getHUDPosition().x, hudComp->getHUDPosition().y);
 
 		//Avatar Texture
-		transformComp = static_cast<TransformComponent*>(i.HUDAvatarIcon.getComponent(ComponentType::Transform));
+		transformComp = static_cast<TransformComponent*>(hudElement.HUDAvatarIcon.getComponent(ComponentType::Transform));
 		transformComp->setPos(hudComp->getHUDPosition().x + hudComp->getAvatarOffset().x, hudComp->getHUDPosition().y + hudComp->getAvatarOffset().y);
 	}
 }
