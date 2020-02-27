@@ -32,7 +32,7 @@ void ProjectileManager::init()
 		glowStick.addComponent(new VisualComponent("GlowStick.png", m_renderer));
 		glowStick.addComponent(new ForceComponent(glm::vec2(0, 0)));
 		glowStick.addComponent(new HealthComponent(1, 0));
-		glowStick.addComponent(new ColliderCircleComponent(16));
+		glowStick.addComponent(new ColliderCircleComponent(GLOWSTICK_RADIUS));
 		glowStick.addComponent(new TimerComponent(BULLET_LIFETIME));
 		glowStick.addComponent(new TagComponent(Tag::GlowStick));
 	}
