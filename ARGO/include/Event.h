@@ -15,13 +15,7 @@ struct CreateBulletEvent
 struct PhysicsMove
 {
 	glm::vec2 velocity;
-	Entity& entity;
-};
-
-
-struct PickupGrabbed
-{
-	Entity* pickup;
+ 	Entity& entity;
 };
 
 struct PhysicsRotate
@@ -30,15 +24,19 @@ struct PhysicsRotate
 	Entity& entity;
 };
 
-struct MenuMoveButtonsUpDown
+struct MenuMoveBetweenUI 
 {
-	// bool for if its moving down or up
-	bool isMoveDown;
+ 	MoveDirection direction;
 };
 
-struct MenuSelectButton
+struct MenuButtonPressed
 {
-	Entity& entity;
+	ButtonType buttonPressed;
+};  
+
+struct UpdateAchievement
+{
+	AchievementsType type;
 };
 
 struct CloseWindow

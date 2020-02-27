@@ -84,3 +84,18 @@ enum class MenuStates
 	Splash,
 	Achievements
 };
+
+enum class MoveDirection
+{
+	Up,
+	Down,
+	Left,
+	Right
+};
+
+enum class AchievementsType
+{
+	EnemiesKilled,
+	TimeSurvived,
+	GamesWon,
+ };

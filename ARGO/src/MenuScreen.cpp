@@ -64,8 +64,8 @@ void MenuScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 
 	createInputEntity(t_controller);
 
-	m_eventManager.subscribeToEvent<MenuMoveButtonsUpDown>(std::bind(&MenuScreen::changeCurrentSelectedButton, this, std::placeholders::_1));
-	m_eventManager.subscribeToEvent<MenuSelectButton>(std::bind(&MenuScreen::buttonPressed, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<MenuMoveButtons>(std::bind(&MenuScreen::changeCurrentSelectedButton, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<MenuPressButton>(std::bind(&MenuScreen::buttonPressed, this, std::placeholders::_1));
 
 
 }
@@ -100,7 +100,7 @@ void MenuScreen::createInputEntity(Controller& t_controller)
 	m_inputEntity.addComponent(new CommandComponent());
 }
 
-void MenuScreen::changeCurrentSelectedButton(const MenuMoveButtonsUpDown& t_event)
+void MenuScreen::changeCurrentSelectedButton(const MenuMoveButtons& t_event)
 {
 	int currentButtonIndex = static_cast<int>(m_currentButton);
 	updateButtonColour(m_menuButtons[currentButtonIndex], BUTTON_DEFAULT_COLOUR);
@@ -110,7 +110,7 @@ void MenuScreen::changeCurrentSelectedButton(const MenuMoveButtonsUpDown& t_even
 	m_currentButton = static_cast<MenuButtonType>(currentButtonIndex);
 }
 
-void MenuScreen::buttonPressed(const MenuSelectButton& t_event)
+void MenuScreen::buttonPressed(const MenuPressButton& t_event)
 {
 	MenuStates newScreen = MenuStates::MainMenu;
 	switch (m_currentButton)
