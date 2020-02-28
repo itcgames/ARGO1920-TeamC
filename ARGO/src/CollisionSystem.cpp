@@ -323,6 +323,7 @@ void CollisionSystem::createExplosion(glm::vec2 t_position)
 {
 	glm::vec2 bounds{ EXPLOSION_RADIUS, EXPLOSION_RADIUS };
 	Quad quad{ NULL, t_position - bounds, bounds * 2.0f };
+	m_eventManager.emitEvent(Explosion{ t_position });
 
 	std::vector<Entity*> entities;
 	m_quadTree.retrieve(&entities, quad); 
@@ -488,6 +489,9 @@ void CollisionSystem::playerToPickUp(Entity* t_player, Entity* t_pickUp)
 				break;
 			case PickupType::Grenade:
 				weaponComp->fillAmmo(Weapon::GrenadeLauncher);
+				break;
+			case PickupType::Shotgun:
+				weaponComp->fillAmmo(Weapon::Shotgun);
 				break;
 			case PickupType::Health:
 				//Health Pickup

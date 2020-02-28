@@ -46,6 +46,10 @@ namespace Utilities
 	const int PLAYER_FIRE_DELAY = 1000 / 10;
 	const float PLAYER_INVINCIBILITY_FRAMES = 32.0f;
 
+	//Weapon Values
+	const int NUMBER_OF_SHOTGUN_PELLETS = 5;
+
+
 	const int ENEMY_RADIUS = 24;
 	const int ENEMY_HP = 2;
 	const int ENEMY_POOL_SIZE = 100;
@@ -75,7 +79,7 @@ namespace Utilities
 	const int MAX_FLOW_FIELD_WEIGHT = 20;
 
 	const float RADIANS_TO_DEGREES = 57.2958;
-	static const int S_NUMBER_OF_SCREENS = 9; 
+	static const int S_NUMBER_OF_SCREENS = 7; 
 
 	static const glm::vec3 MENU_BUTTON_HIGHLIGHTED_COLOUR{ 255,255,240 };
 	static const glm::vec3 MENU_BUTTON_DEFAULT_COLOUR{ 199,163,10 };
@@ -111,8 +115,9 @@ namespace Utilities
 	const float PLAYER_DEATH_MAX_PARTICLE_SIZE = 12.0f;
 
 	//Explosion
-	const glm::uvec4 PRIMARY_EXPLOSION_COLOUR{ 50,0,0,255 };
-	const glm::uvec4 SECONDARY_EXPLOSION_COLOUR{ 150,0,0,255 };
+	const glm::uvec4 PRIMARY_EXPLOSION_COLOUR{ 180,0,0,255 };
+	const glm::uvec4 SECONDARY_EXPLOSION_COLOUR{ 255,255,0,255 };
+	const float EXPLOSION_BASE_SPEED = 8.0f;
 	const float EXPLOSION_MIN_PARTICLE_SIZE = 2.0f;
 	const float EXPLOSION_MAX_PARTICLE_SIZE = 15.0f;
 }
@@ -125,9 +130,7 @@ enum class MenuStates
 	Options,
 	License,
 	Splash,
-	Achievements,
-	GameType,
-	JoinGame
+	Achievements
 };
 
 enum class Systems

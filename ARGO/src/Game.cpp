@@ -15,9 +15,7 @@ Game::Game() :
 	m_licenseScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_splashScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_mainMenuScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
-	m_achievementsScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
-	m_gameTypeScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
-	m_joinGameScreen{m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem},
+	m_achievementsScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem }, 
 #ifdef _DEBUG
 	m_currentScreen{ MenuStates::Splash }
 #else
@@ -249,13 +247,7 @@ void Game::update(float t_dt)
 		break;
 	case MenuStates::Achievements:
 		m_achievementsScreen.update(t_dt);
-		break;
-	case MenuStates::GameType:
-		m_gameTypeScreen.update(t_dt);
-		break;
-	case MenuStates::JoinGame:
-		m_joinGameScreen.update(t_dt);
-		break;
+		break; 
 	default:
 		break;
 	}
@@ -286,13 +278,7 @@ void Game::render()
 		break;
 	case MenuStates::Achievements:
 		m_achievementsScreen.render(m_renderer);
-		break;
-	case MenuStates::GameType:
-		m_gameTypeScreen.render(m_renderer);
-		break;
-	case MenuStates::JoinGame:
-		m_joinGameScreen.render(m_renderer);
-		break;
+		break; 
 	default:
 		break;
 	} 
@@ -387,13 +373,7 @@ void Game::initialiseScreen()
 		break;
 	case MenuStates::Splash:
 		m_splashScreen.initialise(m_renderer, m_controllers[0]);
-		break;
-	case MenuStates::GameType:
-		m_gameTypeScreen.initialise(m_renderer, m_controllers[0]);
-		break;
-	case MenuStates::JoinGame:
-		m_joinGameScreen.initialise(m_renderer, m_controllers[0]);
-		break;
+		break; 
 	default:
 		break;
 	}
@@ -425,13 +405,7 @@ void Game::resetScreen()
 		break;
 	case MenuStates::Achievements:
 		m_achievementsScreen.reset();
-		break;
-	case MenuStates::GameType:
-		m_gameTypeScreen.reset();
-		break;
-	case MenuStates::JoinGame:
-		m_joinGameScreen.reset();
-		break;
+		break; 
 	default:
 		break;
 	}

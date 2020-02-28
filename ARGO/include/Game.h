@@ -7,9 +7,7 @@
 #include "OptionsScreen.h"
 #include "SplashScreen.h"
 #include "LicenseScreen.h"
-#include "AchievementScreen.h"
-#include "GameTypeScreen.h"
-#include "JoinGameScreen.h"
+#include "AchievementScreen.h" 
 #include "Event.h"
 
 #include "AiSystem.h"
@@ -76,9 +74,7 @@ private:
 	CreditsScreen m_creditsScreen;
 	LicenseScreen m_licenseScreen;
 	SplashScreen m_splashScreen;
-	AchievementScreen m_achievementsScreen;
-	GameTypeScreen m_gameTypeScreen;
-	JoinGameScreen m_joinGameScreen;
+	AchievementScreen m_achievementsScreen; 
 
 	Controller m_controllers[Utilities::S_MAX_PLAYERS];
 

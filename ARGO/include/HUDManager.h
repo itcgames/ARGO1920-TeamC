@@ -32,6 +32,7 @@ public:
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
 	void setUpHUD(HUDBlock& t_hudBlock, int t_playerIndex);
 	void swapToSkullAvatar(VisualComponent* t_visComp);
+	void reset();
 private:
 	HUDBlock m_playerHUD[Utilities::S_MAX_PLAYERS];
 	Entity(&m_players)[Utilities::S_MAX_PLAYERS];

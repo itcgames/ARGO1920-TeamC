@@ -136,7 +136,7 @@ void MenuScreen::buttonPressed(const MenuButtonPressed& t_event)
 		switch (m_currentButton)
 		{
 		case MenuButtonType::Play:
-			newScreen = MenuStates::GameType;
+			newScreen = MenuStates::Game;
 			break;
 		case MenuButtonType::Options:
 			newScreen = MenuStates::Options;
