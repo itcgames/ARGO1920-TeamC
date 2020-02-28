@@ -19,7 +19,7 @@ Game::Game() :
 	m_gameTypeScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_joinGameScreen{m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem},
 #ifdef _DEBUG
-	m_currentScreen{ MenuStates::Game }
+	m_currentScreen{ MenuStates::Splash }
 #else
 	m_currentScreen{ MenuStates::Splash }
 #endif // _DEBUG

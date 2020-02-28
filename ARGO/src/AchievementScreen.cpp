@@ -49,32 +49,27 @@ void AchievementScreen::reset()
 
 void AchievementScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 {
-	checkStats();
-	m_hiddenAchvString = "Win 10 Games and Kill 1000 Enemies";
-
-	setControllerButtonMaps();
-
 
 	for (bool& hasAchievement : m_hasAchievements)
 	{
 		hasAchievement = false;
 	}
+	checkStats();
+	m_hiddenAchvString = "Win 10 Games and Kill 1000 Enemies";
+
+	setControllerButtonMaps();
 
 	m_screenActive = true;
-
 
 	createBackground(t_renderer);
 	createInputEntity(t_controller);
 	createAchievementEntities(t_renderer);
 	createCheckBoxEntities(t_renderer);
 
-
-
 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
 
 	m_eventManager.subscribeToEvent<UpdateAchievement>(std::bind(&AchievementScreen::updateAchievement, this, std::placeholders::_1));
 	m_eventManager.subscribeToEvent<MenuButtonPressed>(std::bind(&AchievementScreen::buttonPressed, this, std::placeholders::_1));
-
 }
 
 void AchievementScreen::setControllerButtonMaps()

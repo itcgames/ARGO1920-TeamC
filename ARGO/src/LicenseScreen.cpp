@@ -59,8 +59,8 @@ void LicenseScreen::setControllerButtonMaps()
 	using ButtonCommandPair = std::pair<ButtonType, Command*>;
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)] =
 	{
-		ButtonCommandPair(ButtonType::A, new MenuSelectButtonCommand()),
-		ButtonCommandPair(ButtonType::Start, new MenuConfirmCommand())
+		ButtonCommandPair(ButtonType::A, new GoToMainMenuCommand()),
+		ButtonCommandPair(ButtonType::Start, new GoToMainMenuCommand())
 	};
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Held)];
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Released)];
