@@ -35,8 +35,18 @@ void HUDManager::update()
 		transformComp->setPos(hudComp->getHUDPosition().x + hudComp->getAmmoTextOffset().x, hudComp->getHUDPosition().y + hudComp->getAmmoTextOffset().y);
 		TextComponent* textComp = static_cast<TextComponent*>(hudElement.HUDAmmoText.getComponent(ComponentType::Text));
 		//Get the Ammo Componentn Here and do the changes needed to set the correct size of the bar.
+		WeaponComponent* weaponComp = static_cast<WeaponComponent*>(m_players[hudComp->getIndex()].getComponent(ComponentType::Weapon));
+		int ammo = weaponComp->getAmmo();
+		int maxAmmo = weaponComp->getMaxAmmo();
+		float ammoScaler = 1.0f;
+		if (maxAmmo != 0)
+		{
+			ammoScaler = (float)ammo / (float)maxAmmo;
+		}
 		//This is a stand in until Emmett is done that.
-		textComp->setText(std::string("100 / 100"));
+		textComp->setText(std::to_string(ammo) + " / " + std::to_string(maxAmmo));
+		hudComp->setCurrentAmmoSize(hudComp->getMaxAmmoSize().x * ammoScaler);
+		static_cast<PrimitiveComponent*>(hudElement.HUDAmmoBar.getComponent(ComponentType::Primitive))->setSize(hudComp->getCurrentAmmoSize());
 
 
 		//Ammo Bar
@@ -131,7 +141,7 @@ void HUDManager::setUpHUD(HUDBlock& t_hudBlock, int t_playerIndex)
 	primComp->setStaticPosition(true);
 
 	t_hudBlock.HUDVisualTexture.addComponent(new TransformComponent(true));
-	t_hudBlock.HUDVisualTexture.addComponent(new VisualComponent("HUD.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255),true));
+	t_hudBlock.HUDVisualTexture.addComponent(new VisualComponent("HUD.png", m_renderer, glm::vec2(0,0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255),true));
 
 	t_hudBlock.HUDHealthText.addComponent(new TransformComponent(true));
 	t_hudBlock.HUDHealthText.addComponent(new TextComponent(std::string("ariblk.ttf"), m_renderer, true, std::string("HI")));
@@ -147,16 +157,16 @@ void HUDManager::setUpHUD(HUDBlock& t_hudBlock, int t_playerIndex)
 	switch (t_playerIndex)
 	{
 	case 0:
-		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("RedPlayerAvatar.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("BluePlayerAvatar.png", m_renderer, glm::vec2(0, 0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
 		break;
 	case 1:
-		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("BluePlayerAvatar.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("GreenPlayerAvatar.png", m_renderer, glm::vec2(0, 0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
 		break;
 	case 2:
-		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("GreenPlayerAvatar.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("RedPlayerAvatar.png", m_renderer, glm::vec2(0, 0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
 		break;
 	case 3:
-		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("YellowPlayerAvatar.png", m_renderer, static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
+		t_hudBlock.HUDAvatarIcon.addComponent(new VisualComponent("YellowPlayerAvatar.png", m_renderer, glm::vec2(0, 0), static_cast<Uint8>(255), static_cast<Uint8>(255), static_cast<Uint8>(255), true));
 		break;
 	}
 }

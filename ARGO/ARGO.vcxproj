@@ -44,6 +44,7 @@
     <ClCompile Include="src\MoveUpCommand.cpp" />
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\ParticleEmitterComponent.cpp" />
+    <ClCompile Include="src\ParticleManager.cpp" />
     <ClCompile Include="src\ParticleSystem.cpp" />
     <ClCompile Include="src\PickUpComponent.cpp" />
     <ClCompile Include="src\PickUpFactory.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="include\MoveUpCommand.h" />
     <ClInclude Include="include\Particle.h" />
     <ClInclude Include="include\ParticleEmitterComponent.h" />
+    <ClInclude Include="include\ParticleManager.h" />
     <ClInclude Include="include\ParticleSystem.h" />
     <ClInclude Include="include\PickUpComponent.h" />
     <ClInclude Include="include\PickUpFactory.h" />

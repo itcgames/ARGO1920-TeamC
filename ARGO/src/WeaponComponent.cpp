@@ -5,7 +5,8 @@ WeaponComponent::WeaponComponent() :
 	Component(ComponentType::Weapon),
 	m_currentWeapon(Weapon::Pistol),
 	m_glowStickCooldown(0.0f),
-	m_gunCooldown(0.0f)
+	m_gunCooldown(0.0f),
+	m_ammo(0)
 {
 }
 
@@ -66,6 +67,27 @@ bool WeaponComponent::throwGlowStick()
 Weapon WeaponComponent::getCurrent()
 {
 	return m_currentWeapon;
+}
+
+int WeaponComponent::getMaxAmmo()
+{
+	switch (m_currentWeapon)
+	{
+	case Weapon::MachineGun:
+		return MACHINEGUN_MAX_AMMO;
+		break;
+	case Weapon::GrenadeLauncher:
+		return GRENADE_LAUNCHER_MAX_AMMO;
+		break;
+	default:
+		break;
+	}
+	return 0;
+}
+
+int WeaponComponent::getAmmo()
+{
+	return m_ammo;
 }
 
 void WeaponComponent::setCurrent(Weapon t_weapon)

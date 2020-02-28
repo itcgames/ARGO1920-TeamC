@@ -1,10 +1,21 @@
 #pragma once
 #include "FiniteStateMachine.h"
 
+struct stateData
+{
+	int currentFrame;
+	int totalFrames;
+	float frameTimer; 
+	float timePerFrame;
+	SDL_Texture* texture;
+};
+
 class State
 {
 public:
-	virtual void update() {}
+	virtual void update(float t_dt) {}
+	virtual void getTexture() {}
+	virtual void getFrame() {}
 
 	virtual void idle(FiniteStateMachine* a)
 	{
@@ -18,5 +29,6 @@ public:
 	{
 		std::cout << "no transition to attacking" << std::endl;
 	}
+
 };
 

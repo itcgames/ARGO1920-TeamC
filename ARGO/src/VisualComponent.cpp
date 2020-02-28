@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "VisualComponent.h"
 
-VisualComponent::VisualComponent(std::string t_filename, SDL_Renderer* t_renderer, Uint8 t_red, Uint8 t_green, Uint8 t_blue, bool t_staticPosition) :
+VisualComponent::VisualComponent(std::string t_filename, SDL_Renderer* t_renderer, glm::vec2 t_offset, Uint8 t_red, Uint8 t_green, Uint8 t_blue, bool t_staticPosition) :
 	Component(ComponentType::Visual),
-	m_staticPosition(t_staticPosition)
+	m_staticPosition(t_staticPosition),
+	m_offset(t_offset)
 {
 	if (!loadFromFile(t_filename, t_renderer))
 	{
@@ -58,6 +59,16 @@ void VisualComponent::setStaticPosition(bool t_staticPosition)
 bool VisualComponent::getStaticPosition()
 {
 	return m_staticPosition;
+}
+
+glm::vec2 VisualComponent::getOffset()
+{
+	return m_offset;
+}
+
+void VisualComponent::setOffset(glm::vec2 t_offset)
+{
+	m_offset = t_offset;
 }
 
 bool VisualComponent::loadFromFile(std::string t_filename, SDL_Renderer* t_renderer)

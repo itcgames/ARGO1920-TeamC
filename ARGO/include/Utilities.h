@@ -56,13 +56,6 @@ namespace Utilities
 	const int NUMBER_OF_CONTROLLER_BUTTONS = 24;
  	const int NUMBER_OF_CONTROLLER_MAPS = 3;
 
-	//Particle
-	const int PROJECTILE_SPEED = 32;
-	const int PARTICLE_DIRECTION_ANGLE_SAMPLE = 90;
-	const int PARTICLE_OFFSET_ANGLE_SAMPLE = 30;
-	const int PARTICLE_SPEED_SAMPLE = 1;
-	const int PARTICLE_MAX_PARTICLES_SAMPLE = 100;
-	const int PARTICLES_PER_SECOND_SAMPLE = 20;
 
 	//consts for audio
 	const int AUDIO_ALL_CHANNELS = -1;
@@ -93,6 +86,35 @@ namespace Utilities
 	//HUD Values
 	const float PERCENTAGE_BUFFER_BETWEEN_HUDS = 0.05f;//5% screen space.
 	const float PERCENTAGE_SCREENSPACE_OF_HUD = 0.1875f;//18.75% screen space which is taken by each HUD.
+
+	//Particles Manager
+	//Base Particles
+	//1-100 value
+	const int PARTICLE_MAX_EMITTER_POOL = 30;
+	const int PARTICLE_PERCENTAGE_SPEED_OFFSET = 50;
+	const int PARTICLE_BASE_SPEED = 2;
+	const int PARTICLE_MAX_PARTICLES = 100;
+	const int PARTICLE_TIME_TO_KILL_PARTICLE = 20;
+	const float PARTICLES_PER_SECOND = 25.0f;
+
+	//Alien Death
+	const glm::uvec4 PRIMARY_ENEMY_DEATH_COLOUR{ 0,50,0,255 };
+	const glm::uvec4 SECONDARY_ENEMY_DEATH_COLOUR{ 0,200,0,255 };
+	const float ENEMY_DEATH_MIN_PARTICLE_SIZE = 2.0f;
+	const float ENEMY_DEATH_MAX_PARTICLE_SIZE = 10.0f;
+
+
+	//Player Death
+	const glm::uvec4 PRIMARY_PLAYER_DEATH_COLOUR{ 50,0,0,255 };
+	const glm::uvec4 SECONDARY_PLAYER_DEATH_COLOUR{ 200,0,0,255 };
+	const float PLAYER_DEATH_MIN_PARTICLE_SIZE = 2.0f;
+	const float PLAYER_DEATH_MAX_PARTICLE_SIZE = 12.0f;
+
+	//Explosion
+	const glm::uvec4 PRIMARY_EXPLOSION_COLOUR{ 50,0,0,255 };
+	const glm::uvec4 SECONDARY_EXPLOSION_COLOUR{ 150,0,0,255 };
+	const float EXPLOSION_MIN_PARTICLE_SIZE = 2.0f;
+	const float EXPLOSION_MAX_PARTICLE_SIZE = 15.0f;
 }
 
 enum class MenuStates

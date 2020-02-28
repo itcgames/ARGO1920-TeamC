@@ -219,7 +219,7 @@ void LevelManager::setTileLight(Entity* t_entity, std::vector<Entity*>& t_queue,
 {
 	lightFieldComponent* lightField = static_cast<lightFieldComponent*>(t_entity->getComponent(ComponentType::LightField));
 	TransformComponent* transform = static_cast<TransformComponent*>(t_entity->getComponent(ComponentType::Transform));
-	if (lightField && lightField->getWeight() > t_newWeight && transform && m_renderSystem.inView(transform))
+	if (lightField && lightField->getWeight() > t_newWeight && transform)
 	{
 		lightField->setWeight(t_newWeight);
 		if (!static_cast<ColliderAABBComponent*>(t_entity->getComponent(ComponentType::ColliderAABB)) && t_newWeight < MAX_LIGHT_WEIGHT)

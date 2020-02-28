@@ -2,13 +2,14 @@
 #include "Entity.h" 
 #include "Utilities.h"
 #include "Controller.h"
+#include "WeaponComponent.h"
 
 struct CreateBulletEvent
 {
 	Entity& entity;
 	glm::vec2 direction;
 	float forceScale;
-	int type;
+	Weapon type;
 	Controller& controller;
 };
 
@@ -34,6 +35,11 @@ struct PhysicsMove
 struct EnemyKilled
 {
 	Entity* enemy;
+};
+
+struct PlayerKilled
+{
+	Entity* player;
 };
 
 struct PhysicsRotate

@@ -20,11 +20,12 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_weaponSystem{ m_projectileManager, m_eventManager },
 	m_playerFactory(),
 	m_enemyFactory(),
-	m_pickUpManager(m_eventManager, m_collisionSystem) ,
+ 	m_pickUpManager(m_eventManager, m_collisionSystem) ,
 	m_commandSystem{ t_commandSystem },
 	m_inputSystem{ t_input },
 	m_renderSystem{ t_renderSystem },
- 	m_hudManager(m_players)
+ 	m_hudManager(m_players),
+	m_particleManager(m_eventManager,m_particleSystem)
 {
 }
 
@@ -42,6 +43,7 @@ void GameScreen::update(float t_deltaTime)
 	m_collisionSystem.handleCollisions();
 	m_pickUpManager.update(t_deltaTime);
 	m_hudManager.update();
+	m_particleManager.update(t_deltaTime);
 }
 
 void GameScreen::processEvents(SDL_Event* t_event)
@@ -109,8 +111,10 @@ void GameScreen::render(SDL_Renderer* t_renderer)
 	m_renderSystem.render(t_renderer, m_goal);
 	m_projectileManager.render(t_renderer, &m_renderSystem);
 	m_pickUpManager.render(t_renderer, &m_renderSystem);
+	m_particleManager.render(t_renderer, &m_renderSystem);
 	m_levelManager.renderLight(t_renderer, &m_renderSystem);
 	m_hudManager.render(t_renderer, &m_renderSystem);
+
 }
 
 
@@ -129,6 +133,7 @@ void GameScreen::createGoal()
 	m_goal.addComponent(new TransformComponent(Utilities::GOAL_START_POSITION));
 	m_goal.addComponent(new ColliderCircleComponent(32));
 	m_goal.addComponent(new TagComponent(Tag::Goal));
+	m_goal.addComponent(new VisualComponent("EscapePod.png", m_renderer));
 }
 
 void GameScreen::setUpLevel()
@@ -254,6 +259,9 @@ void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utiliti
 		playerCount++;
 	}
 	setUpLevel();
+	m_projectileManager.reset();
+	m_enemyManager.killAll();
+	m_hudManager;
 }
 
 void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS], bool t_isOnline)

@@ -10,6 +10,7 @@
 #include "VisualComponent.h"
 #include "HealthComponent.h"
 #include "TextComponent.h"
+#include "WeaponComponent.h"
 
 struct HUDBlock 
 {

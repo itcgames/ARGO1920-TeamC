@@ -2,6 +2,13 @@
 #include "Component.h"
 #include "Particle.h"
 #include <vector>
+
+enum class EmitterType
+{
+	Spray,
+	Burst
+};
+
 class ParticleEmitterComponent :
 	public Component
 {
@@ -9,8 +16,8 @@ public:
 	ParticleEmitterComponent();
 	ParticleEmitterComponent(glm::vec2 t_position, bool t_emitting = true, float t_angle = 10,
 		float t_angleOffset = 45.0f, float t_speed = 8, int t_maxParticles = 100,
-		float t_particlesPerSecond = 60.0f, int t_timeToKillParticle = 150, bool t_rotating = false, float t_rotateAnglePerFrame = 0.05f);
-
+		float t_particlesPerSecond = 60.0f, int t_timeToKillParticle = 150, bool t_rotating = false, float t_rotateAnglePerFrame = 0.05f, EmitterType t_emitterType = EmitterType::Spray);
+	ParticleEmitterComponent(bool t_emitting, float t_speedOffset, float t_speed, int t_maxParticles = 200, int t_timeToKillParticle = 150, float t_particlesPerSecond = 100.0f);
 	void setParticle(glm::vec2 t_pos);
 	void killParticle(int t_index);
 	void setEmitting(bool t_emitting);
@@ -41,6 +48,13 @@ public:
 	bool getRotating();
 	void setRotatingSpeed(float t_rotateAnglePerFrame);
 	float getRotatingSpeed();
+	EmitterType getEmitterType();
+	void setEmitterType(EmitterType t_emitterType);
+	int getSpeedOffset();
+	void setParticleColour(int t_index, glm::uvec4 t_colour);
+	glm::uvec4 getParticleColour(int t_index);
+	void setParticleSize(int t_index, float t_size);
+	float getParticleSize(int t_index);
 
 private:
 	//The Vector for Particles
@@ -63,9 +77,12 @@ private:
 	float m_angleOffset = 30.0f;
 	//The Speed of the Particles. Multiplied with a unit vector
 	float m_speed = 8.0f;
+	//Percentage Offset the Speed of the particles have. Needs to be an int. 
+	int m_speedOffset = 10;
 	//Tracks how long until the next particle is placed.
 	float m_placeParticleTimer{ 0 };
 	bool m_rotating{ false };
 	float m_rotateAnglePerFrame{ 0 };
+	EmitterType m_emitterType = EmitterType::Spray;
 };
 

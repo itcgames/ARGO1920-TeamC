@@ -11,3 +11,8 @@ Tag TagComponent::getTag()
 {
 	return m_tag;
 }
+
+void TagComponent::setTag(Tag t_tag)
+{
+	m_tag = t_tag;
+}

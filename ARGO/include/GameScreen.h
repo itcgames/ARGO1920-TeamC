@@ -16,6 +16,7 @@
 #include "PickUpManager.h"
 #include "EnemyFactory.h"
 #include "HUDManager.h"
+#include "ParticleManager.h"
 #include <WeaponSystem.h>
 
 class GameScreen
@@ -72,6 +73,8 @@ public:
 	PlayerFactory m_playerFactory;
 	EnemyFactory m_enemyFactory;
 	PickUpManager m_pickUpManager;
+	ParticleManager m_particleManager;
+
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
 
 	// bool to see if game is being played online or not

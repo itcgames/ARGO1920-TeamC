@@ -131,8 +131,6 @@ void RenderSystem::renderParticles(SDL_Renderer* t_renderer, ParticleEmitterComp
 	SDL_GetRenderDrawColor(t_renderer, &prevRGBA[0], &prevRGBA[1], &prevRGBA[2], &prevRGBA[3]);
 
 	SDL_Rect rect;
-	rect.w = t_primitive->getSize().x;
-	rect.h = t_primitive->getSize().y;
 	Colour colour;
 	//set colour from the component
 	if (t_colComp)
@@ -145,14 +143,17 @@ void RenderSystem::renderParticles(SDL_Renderer* t_renderer, ParticleEmitterComp
 		colour.red = 255;
 	}
 
-	SDL_SetRenderDrawColor(t_renderer, colour.red, colour.green, colour.blue, colour.alpha);
+
 	for (int i = 0; i < t_emitter->getMaxParticles(); i++)
 	{
-
 		if (t_emitter->getParticleAlive(i))
 		{
+			SDL_SetRenderDrawColor(t_renderer, t_emitter->getParticleColour(i).x, t_emitter->getParticleColour(i).y, t_emitter->getParticleColour(i).z, t_emitter->getParticleColour(i).a);
+			rect.w = t_emitter->getParticleSize(i);
+			rect.h = t_emitter->getParticleSize(i);
 			rect.x = t_emitter->getParticlePosition(i).x;
 			rect.y = t_emitter->getParticlePosition(i).y;
+
 			rect.x = rect.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
 			rect.y = rect.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
 			SDL_RenderFillRect(t_renderer, &rect);
@@ -173,10 +174,21 @@ void RenderSystem::renderTexture(VisualComponent* t_visComp, int t_textureLeftPo
 		renderQuad.h = t_clip->h;
 	}
 
+
+	glm::vec2 offset = glm::vec2(0, 0);
+	if (t_visComp->getOffset() != glm::vec2(0,0))
+	{
+		float theta = glm::radians(t_angle);
+		float cs = cos(theta);
+		float sn = sin(theta);
+		offset.x = t_visComp->getOffset().x * cs - t_visComp->getOffset().y * sn;
+		offset.y = t_visComp->getOffset().x * sn + t_visComp->getOffset().y * cs;
+	}
+
 	if (!t_visComp->getStaticPosition())
 	{
-		renderQuad.x = renderQuad.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
-		renderQuad.y = renderQuad.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
+		renderQuad.x = renderQuad.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x + offset.x;
+		renderQuad.y = renderQuad.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y + offset.y;
 	}
 	//Render to screen
 	SDL_RenderCopyEx(t_renderer, t_visComp->getTexture(), t_clip, &renderQuad, t_angle, t_center, t_flip);

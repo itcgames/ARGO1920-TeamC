@@ -21,6 +21,7 @@ public:
 	//Set color
 	void setColor(Uint8 t_red, Uint8 t_green, Uint8 t_blue, Uint8 t_alpha);
 	void setColor(Colour t_colour);
+	void setSecondaryColour(Colour t_colour);
 	//Set individual colour
 	void setRed(Uint8 t_red);
 	void setGreen(Uint8 t_green);
@@ -29,6 +30,7 @@ public:
 
 	//get colour
 	Colour getColour();
+	Colour getSecondaryColour();
 	//get individual colour
 	Uint8 getRed();
 	Uint8 getGreen();
@@ -37,5 +39,6 @@ public:
 
 private:
 	Colour m_colour;
+	Colour m_secondaryColour;
 };
 
