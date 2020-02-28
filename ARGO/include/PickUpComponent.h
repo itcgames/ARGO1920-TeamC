@@ -5,7 +5,8 @@ enum class PickupType
 {
 	Health,
 	MachineGun,
-	Grenade
+	Grenade,
+	Shotgun
 };
 
 class PickUpComponent :

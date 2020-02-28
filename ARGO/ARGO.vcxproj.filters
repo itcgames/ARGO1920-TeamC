@@ -276,12 +276,6 @@
     <ClCompile Include="src\MoveRightCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
-    <ClCompile Include="src\GoToMainMenuCommand.cpp">
-      <Filter>Source Files\CommandPattern\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GoToLicenseScreenCommand.cpp">
-      <Filter>Source Files\CommandPattern\Commands</Filter>
-    </ClCompile>
     <ClCompile Include="src\FireBulletCommand.cpp">
       <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
@@ -305,6 +299,24 @@
     </ClCompile>
     <ClCompile Include="src\FlowFieldComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuCancelCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuConfirmCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuMoveLeftCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuMoveRightCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GoToLicenseScreenCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GoToMainMenuCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
     </ClCompile>
     <ClCompile Include="src\HUDComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
@@ -548,12 +560,6 @@
     <ClInclude Include="include\MoveLeftCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="include\GoToMainMenuCommand.h">
-      <Filter>Header Files\CommandPattern\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GoToLicenseScreenCommand.h">
-      <Filter>Header Files\CommandPattern\Commands</Filter>
-    </ClInclude>
     <ClInclude Include="include\FireBulletCommand.h">
       <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
@@ -580,6 +586,24 @@
     </ClInclude>
     <ClInclude Include="include\FlowFieldComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MenuMoveRightCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MenuCancelCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MenuConfirmCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MenuMoveLeftCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GoToLicenseScreenCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GoToMainMenuCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
     <ClInclude Include="include\HealthComponent.h">
       <Filter>Header Files\ECS\Components</Filter>

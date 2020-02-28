@@ -13,6 +13,11 @@ struct CreateBulletEvent
 	Controller& controller;
 };
 
+struct PickupGrabbed
+{
+	Entity* pickup;
+};
+
 struct CreateGlowStickEvent
 {
 	Entity& entity;
@@ -27,11 +32,6 @@ struct PhysicsMove
 	Entity& entity;
 };
 
-struct PickupGrabbed
-{
-	Entity* pickup;
-};
-
 struct EnemyKilled
 {
 	Entity* enemy;
@@ -42,22 +42,32 @@ struct PlayerKilled
 	Entity* player;
 };
 
+struct Explosion
+{
+	glm::vec2 position;
+};
+
 struct PhysicsRotate
 {
 	glm::vec2 rotation;
 	Entity& entity;
 };
 
-struct MenuMoveButtonsUpDown
+struct MenuMoveBetweenUI
 {
-	// bool for if its moving down or up
-	bool isMoveDown;
+	MoveDirection direction;
 };
 
-struct MenuSelectButton
+struct MenuButtonPressed
 {
-	Entity& entity;
+	ButtonType buttonPressed;
 };
+
+struct UpdateAchievement
+{
+	int enemiesKilled = 0;
+	int gamesWon = 0;
+}; 
 
 struct CloseWindow
 {

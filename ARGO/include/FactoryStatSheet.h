@@ -5,6 +5,9 @@ namespace FactoryStatSheet
 
 	//Player Starting Values
 	const int PLAYER_MAX_HP = 10;
+	const int PLAYER_MAX_HP_1 = 15;
+	const int PLAYER_MAX_HP_2 = 20;
+	const int PLAYER_MAX_HP_3 = 30;
 	const int PLAYER_STARTING_HP = 10;
 	const float PLAYER_INVINCIBILITY_FRAMES = 32.0f;
 
@@ -21,7 +24,7 @@ namespace FactoryStatSheet
 	const float ENEMY_MAX_SPEED = 0.5f;
 	const float ENEMY_TURN_RATE = 15.0f;
 	const int ENEMY_RADIUS = 32;
-	const int ENEMY_HP = 2;
+	const int ENEMY_HP = 0;
 	const int ENEMY_MAX_HP = 2;
 
 

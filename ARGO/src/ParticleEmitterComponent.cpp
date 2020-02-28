@@ -279,5 +279,10 @@ float ParticleEmitterComponent::getParticleSize(int t_index)
 	return m_particles[t_index].getSize();
 }
 
+void ParticleEmitterComponent::setSpeed(float t_speed)
+{
+	m_speed = t_speed;
+}
+
 
 

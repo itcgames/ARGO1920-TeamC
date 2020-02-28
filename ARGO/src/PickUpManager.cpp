@@ -28,7 +28,7 @@ void PickUpManager::randomPickupSpawn(const EnemyKilled& t_event)
 {
 	if (glm::linearRand(0, PICKUP_SPAWN_CHANCE) == 0)
 	{
-		int type = glm::linearRand(1, 3);
+		int type = glm::linearRand(1, 4);
 		placePickup(static_cast<TransformComponent*>(t_event.enemy->getComponent(ComponentType::Transform))->getPos(), type);
 	}
 }

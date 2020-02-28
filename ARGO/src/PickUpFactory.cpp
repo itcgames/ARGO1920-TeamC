@@ -29,7 +29,7 @@ void PickUpFactory::createDrop(int t_type, Entity& t_entity)
 	switch (t_type)
 	{
 	case 1:
-		t_entity.addComponent(new VisualComponent("AmmoBox.png", m_renderer));
+		t_entity.addComponent(new VisualComponent("Ammobox_MachineGun.png", m_renderer));
 		t_entity.addComponent(new PickUpComponent(PickupType::MachineGun));
 		break;
 	case 2:
@@ -37,8 +37,12 @@ void PickUpFactory::createDrop(int t_type, Entity& t_entity)
 		t_entity.addComponent(new PickUpComponent(PickupType::Health));
 		break;
 	case 3:
-		t_entity.addComponent(new VisualComponent("AmmoBox.png", m_renderer));
+		t_entity.addComponent(new VisualComponent("AmmoBox_Grenade.png", m_renderer));
 		t_entity.addComponent(new PickUpComponent(PickupType::Grenade));
+		break;
+	case 4:
+		t_entity.addComponent(new VisualComponent("AmmoBox_Shotgun.png", m_renderer));
+		t_entity.addComponent(new PickUpComponent(PickupType::Shotgun));
 		break;
 	default:
 		t_entity.addComponent(new VisualComponent("HealthBox.png", m_renderer));

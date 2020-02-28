@@ -323,6 +323,9 @@ void CollisionSystem::createExplosion(glm::vec2 t_position)
 {
 	glm::vec2 bounds{ EXPLOSION_RADIUS, EXPLOSION_RADIUS };
 	Quad quad{ NULL, t_position - bounds, bounds * 2.0f };
+	m_eventManager.emitEvent(Explosion{ t_position });
+	std::string filePath = "Explosion_" + std::to_string(glm::linearRand(1, 2)) + ".wav";
+	AudioManager::Instance()->PlaySfx(Utilities::GUN_FIRE_PATH + filePath);
 
 	std::vector<Entity*> entities;
 	m_quadTree.retrieve(&entities, quad); 
@@ -489,9 +492,12 @@ void CollisionSystem::playerToPickUp(Entity* t_player, Entity* t_pickUp)
 			case PickupType::Grenade:
 				weaponComp->fillAmmo(Weapon::GrenadeLauncher);
 				break;
+			case PickupType::Shotgun:
+				weaponComp->fillAmmo(Weapon::Shotgun);
+				break;
 			case PickupType::Health:
 				//Health Pickup
-				HealthComponent* playerHealthComp = static_cast<HealthComponent*>(t_player->getComponent(ComponentType::Health));
+				HealthComponent * playerHealthComp = static_cast<HealthComponent*>(t_player->getComponent(ComponentType::Health));
 				int healthToAdd = playerHealthComp->getMaxHealth() * pickUpComp->getHealthChange();
 				if (healthToAdd <= 0)
 				{
@@ -511,6 +517,7 @@ void CollisionSystem::playerToGoal(Entity* t_player, Entity* t_goal)
 {
 	if (t_player->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_player, t_goal))
 	{
+		m_eventManager.emitEvent<UpdateAchievement>(UpdateAchievement{ 0, 1 });
 		m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::MainMenu });
 	}
 }
@@ -523,7 +530,10 @@ void CollisionSystem::playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enem
 		static_cast<HealthComponent*>(t_enemy->getComponent(ComponentType::Health))->reduceHealth(1);
 		if (!static_cast<HealthComponent*>(t_enemy->getComponent(ComponentType::Health))->isAlive())
 		{
+			m_eventManager.emitEvent<UpdateAchievement>(UpdateAchievement{ 1,0 });
 			m_eventManager.emitEvent(EnemyKilled{ t_enemy });
+			std::string filePath = "BugDeath_" + std::to_string(glm::linearRand(1, 10)) + ".wav";
+			AudioManager::Instance()->PlaySfx(Utilities::BUG_DEATH_PATH + filePath);
 		}
 	}
 }

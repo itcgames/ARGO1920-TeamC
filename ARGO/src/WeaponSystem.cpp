@@ -22,7 +22,23 @@ void WeaponSystem::fireBullet(const CreateBulletEvent& t_event)
 	WeaponComponent* weapon = static_cast<WeaponComponent*>(t_event.entity.getComponent(ComponentType::Weapon));
 	if (weapon && weapon->fireGun())
 	{
-		m_projectileManager.createPlayerBullet(t_event, weapon->getCurrent());
+		switch (weapon->getCurrent())
+		{
+		case Weapon::Shotgun:
+			for (int pellet = 0; pellet < Utilities::NUMBER_OF_SHOTGUN_PELLETS; pellet++)
+			{
+				//This will output angle offsets of -30,-15,0,15,30 to get the correct spread.
+				float angleOffset = -30.0f + (15.0f * pellet);
+				m_projectileManager.createPlayerBullet(t_event, weapon->getCurrent(), angleOffset);
+			}
+			break;
+		case Weapon::GrenadeLauncher:
+		case Weapon::MachineGun:
+		case Weapon::Pistol:
+			m_projectileManager.createPlayerBullet(t_event, weapon->getCurrent());
+			break;
+		}
+
 	}
 }
 

@@ -55,6 +55,7 @@ public:
 	glm::uvec4 getParticleColour(int t_index);
 	void setParticleSize(int t_index, float t_size);
 	float getParticleSize(int t_index);
+	void setSpeed(float t_speed);
 
 private:
 	//The Vector for Particles

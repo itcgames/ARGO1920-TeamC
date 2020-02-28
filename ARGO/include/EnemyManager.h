@@ -9,6 +9,7 @@
 #include "AudioManager.h"
 #include "LevelManager.h"
 #include "Utilities.h"
+#include "EnemyFactory.h"
 
 class EnemyManager
 {
