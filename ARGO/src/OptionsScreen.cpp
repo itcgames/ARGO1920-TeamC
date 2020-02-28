@@ -26,3 +26,7 @@ void OptionsScreen::reset()
 void OptionsScreen::initialise()
 {
 }
+
+void OptionsScreen::passSystems()
+{
+}

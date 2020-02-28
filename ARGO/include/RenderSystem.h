@@ -21,12 +21,13 @@
 class RenderSystem : public BaseSystem
 {
 public:
-	~RenderSystem();
+ 	~RenderSystem();
 	void update(Entity& t_entity);
 	void render(SDL_Renderer* t_renderer, Entity& t_entity);
 	void renderLight(SDL_Renderer* t_renderer, Entity& t_entity);
 	void setFocus(glm::vec2 t_point);
 	glm::vec2& getFocus();
+	void operator=(const RenderSystem& t_otherRenderSystem);
 	bool inView(TransformComponent* t_posComp);
 
 private:

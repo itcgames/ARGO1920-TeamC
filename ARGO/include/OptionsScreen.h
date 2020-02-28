@@ -12,6 +12,7 @@ public:
 	void render(SDL_Renderer* t_renderer);
 	void reset();
 	void initialise();
+	void passSystems();
 private:
 	EventManager& m_eventManager;
 	Controller& m_controller;
