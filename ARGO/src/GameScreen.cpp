@@ -356,153 +356,214 @@ void GameScreen::processReceivedClientData()
 
 void GameScreen::processReceivedHostData()
 {
-	/*
-	std::string s = "scott>=tiger";
-	std::string delimiter = ">=";
-	std::string token = s.substr(0, s.find(delimiter)); // token is "scott"
-	*/
 	if (!m_onlineHandler.getGameData().empty())
 	{
 		std::string& gameData = m_onlineHandler.getGameData();
 		std::vector<std::string> entityData;
 		std::size_t start = gameData.find(":", 0) + 1;
 		std::size_t end = start;
-
-		while ((end = gameData.find(",", start)) != std::string::npos)
-		{
-			entityData.push_back(gameData.substr(start, end - start));
-			start = end + 1;
-			if (gameData.at(start) == '!')
-			{
-				break;
-			}
-		}
-
 		int dataIndex = 0;
-		for (int i = 0; i < m_entities.size(); i++)
-		{			
-			TagComponent* tagComp = static_cast<TagComponent*>(m_entities.at(i).getComponent(ComponentType::Tag));
-			HealthComponent* hpComp = static_cast<HealthComponent*>(m_entities.at(i).getComponent(ComponentType::Health));
-			TransformComponent* posComp = static_cast<TransformComponent*>(m_entities.at(i).getComponent(ComponentType::Transform));
 
-
-			if (dataIndex >= entityData.size())
+		//#############################################################################
+		//Entities
+		{
+			while ((end = gameData.find(",", start)) != std::string::npos)
 			{
-				break;
+				entityData.push_back(gameData.substr(start, end - start));
+				start = end + 1;
+				if (gameData.at(start) == '!')
+				{
+					break;
+				}
 			}
-			int data;
-			std::stringstream ss(entityData.at(dataIndex));
-			ss >> data;
-			tagComp->setTag(data);
-			ss.clear();
-			ss.str(entityData.at(++dataIndex));
-			ss >> data;
-			posComp->setX(data);
-			ss.clear();
-			ss.str(entityData.at(++dataIndex));
-			ss >> data;
-			posComp->setY(data);
-			ss.clear();
-			ss.str(entityData.at(++dataIndex));
-			ss >> data;
-			hpComp->setHealth(data);
-			dataIndex++;
+
+			for (int i = 0; i < m_entities.size(); i++)
+			{
+				TagComponent* tagComp = static_cast<TagComponent*>(m_entities.at(i).getComponent(ComponentType::Tag));
+				HealthComponent* hpComp = static_cast<HealthComponent*>(m_entities.at(i).getComponent(ComponentType::Health));
+				TransformComponent* posComp = static_cast<TransformComponent*>(m_entities.at(i).getComponent(ComponentType::Transform));
+
+				if (dataIndex >= entityData.size() || entityData.at(0) == "")
+				{
+					break;
+				}
+				int data;
+				std::stringstream ss(entityData.at(dataIndex));
+				ss >> data;
+				tagComp->setTag(data);
+				ss.clear();
+				ss.str(entityData.at(++dataIndex));
+				ss >> data;
+				posComp->setX(data);
+				ss.clear();
+				ss.str(entityData.at(++dataIndex));
+				ss >> data;
+				posComp->setY(data);
+				ss.clear();
+				ss.str(entityData.at(++dataIndex));
+				ss >> data;
+				hpComp->setHealth(data);
+				dataIndex++;
+			}
 		}
 
-		//entityData.push_back(gameData.substr(start));
 
-		//std::vector<float> posVec;
+		//#############################################################################
+		//Players
+		{
+			entityData.clear();
+			start = gameData.find(":", start) + 1;
+			end = start;
 
-		//for (int i = 0; i < entityData.size(); i++)
-		//{
-		//	std::stringstream ss(entityData.at(i));
-		//	float pos;
-		//	ss >> pos;
-		//	posVec.push_back(pos);
-		//}
+			while ((end = gameData.find(",", start)) != std::string::npos)
+			{
+				entityData.push_back(gameData.substr(start, end - start));
+				start = end + 1;
+				if (gameData.at(start) == '!' || entityData.at(0) == "")
+				{
+					break;
+				}
+			}
 
-		////for (int i = 0; i < Utilities::S_MAX_PLAYERS; i++)
-		//{
-		//	static_cast<TransformComponent*>(m_players[3].getComponent(ComponentType::Transform))->setPos(posVec[0], posVec[1]);
-		//}
+			dataIndex = 0;
+			for (int i = 1; i < 3; i++)
+			{
+				HealthComponent* hpComp = static_cast<HealthComponent*>(m_players[i].getComponent(ComponentType::Health));
+				TransformComponent* posComp = static_cast<TransformComponent*>(m_players[i].getComponent(ComponentType::Transform));
+
+				if (dataIndex >= entityData.size())
+				{
+					break;
+				}
+				int data;
+				std::stringstream ss(entityData.at(dataIndex));
+				ss.str(entityData.at(++dataIndex));
+				ss >> data;
+				posComp->setX(data);
+				ss.clear();
+				ss.str(entityData.at(++dataIndex));
+				ss >> data;
+				posComp->setY(data);
+				ss.clear();
+				ss >> data;
+				hpComp->setHealth(data);
+
+				dataIndex++;
+			}
+		}
+
+
+		//#############################################################################
+		//Tiles
+		{
+			entityData.clear();
+			start = gameData.find(":", start) + 1;
+			end = start;
+
+			while ((end = gameData.find(",", start)) != std::string::npos)
+			{
+				entityData.push_back(gameData.substr(start, end - start));
+				start = end + 1;
+				if (start < gameData.size() && gameData.at(start) == '!')
+				{
+					break;
+				}
+			}
+
+			std::vector<Entity>& tiles = m_levelManager.getTiles();
+			dataIndex = 0;
+			for (int i = 0; i < tiles.size(); i++)
+			{
+				TileComponent* tileComp = static_cast<TileComponent*>(tiles.at(i).getComponent(ComponentType::Tile));
+
+				if (dataIndex >= entityData.size() || entityData.at(0) == "")
+				{
+					break;
+				}
+				int data;
+				std::stringstream ss(entityData.at(dataIndex));
+				ss >> data;
+				if (static_cast<int>(tileComp->getTileType()) != data)
+				{
+					if (data == 0)
+					{
+						m_levelManager.setToWall(tiles.at(i));
+					}
+					else if (data == 1)
+					{
+						m_levelManager.setToFloor(tiles.at(i));
+					}
+					tileComp->setTileType(static_cast<TileType>(data));
+				}
+				dataIndex++;
+			}
+		}
 	}
-
 }
 
 void GameScreen::sendHostData()
 {
-	std::string data;
-	//std::vector<std::string> entities;
+	std::string entityData;
 	std::vector<Entity>& levelTiles = m_levelManager.getTiles();
 
-	//for (auto& tile : levelTiles)
-	//{
-	//	entities.push_back(static_cast<TileComponent*>(tile.getComponent(ComponentType::Tile)).)
-	//}
-
-	data.append(Utilities::ONLINE_ENTITY);
+	//#############################################################################
+	//Entities
+	entityData.append(Utilities::ONLINE_ENTITY);
 	for (int i = 0; i < m_entities.size(); i++)
 	{
-		data += std::to_string(static_cast<int>(static_cast<TagComponent*>(m_entities.at(i).getComponent(ComponentType::Tag))->getTag()));
-		data += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
+		entityData += std::to_string(static_cast<int>(static_cast<TagComponent*>(m_entities.at(i).getComponent(ComponentType::Tag))->getTag()));
+		entityData += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
 		glm::ivec2 pos = static_cast<TransformComponent*>(m_entities.at(i).getComponent(ComponentType::Transform))->getPos();
-		data += std::to_string(pos.x);
-		data += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
-		data += std::to_string(pos.y);
-		data += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
-		data += std::to_string(static_cast<int>(static_cast<HealthComponent*>(m_entities.at(i).getComponent(ComponentType::Health))->getHealth()));
-		data += Utilities::ONLINE_ENTITY_SEPARATOR;
+		entityData += std::to_string(pos.x);
+		entityData += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
+		entityData += std::to_string(pos.y);
+		entityData += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
+		entityData += std::to_string(static_cast<int>(static_cast<HealthComponent*>(m_entities.at(i).getComponent(ComponentType::Health))->getHealth()));
+		entityData += Utilities::ONLINE_ENTITY_SEPARATOR;
 	}
-	data += Utilities::ONLINE_ENTITY_TYPE_SEPARATOR;
-	data += Utilities::ONLINE_PLAYER;
+	if (entityData[entityData.size() - 1] != ',')
+	{
+		entityData += Utilities::ONLINE_ENTITY_SEPARATOR;
+	}
+	entityData += Utilities::ONLINE_ENTITY_TYPE_SEPARATOR;
 
+	//#############################################################################
+	//Players
+	std::string playerData = "";
+	playerData += Utilities::ONLINE_PLAYER;
 	//change to amount of host's local players once logic is in for that
 	for (int i = 0; i < 3; i++)
 	{
 		glm::ivec2 pos = static_cast<TransformComponent*>(m_players[i].getComponent(ComponentType::Transform))->getPos();
-		data += std::to_string(pos.x);
-		data += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
-		data += std::to_string(pos.y);
-		data += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
-		data += std::to_string(static_cast<int>(static_cast<HealthComponent*>(m_players[i].getComponent(ComponentType::Health))->getHealth()));
-		data += Utilities::ONLINE_ENTITY_SEPARATOR;
+		playerData += std::to_string(pos.x);
+		playerData += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
+		playerData += std::to_string(pos.y);
+		playerData += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
+		playerData += std::to_string(static_cast<int>(static_cast<HealthComponent*>(m_players[i].getComponent(ComponentType::Health))->getHealth()));
+		playerData += Utilities::ONLINE_ENTITY_SEPARATOR;
 	}
-	data += Utilities::ONLINE_ENTITY_TYPE_SEPARATOR;
-	data += Utilities::ONLINE_PLAYER_BULLET;
-	//player bullets
-	for (int i = 0; i < Utilities::BULLET_POOL_SIZE; i++)
+	if (playerData[playerData.size() - 1] != ',')
 	{
-		glm::ivec2 pos = static_cast<TransformComponent*>(m_projectileManager.getBullet(true, i).entity.getComponent(ComponentType::Transform))->getPos();
-		data += std::to_string(pos.x);
-		data += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
-		data += std::to_string(pos.y);
-		//data += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
-		//data += static_cast<int>(static_cast<HealthComponent*>(m_entities.at(i).getComponent(ComponentType::Health))->getHealth());
-		data += Utilities::ONLINE_ENTITY_SEPARATOR;
+		playerData += Utilities::ONLINE_ENTITY_SEPARATOR;
 	}
-	data += Utilities::ONLINE_ENTITY_TYPE_SEPARATOR;
-	data += Utilities::ONLINE_ENEMY_BULLET;
-	//enemy bullets
-	for (int i = 0; i < Utilities::BULLET_POOL_SIZE; i++)
-	{
-		glm::ivec2 pos = static_cast<TransformComponent*>(m_projectileManager.getBullet(false, i).entity.getComponent(ComponentType::Transform))->getPos();
-		data += std::to_string(pos.x);
-		data += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
-		data += std::to_string(pos.y);
-		//data += Utilities::ONLINE_ENTITY_DATA_SEPARATOR;
-		//data += static_cast<int>(static_cast<HealthComponent*>(m_entities.at(i).getComponent(ComponentType::Health))->getHealth());
-		data += Utilities::ONLINE_ENTITY_SEPARATOR;
-	}
+	playerData += Utilities::ONLINE_ENTITY_TYPE_SEPARATOR;
 
-	data += Utilities::ONLINE_ENTITY_TYPE_SEPARATOR;
-	data += Utilities::ONLINE_TILE;
+	//#############################################################################
+	//Tiles
+	std::string tileData = "";
+	tileData += Utilities::ONLINE_TILE;
 	for (int i = 0; i < levelTiles.size(); i++)
 	{
-		data += std::to_string(static_cast<int>(static_cast<TileComponent*>(levelTiles.at(i).getComponent(ComponentType::Tile))->getTileType()));
-		data += Utilities::ONLINE_ENTITY_SEPARATOR;
+		tileData += std::to_string(static_cast<int>(static_cast<TileComponent*>(levelTiles.at(i).getComponent(ComponentType::Tile))->getTileType()));
+		tileData += Utilities::ONLINE_ENTITY_SEPARATOR;
 	}
+	if (tileData[tileData.size() - 1] != ',')
+	{
+		tileData += Utilities::ONLINE_ENTITY_SEPARATOR;
+	}
+	tileData += Utilities::ONLINE_ENTITY_TYPE_SEPARATOR;
 
-	m_onlineHandler.sendDataToClients(data);
+	m_onlineHandler.sendDataToClients(entityData + playerData + tileData);
 }
 
 void GameScreen::sendClientData()
