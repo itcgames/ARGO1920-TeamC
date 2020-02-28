@@ -27,7 +27,7 @@ void LevelManager::setupLevel()
 			m_levelTiles.back().addComponent(new TagComponent(Tag::Tile));
 			m_levelTiles.back().addComponent(new VisualComponent("wallSmall.png", m_renderer));
 			m_levelTiles.back().addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
-			m_levelTiles.back().addComponent(new TileComponent());
+			m_levelTiles.back().addComponent(new TileComponent(TileType::Wall));
 			m_levelTiles.back().addComponent(new HealthComponent(Utilities::WALL_HEALTH, Utilities::WALL_HEALTH));
 		}
 	}
@@ -72,6 +72,7 @@ void LevelManager::setToWall(Entity& t_entity)
 	t_entity.addComponent(new VisualComponent("wall_4.png", m_renderer));
 	t_entity.addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
 	static_cast<HealthComponent*>(t_entity.getComponent(ComponentType::Health))->setHealth(Utilities::WALL_HEALTH);
+	changeTileType(t_entity, TileType::Wall);
 }
 
 void LevelManager::setToFloor(Entity& t_entity)
@@ -80,6 +81,7 @@ void LevelManager::setToFloor(Entity& t_entity)
 	t_entity.removeCompType(ComponentType::ColliderAABB);
 
 	t_entity.addComponent(new VisualComponent("floor_1b.png", m_renderer));
+	changeTileType(t_entity, TileType::Floor);
 }
 
 void LevelManager::createRoom(glm::vec2 t_startPosition, int t_width, int t_height)
@@ -95,6 +97,16 @@ void LevelManager::createRoom(glm::vec2 t_startPosition, int t_width, int t_heig
 		}
 		startTile = static_cast<TileComponent*>(startTile->getComponent(ComponentType::Tile))->getNeighbours()->right;
 	}
+}
+
+std::vector<Entity>& LevelManager::getTiles()
+{
+	return m_levelTiles;
+}
+
+void LevelManager::changeTileType(Entity& t_entity, TileType t_type)
+{
+	static_cast<TileComponent*>(t_entity.getComponent(ComponentType::Tile))->setTileType(t_type);
 }
 
 void LevelManager::setTileNeighbours()

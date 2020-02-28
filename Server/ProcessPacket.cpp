@@ -9,7 +9,7 @@ bool Server::ProcessPacket(std::shared_ptr<Connection> connection, PacketType pa
 	{
 	case PacketType::ChatMessage: //Packet Type: chat message
 	{
-		std::string message = "other:gd:10,20"; //string to store our message we received
+		std::string message = ""; //string to store our message we received
 		if (!GetString(connection, message)) //Get the chat message and store it in variable: Message
 			return false; //If we do not properly get the chat message, return false
 		else
@@ -29,18 +29,6 @@ bool Server::ProcessPacket(std::shared_ptr<Connection> connection, PacketType pa
 						conn->m_pm.Append(msgPacket);
 					}
 				}
-				if (data == "ks")
-				{
-					std::cout << "Received Kill Server packet!" << std::endl;
-					m_killServer = true;
-					std::shared_lock<std::shared_mutex> lock(m_mutex_connectionMgr);
-					for (auto conn : m_connections) //For each connection...
-					{
-						std::cout << "Disconnecting client with id: " << conn->m_ID << std::endl;
-						DisconnectClient(conn);
-					}
-					system("taskkill /IM Server.exe /F");
-				}
 			}
 			else if (message.find("other:") != std::string::npos)
 			{
@@ -59,6 +47,17 @@ bool Server::ProcessPacket(std::shared_ptr<Connection> connection, PacketType pa
 					}
 				}
 			}
+			else if (message.find("host:") != std::string::npos) //send only to host
+			{
+				std::string data = message.erase(message.find("host:"), 5);
+
+				PS::ChatMessage cm(message);
+				std::shared_ptr<Packet> msgPacket = std::make_shared<Packet>(cm.toPacket());
+				{
+					std::shared_lock<std::shared_mutex> lock(m_mutex_connectionMgr);
+					m_connections[0]->m_pm.Append(msgPacket);
+				}
+			}
 			else if (message.find("self:") != std::string::npos) //this should be only ConnectData packetType
 			{
 				std::string data = message.erase(message.find("self:"), 5);
@@ -72,7 +71,7 @@ bool Server::ProcessPacket(std::shared_ptr<Connection> connection, PacketType pa
 					data += "guest";
 				}
 
-				//dont sent to self
+				//send to self
 				PS::ChatMessage cm(data);
 				std::shared_ptr<Packet> msgPacket = std::make_shared<Packet>(cm.toPacket()); //use shared_ptr instead of sending with SendString so we don't have to reallocate packet for each connection
 				{

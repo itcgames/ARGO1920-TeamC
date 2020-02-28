@@ -17,7 +17,9 @@ public:
 	std::string& getRestartData();
 	std::string& getConnectData();
 	bool isConnected();
-	void sendGameData(glm::vec2 t_pos);
+	//void sendGameData(glm::vec2 t_pos);
+	void sendDataToClients(std::string t_data);
+	void sendDataToHost(std::string t_data);
 	void sendWinData(int t_ms);
 	void sendConnectData();
 	void sendStartData();
@@ -35,6 +37,7 @@ private:
 	const std::string LOCAL_HOST = "127.0.0.1";
 	const std::string CONNECT_DATA = "self:cd:";
 	const std::string GAME_DATA = "other:gd:";
+	const std::string HOST_GAME_DATA = "host:gd:";
 	const std::string START_DATA = "other:sd:";
 	const std::string WIN_DATA = "all:wd:";
 

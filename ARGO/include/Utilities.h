@@ -21,7 +21,16 @@ namespace Utilities
 	private:
 		OnlineData() {};
 	};
+	const std::string ONLINE_TILE = "t:";
+	const std::string ONLINE_PLAYER = "p:";
+	const std::string ONLINE_ENTITY = "e:";
+	const std::string ONLINE_PLAYER_BULLET = "z:";
+	const std::string ONLINE_ENEMY_BULLET = "x:";
+	const std::string ONLINE_ENTITY_DATA_SEPARATOR = ",";
+	const std::string ONLINE_ENTITY_TYPE_SEPARATOR = "!";
+	const std::string ONLINE_ENTITY_SEPARATOR = ",";
 
+	static const int BULLET_POOL_SIZE = 160;
 	const static int S_MAX_PLAYERS = 4;
 	//font consts
 	const int SMALL_FONT = 24;

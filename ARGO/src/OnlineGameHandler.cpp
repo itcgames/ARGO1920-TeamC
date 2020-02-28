@@ -93,13 +93,41 @@ bool OnlineGameHandler::isConnected()
 	}
 }
 
-void OnlineGameHandler::sendGameData(glm::vec2 t_pos)
+//void OnlineGameHandler::sendGameData(glm::vec2 t_pos)
+//{
+//	std::string data = GAME_DATA;
+//	data += std::to_string(t_pos.x);
+//	data += ",";
+//	data += std::to_string(t_pos.y);
+//
+//#ifdef _DEBUG
+//	std::cout << "Sent data: " << data << std::endl;
+//#endif // _DEBUG
+//
+//	m_client->SendString(data);
+//}
+
+void OnlineGameHandler::sendDataToClients(std::string t_data)
 {
 	std::string data = GAME_DATA;
-	data += std::to_string(t_pos.x);
-	data += ",";
-	data += std::to_string(t_pos.y);
-	std::cout << "Sent data: " << data << std::endl;
+	data += t_data;
+
+#ifdef _DEBUG
+	//std::cout << "Sent data to clients: " << data << std::endl;
+#endif // _DEBUG
+
+	m_client->SendString(data);
+}
+
+void OnlineGameHandler::sendDataToHost(std::string t_data)
+{
+	std::string data = HOST_GAME_DATA;
+	data += t_data;
+
+#ifdef _DEBUG
+	//std::cout << "Sent data to host: " << data << std::endl;
+#endif // _DEBUG
+
 	m_client->SendString(data);
 }
 

@@ -31,15 +31,16 @@ public:
 	void update(float t_dt);
 	void updateBullet(Bullet& t_bullet, float t_dt);
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
+	Bullet& getBullet(bool t_playerBullets, int t_bulletIndex);
+
 private:
 	void tick(float t_dt);
 
-	static const int BULLET_POOL_SIZE = 160;
 	static const int BULLET_RADIUS = 4;
 	static const int BULLET_LIFETIME = 90;
 	const float PLAYER_BULLER_SPEED = 16.0f;
-	Bullet m_playerBullets[BULLET_POOL_SIZE];
-	Bullet m_enemyBullets[BULLET_POOL_SIZE];
+	Bullet m_playerBullets[Utilities::BULLET_POOL_SIZE];
+	Bullet m_enemyBullets[Utilities::BULLET_POOL_SIZE];
 	int m_nextPlayerBullet;
 	int m_nextEnemyBullet;
 	AudioManager* m_audioMgr;

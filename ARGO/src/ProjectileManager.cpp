@@ -59,7 +59,7 @@ void ProjectileManager::createPlayerBullet(const Events::CreateBulletEvent& t_ev
 		m_playerBullets[m_nextPlayerBullet].type = t_event.type;
 
 		m_nextPlayerBullet++;
-		if (m_nextPlayerBullet >= BULLET_POOL_SIZE)
+		if (m_nextPlayerBullet >= Utilities::BULLET_POOL_SIZE)
 		{
 			m_nextPlayerBullet = 0;
 		}
@@ -76,7 +76,7 @@ void ProjectileManager::createEnemyBullet(const Events::CreateBulletEvent& t_eve
 	m_enemyBullets[m_nextEnemyBullet].type = t_event.type;
 
 	m_nextEnemyBullet++;
-	if (m_nextEnemyBullet >= BULLET_POOL_SIZE)
+	if (m_nextEnemyBullet >= Utilities::BULLET_POOL_SIZE)
 	{
 		m_nextEnemyBullet = 0;
 	}
@@ -152,5 +152,17 @@ void ProjectileManager::render(SDL_Renderer* t_renderer, RenderSystem* t_system)
 		{
 			t_system->render(t_renderer, bullet.entity);
 		}
+	}
+}
+
+Bullet& ProjectileManager::getBullet(bool t_playerBullets, int t_bulletIndex)
+{
+	if (t_playerBullets)
+	{
+		return m_playerBullets[t_bulletIndex];
+	}
+	else
+	{
+		return m_enemyBullets[t_bulletIndex];
 	}
 }

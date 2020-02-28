@@ -39,7 +39,10 @@ private:
 	void updateLevelManager();
 	void setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]);
 	void removeDeadEnemies();
-	void processGameData();
+	void processReceivedClientData();
+	void processReceivedHostData();
+	void sendHostData();
+	void sendClientData();
 
 	EventManager& m_eventManager;
 

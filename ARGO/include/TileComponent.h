@@ -13,13 +13,22 @@ struct Neighbours
 	Entity* bottomRight;
 };
 
+enum class TileType
+{
+	Wall = 0,
+	Floor = 1
+};
+
 class TileComponent :
 	public Component
 {
 public:
-	TileComponent();
+	TileComponent(TileType t_type);
 	Neighbours* getNeighbours();
+	void setTileType(TileType t_type);
+	TileType getTileType() const;
 private:
 	Neighbours m_neighbours;
+	TileType m_type;
 };
 
