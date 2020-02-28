@@ -11,6 +11,18 @@
 #include "BaseSystem.h"
 #include "RenderSystem.h"
 #include "ProjectileManager.h"
+#include <queue>
+
+struct LessThanByTotalDistance
+{
+	bool operator()(const Entity* lhs, const Entity* rhs) const
+	{
+		PathingComponent* lComp = static_cast<PathingComponent*>(lhs->getComponent(ComponentType::Pathing));
+		PathingComponent* RComp = static_cast<PathingComponent*>(rhs->getComponent(ComponentType::Pathing));
+		//get pathing component from each and get total distance from each;
+		return lComp->getTotalDistance() > RComp->getTotalDistance();
+	}
+};
 
 class LevelManager
 {
@@ -25,7 +37,7 @@ public:
 	void setToFloor(Entity& t_entity);
 	void createRoom(glm::vec2 t_startPosition, int t_width, int t_height);
 	Entity* findAtPosition(glm::vec2 t_position);
-	void resetPathing();
+	std::vector<glm::vec2> createPath(glm::vec2 start, glm::vec2 target);
 
 private:
 	void setTileNeighbours();
@@ -36,6 +48,8 @@ private:
 	void generateLightField(); 
 	void setTileLight(Entity* t_entity, std::vector<Entity*>& t_queue, int t_newWeight);
 	void setNeighbourLights(Entity* t_entity, std::vector<Entity*>& t_queue);
+	void resetPathing();
+	void addToPath(Entity* t_child, Entity* t_parent, glm::vec2 targetPos, std::priority_queue<Entity*, std::vector<Entity*>, LessThanByTotalDistance>* t_queue);
 
 	std::vector<Entity> m_levelTiles;
 	Entity(&m_players)[Utilities::S_MAX_PLAYERS];

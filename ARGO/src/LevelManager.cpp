@@ -94,9 +94,10 @@ void LevelManager::setToFloor(Entity& t_entity)
 {
 	t_entity.removeCompType(ComponentType::Visual);
 	t_entity.removeCompType(ComponentType::ColliderAABB);
+	t_entity.removeCompType(ComponentType::Pathing);
 
 	t_entity.addComponent(new VisualComponent("floor_1b.png", m_renderer));
-	m_levelTiles.back().addComponent(new PathingComponent());
+	t_entity.addComponent(new PathingComponent());
 }
 
 void LevelManager::createRoom(glm::vec2 t_startPosition, int t_width, int t_height)
@@ -353,6 +354,121 @@ void LevelManager::resetPathing()
 		if (comp)
 		{
 			comp->reset();
+		}
+	}
+}
+
+
+std::vector<glm::vec2> LevelManager::createPath(glm::vec2 start, glm::vec2 target)
+{
+	resetPathing();
+
+	Entity* startTile = findAtPosition(start);
+	Entity* targetTile = findAtPosition(target);
+
+	if (!targetTile || !startTile)
+	{
+		std::vector<glm::vec2> empty;
+		return empty;
+	}
+
+	PathingComponent* startData = static_cast<PathingComponent*>(startTile->getComponent(ComponentType::Pathing));
+	PathingComponent* targetData = static_cast<PathingComponent*>(targetTile->getComponent(ComponentType::Pathing));
+	TransformComponent* startTransform = static_cast<TransformComponent*>(startTile->getComponent(ComponentType::Transform));
+	TransformComponent* endTransform = static_cast<TransformComponent*>(targetTile->getComponent(ComponentType::Transform));
+
+	if (!targetData || !startData)
+	{
+		std::vector<glm::vec2> empty;
+		return empty;
+	}
+	startData->setDistance(0);
+	startData->setTotalDistance(glm::distance2(startTransform->getPos(), endTransform->getPos()));
+
+	std::priority_queue<Entity*, std::vector<Entity*>, LessThanByTotalDistance> queue;
+	queue.push(startTile);
+
+	while (!queue.empty() && queue.top() != targetTile)
+	{
+		Entity* current = queue.top();
+		queue.pop();
+
+		Neighbours* neighbours = static_cast<TileComponent*>(current->getComponent(ComponentType::Tile))->getNeighbours();
+
+		if (neighbours->top)
+		{
+			addToPath(neighbours->top, current, endTransform->getPos(), &queue);
+		}
+		if (neighbours->left)
+		{
+			addToPath(neighbours->left, current, endTransform->getPos(), &queue);
+		}
+		if (neighbours->right)
+		{
+			addToPath(neighbours->right, current, endTransform->getPos(), &queue);
+		}
+		if (neighbours->bottom)
+		{
+			addToPath(neighbours->bottom, current, endTransform->getPos(), &queue);
+		}
+		if (neighbours->topLeft && neighbours->top && neighbours->left &&
+			!static_cast<ColliderAABBComponent*>(neighbours->top->getComponent(ComponentType::ColliderAABB)) &&
+			!static_cast<ColliderAABBComponent*>(neighbours->left->getComponent(ComponentType::ColliderAABB)))
+		{
+			addToPath(neighbours->topLeft, current, endTransform->getPos(), &queue);
+		}
+		if (neighbours->topRight && neighbours->top && neighbours->right &&
+			!static_cast<ColliderAABBComponent*>(neighbours->top->getComponent(ComponentType::ColliderAABB)) &&
+			!static_cast<ColliderAABBComponent*>(neighbours->right->getComponent(ComponentType::ColliderAABB)))
+		{
+			addToPath(neighbours->topRight, current, endTransform->getPos(), &queue);
+		}
+		if (neighbours->bottomLeft && neighbours->bottom && neighbours->left &&
+			!static_cast<ColliderAABBComponent*>(neighbours->bottom->getComponent(ComponentType::ColliderAABB)) &&
+			!static_cast<ColliderAABBComponent*>(neighbours->left->getComponent(ComponentType::ColliderAABB)))
+		{
+			addToPath(neighbours->bottomLeft, current, endTransform->getPos(), &queue);
+		}
+		if (neighbours->bottomRight && neighbours->bottom && neighbours->right &&
+			!static_cast<ColliderAABBComponent*>(neighbours->bottom->getComponent(ComponentType::ColliderAABB)) &&
+			!static_cast<ColliderAABBComponent*>(neighbours->right->getComponent(ComponentType::ColliderAABB)))
+		{
+			addToPath(neighbours->bottomRight, current, endTransform->getPos(), &queue);
+		}
+	}
+
+	std::vector<glm::vec2> output;
+	output.push_back(endTransform->getPos() + glm::vec2(Utilities::TILE_SIZE / 2, Utilities::TILE_SIZE / 2)); //position + tile centre
+	while (targetData->getPrevious() != nullptr)
+	{
+		targetTile = targetData->getPrevious();
+		targetData = static_cast<PathingComponent*>(targetTile->getComponent(ComponentType::Pathing));
+		endTransform = static_cast<TransformComponent*>(targetTile->getComponent(ComponentType::Transform));
+		output.push_back(endTransform->getPos() + glm::vec2(Utilities::TILE_SIZE / 2, Utilities::TILE_SIZE / 2));
+	}
+
+	output.pop_back();
+
+	return output;
+}
+
+void LevelManager::addToPath(Entity* t_child, Entity* t_parent, glm::vec2 targetPos, std::priority_queue<Entity*, std::vector<Entity*>, LessThanByTotalDistance>* t_queue)
+{
+	PathingComponent* childData = static_cast<PathingComponent*>(t_child->getComponent(ComponentType::Pathing));
+	PathingComponent* parentData = static_cast<PathingComponent*>(t_parent->getComponent(ComponentType::Pathing));
+	TransformComponent* childTransform = static_cast<TransformComponent*>(t_child->getComponent(ComponentType::Transform));
+	TransformComponent* parentTransform = static_cast<TransformComponent*>(t_parent->getComponent(ComponentType::Transform));
+
+	if (childData)
+	{
+		float distance = glm::distance2(childTransform->getPos(), parentTransform->getPos()) + parentData->getDistance();
+		if (childData->getDistance() > distance)
+		{
+			childData->setDistance(distance);
+			childData->setTotalDistance(distance + glm::distance2(childTransform->getPos(), targetPos));
+			childData->setPrevious(t_parent);
+
+			t_queue->push(t_child);
 		}
 	}
 }

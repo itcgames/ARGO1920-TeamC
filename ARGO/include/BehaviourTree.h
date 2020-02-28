@@ -1,12 +1,24 @@
 #pragma once
 #include <Entity.h>
+#include "LevelManager.h"
 
 
 ////----------------------------Helper functions.----------------------------
 static void move(ForceComponent* t_forceComp, TransformComponent* t_transformComp, glm::vec2 t_direction)
 {
-	t_forceComp->addForce(t_direction); 
+	t_forceComp->addForce(t_direction);
 	t_transformComp->setRotation(glm::degrees(atan2(t_direction.y, t_direction.x)));
+}
+static void path(ForceComponent* t_forceComp, TransformComponent* t_transformComp, glm::vec2 t_destination, LevelManager& t_levelManager)
+{
+	std::vector<glm::vec2> path = t_levelManager.createPath(t_transformComp->getPos(), t_destination);
+
+	if (!path.empty())
+	{
+		glm::vec2 direction = glm::normalize(path.back() - t_transformComp->getPos());
+		t_forceComp->addForce(direction);
+		t_transformComp->setRotation(glm::degrees(atan2(direction.y, direction.x)));
+	}
 }
 
 ////----------------------------This is the data we will need for our behaviour to function.----------------------------
@@ -40,7 +52,7 @@ struct ClosestHealthData
 };
 struct GoalData
 {
-	Entity* entity;
+	glm::vec2 destination;
 };
 
 //----------------------------These are the basic classes needed for the behaviour tree to function----------------------------
@@ -93,8 +105,9 @@ public:
 class RetreatBehaviour : public WeightedNode {
 private:
 	EnemyData* m_data;
+	LevelManager& m_levelManager;
 public:
-	RetreatBehaviour(EnemyData* t_data) : m_data(t_data) {}
+	RetreatBehaviour(EnemyData* t_data, LevelManager& t_levelManager) : m_data(t_data), m_levelManager(t_levelManager) {}
 	virtual bool run(Entity& t_entity) override
 	{
 		TransformComponent* transformComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
@@ -118,8 +131,9 @@ public:
 class HoldBehaviour : public WeightedNode {
 private:
 	EnemyData* m_data;
+	LevelManager& m_levelManager;
 public:
-	HoldBehaviour(EnemyData* t_data) : m_data(t_data) {}
+	HoldBehaviour(EnemyData* t_data, LevelManager& t_levelManager) : m_data(t_data), m_levelManager(t_levelManager) {}
 	virtual bool run(Entity& t_entity) override
 	{
 		return true;
@@ -130,41 +144,12 @@ public:
 	}
 };
 
-//class GetAmmoBehaviour : public WeightedNode {
-//private:
-//	ClosestPickupData* m_data;
-//public:
-//	GetAmmoBehaviour(ClosestPickupData* t_data) : m_data(t_data) {}
-//	virtual bool run(Entity& t_entity) override
-//	{
-//		return false;
-//	}
-//	virtual float getWeight(Entity& t_entity) override
-//	{
-//		return 0.0f;
-//	}
-//};
-//
-//class GetHealthBehaviour : public WeightedNode {
-//private:
-//	ClosestHealthData* m_data;
-//public:
-//	GetHealthBehaviour(ClosestHealthData* t_data) : m_data(t_data) {}
-//	virtual bool run(Entity& t_entity) override
-//	{
-//		return false;
-//	}
-//	virtual float getWeight(Entity& t_entity) override
-//	{
-//		return 0.0f;
-//	}
-//};
-
 class GetAmmoBehaviour : public WeightedNode {
 private:
 	ClosestPickupData* m_data;
+	LevelManager& m_levelManager;
 public:
-	GetAmmoBehaviour(ClosestPickupData* t_data) : m_data(t_data) {}
+	GetAmmoBehaviour(ClosestPickupData* t_data, LevelManager& t_levelManager) : m_data(t_data), m_levelManager(t_levelManager) {}
 	virtual bool run(Entity& t_entity) override
 	{
 		TransformComponent* transformComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
@@ -172,7 +157,7 @@ public:
 		TransformComponent* transComp = static_cast<TransformComponent*>(m_data->entity->getComponent(ComponentType::Transform));
 		if (forceComp && transComp->getPos() != transformComp->getPos())
 		{
-			move(forceComp, transformComp, glm::normalize(transComp->getPos() - transformComp->getPos()));
+			path(forceComp, transformComp, transComp->getPos(), m_levelManager);
 			return true;
 		}
 		return false;
@@ -194,10 +179,19 @@ public:
 class GetHealthBehaviour : public WeightedNode {
 private:
 	ClosestHealthData* m_data;
+	LevelManager& m_levelManager;
 public:
-	GetHealthBehaviour(ClosestHealthData* t_data) : m_data(t_data) {}
+	GetHealthBehaviour(ClosestHealthData* t_data, LevelManager& t_levelManager) : m_data(t_data), m_levelManager(t_levelManager) {}
 	virtual bool run(Entity& t_entity) override
 	{
+		TransformComponent* transformComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
+		ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
+		TransformComponent* transComp = static_cast<TransformComponent*>(m_data->entity->getComponent(ComponentType::Transform));
+		if (forceComp && transComp->getPos() != transformComp->getPos())
+		{
+			path(forceComp, transformComp, transComp->getPos(), m_levelManager);
+			return true;
+		}
 		return false;
 	}
 	virtual float getWeight(Entity& t_entity) override
@@ -217,14 +211,29 @@ public:
 class MoveToGoalBehaviour : public WeightedNode {
 private:
 	GoalData* m_data;
+	LevelManager& m_levelManager;
 public:
-	MoveToGoalBehaviour(GoalData* t_data) : m_data(t_data) {}
+	MoveToGoalBehaviour(GoalData* t_data, LevelManager& t_levelManager) : m_data(t_data), m_levelManager(t_levelManager) {}
 	virtual bool run(Entity& t_entity) override
 	{
+		TransformComponent* transformComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
+		ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
+		if (forceComp && m_data->destination != transformComp->getPos())
+		{
+			path(forceComp, transformComp, m_data->destination, m_levelManager);
+			return true;
+		}
 		return false;
 	}
 	virtual float getWeight(Entity& t_entity) override
 	{
+		AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getComponent(ComponentType::Ai));
+	
+		if (aiComp->getIsleader())
+		{
+			return 5.0f;
+		}
+	
 		return 0.0f;
 	}
 };
@@ -232,8 +241,9 @@ public:
 class MoveToLeaderBehaviour : public WeightedNode {
 private:
 	ClosestLeaderData* m_data;
+	LevelManager& m_levelManager;
 public:
-	MoveToLeaderBehaviour(ClosestLeaderData* t_data) : m_data(t_data) {}
+	MoveToLeaderBehaviour(ClosestLeaderData* t_data, LevelManager& t_levelManager) : m_data(t_data), m_levelManager(t_levelManager) {}
 	virtual bool run(Entity& t_entity) override
 	{
 		TransformComponent* transformComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
@@ -241,7 +251,7 @@ public:
 		TransformComponent* goalTransComp = static_cast<TransformComponent*>(m_data->entity->getComponent(ComponentType::Transform));
 		if (forceComp && goalTransComp->getPos() != transformComp->getPos())
 		{
-			move(forceComp, transformComp, glm::normalize(goalTransComp->getPos() - transformComp->getPos()));
+			path(forceComp, transformComp, goalTransComp->getPos(), m_levelManager);
 			return true;
 		}
 		return false;

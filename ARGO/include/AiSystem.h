@@ -15,15 +15,10 @@
 #include "BehaviourTree.h"
 #include <queue>
 
-struct LessThanByTotalDistance
+struct BotWaypoints
 {
-	bool operator()(const Entity* lhs, const Entity* rhs) const
-	{
-		PathingComponent* lComp = static_cast<PathingComponent*>(lhs->getComponent(ComponentType::Pathing));
-		PathingComponent* RComp = static_cast<PathingComponent*>(rhs->getComponent(ComponentType::Pathing));
-		//get pathing component from each and get total distance from each;
-		return lComp->getTotalDistance() > RComp->getTotalDistance();
-	}
+	glm::vec2 destination;
+	bool searched;
 };
 
 class AiSystem : public BaseSystem
@@ -48,14 +43,19 @@ private:
 	void setClosestLeaderData(glm::vec2 t_botPosition);
 	void setClosestPickupData(glm::vec2 t_botPosition);
 	void setGoalData(glm::vec2 t_botPosition);
+	void setLeader();
+	void setCurrentWaypoint();
 
-	std::vector<glm::vec2> createPath(glm::vec2 start, glm::vec2 target);
-	void addToPath(Entity* t_child, Entity* t_parent, glm::vec2 targetPos, std::priority_queue<Entity*, std::vector<Entity*>, LessThanByTotalDistance>* t_queue);
+
 
 	Entity(&m_players)[Utilities::S_MAX_PLAYERS];
 	Entity(&m_enemies)[Utilities::ENEMY_POOL_SIZE];
 	Entity(&m_pickups)[Utilities::PICKUP_POOL_SIZE];
 	Entity& m_goal;
+	const static int TOTAL_WAYPOINTS = 5;
+	BotWaypoints m_waypoints[TOTAL_WAYPOINTS];
+	int m_currentWaypoint;
+
 	EventManager& m_eventManager;
 	LevelManager& m_levelmanager;
 

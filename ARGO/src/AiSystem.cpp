@@ -7,14 +7,20 @@ AiSystem::AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], Entity(&t_enemi
 	m_pickups(t_pickups),
 	m_goal(t_goal),
 	m_eventManager(t_eventManager),
-	m_levelmanager(t_levelManager)
+	m_levelmanager(t_levelManager),
+	m_currentWaypoint(glm::linearRand(0,4))
 {
-	m_behaviourTree.addChild(new RetreatBehaviour(&m_botEnemyData));
-	m_behaviourTree.addChild(new HoldBehaviour(&m_botEnemyData));
-	m_behaviourTree.addChild(new GetAmmoBehaviour(&m_botPickupData));
-	m_behaviourTree.addChild(new GetHealthBehaviour(&m_botHealthPickupData));
-	m_behaviourTree.addChild(new MoveToGoalBehaviour(&m_botGoalData));
-	m_behaviourTree.addChild(new MoveToLeaderBehaviour(&m_botLeaderData));
+	m_behaviourTree.addChild(new RetreatBehaviour(&m_botEnemyData, m_levelmanager));
+	m_behaviourTree.addChild(new HoldBehaviour(&m_botEnemyData, m_levelmanager));
+	m_behaviourTree.addChild(new GetAmmoBehaviour(&m_botPickupData, m_levelmanager));
+	m_behaviourTree.addChild(new GetHealthBehaviour(&m_botHealthPickupData, m_levelmanager));
+	m_behaviourTree.addChild(new MoveToGoalBehaviour(&m_botGoalData, m_levelmanager));
+	m_behaviourTree.addChild(new MoveToLeaderBehaviour(&m_botLeaderData, m_levelmanager));
+
+	m_waypoints[1].destination = glm::vec2(Utilities::TILE_SIZE * 55, Utilities::TILE_SIZE * 3);
+	m_waypoints[2].destination = glm::vec2(Utilities::TILE_SIZE * 3, Utilities::TILE_SIZE * 37);
+	m_waypoints[3].destination = glm::vec2(Utilities::TILE_SIZE * 20, Utilities::TILE_SIZE * 37);
+	m_waypoints[4].destination = glm::vec2(Utilities::TILE_SIZE * 20, Utilities::TILE_SIZE * 20);
 }
 
 AiSystem::~AiSystem()
@@ -28,6 +34,7 @@ void AiSystem::update(Entity& t_entity)
 	AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getComponent(ComponentType::Ai));
 	ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
 
+	m_waypoints[0].destination = static_cast<TransformComponent*>(m_goal.getComponent(ComponentType::Transform))->getPos();
 	//make sure that entity is not missing crucial components
 	if (posComp && aiComp && forceComp)
 	{
@@ -130,6 +137,8 @@ void AiSystem::playerMovementDecision(Entity& t_entity)
 {
 	//set up data
 	glm::vec2 botPos = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform))->getPos();
+	setLeader();
+	setCurrentWaypoint();
 	m_botEnemyData.nearbyEnemies = 0;
 	m_botPickupData.entity = nullptr;
 	m_botHealthPickupData.entity = nullptr;
@@ -150,8 +159,8 @@ void AiSystem::playerShootingDecision(Entity& t_entity)
 		Weapon weapon = static_cast<WeaponComponent*>(t_entity.getComponent(ComponentType::Weapon))->getCurrent();
 		Controller temp;
 		glm::vec2 fireDirection = glm::normalize(enemyPos - playerTransform->getPos());
-		m_eventManager.emitEvent(CreateBulletEvent{ t_entity, fireDirection , 32, weapon , temp });
 		playerTransform->setRotation(glm::degrees(atan2(fireDirection.y, fireDirection.x)));
+		m_eventManager.emitEvent(CreateBulletEvent{ t_entity, fireDirection , 32, weapon , temp });
 	}
 }
 void AiSystem::setEnemyData(glm::vec2 t_botPosition)
@@ -244,7 +253,64 @@ void AiSystem::setClosestPickupData(glm::vec2 t_botPosition)
 
 void AiSystem::setGoalData(glm::vec2 t_botPosition)
 {
-	m_botGoalData.entity = &m_goal;
+	m_botGoalData.destination = m_waypoints[m_currentWaypoint].destination;
+}
+
+void AiSystem::setLeader()
+{
+	bool playerFound = false;
+	for (auto& player : m_players)
+	{
+		if (!static_cast<AiComponent*>(player.getComponent(ComponentType::Ai)))
+		{
+			playerFound = true;
+		}
+	}
+
+	if (!playerFound)
+	{
+		for (auto& player : m_players)
+		{
+			AiComponent* aiComp = static_cast<AiComponent*>(player.getComponent(ComponentType::Ai));
+			HealthComponent* hpComp = static_cast<HealthComponent*>(player.getComponent(ComponentType::Health));
+			if (hpComp->isAlive())
+			{
+				aiComp->setIsLeaser(true);
+				break;
+			}
+		}
+	}
+}
+
+void AiSystem::setCurrentWaypoint()
+{
+	glm::vec2 leaderPos;
+	for (auto& player : m_players)
+	{
+		AiComponent* aiComp = static_cast<AiComponent*>(player.getComponent(ComponentType::Ai));
+		HealthComponent* hpComp = static_cast<HealthComponent*>(player.getComponent(ComponentType::Health));
+		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getComponent(ComponentType::Transform));
+		if (aiComp && hpComp->isAlive() && aiComp->getIsleader())
+		{
+			leaderPos = transformComp->getPos();
+		}
+	}
+
+	//if the leader is close enough to its waypoint it decides to get a new waypoint.
+	if (glm::distance2(leaderPos, m_waypoints[m_currentWaypoint].destination) < Utilities::TILE_SIZE * Utilities::TILE_SIZE)
+	{
+		bool success = false;
+
+		while (!success)
+		{
+			int newWayPoint = glm::linearRand(0, 4);
+			if (newWayPoint != m_currentWaypoint)
+			{
+				m_currentWaypoint = newWayPoint;
+				success = true;
+			}
+		}
+	}
 }
 
 void AiSystem::wander(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent)
@@ -267,108 +333,4 @@ void AiSystem::wander(TransformComponent* t_posComp, AiComponent* t_aiComponent,
 void AiSystem::sleep(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent)
 {
 	//Nothing will add code to awake unit if a target (i.e player) comes within range once discussions are had.
-}
-
-
-std::vector<glm::vec2> AiSystem::createPath(glm::vec2 start, glm::vec2 target)
-{
-	//TODO: create pathing component on level tiles. can probably remove from wall tiles
-
-
-	//resetTiles(); levelmanager reset pathing;
-	Entity* startTile = m_levelmanager.findAtPosition(start);
-	Entity* targetTile = m_levelmanager.findAtPosition(target);
-	PathingComponent* startData = static_cast<PathingComponent*>(startTile->getComponent(ComponentType::Pathing));
-	TransformComponent* startTransform = static_cast<TransformComponent*>(startTile->getComponent(ComponentType::Transform));
-	TransformComponent* endTransform = static_cast<TransformComponent*>(targetTile->getComponent(ComponentType::Transform));
-	startData->setDistance(0);
-	startData->setTotalDistance(glm::distance2(startTransform->getPos(), endTransform->getPos()));
-
-	std::priority_queue<Entity*, std::vector<Entity*>, LessThanByTotalDistance> queue;
-	queue.push(startTile);
-
-	while (!queue.empty() && queue.top() != targetTile)
-	{
-		Entity* current = queue.top();
-		queue.pop();
-
-		Neighbours* neighbours = static_cast<TileComponent*>(startTile->getComponent(ComponentType::Tile))->getNeighbours();
-
-		if (neighbours->top)
-		{
-			addToPath(neighbours->top, current, endTransform->getPos(), &queue);
-		}
-		if (neighbours->left)
-		{
-			addToPath(neighbours->left, current, endTransform->getPos(), &queue);
-		}
-		if (neighbours->right)
-		{
-			addToPath(neighbours->right, current, endTransform->getPos(), &queue);
-		}
-		if (neighbours->bottom)
-		{
-			addToPath(neighbours->bottom, current, endTransform->getPos(), &queue);
-		}
-		if (neighbours->topLeft && neighbours->top && neighbours->left &&
-			!static_cast<ColliderAABBComponent*>(neighbours->top->getComponent(ComponentType::ColliderAABB)) &&
-			!static_cast<ColliderAABBComponent*>(neighbours->left->getComponent(ComponentType::ColliderAABB)))
-		{
-			addToPath(neighbours->topLeft, current, endTransform->getPos(), &queue);
-		}
-		if (neighbours->topRight && neighbours->top && neighbours->right &&
-			!static_cast<ColliderAABBComponent*>(neighbours->top->getComponent(ComponentType::ColliderAABB)) &&
-			!static_cast<ColliderAABBComponent*>(neighbours->right->getComponent(ComponentType::ColliderAABB)))
-		{
-			addToPath(neighbours->topRight, current, endTransform->getPos(), &queue);
-		}
-		if (neighbours->bottomLeft && neighbours->bottom && neighbours->left &&
-			!static_cast<ColliderAABBComponent*>(neighbours->bottom->getComponent(ComponentType::ColliderAABB)) &&
-			!static_cast<ColliderAABBComponent*>(neighbours->left->getComponent(ComponentType::ColliderAABB)))
-		{
-			addToPath(neighbours->bottomLeft, current, endTransform->getPos(), &queue);
-		}
-		if (neighbours->bottomRight && neighbours->bottom && neighbours->right &&
-			!static_cast<ColliderAABBComponent*>(neighbours->bottom->getComponent(ComponentType::ColliderAABB)) &&
-			!static_cast<ColliderAABBComponent*>(neighbours->right->getComponent(ComponentType::ColliderAABB)))
-		{
-			addToPath(neighbours->bottomRight, current, endTransform->getPos(), &queue);
-		}
-	}
-
-	PathingComponent* targetData = static_cast<PathingComponent*>(targetTile->getComponent(ComponentType::Pathing));
-	std::vector<glm::vec2> output;
-	output.push_back(endTransform->getPos() + glm::vec2(Utilities::TILE_SIZE / 2, Utilities::TILE_SIZE / 2)); //position + tile centre
-	while (targetData->getPrevious() != nullptr)
-	{
-		targetTile = targetData->getPrevious(); 
-		targetData = static_cast<PathingComponent*>(targetTile->getComponent(ComponentType::Pathing));
-		endTransform = static_cast<TransformComponent*>(targetTile->getComponent(ComponentType::Transform));
-		output.push_back(endTransform->getPos() + glm::vec2(Utilities::TILE_SIZE / 2, Utilities::TILE_SIZE / 2));
-	}
-
-	output.pop_back();
-
-	return output;
-}
-
-void AiSystem::addToPath(Entity* t_child, Entity* t_parent, glm::vec2 targetPos, std::priority_queue<Entity*, std::vector<Entity*>, LessThanByTotalDistance>* t_queue)
-{
-	PathingComponent* childData = static_cast<PathingComponent*>(t_child->getComponent(ComponentType::Pathing));
-	PathingComponent* parentData = static_cast<PathingComponent*>(t_parent->getComponent(ComponentType::Pathing));
-	TransformComponent* childTransform = static_cast<TransformComponent*>(t_child->getComponent(ComponentType::Transform));
-	TransformComponent* parentTransform = static_cast<TransformComponent*>(t_parent->getComponent(ComponentType::Transform));
-
-	if (childData)
-	{
-		float distance = glm::distance2(childTransform->getPos(), parentTransform->getPos()) + parentData->getDistance();
-		if (childData->getDistance() > distance)
-		{
-			childData->setDistance(distance);
-			childData->setTotalDistance(distance + glm::distance2(childTransform->getPos(), targetPos));
-			childData->setPrevious(t_parent);
-
-			t_queue->push(t_child);
-		}
-	}
 }
