@@ -10,6 +10,7 @@ enum class PlayerJoinedParts
 {
 	Border,
 	Player,
+	PlaceHolder,
 	Text
 };
 
@@ -23,6 +24,8 @@ public:
 	void render(SDL_Renderer* t_renderer);
 	void initialise(SDL_Renderer* t_renderer);
 	void playerHasJoined();
+	void setIsActive(bool t_isActive);
+	bool getIsActive();
 private:
 
 	void setControllerButtonMaps();
@@ -44,7 +47,7 @@ private:
 	Entity m_background;
 	Entity m_inputEntities[Utilities::S_MAX_PLAYERS];
 
-	static const int S_NUMBER_OF_PLAYER_JOINED_ENTITIES_PARTS = 3;
+	static const int S_NUMBER_OF_PLAYER_JOINED_ENTITIES_PARTS = 4;
 	Entity m_playerJoinedEntity[Utilities::S_MAX_PLAYERS][S_NUMBER_OF_PLAYER_JOINED_ENTITIES_PARTS];
 
 	Entity m_helpText[2];

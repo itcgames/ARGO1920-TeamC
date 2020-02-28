@@ -39,6 +39,8 @@ public:
 	void reset();
 	void render(SDL_Renderer* t_renderer);
 	void initialise(SDL_Renderer* t_renderer, Controller& t_controller);
+	void setIsActive(bool t_isActive);
+	bool getIsActive();
 private:
 	void attemptToConnect(std::string t_ip, int t_port = Utilities::OnlineData::PORT_NUM);
 	void setControllerButtonMaps();

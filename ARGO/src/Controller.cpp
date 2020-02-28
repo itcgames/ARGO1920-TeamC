@@ -14,6 +14,7 @@ Controller::Controller(const Controller& t_otherController)
 	m_previous = t_otherController.m_previous;
 	m_controllerName = t_otherController.m_controllerName;
 	m_rumble = t_otherController.m_rumble;
+	m_playerControllerType = t_otherController.m_playerControllerType;
 }
 
 void Controller::operator=(const Controller& t_otherController)
@@ -24,6 +25,7 @@ void Controller::operator=(const Controller& t_otherController)
 	m_previous = t_otherController.m_previous;
 	m_controllerName = t_otherController.m_controllerName;
 	m_rumble = t_otherController.m_rumble;
+	m_playerControllerType = t_otherController.m_playerControllerType;
 }
 
 Controller::~Controller()
@@ -48,6 +50,7 @@ void Controller::initialiseController()
 			std::string name((SDL_GameControllerName(m_controller)));
 			m_controllerName = name;
 			m_rumble.init(m_controller);
+			m_playerControllerType = PlayerType::Local;
 			break;
 		}
 	}
@@ -250,6 +253,11 @@ float Controller::getRumbleTime()
 {
 	return m_rumble.getTime();
 }
+
+PlayerType Controller::getControllerPlayerType()
+{
+	return m_playerControllerType;
+} 
 
 /// <summary>
 /// Returns the name of the button that's type is passed to the function

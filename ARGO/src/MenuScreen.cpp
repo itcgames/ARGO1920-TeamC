@@ -22,8 +22,7 @@ void MenuScreen::update(float t_deltaTime)
 
 void MenuScreen::reset()
 {
-	m_screenActive = true;
-	m_currentButton = MenuButtonType::Play;
+ 	m_currentButton = MenuButtonType::Play;
 	for (Entity& menuButton : m_menuButtons)
 	{
 		updateButtonColour(menuButton, Utilities::MENU_BUTTON_DEFAULT_COLOUR);
@@ -71,7 +70,17 @@ void MenuScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 	m_eventManager.subscribeToEvent<Events::MenuButtonPressed>(std::bind(&MenuScreen::buttonPressed, this, std::placeholders::_1));
 
 
-} 
+}
+void MenuScreen::setIsActive(bool t_isActive)
+{
+	m_screenActive = t_isActive;
+}
+
+bool MenuScreen::getIsActive()
+{
+	return m_screenActive;
+}
+
 
 void MenuScreen::setControllerButtonMaps()
 {

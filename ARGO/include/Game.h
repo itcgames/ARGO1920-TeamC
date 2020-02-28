@@ -44,6 +44,7 @@ private:
 	void render();
 	void cleanup();
 	void killGameServer();
+	void handleScreenActive();
 
 	void closeWindow(const Events::CloseWindow& t_event = Events::CloseWindow());
 	void changeScreen(const Events::ChangeScreen& t_event);

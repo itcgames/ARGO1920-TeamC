@@ -128,3 +128,10 @@ enum class MoveDirection
 	Left,
 	Right
 };
+
+enum class PlayerType
+{
+	Local,
+	Online,
+	Ai
+};

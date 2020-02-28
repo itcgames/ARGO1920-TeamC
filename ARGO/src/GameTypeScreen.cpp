@@ -22,7 +22,6 @@ void GameTypeScreen::update(float t_deltaTime)
 
 void GameTypeScreen::reset()
 {
-	m_screenActive = true;
 	m_currentButton = MenuButtonsType::Offline;
 	for (Entity& gameTypeButton : m_gameTypeButtons)
 	{
@@ -30,7 +29,7 @@ void GameTypeScreen::reset()
 	}
 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
 	updateButtonColour(m_gameTypeButtons[static_cast<int>(m_currentButton)], Utilities::MENU_BUTTON_HIGHLIGHTED_COLOUR);
-}
+ }
 
 void GameTypeScreen::render(SDL_Renderer* t_renderer)
 {
@@ -85,6 +84,16 @@ void GameTypeScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controll
 
 	m_eventManager.subscribeToEvent<Events::MenuMoveBetweenUI>(std::bind(&GameTypeScreen::moveThroughUI, this, std::placeholders::_1));
 	m_eventManager.subscribeToEvent<Events::MenuButtonPressed>(std::bind(&GameTypeScreen::buttonPressed, this, std::placeholders::_1));
+}
+
+void GameTypeScreen::setIsActive(bool t_isActive)
+{
+	m_screenActive = t_isActive;
+}
+
+bool GameTypeScreen::getIsActive()
+{
+	return m_screenActive;
 }
 
 void GameTypeScreen::attemptToConnect(std::string t_ip, int t_port)
@@ -350,7 +359,7 @@ void GameTypeScreen::gameTypeChosen()
 	{
 	case MenuButtonsType::Offline:
 		m_screenActive = false;
-		m_eventManager.emitEvent(Events::ChangeScreen{ MenuStates::Game });
+		m_eventManager.emitEvent(Events::ChangeScreen{ MenuStates::JoinGame });
 		break;
 	case MenuButtonsType::OnlineHost:
 	{
@@ -384,6 +393,7 @@ void GameTypeScreen::gameTypeChosen()
 			Utilities::OnlineData::S_ONLINE_STATUS = Utilities::OnlineState::Host;
 			Utilities::OnlineData::S_IS_HOST = true;
 			attemptToConnect(m_hostsIp);
+			m_screenActive = false;
 			m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::JoinGame });
 		}
 		break;

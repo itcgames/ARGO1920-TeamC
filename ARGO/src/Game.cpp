@@ -19,7 +19,7 @@ Game::Game() :
 	m_achievementsScreen{ m_eventManager, m_controllers[0], m_renderer },
 	m_joinGameScreen{m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem, m_controllers},
 	m_gameTypeScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem, m_onlineHandler },
-	m_currentScreen{ MenuStates::MainMenu }
+	m_currentScreen{ MenuStates::Splash}
 {
 	try
 	{
@@ -208,6 +208,7 @@ void Game::processEvent()
 
 void Game::update(float t_dt)
 {
+	handleScreenActive();
 	switch (m_currentScreen)
 	{
 	case MenuStates::Game:
@@ -310,6 +311,58 @@ void Game::killGameServer()
 	system("taskkill /F /T /IM ScuffedArgoServer.exe");
 }
 
+void Game::handleScreenActive()
+{
+	if (m_currentScreen == MenuStates::MainMenu)
+	{
+		if (!m_mainMenuScreen.getIsActive())
+		{
+			m_mainMenuScreen.setIsActive(true);
+		}
+		if (m_joinGameScreen.getIsActive())
+		{
+			m_joinGameScreen.setIsActive(false);
+		}
+		if (m_gameTypeScreen.getIsActive())
+		{
+			m_gameTypeScreen.setIsActive(false);
+		}
+	}
+	else if (m_currentScreen == MenuStates::JoinGame)
+	{
+		if (m_mainMenuScreen.getIsActive())
+		{
+			m_mainMenuScreen.setIsActive(false);
+		}
+		if (!m_joinGameScreen.getIsActive())
+		{
+			m_joinGameScreen.setIsActive(true);
+
+		}
+		if (m_gameTypeScreen.getIsActive())
+		{
+			m_gameTypeScreen.setIsActive(false);
+
+		}
+	}
+	else if (m_currentScreen == MenuStates::GameType)
+	{
+		if (m_mainMenuScreen.getIsActive())
+		{
+			m_mainMenuScreen.setIsActive(false);
+		}
+		if (m_joinGameScreen.getIsActive())
+		{
+			m_joinGameScreen.setIsActive(false);
+
+		}
+		if (!m_gameTypeScreen.getIsActive())
+		{
+			m_gameTypeScreen.setIsActive(true);
+		}
+	} 
+}
+
 void Game::closeWindow(const Events::CloseWindow& t_event)
 {
 	m_isRunning = false;
@@ -364,7 +417,7 @@ void Game::initialiseScreen()
 	switch (m_currentScreen)
 	{
 	case MenuStates::Game:
-		m_gameScreen.initialise(m_renderer, m_controllerButtonMaps, m_controllers);
+		m_gameScreen.initialise(m_renderer, m_controllerButtonMaps, m_properControllers);
 		break;
 	case MenuStates::MainMenu:
 		m_mainMenuScreen.initialise(m_renderer, m_controllers[0]);

@@ -25,8 +25,7 @@ void JoinGameScreen::update(float t_deltaTime)
 
 void JoinGameScreen::reset()
 {
-	m_screenActive = true;
-	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
+ 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
 }
 
 void JoinGameScreen::render(SDL_Renderer* t_renderer)
@@ -42,12 +41,16 @@ void JoinGameScreen::render(SDL_Renderer* t_renderer)
 		{
 			for (int index2 = 0; index2 < S_NUMBER_OF_PLAYER_JOINED_ENTITIES_PARTS; index2++)
 			{
-				m_renderSystem.render(t_renderer, m_playerJoinedEntity[index][index2]);
+				if (index2 != static_cast<int>(PlayerJoinedParts::PlaceHolder))
+				{
+					m_renderSystem.render(t_renderer, m_playerJoinedEntity[index][index2]);
+				}
 			}
 		}
 		else
 		{
 			m_renderSystem.render(t_renderer, m_playerJoinedEntity[index][static_cast<int>(PlayerJoinedParts::Border)]);
+			m_renderSystem.render(t_renderer, m_playerJoinedEntity[index][static_cast<int>(PlayerJoinedParts::PlaceHolder)]);
 		}
 	}
 }
@@ -58,9 +61,10 @@ void JoinGameScreen::initialise(SDL_Renderer* t_renderer)
 	m_playersHaveJoined[0] = true;
 	for (int index = 1; index < Utilities::S_MAX_PLAYERS; index++)
 	{
-		m_playersHaveJoined[index] = true;
+		m_playersHaveJoined[index] = false;
 		m_joinedControllers[index] = Controller();
 	}
+	m_playersHaveJoined[0] = true;
 	m_joinedControllers[0] = m_controllers[0];
 	setControllerButtonMaps();
 	createBackground(t_renderer);
@@ -84,19 +88,28 @@ void JoinGameScreen::playerHasJoined()
 	}
 }
 
+void JoinGameScreen::setIsActive(bool t_isActive)
+{
+	m_screenActive = t_isActive;
+}
+
+bool JoinGameScreen::getIsActive()
+{
+	return m_screenActive;
+}
+
 void JoinGameScreen::setControllerButtonMaps()
 {
 	using ButtonCommandPair = std::pair < ButtonType, Command*>;
 	m_controllerButtonMaps[0] =
 	{
-		ButtonCommandPair(ButtonType::A, new MenuConfirmCommand()),
-		ButtonCommandPair(ButtonType::Start, new MenuConfirmCommand()),
+ 		ButtonCommandPair(ButtonType::Start, new MenuConfirmCommand()),
 		ButtonCommandPair(ButtonType::B, new MenuCancelCommand())
 	};
 	m_controllerButtonMaps[1] =
 	{
-		ButtonCommandPair(ButtonType::A, new PlayerTwoJoinCommand()) 
-	}; 
+		ButtonCommandPair(ButtonType::A, new PlayerTwoJoinCommand())
+ 	}; 
 	m_controllerButtonMaps[2] =
 	{
 		ButtonCommandPair(ButtonType::A, new PlayerThreeJoinCommand())
@@ -111,8 +124,7 @@ void JoinGameScreen::buttonPressed(const Events::MenuButtonPressed& t_event)
 {
 	if (m_screenActive)
 	{
-
-		if (ButtonType::A == t_event.buttonPressed || ButtonType::Start == t_event.buttonPressed)
+		if (ButtonType::Start == t_event.buttonPressed)
 		{
 			startGame();
 		}
@@ -143,9 +155,9 @@ void JoinGameScreen::createInputEntities()
 	{
 		m_inputEntities[index].addComponent(new CommandComponent());
 		m_inputEntities[index].addComponent(new InputComponent(m_controllers[index],
-			m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)],
-			m_controllerButtonMaps[static_cast<int>(ButtonState::Held)],
-			m_controllerButtonMaps[static_cast<int>(ButtonState::Released)]));
+			m_controllerButtonMaps[index],
+			ButtonCommandMap(),
+			ButtonCommandMap()));
 	}
 }
 
@@ -172,6 +184,19 @@ void JoinGameScreen::createPlayerJoinedEntities(SDL_Renderer* t_renderer)
 		glm::vec2 playerSize = glm::vec2(playerVisualComp->getWidth(), playerVisualComp->getHeight());
 
 		m_playerJoinedEntity[index][static_cast<int>(PlayerJoinedParts::Player)].addComponent(new TransformComponent(glm::vec2(borderPosition.x + borderSize.x / 2.0f - playerSize.x / 2.0f, borderPosition.y + borderSize.y / 2.0f - playerSize.y / 1.5f)));
+
+
+
+		m_playerJoinedEntity[index][static_cast<int>(PlayerJoinedParts::PlaceHolder)].addComponent(new VisualComponent("JoinGame_Placeholder.png", t_renderer));
+
+
+		m_playerJoinedEntity[index][static_cast<int>(PlayerJoinedParts::PlaceHolder)].addComponent(new TransformComponent(glm::vec2(borderPosition.x + borderSize.x / 2.0f - playerSize.x / 2.0f, borderPosition.y + borderSize.y / 2.0f - playerSize.y / 1.5f)));
+
+
+
+
+
+
 
 
 		TransformComponent* playerTransformComp = static_cast<TransformComponent*>(m_playerJoinedEntity[index][static_cast<int>(PlayerJoinedParts::Player)].getComponent(ComponentType::Transform));
@@ -235,6 +260,10 @@ void JoinGameScreen::playersJoin(const Events::JoinGame& t_event)
 	else if (t_event.index == 3)
 	{
 		m_joinedControllers[3] = m_controllers[3];
+	}
 
+	if (!m_playersHaveJoined[t_event.index])
+	{
+		m_playersHaveJoined[t_event.index] = true;
 	}
 }

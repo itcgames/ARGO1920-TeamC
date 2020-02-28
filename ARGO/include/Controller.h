@@ -84,6 +84,8 @@ public:
 	float getRumbleStrength();
 	float getRumbleTime();
 
+	PlayerType getControllerPlayerType();
+
 private: 
 	// dead zone used by thumb sticks
 	const int THUMB_STICK_THRESHOLD = 8000;
@@ -111,4 +113,6 @@ private:
 	std::string getButtonName(ButtonType t_ButtonType);
  
 	Rumble m_rumble;
+
+	PlayerType m_playerControllerType = PlayerType::Ai;
 };

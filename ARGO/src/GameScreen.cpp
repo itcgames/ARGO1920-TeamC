@@ -133,16 +133,20 @@ void GameScreen::createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_ren
 		Utilities::PARTICLE_DIRECTION_ANGLE_SAMPLE, Utilities::PARTICLE_OFFSET_ANGLE_SAMPLE, Utilities::PARTICLE_SPEED_SAMPLE,
 		Utilities::PARTICLE_MAX_PARTICLES_SAMPLE, Utilities::PARTICLES_PER_SECOND_SAMPLE));
 	t_player.addComponent(new FireRateComponent(Utilities::PLAYER_FIRE_DELAY));
-	if (m_controllers[t_index].getSDLController())
+	if (m_controllers[t_index].getControllerPlayerType() == PlayerType::Local)
 	{
 		t_player.addComponent(new InputComponent(m_controllers[t_index],
 			m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][t_index],
 			m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][t_index],
 			m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][t_index]));
 	}
-	else
+	else if (m_controllers[t_index].getControllerPlayerType() == PlayerType::Ai)
 	{
 		t_player.addComponent(new AiComponent(AITypes::ePlayerBot, AIStates::eWander, 0, 0));
+	}
+	else
+	{
+		// online player
 	}
 }
 

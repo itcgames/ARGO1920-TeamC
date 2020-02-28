@@ -30,15 +30,13 @@ void LicenseScreen::render(SDL_Renderer* t_renderer)
 
 void LicenseScreen::reset()
 {
-	m_screenActive = true;
-	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
+ 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
 	m_screenStartTime = SDL_GetTicks();
 }
 
 void LicenseScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 {
-	m_screenActive = true;
-	setControllerButtonMaps();
+ 	setControllerButtonMaps();
 
 	m_background.addComponent(new VisualComponent("License_Background.png", t_renderer));
 	m_background.addComponent(new TransformComponent(0, 0));
