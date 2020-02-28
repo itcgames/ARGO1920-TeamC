@@ -4,7 +4,7 @@
 #include "GameScreen.h"
 #include "MenuScreen.h"
 #include "CreditsScreen.h"
-#include "OptionsScreen.h"
+#include "HelpScreen.h"
 #include "SplashScreen.h"
 #include "LicenseScreen.h"
 #include "AchievementScreen.h" 
@@ -70,7 +70,7 @@ private:
 	MenuStates m_currentScreen;
 	GameScreen m_gameScreen; 
 	MenuScreen m_mainMenuScreen;
-	OptionsScreen m_optionsScreen;
+	HelpScreen m_helpScreen;
 	CreditsScreen m_creditsScreen;
 	LicenseScreen m_licenseScreen;
 	SplashScreen m_splashScreen;

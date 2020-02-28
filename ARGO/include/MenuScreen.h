@@ -12,7 +12,7 @@
 enum class MenuButtonType
 {
 	Play,
-	Options,
+	Help,
 	Credits,
 	Achievements,
 	Quit

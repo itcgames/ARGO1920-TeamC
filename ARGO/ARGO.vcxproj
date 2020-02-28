@@ -27,6 +27,7 @@
     <ClCompile Include="src\FSMComponent.cpp" />
     <ClCompile Include="src\GoToLicenseScreenCommand.cpp" />
     <ClCompile Include="src\GoToMainMenuCommand.cpp" />
+    <ClCompile Include="src\HelpScreen.cpp" />
     <ClCompile Include="src\MenuCancelCommand.cpp" />
     <ClCompile Include="src\MenuConfirmCommand.cpp" />
     <ClCompile Include="src\HUDComponent.cpp" />
@@ -61,7 +62,6 @@
     <ClCompile Include="src\GameScreen.cpp" />
     <ClCompile Include="src\LicenseScreen.cpp" />
     <ClCompile Include="src\MenuScreen.cpp" />
-    <ClCompile Include="src\OptionsScreen.cpp" />
     <ClCompile Include="src\LevelManager.cpp" />
     <ClCompile Include="src\ProjectileManager.cpp" />
     <ClCompile Include="src\QuadTree.cpp" />
@@ -122,6 +122,7 @@
     <ClInclude Include="include\FSMComponent.h" />
     <ClInclude Include="include\GoToLicenseScreenCommand.h" />
     <ClInclude Include="include\GoToMainMenuCommand.h" />
+    <ClInclude Include="include\HelpScreen.h" />
     <ClInclude Include="include\MenuCancelCommand.h" />
     <ClInclude Include="include\MenuConfirmCommand.h" />
     <ClInclude Include="include\HealthComponent.h" />
@@ -158,7 +159,6 @@
     <ClInclude Include="include\GameScreen.h" />
     <ClInclude Include="include\LicenseScreen.h" />
     <ClInclude Include="include\MenuScreen.h" />
-    <ClInclude Include="include\OptionsScreen.h" />
     <ClInclude Include="include\LevelManager.h" />
     <ClInclude Include="include\ProjectileManager.h" />
     <ClInclude Include="include\QuadTree.h" />

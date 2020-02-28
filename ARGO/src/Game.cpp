@@ -10,14 +10,14 @@ int Utilities::Achievements::numberOfUnlockedAchv = 0;
 class State;
 Game::Game() :
 	m_gameScreen{ m_renderer, m_eventManager, m_controllers, m_commandSystem, m_inputSystem, m_renderSystem },
-	m_optionsScreen{ m_eventManager, m_controllers[0], m_renderer },
+	m_helpScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_creditsScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_licenseScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_splashScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_mainMenuScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_achievementsScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem }, 
 #ifdef _DEBUG
-	m_currentScreen{ MenuStates::Game }
+	m_currentScreen{ MenuStates::Splash }
 #else
 	m_currentScreen{ MenuStates::Splash }
 #endif // _DEBUG
@@ -236,8 +236,8 @@ void Game::update(float t_dt)
 	case MenuStates::Credits:
 		m_creditsScreen.update(t_dt);
 		break;
-	case MenuStates::Options:
-		m_optionsScreen.update(t_dt);
+	case MenuStates::Help:
+		m_helpScreen.update(t_dt);
 		break;
 	case MenuStates::License:
 		m_licenseScreen.update(t_dt);
@@ -267,8 +267,8 @@ void Game::render()
 	case MenuStates::Credits:
 		m_creditsScreen.render(m_renderer);
 		break;
-	case MenuStates::Options:
-		m_optionsScreen.render(m_renderer);
+	case MenuStates::Help:
+		m_helpScreen.render(m_renderer);
 		break;
 	case MenuStates::License:
 		m_licenseScreen.render(m_renderer);
@@ -365,8 +365,8 @@ void Game::initialiseScreen()
 	case MenuStates::Credits:
 		m_creditsScreen.initialise(m_renderer, m_controllers[0]);
 		break;
-	case MenuStates::Options:
-		m_optionsScreen.initialise();
+	case MenuStates::Help:
+		m_helpScreen.initialise(m_renderer, m_controllers[0]);
 		break;
 	case MenuStates::License:
 		m_licenseScreen.initialise(m_renderer, m_controllers[0]);
@@ -394,8 +394,8 @@ void Game::resetScreen()
 	case MenuStates::Credits:
 		m_creditsScreen.reset();
 		break;
-	case MenuStates::Options:
-		m_optionsScreen.reset();
+	case MenuStates::Help:
+		m_helpScreen.reset();
 		break;
 	case MenuStates::License:
 		m_licenseScreen.reset();

@@ -129,7 +129,7 @@ enum class MenuStates
 	Game,
 	MainMenu,
 	Credits,
-	Options,
+	Help,
 	License,
 	Splash,
 	Achievements

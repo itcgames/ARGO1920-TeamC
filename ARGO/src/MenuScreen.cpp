@@ -50,7 +50,7 @@ void MenuScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 	m_background.addComponent(new TransformComponent(0, 0));
 
 	m_menuButtons[static_cast<int>(MenuButtonType::Play)].addComponent(new VisualComponent("Play_Button.png", t_renderer));
-	m_menuButtons[static_cast<int>(MenuButtonType::Options)].addComponent(new VisualComponent("Options_Button.png", t_renderer));
+	m_menuButtons[static_cast<int>(MenuButtonType::Help)].addComponent(new VisualComponent("Help_Button.png", t_renderer));
 	m_menuButtons[static_cast<int>(MenuButtonType::Credits)].addComponent(new VisualComponent("Credits_Button.png", t_renderer));
 	m_menuButtons[static_cast<int>(MenuButtonType::Quit)].addComponent(new VisualComponent("Quit_Button.png", t_renderer));
 	m_menuButtons[static_cast<int>(MenuButtonType::Achievements)].addComponent(new VisualComponent("Achievements_Button.png", t_renderer));
@@ -138,8 +138,8 @@ void MenuScreen::buttonPressed(const MenuButtonPressed& t_event)
 		case MenuButtonType::Play:
 			newScreen = MenuStates::Game;
 			break;
-		case MenuButtonType::Options:
-			newScreen = MenuStates::Options;
+		case MenuButtonType::Help:
+			newScreen = MenuStates::Help;
 			break;
 		case MenuButtonType::Credits:
 			newScreen = MenuStates::Credits;
