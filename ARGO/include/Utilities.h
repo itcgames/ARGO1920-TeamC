@@ -61,6 +61,7 @@ namespace Utilities
 	const int NUMBER_OF_CONTROLLER_BUTTONS = 24;
  	const int NUMBER_OF_CONTROLLER_MAPS = 3;
 
+	static const int PICKUP_POOL_SIZE = 20;
 
 	//consts for audio
 	const int AUDIO_ALL_CHANNELS = -1;

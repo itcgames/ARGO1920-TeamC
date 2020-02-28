@@ -15,7 +15,7 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_renderer{ t_renderer },
 	m_transformSystem{ m_eventManager },
 	m_projectileManager{ t_renderer, m_eventManager, m_renderSystem.getFocus(), m_transformSystem, m_collisionSystem },
-	m_aiSystem{ m_players, m_enemyManager.getEnemies(), m_eventManager, m_levelManager },
+	m_aiSystem{ m_players, m_enemyManager.getEnemies(), m_pickUpManager.getPickups(), m_goal, m_eventManager, m_levelManager },
 	m_collisionSystem{ m_eventManager },
 	m_weaponSystem{ m_projectileManager, m_eventManager },
 	m_playerFactory(),

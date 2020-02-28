@@ -1,17 +1,26 @@
 #include "stdafx.h"
 #include "AiSystem.h"
 
-AiSystem::AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], Entity(&t_enemies)[Utilities::ENEMY_POOL_SIZE], EventManager& t_eventManager, LevelManager& t_levelManager) :
+AiSystem::AiSystem(Entity(&t_players)[Utilities::S_MAX_PLAYERS], Entity(&t_enemies)[Utilities::ENEMY_POOL_SIZE], Entity(&t_pickups)[Utilities::PICKUP_POOL_SIZE], Entity& t_goal, EventManager& t_eventManager, LevelManager& t_levelManager) :
 	m_players(t_players),
 	m_enemies(t_enemies),
+	m_pickups(t_pickups),
+	m_goal(t_goal),
 	m_eventManager(t_eventManager),
-	m_levelmanager(t_levelManager)
+	m_levelmanager(t_levelManager),
+	m_currentWaypoint(glm::linearRand(0,4))
 {
-	m_behaviourTree.addChild(new RetreatBehaviour(&m_botEnemyData));
-	m_behaviourTree.addChild(new HoldBehaviour(&m_botEnemyData));
-	m_behaviourTree.addChild(new GetAmmoBehaviour(&m_botPickupData));
-	m_behaviourTree.addChild(new MoveToGoalBehaviour(&m_botGoalData));
-	m_behaviourTree.addChild(new MoveToLeaderBehaviour(&m_botLeaderData));
+	m_behaviourTree.addChild(new RetreatBehaviour(&m_botEnemyData, m_levelmanager));
+	m_behaviourTree.addChild(new HoldBehaviour(&m_botEnemyData, m_levelmanager));
+	m_behaviourTree.addChild(new GetAmmoBehaviour(&m_botPickupData, m_levelmanager));
+	m_behaviourTree.addChild(new GetHealthBehaviour(&m_botHealthPickupData, m_levelmanager));
+	m_behaviourTree.addChild(new MoveToGoalBehaviour(&m_botGoalData, m_levelmanager));
+	m_behaviourTree.addChild(new MoveToLeaderBehaviour(&m_botLeaderData, m_levelmanager));
+
+	m_waypoints[1].destination = glm::vec2(Utilities::TILE_SIZE * 55, Utilities::TILE_SIZE * 3);
+	m_waypoints[2].destination = glm::vec2(Utilities::TILE_SIZE * 3, Utilities::TILE_SIZE * 37);
+	m_waypoints[3].destination = glm::vec2(Utilities::TILE_SIZE * 20, Utilities::TILE_SIZE * 37);
+	m_waypoints[4].destination = glm::vec2(Utilities::TILE_SIZE * 20, Utilities::TILE_SIZE * 20);
 }
 
 AiSystem::~AiSystem()
@@ -25,6 +34,7 @@ void AiSystem::update(Entity& t_entity)
 	AiComponent* aiComp = static_cast<AiComponent*>(t_entity.getComponent(ComponentType::Ai));
 	ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
 
+	m_waypoints[0].destination = static_cast<TransformComponent*>(m_goal.getComponent(ComponentType::Transform))->getPos();
 	//make sure that entity is not missing crucial components
 	if (posComp && aiComp && forceComp)
 	{
@@ -127,7 +137,11 @@ void AiSystem::playerMovementDecision(Entity& t_entity)
 {
 	//set up data
 	glm::vec2 botPos = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform))->getPos();
+	setLeader();
+	setCurrentWaypoint();
 	m_botEnemyData.nearbyEnemies = 0;
+	m_botPickupData.entity = nullptr;
+	m_botHealthPickupData.entity = nullptr;
 	setEnemyData(botPos);
 	setClosestLeaderData(botPos);
 	setClosestPickupData(botPos);
@@ -140,11 +154,13 @@ void AiSystem::playerShootingDecision(Entity& t_entity)
 {
 	if (m_botEnemyData.distance < CAN_SEE_ENEMY_DISTANCE * CAN_SEE_ENEMY_DISTANCE)
 	{
-		glm::vec2 playerPos = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform))->getPos();
+		TransformComponent* playerTransform = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
 		glm::vec2 enemyPos = static_cast<TransformComponent*>(m_botEnemyData.enemy->getComponent(ComponentType::Transform))->getPos();
 		Weapon weapon = static_cast<WeaponComponent*>(t_entity.getComponent(ComponentType::Weapon))->getCurrent();
 		Controller temp;
-		m_eventManager.emitEvent(CreateBulletEvent{ t_entity, glm::normalize(enemyPos - playerPos) , 32, weapon , temp });
+		glm::vec2 fireDirection = glm::normalize(enemyPos - playerTransform->getPos());
+		playerTransform->setRotation(glm::degrees(atan2(fireDirection.y, fireDirection.x)));
+		m_eventManager.emitEvent(CreateBulletEvent{ t_entity, fireDirection , 32, weapon , temp });
 	}
 }
 void AiSystem::setEnemyData(glm::vec2 t_botPosition)
@@ -195,11 +211,106 @@ void AiSystem::setClosestLeaderData(glm::vec2 t_botPosition)
 
 void AiSystem::setClosestPickupData(glm::vec2 t_botPosition)
 {
+	m_botHealthPickupData.distance = CAN_SEE_ENEMY_DISTANCE * CAN_SEE_ENEMY_DISTANCE;
+	m_botPickupData.distance = CAN_SEE_ENEMY_DISTANCE * CAN_SEE_ENEMY_DISTANCE;
+	for (auto& pickup : m_pickups)
+	{
+		if (pickup.getComponent(ComponentType::ColliderCircle))
+		{
+			TransformComponent* transComp = static_cast<TransformComponent*>(pickup.getComponent(ComponentType::Transform));
+			HealthComponent* healthComp = static_cast<HealthComponent*>(pickup.getComponent(ComponentType::Health));
+			PickUpComponent* pickupComp = static_cast<PickUpComponent*>(pickup.getComponent(ComponentType::PickUp));
+			if (transComp && healthComp && pickupComp && healthComp->isAlive())
+			{
+				float newDistance = glm::distance2(t_botPosition, transComp->getPos());
+				switch (pickupComp->getPickupType())
+				{
+				case PickupType::Health:
+					if (true)
+					{
+						if (newDistance < m_botHealthPickupData.distance)
+						{
+							m_botHealthPickupData.distance = newDistance;
+							m_botHealthPickupData.entity = &pickup;
+						}
+					}
+					break;
+				case PickupType::MachineGun:
+				case PickupType::Grenade:
+					if (newDistance < m_botPickupData.distance)
+					{
+						m_botPickupData.distance = newDistance;
+						m_botPickupData.entity = &pickup;
+					}
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
 }
 
 void AiSystem::setGoalData(glm::vec2 t_botPosition)
 {
-	m_botGoalData.entity = &m_players[0];
+	m_botGoalData.destination = m_waypoints[m_currentWaypoint].destination;
+}
+
+void AiSystem::setLeader()
+{
+	bool playerFound = false;
+	for (auto& player : m_players)
+	{
+		if (!static_cast<AiComponent*>(player.getComponent(ComponentType::Ai)))
+		{
+			playerFound = true;
+		}
+	}
+
+	if (!playerFound)
+	{
+		for (auto& player : m_players)
+		{
+			AiComponent* aiComp = static_cast<AiComponent*>(player.getComponent(ComponentType::Ai));
+			HealthComponent* hpComp = static_cast<HealthComponent*>(player.getComponent(ComponentType::Health));
+			if (hpComp->isAlive())
+			{
+				aiComp->setIsLeaser(true);
+				break;
+			}
+		}
+	}
+}
+
+void AiSystem::setCurrentWaypoint()
+{
+	glm::vec2 leaderPos;
+	for (auto& player : m_players)
+	{
+		AiComponent* aiComp = static_cast<AiComponent*>(player.getComponent(ComponentType::Ai));
+		HealthComponent* hpComp = static_cast<HealthComponent*>(player.getComponent(ComponentType::Health));
+		TransformComponent* transformComp = static_cast<TransformComponent*>(player.getComponent(ComponentType::Transform));
+		if (aiComp && hpComp->isAlive() && aiComp->getIsleader())
+		{
+			leaderPos = transformComp->getPos();
+		}
+	}
+
+	//if the leader is close enough to its waypoint it decides to get a new waypoint.
+	if (glm::distance2(leaderPos, m_waypoints[m_currentWaypoint].destination) < Utilities::TILE_SIZE * Utilities::TILE_SIZE)
+	{
+		bool success = false;
+
+		while (!success)
+		{
+			int newWayPoint = glm::linearRand(0, 4);
+			if (newWayPoint != m_currentWaypoint)
+			{
+				m_currentWaypoint = newWayPoint;
+				success = true;
+			}
+		}
+	}
 }
 
 void AiSystem::wander(TransformComponent* t_posComp, AiComponent* t_aiComponent, ForceComponent* t_forceComponent)

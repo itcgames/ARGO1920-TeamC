@@ -6,7 +6,8 @@ AiComponent::AiComponent(AITypes t_types, AIStates t_states, float t_maxRot, flo
 	m_maxRotation(t_maxRot),
 	m_maxSpeed(t_maxSpeed),
 	m_type(t_types),
-	m_state(t_states)
+	m_state(t_states),
+	m_isLeader(false)
 {
 }
 
@@ -56,4 +57,14 @@ void AiComponent::setMaxSpeed(float t_maxSpeed)
 float AiComponent::getMaxSpeed()
 {
 	return m_maxSpeed;
+}
+
+bool AiComponent::getIsleader()
+{
+	return m_isLeader;
+}
+
+void AiComponent::setIsLeaser(bool t_value)
+{
+	m_isLeader = t_value;
 }
