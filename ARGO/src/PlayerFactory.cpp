@@ -47,6 +47,7 @@ void PlayerFactory::createPlayer(Entity& t_entity, bool t_isPlayer, Controller& 
 	t_entity.addComponent(new TagComponent(Tag::Player));
 	t_entity.addComponent(new FireRateComponent(Utilities::PLAYER_FIRE_DELAY));
 	t_entity.addComponent(new WeaponComponent());
+	t_entity.addComponent(new FSMComponent());
 
 	if (t_isPlayer)
 	{

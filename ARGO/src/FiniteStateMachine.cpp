@@ -2,9 +2,9 @@
 #include "FiniteStateMachine.h"
 #include "Idle.h"
 
-FiniteStateMachine::FiniteStateMachine()
+FiniteStateMachine::FiniteStateMachine() :
+	m_current(new Idle())
 {
-	m_current = new Idle();
 }
 
 FiniteStateMachine::~FiniteStateMachine()
@@ -34,6 +34,15 @@ State* FiniteStateMachine::getPrevious()
 void FiniteStateMachine::update(float t_dt)
 {
 	m_current->update(t_dt);
+
+	if (m_moved)
+	{
+		moving();
+	}
+	else
+	{
+		idle();
+	}
 }
 
 void FiniteStateMachine::idle()

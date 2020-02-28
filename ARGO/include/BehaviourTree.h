@@ -116,6 +116,7 @@ public:
 
 		if (forceComp)
 		{
+			static_cast<FSMComponent*>(t_entity.getComponent(ComponentType::FSM))->getFSM().setMoved(true);
 			move(forceComp, transformComp, glm::normalize(transformComp->getPos() - enemyPos));
 			return true;
 		}
@@ -157,6 +158,7 @@ public:
 		TransformComponent* transComp = static_cast<TransformComponent*>(m_data->entity->getComponent(ComponentType::Transform));
 		if (forceComp && transComp->getPos() != transformComp->getPos())
 		{
+			static_cast<FSMComponent*>(t_entity.getComponent(ComponentType::FSM))->getFSM().setMoved(true);
 			path(forceComp, transformComp, transComp->getPos(), m_levelManager);
 			return true;
 		}
@@ -189,6 +191,7 @@ public:
 		TransformComponent* transComp = static_cast<TransformComponent*>(m_data->entity->getComponent(ComponentType::Transform));
 		if (forceComp && transComp->getPos() != transformComp->getPos())
 		{
+			static_cast<FSMComponent*>(t_entity.getComponent(ComponentType::FSM))->getFSM().setMoved(true);
 			path(forceComp, transformComp, transComp->getPos(), m_levelManager);
 			return true;
 		}
@@ -220,6 +223,7 @@ public:
 		ForceComponent* forceComp = static_cast<ForceComponent*>(t_entity.getComponent(ComponentType::Force));
 		if (forceComp && m_data->destination != transformComp->getPos())
 		{
+			static_cast<FSMComponent*>(t_entity.getComponent(ComponentType::FSM))->getFSM().setMoved(true);
 			path(forceComp, transformComp, m_data->destination, m_levelManager);
 			return true;
 		}
@@ -251,6 +255,7 @@ public:
 		TransformComponent* goalTransComp = static_cast<TransformComponent*>(m_data->entity->getComponent(ComponentType::Transform));
 		if (forceComp && goalTransComp->getPos() != transformComp->getPos())
 		{
+			static_cast<FSMComponent*>(t_entity.getComponent(ComponentType::FSM))->getFSM().setMoved(true);
 			path(forceComp, transformComp, goalTransComp->getPos(), m_levelManager);
 			return true;
 		}

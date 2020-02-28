@@ -19,7 +19,4 @@ void Attacking::moving(FiniteStateMachine* a)
 
 void Attacking::attacking(FiniteStateMachine* a)
 {
-	std::cout << "Attacking -> Attacking" << std::endl;
-	a->setCurrent(new Attacking());
-	delete this;
 }

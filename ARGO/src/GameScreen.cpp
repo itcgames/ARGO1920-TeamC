@@ -94,7 +94,6 @@ void GameScreen::processEvents(SDL_Event* t_event)
 	}
 }
 
-
 void GameScreen::render(SDL_Renderer* t_renderer)
 {
 	preRender();
@@ -115,7 +114,6 @@ void GameScreen::render(SDL_Renderer* t_renderer)
 	m_hudManager.render(t_renderer, &m_renderSystem);
 
 }
-
 
 void GameScreen::createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_renderer)
 {
@@ -175,13 +173,14 @@ void GameScreen::setUpLevel()
 	m_levelManager.createRoom(glm::vec2(41, 31), 7, 3);
 }
 
-
 void GameScreen::updatePlayers(float t_deltaTime)
 {
+
 	for (Entity& player : m_players)
 	{
 		if (static_cast<HealthComponent*>(player.getComponent(ComponentType::Health))->isAlive())
 		{
+			static_cast<FSMComponent*>(player.getComponent(ComponentType::FSM))->getFSM().setMoved(false);
 			m_inputSystem.update(player);
 			m_commandSystem.update(player, m_eventManager);
 			m_aiSystem.update(player);
@@ -190,6 +189,7 @@ void GameScreen::updatePlayers(float t_deltaTime)
 			m_collisionSystem.update(player);
 			m_particleSystem.update(player, t_deltaTime);
 			m_weaponSystem.update(player, t_deltaTime);
+			static_cast<FSMComponent*>(player.getComponent(ComponentType::FSM))->getFSM().update(t_deltaTime);
 		}
 	}
 }
@@ -261,6 +261,7 @@ void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utiliti
 	m_projectileManager.reset();
 	m_enemyManager.killAll();
 	m_hudManager.reset();
+	m_pickUpManager.reset();
 }
 
 void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS], bool t_isOnline)
