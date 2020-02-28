@@ -16,7 +16,7 @@ void PickUpManager::init(SDL_Renderer* t_renderer)
 {
 	m_renderer = t_renderer;
 	PickUpFactory* factory = new PickUpFactory(m_renderer);
-	for (int i = 0; i < PICKUP_POOL_SIZE; i++)
+	for (int i = 0; i < Utilities::PICKUP_POOL_SIZE; i++)
 	{
 		factory->createDrop(2, m_pickUps[i]);
 		TransformComponent* transformComp = static_cast<TransformComponent*>(m_pickUps[i].getComponent(ComponentType::Transform));
@@ -93,7 +93,7 @@ void PickUpManager::update(float t_dt)
 void PickUpManager::nextAvailablePickup()
 {
 
-	if (m_currentPickup < PICKUP_POOL_SIZE - 1 && m_currentPickup != -1)
+	if (m_currentPickup < Utilities::PICKUP_POOL_SIZE - 1 && m_currentPickup != -1)
 	{
 		HealthComponent* healthComp = static_cast<HealthComponent*>(m_pickUps[m_currentPickup + 1].getComponent(ComponentType::Health));
 		if (!healthComp->isAlive())
@@ -102,7 +102,7 @@ void PickUpManager::nextAvailablePickup()
 		}
 		else {
 			bool availableEntity = false;
-			for (int i = 0; i < PICKUP_POOL_SIZE; i++)
+			for (int i = 0; i < Utilities::PICKUP_POOL_SIZE; i++)
 			{
 				healthComp = static_cast<HealthComponent*>(m_pickUps[i].getComponent(ComponentType::Health));
 				if (!healthComp->isAlive())
@@ -119,7 +119,7 @@ void PickUpManager::nextAvailablePickup()
 	}
 
 	else {
-		for (int i = 0; i < PICKUP_POOL_SIZE; i++)
+		for (int i = 0; i < Utilities::PICKUP_POOL_SIZE; i++)
 		{
 			HealthComponent* healthComp = static_cast<HealthComponent*>(m_pickUps[i].getComponent(ComponentType::Health));
 			if (!healthComp->isAlive())
@@ -143,4 +143,9 @@ void PickUpManager::render(SDL_Renderer* t_renderer, RenderSystem* t_system)
 			t_system->render(t_renderer, pickUp);
 		}
 	}
+}
+
+Entity(&PickUpManager::getPickups())[Utilities::PICKUP_POOL_SIZE]
+{
+	return m_pickUps;
 }

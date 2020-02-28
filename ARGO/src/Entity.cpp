@@ -228,6 +228,15 @@ void Entity::addComponent(Component* t_c)
 			}
 			break;
 		}
+		case ComponentType::Pathing:
+		{
+			if (!m_components.at(COMPONENT_ID::PATHING_ID))
+			{
+				m_components.at(COMPONENT_ID::PATHING_ID) = t_c;
+				return;
+			}
+			break;
+		}
 		default:
 			throw std::invalid_argument("Invalid component type!");
 			break;
@@ -472,6 +481,16 @@ void Entity::removeCompType(ComponentType t_type)
 			}
 			break;
 		}
+		case ComponentType::Pathing:
+		{
+			if (m_components.at(COMPONENT_ID::PATHING_ID))
+			{
+				delete m_components.at(COMPONENT_ID::PATHING_ID);
+				m_components.at(COMPONENT_ID::PATHING_ID) = nullptr;
+				return;
+			}
+			break;
+		}
 		default:
 			throw std::invalid_argument("trying to delete an unknown component!");
 			break;
@@ -551,6 +570,8 @@ Component* Entity::getComponent(ComponentType t_type) const
 			return m_components.at(COMPONENT_ID::LIGHT_FIELD_ID);
 		case ComponentType::Weapon:
 			return m_components.at(COMPONENT_ID::WEAPON_ID);
+		case ComponentType::Pathing:
+			return m_components.at(COMPONENT_ID::PATHING_ID);
 		default:
 			throw std::invalid_argument("trying to get an unknown component!");
 			break;

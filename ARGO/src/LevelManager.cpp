@@ -83,6 +83,7 @@ void LevelManager::setToWall(Entity& t_entity)
 {
 	t_entity.removeCompType(ComponentType::Visual);
 	t_entity.removeCompType(ComponentType::ColliderAABB);
+	t_entity.removeCompType(ComponentType::Pathing);
 
 	t_entity.addComponent(new VisualComponent("wall_4.png", m_renderer));
 	t_entity.addComponent(new ColliderAABBComponent(glm::vec2(Utilities::TILE_SIZE, Utilities::TILE_SIZE)));
@@ -95,6 +96,7 @@ void LevelManager::setToFloor(Entity& t_entity)
 	t_entity.removeCompType(ComponentType::ColliderAABB);
 
 	t_entity.addComponent(new VisualComponent("floor_1b.png", m_renderer));
+	m_levelTiles.back().addComponent(new PathingComponent());
 }
 
 void LevelManager::createRoom(glm::vec2 t_startPosition, int t_width, int t_height)
@@ -341,5 +343,17 @@ Entity* LevelManager::findAtPosition(glm::vec2 t_position)
 		return &m_levelTiles[(y * Utilities::LEVEL_TILE_WIDTH) + x];
 	}
 	return nullptr;
+}
+
+void LevelManager::resetPathing()
+{
+	for (auto& tile : m_levelTiles)
+	{
+		PathingComponent* comp = static_cast<PathingComponent*>(tile.getComponent(ComponentType::Pathing));
+		if (comp)
+		{
+			comp->reset();
+		}
+	}
 }
 

@@ -23,6 +23,7 @@ enum class ComponentType
 	HUD = 19,
 	LightField = 20,
 	Weapon = 21,
+	Pathing = 22,
 	Count
 };
 
@@ -51,4 +52,5 @@ namespace COMPONENT_ID
 	const int HUD_ID = static_cast<int>(ComponentType::HUD);
 	const int LIGHT_FIELD_ID = static_cast<int>(ComponentType::LightField);
 	const int WEAPON_ID = static_cast<int>(ComponentType::Weapon);
+	const int PATHING_ID = static_cast<int>(ComponentType::Pathing);
 }

@@ -19,9 +19,9 @@ public:
 	void update(float t_dt);
 	void nextAvailablePickup();
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
+	Entity(&getPickups())[Utilities::PICKUP_POOL_SIZE];
 private:
-	static const int PICKUP_POOL_SIZE = 20;
-	Entity m_pickUps[PICKUP_POOL_SIZE];
+	Entity m_pickUps[Utilities::PICKUP_POOL_SIZE];
 	SDL_Renderer* m_renderer;
 	int m_currentPickup{ 0 };
 	CollisionSystem& m_collisionSystem;

@@ -7,6 +7,7 @@
 #include "HealthComponent.h"
 #include "FlowFieldComponent.h"
 #include "lightFieldComponent.h"
+#include "PathingComponent.h"
 #include "BaseSystem.h"
 #include "RenderSystem.h"
 #include "ProjectileManager.h"
@@ -24,6 +25,8 @@ public:
 	void setToFloor(Entity& t_entity);
 	void createRoom(glm::vec2 t_startPosition, int t_width, int t_height);
 	Entity* findAtPosition(glm::vec2 t_position);
+	void resetPathing();
+
 private:
 	void setTileNeighbours();
 	void resetFields();
