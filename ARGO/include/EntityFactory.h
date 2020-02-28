@@ -17,6 +17,7 @@
 #include "Controller.h"
 #include "FireRateComponent.h"
 #include "WeaponComponent.h"
+#include "FSMComponent.h"
 #include <SDL_image.h>
 
 class EntityFactory

@@ -5,8 +5,8 @@ class Attacking : public State
 {
 public:
 	virtual void update(float t_dt) {}
-	virtual void getTexture() {}
-	virtual void getFrame() {}
+	virtual SDL_Texture* getTexture() { return nullptr; }
+	virtual SDL_Rect* getFrame() { return nullptr; }
 
 	void idle(FiniteStateMachine* a);
 	void moving(FiniteStateMachine* a);

@@ -130,6 +130,13 @@ void PickUpManager::nextAvailablePickup()
 	}
 
 }
+void PickUpManager::reset()
+{
+	for (auto& pickUp : m_pickUps)
+	{
+		static_cast<HealthComponent*>(pickUp.getComponent(ComponentType::Health))->setHealth(0);
+	}
+}
 ///<summary>
 /// If a Pickup is alive then it renders it.
 ///</summary>

@@ -1,5 +1,6 @@
 #pragma once
 #include "FiniteStateMachine.h"
+#include "AssetManager.h"
 
 struct stateData
 {
@@ -14,8 +15,8 @@ class State
 {
 public:
 	virtual void update(float t_dt) {}
-	virtual void getTexture() {}
-	virtual void getFrame() {}
+	virtual SDL_Texture* getTexture() { return nullptr; }
+	virtual SDL_Rect* getFrame() { return nullptr; }
 
 	virtual void idle(FiniteStateMachine* a)
 	{

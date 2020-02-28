@@ -5,9 +5,6 @@
 
 void Idle::idle(FiniteStateMachine* a)
 {
-	std::cout << "Idle -> Idle" << std::endl;
-	a->setCurrent(new Idle());
-	delete this;
 }
 
 void Idle::moving(FiniteStateMachine* a)

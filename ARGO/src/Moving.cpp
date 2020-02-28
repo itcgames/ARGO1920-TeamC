@@ -12,9 +12,6 @@ void Moving::idle(FiniteStateMachine* a)
 
 void Moving::moving(FiniteStateMachine* a)
 {
-	std::cout << "Moving -> Moving" << std::endl;
-	a->setCurrent(new Moving());
-	delete this;
 }
 
 void Moving::attacking(FiniteStateMachine* a)
