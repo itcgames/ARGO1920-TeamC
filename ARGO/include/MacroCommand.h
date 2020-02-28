@@ -18,6 +18,7 @@
 #include "GoToLicenseScreenCommand.h"
 #include "GoToMainMenuCommand.h"
 #include "ThrowGlowstickCommand.h"
+#include "GoToGameScreenCommand.h"
  
 class MacroCommand
 {
