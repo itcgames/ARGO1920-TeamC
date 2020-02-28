@@ -17,7 +17,6 @@ public:
 	void initialise(SDL_Renderer* t_renderer, Controller& t_controller);
  private:
 	void setControllerButtonMaps();
-	void returnToMainMenu(const Events::MenuButtonPressed& t_event);
 
 	Entity m_inputEntity;
 	Entity m_background;

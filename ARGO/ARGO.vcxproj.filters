@@ -324,6 +324,18 @@
     <ClCompile Include="src\OnlineGameHandler.cpp">
       <Filter>Client Files\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\PlayerTwoJoinCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerFourJoinCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerOneJoinCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerThreeJoinCommand.cpp">
+      <Filter>Source Files\CommandPattern\Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -583,6 +595,18 @@
     </ClInclude>
     <ClInclude Include="include\OnlineGameHandler.h">
       <Filter>Client Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerFourJoinCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerTwoJoinCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerOneJoinCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerThreeJoinCommand.h">
+      <Filter>Header Files\CommandPattern\Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

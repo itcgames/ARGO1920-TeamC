@@ -11,13 +11,13 @@ bool Utilities::OnlineData::S_IS_HOST = false;
 class State;
 Game::Game() :
 	m_gameScreen{ m_renderer, m_eventManager, m_controllers, m_commandSystem, m_inputSystem, m_renderSystem },
-	m_optionsScreen{ m_eventManager, m_controllers[0], m_renderer },
+	m_optionsScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_creditsScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_licenseScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_splashScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_mainMenuScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_achievementsScreen{ m_eventManager, m_controllers[0], m_renderer },
-	m_joinGameScreen{m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem},
+	m_joinGameScreen{m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem, m_controllers},
 	m_gameTypeScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem, m_onlineHandler },
 	m_currentScreen{ MenuStates::MainMenu }
 {
@@ -63,6 +63,7 @@ Game::Game() :
 
 		m_eventManager.subscribeToEvent<Events::CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 		m_eventManager.subscribeToEvent<Events::ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
+		m_eventManager.subscribeToEvent<Events::SetControllers>(std::bind(&Game::setProperControllers, this, std::placeholders::_1));
 
 		setupIgnoredEvents();
 
@@ -349,6 +350,14 @@ void Game::changeScreen(const Events::ChangeScreen& t_event)
 	}
 }
 
+void Game::setProperControllers(const Events::SetControllers& t_event)
+{
+	for (int index = 0; index < 4; index++)
+	{
+		m_properControllers[index] = t_event.controllers[index];
+	}
+}
+
 void Game::initialiseScreen()
 {
 	createButtonMaps();
@@ -364,7 +373,7 @@ void Game::initialiseScreen()
 		m_creditsScreen.initialise(m_renderer, m_controllers[0]);
 		break;
 	case MenuStates::Options:
-		m_optionsScreen.initialise();
+		m_optionsScreen.initialise(m_renderer, m_controllers[0]);
 		break;
 	case MenuStates::License:
 		m_licenseScreen.initialise(m_renderer, m_controllers[0]);
@@ -379,7 +388,7 @@ void Game::initialiseScreen()
 		m_gameTypeScreen.initialise(m_renderer, m_controllers[0]);
 		break;
 	case MenuStates::JoinGame:
-		m_joinGameScreen.initialise(m_renderer, m_controllers[0]);
+		m_joinGameScreen.initialise(m_renderer);
 		break;
 	default:
 		break;

@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "JoinGameScreen.h"
 
-JoinGameScreen::JoinGameScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_inputSystem, RenderSystem& t_renderSystem) :
+JoinGameScreen::JoinGameScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_inputSystem, RenderSystem& t_renderSystem, Controller(&t_controllers)[Utilities::S_MAX_PLAYERS]) :
 	m_eventManager{ t_eventManager },
 	m_commandSystem{ t_commandSystem },
 	m_inputSystem{ t_inputSystem },
-	m_renderSystem{ t_renderSystem }
-{
+	m_renderSystem{ t_renderSystem },
+	m_controllers{t_controllers}
+{ 
 }
 
 JoinGameScreen::~JoinGameScreen()
@@ -15,8 +16,11 @@ JoinGameScreen::~JoinGameScreen()
 
 void JoinGameScreen::update(float t_deltaTime)
 {
-	m_inputSystem.update(m_inputEntity);
-	m_commandSystem.update(m_inputEntity, m_eventManager);
+	for (Entity& input : m_inputEntities)
+	{
+		m_inputSystem.update(input);
+		m_commandSystem.update(input, m_eventManager);
+	}
 }
 
 void JoinGameScreen::reset()
@@ -48,22 +52,26 @@ void JoinGameScreen::render(SDL_Renderer* t_renderer)
 	}
 }
 
-void JoinGameScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
+void JoinGameScreen::initialise(SDL_Renderer* t_renderer)
 {
 	m_screenActive = true;
 	m_playersHaveJoined[0] = true;
 	for (int index = 1; index < Utilities::S_MAX_PLAYERS; index++)
 	{
 		m_playersHaveJoined[index] = true;
+		m_joinedControllers[index] = Controller();
 	}
+	m_joinedControllers[0] = m_controllers[0];
 	setControllerButtonMaps();
 	createBackground(t_renderer);
-	createInputEntity(t_controller);
+	createInputEntities();
 	createPlayerJoinedEntities(t_renderer);
 	createHelpText(t_renderer);
 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
-}
+	m_eventManager.subscribeToEvent<Events::MenuButtonPressed>(std::bind(&JoinGameScreen::buttonPressed, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<Events::JoinGame>(std::bind(&JoinGameScreen::playersJoin, this, std::placeholders::_1));
 
+} 
 void JoinGameScreen::playerHasJoined()
 {
 	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
@@ -79,14 +87,24 @@ void JoinGameScreen::playerHasJoined()
 void JoinGameScreen::setControllerButtonMaps()
 {
 	using ButtonCommandPair = std::pair < ButtonType, Command*>;
-	m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)] =
+	m_controllerButtonMaps[0] =
 	{
 		ButtonCommandPair(ButtonType::A, new MenuConfirmCommand()),
 		ButtonCommandPair(ButtonType::Start, new MenuConfirmCommand()),
 		ButtonCommandPair(ButtonType::B, new MenuCancelCommand())
 	};
-	m_controllerButtonMaps[static_cast<int>(ButtonState::Held)];
-	m_controllerButtonMaps[static_cast<int>(ButtonState::Released)];
+	m_controllerButtonMaps[1] =
+	{
+		ButtonCommandPair(ButtonType::A, new PlayerTwoJoinCommand()) 
+	}; 
+	m_controllerButtonMaps[2] =
+	{
+		ButtonCommandPair(ButtonType::A, new PlayerThreeJoinCommand())
+	}; 
+	m_controllerButtonMaps[3] =
+	{
+		ButtonCommandPair(ButtonType::A, new PlayerFourJoinCommand())
+	};
 }
 
 void JoinGameScreen::buttonPressed(const Events::MenuButtonPressed& t_event)
@@ -108,6 +126,7 @@ void JoinGameScreen::buttonPressed(const Events::MenuButtonPressed& t_event)
 void JoinGameScreen::startGame()
 {
 	m_screenActive = false;
+	m_eventManager.emitEvent<Events::SetControllers>(Events::SetControllers{ m_joinedControllers });
 	m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::Game });
 }
 
@@ -118,13 +137,16 @@ void JoinGameScreen::cancel()
 	m_eventManager.emitEvent<Events::ChangeScreen>(Events::ChangeScreen{ MenuStates::GameType });
 }
 
-void JoinGameScreen::createInputEntity(Controller& t_controller)
+void JoinGameScreen::createInputEntities()
 {
-	m_inputEntity.addComponent(new CommandComponent());
-	m_inputEntity.addComponent(new InputComponent(t_controller,
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)],
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Held)],
-		m_controllerButtonMaps[static_cast<int>(ButtonState::Released)]));
+	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
+	{
+		m_inputEntities[index].addComponent(new CommandComponent());
+		m_inputEntities[index].addComponent(new InputComponent(m_controllers[index],
+			m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)],
+			m_controllerButtonMaps[static_cast<int>(ButtonState::Held)],
+			m_controllerButtonMaps[static_cast<int>(ButtonState::Released)]));
+	}
 }
 
 void JoinGameScreen::createBackground(SDL_Renderer* t_renderer)
@@ -197,4 +219,22 @@ void JoinGameScreen::findHostsIp()
 		}
 	}
 	m_hostsIp = ipValue;
+}
+
+void JoinGameScreen::playersJoin(const Events::JoinGame& t_event)
+{
+	if (t_event.index == 1)
+	{
+		m_joinedControllers[1] = m_controllers[1];
+	}
+	else if (t_event.index == 2)
+	{
+		m_joinedControllers[2] = m_controllers[2];
+
+	}
+	else if (t_event.index == 3)
+	{
+		m_joinedControllers[3] = m_controllers[3];
+
+	}
 }

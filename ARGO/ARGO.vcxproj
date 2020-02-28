@@ -44,6 +44,10 @@
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\ParticleEmitterComponent.cpp" />
     <ClCompile Include="src\ParticleSystem.cpp" />
+    <ClCompile Include="src\PlayerFourJoinCommand.cpp" />
+    <ClCompile Include="src\PlayerOneJoinCommand.cpp" />
+    <ClCompile Include="src\PlayerThreeJoinCommand.cpp" />
+    <ClCompile Include="src\PlayerTwoJoinCommand.cpp" />
     <ClCompile Include="src\PrimitiveComponent.cpp" />
     <ClCompile Include="src\CommandComponent.cpp" />
     <ClCompile Include="src\CommandSystem.cpp" />
@@ -130,6 +134,10 @@
     <ClInclude Include="include\Particle.h" />
     <ClInclude Include="include\ParticleEmitterComponent.h" />
     <ClInclude Include="include\ParticleSystem.h" />
+    <ClInclude Include="include\PlayerFourJoinCommand.h" />
+    <ClInclude Include="include\PlayerOneJoinCommand.h" />
+    <ClInclude Include="include\PlayerThreeJoinCommand.h" />
+    <ClInclude Include="include\PlayerTwoJoinCommand.h" />
     <ClInclude Include="include\PrimitiveComponent.h" />
     <ClInclude Include="include\CommandComponent.h" />
     <ClInclude Include="include\CommandSystem.h" />

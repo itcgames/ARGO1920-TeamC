@@ -44,6 +44,16 @@ namespace Events
 	{
 		MenuStates newScreen;
 	};
+
+	struct JoinGame
+	{
+		int index;
+	};
+
+	struct SetControllers
+	{
+		Controller(&controllers)[Utilities::S_MAX_PLAYERS];
+	};
 }
 
 class BaseEvent

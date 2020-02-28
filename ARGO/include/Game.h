@@ -47,6 +47,7 @@ private:
 
 	void closeWindow(const Events::CloseWindow& t_event = Events::CloseWindow());
 	void changeScreen(const Events::ChangeScreen& t_event);
+	void setProperControllers(const Events::SetControllers& t_event);
 
 	AssetManager* m_assetMgr;
 	AudioManager* m_audioMgr;
@@ -78,6 +79,7 @@ private:
 	JoinGameScreen m_joinGameScreen;
 
 	Controller m_controllers[Utilities::S_MAX_PLAYERS];
+	Controller m_properControllers[Utilities::S_MAX_PLAYERS];
 
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
 

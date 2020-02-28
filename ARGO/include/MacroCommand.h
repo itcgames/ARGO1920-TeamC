@@ -17,6 +17,10 @@
 #include "MenuMoveRightCommand.h"
 #include "GoToLicenseScreenCommand.h"
 #include "GoToMainMenuCommand.h"
+#include "PlayerOneJoinCommand.h"
+#include "PlayerThreeJoinCommand.h"
+#include "PlayerTwoJoinCommand.h"
+#include "PlayerFourJoinCommand.h"
 
 class MacroCommand
 {
