@@ -19,12 +19,12 @@ GameScreen::GameScreen(SDL_Renderer* t_renderer, EventManager& t_eventManager, C
 	m_collisionSystem{ m_eventManager },
 	m_weaponSystem{ m_projectileManager, m_eventManager },
 	m_playerFactory(),
-  	m_pickUpManager(m_eventManager, m_collisionSystem) ,
+	m_pickUpManager(m_eventManager, m_collisionSystem),
 	m_commandSystem{ t_commandSystem },
 	m_inputSystem{ t_input },
 	m_renderSystem{ t_renderSystem },
- 	m_hudManager(m_players),
-	m_particleManager(m_eventManager,m_particleSystem)
+	m_hudManager(m_players),
+	m_particleManager(m_eventManager, m_particleSystem)
 {
 }
 
@@ -34,15 +34,18 @@ GameScreen::~GameScreen()
 
 void GameScreen::update(float t_deltaTime)
 {
-	updateLevelManager();
-	updateEntities(t_deltaTime);
 	updatePlayers(t_deltaTime);
-	updateProjectiles(t_deltaTime);
-	m_collisionSystem.update(m_goal);
-	m_collisionSystem.handleCollisions();
-	m_pickUpManager.update(t_deltaTime);
-	m_hudManager.update();
-	m_particleManager.update(t_deltaTime);
+	if (!m_gameOver)
+	{
+		updateLevelManager();
+		updateEntities(t_deltaTime);
+		updateProjectiles(t_deltaTime);
+		m_collisionSystem.update(m_goal);
+		m_collisionSystem.handleCollisions();
+		m_pickUpManager.update(t_deltaTime);
+		m_hudManager.update();
+		m_particleManager.update(t_deltaTime);
+	}
 }
 
 void GameScreen::processEvents(SDL_Event* t_event)
@@ -64,25 +67,18 @@ void GameScreen::processEvents(SDL_Event* t_event)
 			break;
 		}
 		case SDLK_RETURN:
-		{
-			////check if we can add 100 entities, if more than 100, set to 100, if less than 0 set to 0
-			//int availableSpace = glm::clamp(int(MAX_ENTITIES - m_entities.size()), 0, 10);
-			//for (int index = 0; index < availableSpace; index++)
-			//{
-			//	createEnemy();
-			//}
-			//std::cout << m_entities.size() << std::endl;
-			//break;
+		{ 
+			for (Entity& p : m_players)
+			{
+				(static_cast<HealthComponent*>(p.getComponent(ComponentType::Health))->setHealth(0));
+
+			}
+			break;
 		}
 		case SDLK_1:
-		{
-			////create one enemy if space available in the vector
-			//if (m_entities.size() < MAX_ENTITIES)
-			//{
-			//	createEnemy();
-			//}
-			//std::cout << m_entities.size() << std::endl;
-			//break;
+		{ 
+			m_eventManager.emitEvent<GameOver>(GameOver{ });
+			break;
 		}
 		default:
 			break;
@@ -112,6 +108,10 @@ void GameScreen::render(SDL_Renderer* t_renderer)
 	m_particleManager.render(t_renderer, &m_renderSystem);
 	m_levelManager.renderLight(t_renderer, &m_renderSystem);
 	m_hudManager.render(t_renderer, &m_renderSystem);
+	if (m_gameOver)
+	{
+		m_renderSystem.render(t_renderer, m_gameOverPopup);
+	}
 
 }
 
@@ -131,6 +131,14 @@ void GameScreen::createGoal()
 	m_goal.addComponent(new ColliderCircleComponent(32));
 	m_goal.addComponent(new TagComponent(Tag::Goal));
 	m_goal.addComponent(new VisualComponent("EscapePod.png", m_renderer));
+}
+
+void GameScreen::createPopups(SDL_Renderer* t_renderer)
+{
+	m_gameOverPopup.addComponent(new VisualComponent("GameLost_Pop_Up.png", t_renderer));
+	VisualComponent* visualComp = static_cast<VisualComponent*>(m_gameOverPopup.getComponent(ComponentType::Visual));
+	visualComp->setStaticPosition(true);
+	m_gameOverPopup.addComponent(new TransformComponent(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f - visualComp->getWidth() / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f - visualComp->getHeight() / 2.0f)));
 }
 
 void GameScreen::setUpLevel()
@@ -175,14 +183,20 @@ void GameScreen::setUpLevel()
 
 void GameScreen::updatePlayers(float t_deltaTime)
 {
-
+	if (!static_cast<HealthComponent*>(m_players[0].getComponent(ComponentType::Health))->isAlive() &&
+		!static_cast<HealthComponent*>(m_players[1].getComponent(ComponentType::Health))->isAlive() &&
+		!static_cast<HealthComponent*>(m_players[2].getComponent(ComponentType::Health))->isAlive() &&
+		!static_cast<HealthComponent*>(m_players[3].getComponent(ComponentType::Health))->isAlive())
+	{
+		m_eventManager.emitEvent<GameOver>(GameOver{ });
+	}
 	for (Entity& player : m_players)
 	{
+		m_inputSystem.update(player);
+		m_commandSystem.update(player, m_eventManager);
 		if (static_cast<HealthComponent*>(player.getComponent(ComponentType::Health))->isAlive())
 		{
 			static_cast<FSMComponent*>(player.getComponent(ComponentType::FSM))->getFSM().setMoved(false);
-			m_inputSystem.update(player);
-			m_commandSystem.update(player, m_eventManager);
 			m_aiSystem.update(player);
 			m_healthSystem.update(player, t_deltaTime);
 			m_transformSystem.update(player, t_deltaTime);
@@ -220,6 +234,28 @@ void GameScreen::setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilit
 	}
 }
 
+void GameScreen::gameOver(const GameOver& t_event)
+{
+	m_gameOver = true;
+	using ButtonCommandPair = std::pair<ButtonType, Command*>;
+	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
+	{
+		if ((static_cast<InputComponent*>(m_players[index].getComponent(ComponentType::Input))))
+		{
+			m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][index] =
+			{
+ 				ButtonCommandPair(ButtonType::B, new GoToMainMenuCommand())
+			};
+			m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][index] = ButtonCommandMap();
+			m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][index] = ButtonCommandMap();
+
+			(static_cast<InputComponent*>(m_players[index].getComponent(ComponentType::Input)))->setButtonMap(ButtonState::Pressed, m_controllerButtonMaps[static_cast<int>(ButtonState::Pressed)][index]);
+			(static_cast<InputComponent*>(m_players[index].getComponent(ComponentType::Input)))->setButtonMap(ButtonState::Held, m_controllerButtonMaps[static_cast<int>(ButtonState::Held)][index]);
+			(static_cast<InputComponent*>(m_players[index].getComponent(ComponentType::Input)))->setButtonMap(ButtonState::Released, m_controllerButtonMaps[static_cast<int>(ButtonState::Released)][index]);
+		}
+	}
+}
+
 void GameScreen::preRender()
 {
 	// Setting the focus point for the camera.
@@ -246,6 +282,7 @@ void GameScreen::preRender()
 
 void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utilities::S_MAX_PLAYERS])
 {
+	m_gameOver = false;
 	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
 	{
 		m_controllers[index] = t_controller[index];
@@ -266,6 +303,8 @@ void GameScreen::reset(SDL_Renderer* t_renderer, Controller t_controller[Utiliti
 
 void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS], Controller t_controller[Utilities::S_MAX_PLAYERS], bool t_isOnline)
 {
+	m_gameOver = false;
+	createPopups(t_renderer);
 	m_isOnline = t_isOnline;
 	setControllerButtonMap(t_controllerButtonMaps);
 	for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
@@ -285,4 +324,5 @@ void GameScreen::initialise(SDL_Renderer* t_renderer, ButtonCommandMap t_control
 	createGoal();
 	m_pickUpManager.init(m_renderer);
 	m_hudManager.init(t_renderer);
+	m_eventManager.subscribeToEvent<GameOver>(std::bind(&GameScreen::gameOver, this, std::placeholders::_1));
 }

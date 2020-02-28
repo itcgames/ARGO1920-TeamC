@@ -78,6 +78,11 @@ struct ChangeScreen
 	MenuStates newScreen;
 };
 
+struct GameOver
+{
+
+};
+
 class BaseEvent
 {
 protected:

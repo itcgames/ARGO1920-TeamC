@@ -23,6 +23,7 @@
     <ClCompile Include="src\FireBulletCommand.cpp" />
     <ClCompile Include="src\FireRateComponent.cpp" />
     <ClCompile Include="src\FlowFieldComponent.cpp" />
+    <ClCompile Include="src\GoToGameScreenCommand.cpp" />
     <ClCompile Include="src\FSMComponent.cpp" />
     <ClCompile Include="src\GoToLicenseScreenCommand.cpp" />
     <ClCompile Include="src\GoToMainMenuCommand.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="include\FireBulletCommand.h" />
     <ClInclude Include="include\FireRateComponent.h" />
     <ClInclude Include="include\FlowFieldComponent.h" />
+    <ClInclude Include="include\GoToGameScreenCommand.h" />
     <ClInclude Include="include\FSMComponent.h" />
     <ClInclude Include="include\GoToLicenseScreenCommand.h" />
     <ClInclude Include="include\GoToMainMenuCommand.h" />

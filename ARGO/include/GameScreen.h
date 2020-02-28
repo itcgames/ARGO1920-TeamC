@@ -19,6 +19,7 @@
 #include "ParticleManager.h"
 #include <WeaponSystem.h>
 
+
 class GameScreen
 {
 public:
@@ -35,6 +36,7 @@ public:
 
 	void createPlayer(Entity& t_player, int t_index, SDL_Renderer* t_renderer);
 	void createGoal();
+	void createPopups(SDL_Renderer* t_renderer);
 	void setUpLevel();
 	void preRender();
 	void updatePlayers(float t_deltaTime);
@@ -42,6 +44,10 @@ public:
 	void updateProjectiles(float t_deltaTime);
 	void updateLevelManager();
 	void setControllerButtonMap(ButtonCommandMap t_controllerMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS]);
+	void gameOver(const GameOver& t_event);
+
+
+	Entity m_gameOverPopup;
 
 	EventManager& m_eventManager;
 
@@ -78,4 +84,7 @@ public:
 
 	// bool to see if game is being played online or not
 	bool m_isOnline;
+
+	bool m_gameOver;
+
 };
