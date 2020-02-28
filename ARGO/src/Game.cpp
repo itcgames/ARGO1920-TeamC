@@ -17,7 +17,7 @@ Game::Game() :
 	m_mainMenuScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_achievementsScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem }, 
 #ifdef _DEBUG
-	m_currentScreen{ MenuStates::Splash }
+	m_currentScreen{ MenuStates::Game }
 #else
 	m_currentScreen{ MenuStates::Splash }
 #endif // _DEBUG

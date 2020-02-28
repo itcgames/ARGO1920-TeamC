@@ -16,12 +16,24 @@ void RenderSystem::render(SDL_Renderer* t_renderer, Entity& t_entity)
 {
 	TransformComponent* transformComp = static_cast<TransformComponent*>(t_entity.getComponent(ComponentType::Transform));
 	VisualComponent* visComp = static_cast<VisualComponent*>(t_entity.getComponent(ComponentType::Visual));
+	FSMComponent* FSMComp = static_cast<FSMComponent*>(t_entity.getComponent(ComponentType::FSM));
 	if (transformComp != nullptr)
 	{
 		if (inView(transformComp) || transformComp->getAlwaysOnscreen())
 		{
 
 			TextComponent* textComp = static_cast<TextComponent*>(t_entity.getComponent(ComponentType::Text));
+
+			if (FSMComp != nullptr)
+			{
+				glm::vec2 renderPosition = transformComp->getPos();
+				ColliderCircleComponent* circleColliderComp = static_cast<ColliderCircleComponent*>(t_entity.getComponent(ComponentType::ColliderCircle));
+				if (circleColliderComp)
+				{
+					renderPosition -= glm::vec2(circleColliderComp->getRadius(), circleColliderComp->getRadius());
+				}
+				renderTexture(FSMComp->getFSM().getCurrent()->getTexture(), renderPosition.x, renderPosition.y, t_renderer, transformComp->getRotation(), FSMComp->getFSM().getCurrent()->getFrame());
+			}
 
 			if (visComp != nullptr)
 			{
@@ -33,6 +45,7 @@ void RenderSystem::render(SDL_Renderer* t_renderer, Entity& t_entity)
 				}
 				renderTexture(visComp, renderPosition.x, renderPosition.y, t_renderer, transformComp->getRotation());
 			}
+
 			PrimitiveComponent* primComp = static_cast<PrimitiveComponent*>(t_entity.getComponent(ComponentType::Primitive));
 			ParticleEmitterComponent* emitComp = static_cast<ParticleEmitterComponent*>(t_entity.getComponent(ComponentType::ParticleEmitter));
 			if (textComp != nullptr)
@@ -192,6 +205,25 @@ void RenderSystem::renderTexture(VisualComponent* t_visComp, int t_textureLeftPo
 	}
 	//Render to screen
 	SDL_RenderCopyEx(t_renderer, t_visComp->getTexture(), t_clip, &renderQuad, t_angle, t_center, t_flip);
+}
+
+void RenderSystem::renderTexture(SDL_Texture* t_tex, int t_textureLeftPos, int t_textureTopPos, SDL_Renderer* t_renderer, double t_angle, SDL_Rect* t_clip, SDL_Point* t_center, SDL_RendererFlip t_flip)
+{
+	int width;
+	int height;
+	SDL_QueryTexture(t_tex, NULL, NULL, &width, &height);
+	SDL_Rect renderQuad = { t_textureLeftPos, t_textureTopPos, width, height };
+
+	//Set clip rendering dimensions
+	if (t_clip != NULL)
+	{
+		renderQuad.w = t_clip->w;
+		renderQuad.h = t_clip->h;
+	}
+	renderQuad.x = renderQuad.x + Utilities::SCREEN_WIDTH / 2 - m_focusPoint.x;
+	renderQuad.y = renderQuad.y + Utilities::SCREEN_HEIGHT / 2 - m_focusPoint.y;
+	//Render to screen
+	SDL_RenderCopyEx(t_renderer, t_tex, t_clip, &renderQuad, t_angle, t_center, t_flip);
 }
 
 void RenderSystem::renderText(SDL_Renderer* t_renderer, TransformComponent* t_posComp, TextComponent* t_textComp)

@@ -144,6 +144,9 @@ Entity(&EnemyManager::getEnemies())[Utilities::ENEMY_POOL_SIZE]
 
 void EnemyManager::killAll()
 {
+	m_difficultyLevel = 0;
+	m_difficultyTimer = 0;
+
 	for (auto& enemy : m_enemies)
 	{
 		HealthComponent* hpComp = static_cast<HealthComponent*>(enemy.getComponent(ComponentType::Health));

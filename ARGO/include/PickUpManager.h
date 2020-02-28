@@ -18,6 +18,7 @@ public:
 	void placePickup(glm::vec2 t_pos, int t_pickUpType);
 	void update(float t_dt);
 	void nextAvailablePickup();
+	void reset();
 	void render(SDL_Renderer* t_renderer, RenderSystem* t_system);
 	Entity(&getPickups())[Utilities::PICKUP_POOL_SIZE];
 private:
