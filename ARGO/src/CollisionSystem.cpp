@@ -324,6 +324,8 @@ void CollisionSystem::createExplosion(glm::vec2 t_position)
 	glm::vec2 bounds{ EXPLOSION_RADIUS, EXPLOSION_RADIUS };
 	Quad quad{ NULL, t_position - bounds, bounds * 2.0f };
 	m_eventManager.emitEvent(Explosion{ t_position });
+	std::string filePath = "Explosion_" + std::to_string(glm::linearRand(1, 2)) + ".wav";
+	AudioManager::Instance()->PlaySfx(Utilities::GUN_FIRE_PATH + filePath);
 
 	std::vector<Entity*> entities;
 	m_quadTree.retrieve(&entities, quad); 
@@ -530,6 +532,8 @@ void CollisionSystem::playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enem
 		{
 			m_eventManager.emitEvent<UpdateAchievement>(UpdateAchievement{ 1,0 });
 			m_eventManager.emitEvent(EnemyKilled{ t_enemy });
+			std::string filePath = "BugDeath_" + std::to_string(glm::linearRand(1, 10)) + ".wav";
+			AudioManager::Instance()->PlaySfx(Utilities::BUG_DEATH_PATH + filePath);
 		}
 	}
 }

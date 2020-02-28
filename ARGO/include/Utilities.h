@@ -24,6 +24,7 @@ namespace Utilities
 	const std::string IMAGES_PATH = "assets\\images\\";
 	const std::string SFX_PATH = "assets\\sounds\\sfx\\";
 	const std::string GUN_FIRE_PATH = "gunfire\\";
+	const std::string BUG_DEATH_PATH = "BugDeath\\";
 	const std::string MUSIC_PATH = "assets\\sounds\\music\\";
 	const std::string FONTS_PATH = "assets\\fonts\\";
 	const std::string FILES_PATH = "assets\\files\\";
