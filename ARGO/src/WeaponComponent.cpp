@@ -37,6 +37,9 @@ bool WeaponComponent::fireGun()
 		case Weapon::GrenadeLauncher:
 			m_gunCooldown = GREANADE_LAUNCHER_COOLDOWN;
 			break;
+		case Weapon::Shotgun:
+			m_gunCooldown = SHOTGUN_COOLDOWN;
+			break;
 		default:
 			break;
 		}
@@ -79,6 +82,9 @@ int WeaponComponent::getMaxAmmo()
 	case Weapon::GrenadeLauncher:
 		return GRENADE_LAUNCHER_MAX_AMMO;
 		break;
+	case Weapon::Shotgun:
+		return SHOTGUN_MAX_AMMO;
+		break;
 	default:
 		break;
 	}
@@ -105,6 +111,9 @@ void WeaponComponent::fillAmmo(Weapon t_type)
 		break;
 	case Weapon::GrenadeLauncher:
 		m_ammo = GRENADE_LAUNCHER_MAX_AMMO;
+		break;
+	case Weapon::Shotgun:
+		m_ammo = SHOTGUN_MAX_AMMO;
 		break;
 	default:
 		break;

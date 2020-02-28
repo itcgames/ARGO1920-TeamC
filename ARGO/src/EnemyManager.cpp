@@ -19,16 +19,10 @@ EnemyManager::EnemyManager(SDL_Renderer* t_renderer, float t_initialSpawnDelay, 
 void EnemyManager::init()
 {
 	m_audioMgr = AudioManager::Instance();
-
+	EnemyFactory* factory = new EnemyFactory(m_renderer);
 	for (auto& enemy : m_enemies)
 	{
-		enemy.addComponent(new TransformComponent());
-		enemy.addComponent(new AiComponent(AITypes::eMelee, AIStates::eWander, 15.0f, 1.0f));
-		enemy.addComponent(new ColliderCircleComponent(Utilities::ENEMY_RADIUS));
-		enemy.addComponent(new TagComponent(Tag::Enemy));
-		enemy.addComponent(new ForceComponent());
-		enemy.addComponent(new HealthComponent(Utilities::ENEMY_HP, 0));
-		enemy.addComponent(new VisualComponent("EnemyFast.png", m_renderer));
+		factory->createEnemy(1, enemy);
 	}
 }
 

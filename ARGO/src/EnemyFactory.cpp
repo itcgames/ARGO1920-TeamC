@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "EnemyFactory.h"
 
-EnemyFactory::EnemyFactory()
+EnemyFactory::EnemyFactory(SDL_Renderer* t_renderer):
+	m_renderer(t_renderer)
 {
 }
 ///<summary>

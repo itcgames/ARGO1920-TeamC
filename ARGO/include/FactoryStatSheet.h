@@ -21,7 +21,7 @@ namespace FactoryStatSheet
 	const float ENEMY_MAX_SPEED = 0.5f;
 	const float ENEMY_TURN_RATE = 15.0f;
 	const int ENEMY_RADIUS = 32;
-	const int ENEMY_HP = 2;
+	const int ENEMY_HP = 0;
 	const int ENEMY_MAX_HP = 2;
 
 

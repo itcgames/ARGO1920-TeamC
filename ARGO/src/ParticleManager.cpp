@@ -6,6 +6,7 @@ ParticleManager::ParticleManager(EventManager& t_eventManager, ParticleSystem& t
 {
 	t_eventManager.subscribeToEvent<EnemyKilled>(std::bind(&ParticleManager::placeEmitterEnemyDeath, this, std::placeholders::_1));
 	t_eventManager.subscribeToEvent<PlayerKilled>(std::bind(&ParticleManager::placeEmitterPlayerDeath, this, std::placeholders::_1));
+	t_eventManager.subscribeToEvent<Explosion>(std::bind(&ParticleManager::placeEmitterExplosion, this, std::placeholders::_1));
 	for (auto& emitter : m_particleEmitter)
 	{
 		createParticleEmitter(emitter);
@@ -38,6 +39,7 @@ void ParticleManager::placeEmitterEnemyDeath(const EnemyKilled& t_event)
 	emitterTransComp->setPos(enemyTransComp->getPos());
 	ParticleEmitterComponent* emitterComp = static_cast<ParticleEmitterComponent*>(m_particleEmitter[m_currentEmitter].getComponent(ComponentType::ParticleEmitter));
 	emitterComp->setEmitting(true);
+	emitterComp->setSpeed(Utilities::PARTICLE_BASE_SPEED);
 	ColourComponent* colourComp = static_cast<ColourComponent*>(m_particleEmitter[m_currentEmitter].getComponent(ComponentType::Colour));
 	//Converting uVec4 into Colour structs
 	Colour primaryColour{ Utilities::PRIMARY_ENEMY_DEATH_COLOUR.x, Utilities::PRIMARY_ENEMY_DEATH_COLOUR.y, Utilities::PRIMARY_ENEMY_DEATH_COLOUR.z, Utilities::PRIMARY_ENEMY_DEATH_COLOUR.a };
@@ -60,6 +62,7 @@ void ParticleManager::placeEmitterPlayerDeath(const PlayerKilled& t_event)
 	emitterTransComp->setPos(playerTransComp->getPos());
 	ParticleEmitterComponent* emitterComp = static_cast<ParticleEmitterComponent*>(m_particleEmitter[m_currentEmitter].getComponent(ComponentType::ParticleEmitter));
 	emitterComp->setEmitting(true);
+	emitterComp->setSpeed(Utilities::PARTICLE_BASE_SPEED);
 	ColourComponent* colourComp = static_cast<ColourComponent*>(m_particleEmitter[m_currentEmitter].getComponent(ComponentType::Colour));
 	//Converting uVec4 into Colour structs
 	Colour primaryColour{ Utilities::PRIMARY_PLAYER_DEATH_COLOUR.x, Utilities::PRIMARY_PLAYER_DEATH_COLOUR.y, Utilities::PRIMARY_PLAYER_DEATH_COLOUR.z, Utilities::PRIMARY_PLAYER_DEATH_COLOUR.a };
@@ -69,6 +72,25 @@ void ParticleManager::placeEmitterPlayerDeath(const PlayerKilled& t_event)
 	PrimitiveComponent* primComp = static_cast<PrimitiveComponent*>(m_particleEmitter[m_currentEmitter].getComponent(ComponentType::Primitive));
 	primComp->setMaximumSize(Utilities::PLAYER_DEATH_MAX_PARTICLE_SIZE);
 	primComp->setMinimumSize(Utilities::PLAYER_DEATH_MIN_PARTICLE_SIZE);
+	nextAvailableEmitter();
+}
+
+void ParticleManager::placeEmitterExplosion(const Explosion& t_event)
+{
+	TransformComponent* emitterTransComp = static_cast<TransformComponent*>(m_particleEmitter[m_currentEmitter].getComponent(ComponentType::Transform));
+	emitterTransComp->setPos(t_event.position);
+	ParticleEmitterComponent* emitterComp = static_cast<ParticleEmitterComponent*>(m_particleEmitter[m_currentEmitter].getComponent(ComponentType::ParticleEmitter));
+	emitterComp->setEmitting(true);
+	emitterComp->setSpeed(Utilities::EXPLOSION_BASE_SPEED);
+	ColourComponent* colourComp = static_cast<ColourComponent*>(m_particleEmitter[m_currentEmitter].getComponent(ComponentType::Colour));
+	//Converting uVec4 into Colour structs
+	Colour primaryColour{ Utilities::PRIMARY_EXPLOSION_COLOUR.x, Utilities::PRIMARY_EXPLOSION_COLOUR.y, Utilities::PRIMARY_EXPLOSION_COLOUR.z, Utilities::PRIMARY_EXPLOSION_COLOUR.a };
+	Colour secondaryColour{ Utilities::SECONDARY_EXPLOSION_COLOUR.x, Utilities::SECONDARY_EXPLOSION_COLOUR.y, Utilities::SECONDARY_EXPLOSION_COLOUR.z, Utilities::SECONDARY_EXPLOSION_COLOUR.a };
+	colourComp->setColor(primaryColour);
+	colourComp->setSecondaryColour(secondaryColour);
+	PrimitiveComponent* primComp = static_cast<PrimitiveComponent*>(m_particleEmitter[m_currentEmitter].getComponent(ComponentType::Primitive));
+	primComp->setMaximumSize(Utilities::EXPLOSION_MAX_PARTICLE_SIZE);
+	primComp->setMinimumSize(Utilities::EXPLOSION_MIN_PARTICLE_SIZE);
 	nextAvailableEmitter();
 }
 

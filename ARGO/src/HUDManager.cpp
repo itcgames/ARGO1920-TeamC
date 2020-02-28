@@ -175,3 +175,27 @@ void HUDManager::swapToSkullAvatar(VisualComponent* t_visComp)
 {
 
 }
+
+void HUDManager::reset()
+{
+	for (auto& i : m_playerHUD) {
+		HUDComponent* hudComp = static_cast<HUDComponent*>(i.HUDLayoutData.getComponent(ComponentType::HUD));
+		hudComp->setAvatarState(AvatarState::Player);
+		VisualComponent* visiComp = static_cast<VisualComponent*>(i.HUDAvatarIcon.getComponent(ComponentType::Visual));
+		switch (hudComp->getIndex())
+		{
+		case 0:
+			visiComp->loadFromFile("BluePlayerAvatar.png", m_renderer);
+			break;
+		case 1:
+			visiComp->loadFromFile("GreenPlayerAvatar.png", m_renderer);
+			break;
+		case 2:
+			visiComp->loadFromFile("RedPlayerAvatar.png", m_renderer);
+			break;
+		case 3:
+			visiComp->loadFromFile("YellowPlayerAvatar.png", m_renderer);
+			break;
+		}
+	}
+}

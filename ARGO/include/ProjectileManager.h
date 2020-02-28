@@ -27,7 +27,7 @@ class ProjectileManager
 public:
 	ProjectileManager(SDL_Renderer* t_renderer, EventManager& t_eventManager, glm::vec2& t_focusPoint, PhysicsSystem& t_physicsSystem, CollisionSystem& t_collisionSystem);
 	void init();
-	void createPlayerBullet(const CreateBulletEvent& t_event, Weapon t_weapon);
+	void createPlayerBullet(const CreateBulletEvent& t_event, Weapon t_weapon, float t_angleOffset = 0);
 	void createGlowStick(const CreateGlowStickEvent& t_event);
 	void createEnemyBullet(const CreateBulletEvent& t_event);
 	void update(float t_dt);
@@ -46,6 +46,7 @@ private:
 	static const int GLOWSTICK_LIFETIME = 300;
 	const float PLAYER_BULLET_SPEED = 16.0f;
 	const float PLAYER_GRENADE_SPEED = 16.0f;
+	const float PLAYER_SHOTGUN_SPEED = 13.0f;
 	const float GLOWSTICK_SPEED = 64;
 
 	Bullet m_playerBullets[BULLET_POOL_SIZE];
