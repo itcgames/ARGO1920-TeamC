@@ -3,6 +3,14 @@
 
 namespace Utilities
 {
+
+	class Achievements
+	{
+	public:
+		static int numberOfUnlockedAchv;
+
+	};
+
 	const static int S_MAX_PLAYERS = 4;
 	//font consts
 	const int SMALL_FONT = 24;
@@ -18,6 +26,8 @@ namespace Utilities
 	const std::string GUN_FIRE_PATH = "gunfire\\";
 	const std::string MUSIC_PATH = "assets\\sounds\\music\\";
 	const std::string FONTS_PATH = "assets\\fonts\\";
+	const std::string FILES_PATH = "assets\\files\\";
+
 
 #ifdef _DEBUG
 	const int SCREEN_WIDTH = 1600;
@@ -63,10 +73,17 @@ namespace Utilities
 	const int AUDIO_CHANNELS_PER_PLAYER = 8;
 	const int AUDIO_PLAYERS_FIRE_CHANNELS = AUDIO_MIX_CHANNELS - AUDIO_CHANNELS_PER_PLAYER * 4;
 
-	static const int S_NUMBER_OF_SCREENS = 7;
+ 
 
 	//Flow field values
 	const int MAX_FLOW_FIELD_WEIGHT = 20;
+
+	const float RADIANS_TO_DEGREES = 57.2958;
+	static const int S_NUMBER_OF_SCREENS = 7; 
+
+	static const glm::vec3 MENU_BUTTON_HIGHLIGHTED_COLOUR{ 255,255,240 };
+	static const glm::vec3 MENU_BUTTON_DEFAULT_COLOUR{ 199,163,10 };
+	static const glm::vec3 UI_COLOUR = glm::vec3(25, 57, 89);
 
 	static const int GLOWSTICK_POOL_SIZE = 20;
 
@@ -115,3 +132,23 @@ enum class MenuStates
 	Splash,
 	Achievements
 };
+
+enum class Systems
+{
+	AI,
+	Collision,
+	Command,
+	Health,
+	Input,
+	Particle,
+	Physics,
+	Render
+};
+
+enum class MoveDirection
+{
+	Up,
+	Down,
+	Left,
+	Right
+}; 

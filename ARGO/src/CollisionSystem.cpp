@@ -495,7 +495,7 @@ void CollisionSystem::playerToPickUp(Entity* t_player, Entity* t_pickUp)
 				break;
 			case PickupType::Health:
 				//Health Pickup
-				HealthComponent* playerHealthComp = static_cast<HealthComponent*>(t_player->getComponent(ComponentType::Health));
+				HealthComponent * playerHealthComp = static_cast<HealthComponent*>(t_player->getComponent(ComponentType::Health));
 				int healthToAdd = playerHealthComp->getMaxHealth() * pickUpComp->getHealthChange();
 				if (healthToAdd <= 0)
 				{
@@ -515,6 +515,7 @@ void CollisionSystem::playerToGoal(Entity* t_player, Entity* t_goal)
 {
 	if (t_player->getComponent(ComponentType::ColliderCircle) && circleToCircleCollision(t_player, t_goal))
 	{
+		m_eventManager.emitEvent<UpdateAchievement>(UpdateAchievement{ 0, 1 });
 		m_eventManager.emitEvent<ChangeScreen>(ChangeScreen{ MenuStates::MainMenu });
 	}
 }
@@ -527,6 +528,7 @@ void CollisionSystem::playerBulletToEnemy(Entity* t_playerBullet, Entity* t_enem
 		static_cast<HealthComponent*>(t_enemy->getComponent(ComponentType::Health))->reduceHealth(1);
 		if (!static_cast<HealthComponent*>(t_enemy->getComponent(ComponentType::Health))->isAlive())
 		{
+			m_eventManager.emitEvent<UpdateAchievement>(UpdateAchievement{ 1,0 });
 			m_eventManager.emitEvent(EnemyKilled{ t_enemy });
 		}
 	}

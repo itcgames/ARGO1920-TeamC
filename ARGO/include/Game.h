@@ -7,8 +7,17 @@
 #include "OptionsScreen.h"
 #include "SplashScreen.h"
 #include "LicenseScreen.h"
-#include "AchievementScreen.h"
+#include "AchievementScreen.h" 
 #include "Event.h"
+
+#include "AiSystem.h"
+#include "CollisionSystem.h"
+#include "CommandSystem.h"
+#include "HealthSystem.h"
+#include "InputSystem.h"
+#include "ParticleSystem.h"
+#include "PhysicsSystem.h"
+#include "RenderSystem.h"
 
 /// <summary>
 /// Game class needed for the game
@@ -33,6 +42,9 @@ private:
 
 	void closeWindow(const CloseWindow& t_event = CloseWindow());
 	void changeScreen(const ChangeScreen& t_event);
+ 
+	int shownAchv = -1;
+	int timeSincePopup = -1;
 
 	AssetManager* m_assetMgr;
 	AudioManager* m_audioMgr;
@@ -46,6 +58,15 @@ private:
 	// bool for if game is running or not
 	bool m_isRunning;
 
+
+
+ 	CommandSystem m_commandSystem;
+ 	InputSystem m_inputSystem;
+ 	RenderSystem m_renderSystem;
+
+
+	
+
 	MenuStates m_currentScreen;
 	GameScreen m_gameScreen; 
 	MenuScreen m_mainMenuScreen;
@@ -53,11 +74,12 @@ private:
 	CreditsScreen m_creditsScreen;
 	LicenseScreen m_licenseScreen;
 	SplashScreen m_splashScreen;
-	AchievementScreen m_achievementsScreen;
+	AchievementScreen m_achievementsScreen; 
 
 	Controller m_controllers[Utilities::S_MAX_PLAYERS];
 
 	ButtonCommandMap m_controllerButtonMaps[Utilities::NUMBER_OF_CONTROLLER_MAPS][Utilities::S_MAX_PLAYERS];
 
 	bool m_hasScreenBeenSet[Utilities::S_NUMBER_OF_SCREENS];
-};
+
+ };

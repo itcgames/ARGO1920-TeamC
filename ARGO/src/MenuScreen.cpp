@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "MenuScreen.h"
 
-MenuScreen::MenuScreen(EventManager& t_eventManager) :
-	m_eventManager{ t_eventManager },
-	BUTTON_DEFAULT_COLOUR{ 199,163,10 },
-	BUTTON_HIGHLIGHTED_COLOUR{ 255,255,240 },
-	m_currentButton{ MenuButtonType::Play }
-{
+MenuScreen::MenuScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_inputSystem, RenderSystem& t_renderSystem) :
+	m_eventManager{ t_eventManager }, 
+	m_currentButton{ MenuButtonType::Play },
+	m_commandSystem{ t_commandSystem },
+	m_inputSystem{ t_inputSystem },
+	m_renderSystem{ t_renderSystem }
+{	
 }
 
 MenuScreen::~MenuScreen()
@@ -21,13 +22,14 @@ void MenuScreen::update(float t_deltaTime)
 
 void MenuScreen::reset()
 {
+	m_screenActive = true;
 	m_currentButton = MenuButtonType::Play;
 	for (Entity& menuButton : m_menuButtons)
 	{
-		updateButtonColour(menuButton, BUTTON_DEFAULT_COLOUR);
+		updateButtonColour(menuButton, Utilities::MENU_BUTTON_DEFAULT_COLOUR);
 	}
 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
-	updateButtonColour(m_menuButtons[static_cast<int>(m_currentButton)], BUTTON_HIGHLIGHTED_COLOUR);
+	updateButtonColour(m_menuButtons[static_cast<int>(m_currentButton)], Utilities::MENU_BUTTON_HIGHLIGHTED_COLOUR);
 }
 
 void MenuScreen::render(SDL_Renderer* t_renderer)
@@ -41,6 +43,7 @@ void MenuScreen::render(SDL_Renderer* t_renderer)
 
 void MenuScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 {
+	m_screenActive = true;
 	setControllerButtonMaps();
 
 	m_background.addComponent(new VisualComponent("Menu_Background.png", t_renderer));
@@ -52,23 +55,23 @@ void MenuScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller)
 	m_menuButtons[static_cast<int>(MenuButtonType::Quit)].addComponent(new VisualComponent("Quit_Button.png", t_renderer));
 	m_menuButtons[static_cast<int>(MenuButtonType::Achievements)].addComponent(new VisualComponent("Achievements_Button.png", t_renderer));
 
-	VisualComponent* visualComp = static_cast<VisualComponent*>(m_menuButtons[static_cast<int>(m_currentButton)].getComponent(ComponentType::Visual));
 
 	for (int index = 0; index < NUMBER_OF_MENU_BUTTONS; index++)
 	{
+		VisualComponent* visualComp = static_cast<VisualComponent*>(m_menuButtons[index].getComponent(ComponentType::Visual));
 		createMenuButton(m_menuButtons[index], glm::vec2(Utilities::SCREEN_WIDTH / 2.0f - visualComp->getWidth() / 2.0f, (Utilities::SCREEN_HEIGHT / (NUMBER_OF_MENU_BUTTONS + 1)) * (index + 1)));
 	}
 
 	m_renderSystem.setFocus(glm::vec2(Utilities::SCREEN_WIDTH / 2.0f, Utilities::SCREEN_HEIGHT / 2.0f));
-	updateButtonColour(m_menuButtons[static_cast<int>(m_currentButton)], BUTTON_HIGHLIGHTED_COLOUR);
+	updateButtonColour(m_menuButtons[static_cast<int>(m_currentButton)], Utilities::MENU_BUTTON_HIGHLIGHTED_COLOUR);
 
 	createInputEntity(t_controller);
 
-	m_eventManager.subscribeToEvent<MenuMoveButtonsUpDown>(std::bind(&MenuScreen::changeCurrentSelectedButton, this, std::placeholders::_1));
-	m_eventManager.subscribeToEvent<MenuSelectButton>(std::bind(&MenuScreen::buttonPressed, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<MenuMoveBetweenUI>(std::bind(&MenuScreen::changeCurrentSelectedButton, this, std::placeholders::_1));
+	m_eventManager.subscribeToEvent<MenuButtonPressed>(std::bind(&MenuScreen::buttonPressed, this, std::placeholders::_1));
 
 
-}
+} 
 
 void MenuScreen::setControllerButtonMaps()
 {
@@ -77,8 +80,6 @@ void MenuScreen::setControllerButtonMaps()
 	{
 		ButtonCommandPair(ButtonType::DpadUp, new MenuMoveUpCommand()),
 		ButtonCommandPair(ButtonType::DpadDown, new MenuMoveDownCommand()),
-		ButtonCommandPair(ButtonType::LeftThumbStickUp, new MenuMoveUpCommand()),
-		ButtonCommandPair(ButtonType::LeftThumbStickDown, new MenuMoveDownCommand()),
 		ButtonCommandPair(ButtonType::A, new MenuSelectButtonCommand())
 	};
 	m_controllerButtonMaps[static_cast<int>(ButtonState::Held)];
@@ -87,7 +88,7 @@ void MenuScreen::setControllerButtonMaps()
 
 void MenuScreen::createMenuButton(Entity& t_menuButton, glm::vec2 t_position)
 {
-	updateButtonColour(t_menuButton, BUTTON_DEFAULT_COLOUR);
+	updateButtonColour(t_menuButton, Utilities::MENU_BUTTON_DEFAULT_COLOUR);
 	t_menuButton.addComponent(new TransformComponent(t_position));
 }
 
@@ -100,47 +101,68 @@ void MenuScreen::createInputEntity(Controller& t_controller)
 	m_inputEntity.addComponent(new CommandComponent());
 }
 
-void MenuScreen::changeCurrentSelectedButton(const MenuMoveButtonsUpDown& t_event)
+void MenuScreen::changeCurrentSelectedButton(const MenuMoveBetweenUI& t_event)
 {
-	int currentButtonIndex = static_cast<int>(m_currentButton);
-	updateButtonColour(m_menuButtons[currentButtonIndex], BUTTON_DEFAULT_COLOUR);
-	currentButtonIndex = t_event.isMoveDown ? currentButtonIndex + 1 : currentButtonIndex - 1;
-	currentButtonIndex = glm::clamp(currentButtonIndex, 0, (NUMBER_OF_MENU_BUTTONS - 1));
-	updateButtonColour(m_menuButtons[currentButtonIndex], BUTTON_HIGHLIGHTED_COLOUR);
-	m_currentButton = static_cast<MenuButtonType>(currentButtonIndex);
+	if (m_screenActive)
+	{
+		int currentButtonIndex = static_cast<int>(m_currentButton);
+		updateButtonColour(m_menuButtons[currentButtonIndex], Utilities::MENU_BUTTON_DEFAULT_COLOUR);
+		if (MoveDirection::Up == t_event.direction)
+		{
+			currentButtonIndex--;
+		}
+		else if (MoveDirection::Down == t_event.direction)
+		{
+			currentButtonIndex++;
+		}
+ 		if (currentButtonIndex < 0)
+		{
+			currentButtonIndex = static_cast<int>(MenuButtonType::Quit);
+		}
+		else if (currentButtonIndex > NUMBER_OF_MENU_BUTTONS - 1)
+		{
+			currentButtonIndex = static_cast<int>(MenuButtonType::Play);
+		}
+		updateButtonColour(m_menuButtons[currentButtonIndex], Utilities::MENU_BUTTON_HIGHLIGHTED_COLOUR);
+		m_currentButton = static_cast<MenuButtonType>(currentButtonIndex);
+	}
 }
 
-void MenuScreen::buttonPressed(const MenuSelectButton& t_event)
+void MenuScreen::buttonPressed(const MenuButtonPressed& t_event)
 {
-	MenuStates newScreen = MenuStates::MainMenu;
-	switch (m_currentButton)
+	if (m_screenActive && ButtonType::A == t_event.buttonPressed)
 	{
-	case MenuButtonType::Play:
-		newScreen = MenuStates::Game;
-		break;
-	case MenuButtonType::Options:
-		newScreen = MenuStates::Options;
-		break;
-	case MenuButtonType::Credits:
-		newScreen = MenuStates::Credits;
-		break;
-	case MenuButtonType::Achievements:
-		newScreen = MenuStates::Achievements;
-		break;
-	case MenuButtonType::Quit:
-		m_eventManager.emitEvent(CloseWindow());
-		break;
-	default:
-		break;
-	}
-	if (MenuStates::MainMenu != newScreen)
-	{
-		m_eventManager.emitEvent(ChangeScreen{ newScreen });
+		MenuStates newScreen = MenuStates::MainMenu;
+		switch (m_currentButton)
+		{
+		case MenuButtonType::Play:
+			newScreen = MenuStates::Game;
+			break;
+		case MenuButtonType::Options:
+			newScreen = MenuStates::Options;
+			break;
+		case MenuButtonType::Credits:
+			newScreen = MenuStates::Credits;
+			break;
+		case MenuButtonType::Achievements:
+			newScreen = MenuStates::Achievements;
+			break;
+		case MenuButtonType::Quit:
+			m_eventManager.emitEvent(CloseWindow());
+			break;
+		default:
+			break;
+		}
+		if (MenuStates::MainMenu != newScreen)
+		{
+			m_screenActive = false;
+			m_eventManager.emitEvent(ChangeScreen{ newScreen });
+		}
 	}
 }
 
 void MenuScreen::updateButtonColour(Entity& t_menuButton, glm::vec3 t_colour)
-{
+{ 
 	VisualComponent* visualComp = static_cast<VisualComponent*>(t_menuButton.getComponent(ComponentType::Visual));
 	visualComp->setColor(t_colour.x, t_colour.y, t_colour.z);
 }

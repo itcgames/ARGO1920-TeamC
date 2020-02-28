@@ -1,8 +1,11 @@
 #include "stdafx.h"
 #include "SplashScreen.h"
 
-SplashScreen::SplashScreen(EventManager& t_eventManager) :
-	m_eventManager{ t_eventManager }
+SplashScreen::SplashScreen(EventManager& t_eventManager, CommandSystem& t_commandSystem, InputSystem& t_input, RenderSystem& t_renderSystem) :
+	m_eventManager{ t_eventManager },
+	m_commandSystem{ t_commandSystem },
+	m_inputSystem{ t_input },
+	m_renderSystem{ t_renderSystem }
 {
 }
 
@@ -47,7 +50,7 @@ void SplashScreen::initialise(SDL_Renderer* t_renderer, Controller& t_controller
 	m_inputEntity.addComponent(new CommandComponent());
 
 	m_screenStartTime = SDL_GetTicks();
-}
+} 
 
 void SplashScreen::setControllerButtonMaps()
 {

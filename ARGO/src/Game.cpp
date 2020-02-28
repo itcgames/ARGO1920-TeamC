@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Game.h"
 
-
+int Utilities::Achievements::numberOfUnlockedAchv = 0;
 
 /// <summary>
 /// Constructor for the game class.
@@ -9,15 +9,15 @@
 
 class State;
 Game::Game() :
-	m_gameScreen{ m_renderer, m_eventManager, m_controllers },
+	m_gameScreen{ m_renderer, m_eventManager, m_controllers, m_commandSystem, m_inputSystem, m_renderSystem },
 	m_optionsScreen{ m_eventManager, m_controllers[0], m_renderer },
-	m_creditsScreen{ m_eventManager },
-	m_licenseScreen{ m_eventManager },
-	m_splashScreen{ m_eventManager },
-	m_mainMenuScreen{ m_eventManager },
-	m_achievementsScreen{ m_eventManager, m_controllers[0], m_renderer },
+	m_creditsScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
+	m_licenseScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
+	m_splashScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
+	m_mainMenuScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem },
+	m_achievementsScreen{ m_eventManager, m_commandSystem, m_inputSystem, m_renderSystem }, 
 #ifdef _DEBUG
-	m_currentScreen{ MenuStates::Game }
+	m_currentScreen{ MenuStates::Splash }
 #else
 	m_currentScreen{ MenuStates::Splash }
 #endif // _DEBUG
@@ -47,6 +47,8 @@ Game::Game() :
 		// Sets clear colour of renderer to black and the color of any primitives
 		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 
+		//Utilities::numberOfUnlockedAchv = 0;
+
 		for (int index = 0; index < Utilities::S_MAX_PLAYERS; index++)
 		{
 			m_controllers[index].initialiseController();
@@ -60,11 +62,16 @@ Game::Game() :
 		m_audioMgr = AudioManager::Instance();
 		m_audioMgr->PlayMusic("looping\\Ove - Earth Is All We Have.ogg");
 
+		m_achievementsScreen.initialise(m_renderer, m_controllers[0]);
+
 		initialiseScreen();
+ 
 		m_eventManager.subscribeToEvent<CloseWindow>(std::bind(&Game::closeWindow, this, std::placeholders::_1));
 		m_eventManager.subscribeToEvent<ChangeScreen>(std::bind(&Game::changeScreen, this, std::placeholders::_1));
 
 		setupIgnoredEvents();
+
+ 
 
 		// Game is running
 		m_isRunning = true;
@@ -147,6 +154,17 @@ void Game::processEvent()
 		{
 			switch (event.key.keysym.sym)
 			{
+
+			case SDLK_KP_ENTER:
+			{
+				m_eventManager.emitEvent<UpdateAchievement>(UpdateAchievement{ 100, 0 });
+				break;
+			}
+			case SDLK_KP_0:
+			{
+				m_eventManager.emitEvent<UpdateAchievement>(UpdateAchievement{ 0, 1 });
+				break;
+			}
 			case SDLK_ESCAPE:
 			{
 				closeWindow();
@@ -206,7 +224,7 @@ void Game::processEvent()
 }
 
 void Game::update(float t_dt)
-{
+{ 
 	switch (m_currentScreen)
 	{
 	case MenuStates::Game:
@@ -229,7 +247,7 @@ void Game::update(float t_dt)
 		break;
 	case MenuStates::Achievements:
 		m_achievementsScreen.update(t_dt);
-		break;
+		break; 
 	default:
 		break;
 	}
@@ -260,10 +278,10 @@ void Game::render()
 		break;
 	case MenuStates::Achievements:
 		m_achievementsScreen.render(m_renderer);
-		break;
+		break; 
 	default:
 		break;
-	}
+	} 
 	SDL_RenderPresent(m_renderer);
 }
 
@@ -331,7 +349,7 @@ void Game::changeScreen(const ChangeScreen& t_event)
 	{
 		initialiseScreen();
 	}
-}
+} 
 
 void Game::initialiseScreen()
 {
@@ -355,10 +373,7 @@ void Game::initialiseScreen()
 		break;
 	case MenuStates::Splash:
 		m_splashScreen.initialise(m_renderer, m_controllers[0]);
-		break;
-	case MenuStates::Achievements:
-		m_achievementsScreen.initialise();
-		break;
+		break; 
 	default:
 		break;
 	}
@@ -390,7 +405,7 @@ void Game::resetScreen()
 		break;
 	case MenuStates::Achievements:
 		m_achievementsScreen.reset();
-		break;
+		break; 
 	default:
 		break;
 	}
